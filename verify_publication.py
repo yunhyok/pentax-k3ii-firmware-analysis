@@ -1,0 +1,75 @@
+"""Check offline HTML links, evidence consistency, and the public file boundary.
+
+SPDX-License-Identifier: GPL-2.0-only
+"""
+from html.parser import HTMLParser
+import json
+from pathlib import Path
+import subprocess
+from urllib.parse import unquote, urlsplit
+import xml.etree.ElementTree as ET
+
+
+class Document(HTMLParser):
+    def __init__(self, text):
+        super().__init__()
+        self.ids, self.links, self.tags = [], [], []
+        self.lang = None
+        self.feed(text)
+
+    def handle_starttag(self, tag, attrs):
+        a = dict(attrs)
+        self.tags.append(tag)
+        if tag == "html":
+            self.lang = a.get("lang")
+        if "id" in a:
+            self.ids.append(a["id"])
+        for key in ("href", "src", "srcset"):
+            if key in a:
+                self.links.append(a[key])
+        if tag == "img":
+            assert a.get("alt"), "image needs alternative text"
+
+
+def main():
+    root = Path(__file__).resolve().parent
+    text = (root / "index.html").read_text(encoding="utf-8")
+    doc = Document(text)
+    assert doc.lang == "ko" and doc.tags.count("h1") == 1 and doc.tags.count("main") == 1
+    assert len(doc.ids) == len(set(doc.ids)), "duplicate HTML IDs"
+    assert "{{" not in text and "<!-- HUMANIZE" not in text
+    local = 0
+    for link in doc.links:
+        url = urlsplit(link)
+        if url.scheme or url.netloc:
+            assert url.scheme == "https", link
+            continue
+        path = (root / unquote(url.path)).resolve() if url.path else root / "index.html"
+        assert path.is_relative_to(root) and path.is_file(), link
+        assert ".private" not in path.relative_to(root).parts, link
+        if url.fragment and path.name == "index.html":
+            assert unquote(url.fragment) in doc.ids, link
+        local += 1
+    for path in (root / "assets").glob("*.svg"):
+        ET.parse(path)
+    inventory = json.loads((root / "analysis/inventory.json").read_text(encoding="utf-8"))
+    findings = json.loads((root / "analysis/findings.json").read_text(encoding="utf-8"))
+    package = json.loads((root / "analysis/official-package.json").read_text(encoding="utf-8"))
+    comparison = json.loads((root / "analysis/decoder-comparison.json").read_text(encoding="utf-8"))
+    assert inventory["input"]["sha256"] == package["firmware_sha256"] and package["matches_user_file"]
+    assert inventory["decoded"]["sha256"] == findings["decoded_sha256"] == comparison["sha256"]
+    assert comparison["matched"] and comparison["bytes"] == findings["decoded_size"]
+    assert findings["midr_check"]["part_number"] == 0xC09
+    for value in (inventory["input"]["sha256"], findings["decoded_sha256"], "0x02000000", "0xC090", "30,254"):
+        assert value in text, value
+    files = subprocess.check_output(["git", "ls-files", "--cached", "--others", "--exclude-standard"], cwd=root, text=True).splitlines()
+    for name in files:
+        path = Path(name)
+        assert not any(part in {".private", "_workspace", "__pycache__"} for part in path.parts), name
+        assert path.suffix.lower() not in {".bin", ".zip", ".pyc", ".exe", ".dll"}, name
+    print(json.dumps({"passed": True, "local_links_checked": local, "public_files_checked": len(files),
+                      "evidence_identity_consistent": True, "svg_xml_valid": True}, indent=2))
+
+
+if __name__ == "__main__":
+    main()

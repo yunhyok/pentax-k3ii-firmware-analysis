@@ -1,0 +1,12 @@
+{
+  "url": "https://www.ricoh-imaging.co.jp/english/support/digital/firmware/k3ll_v112.zip",
+  "zip_size": 14498772,
+  "zip_sha256": "4a1218582cef9a7b34ab01b2525597bed5f2ee13bae2f07ed1245abb6c1af3f5",
+  "members": [
+    "fwdc230b.bin"
+  ],
+  "firmware_member": "fwdc230b.bin",
+  "firmware_size": 16838656,
+  "firmware_sha256": "a33485f351019960192891ef69ddc5d4904ef9e298671d9d9955679e4c901a9a",
+  "matches_user_file": true
+}

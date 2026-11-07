@@ -1,0 +1,50 @@
+{
+  "scope": "Derived public summary; full authenticated REA bundle retained locally.",
+  "inspection_evidence_id": "ev_5d2197d1575eb5647a763ff29c1e0c5fba5da70f2ae1d9437a23e5d406d643c0",
+  "inventory_evidence_id": "ev_33c76aaae4944c00666d43eb07b76e5128c7f2c86c8a38f31487fa4de8771317",
+  "provider": {
+    "id": "rea-artifact-graph",
+    "name": "REA safe artifact graph provider",
+    "version": "1"
+  },
+  "manifest": {
+    "manifest_id": "agm_a8bdc8f289c373d747c9cb56be0604349787228ed5facd2b1c31b24686ce6595",
+    "root_artifact_id": "art_59e997e43072f6b3942f6d2c370e1640a2b0c286d005b4598d1d0e94dde9ff16",
+    "root_sha256": "4a1218582cef9a7b34ab01b2525597bed5f2ee13bae2f07ed1245abb6c1af3f5",
+    "root_format": "zip",
+    "graph_sha256": "eb59a440acdace522d3a4f00d2fd1db54a765d7a4224e722661eed810f15e840",
+    "node_count": 2,
+    "occurrence_count": 2,
+    "edge_count": 1
+  },
+  "nodes": [
+    {
+      "artifact_id": "art_59e997e43072f6b3942f6d2c370e1640a2b0c286d005b4598d1d0e94dde9ff16",
+      "format": "zip",
+      "sha256": "4a1218582cef9a7b34ab01b2525597bed5f2ee13bae2f07ed1245abb6c1af3f5",
+      "size": 14498772,
+      "media_type": null,
+      "architecture": null,
+      "content_state": "materialized",
+      "limitations": []
+    },
+    {
+      "artifact_id": "art_f22cc01c9f275f1efc2c69e6e684bbb9443db84033fb3ab4d7506570518cd50c",
+      "format": "file",
+      "sha256": "a33485f351019960192891ef69ddc5d4904ef9e298671d9d9955679e4c901a9a",
+      "size": 16838656,
+      "media_type": null,
+      "architecture": null,
+      "content_state": "embedded",
+      "limitations": []
+    }
+  ],
+  "limitations": [
+    "Inspection derives bounded static hypotheses and next probes; it does not execute the artifact or claim format-specific semantics.",
+    "ZIP inventory lists central-directory entries only. Bytes after the central directory, including an APK Signing Block or a ZIP comment, are not occurrences."
+  ],
+  "unavailable": {
+    "firmware_regions": "Requires Linux and caller-supplied Binwalk",
+    "native_decompiler": "Ghidra not configured; Windows provider does not support this raw ARM image"
+  }
+}

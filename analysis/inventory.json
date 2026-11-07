@@ -1,0 +1,79 @@
+{
+  "input": {
+    "filename": "fwdc230b.bin",
+    "size": 16838656,
+    "sha256": "a33485f351019960192891ef69ddc5d4904ef9e298671d9d9955679e4c901a9a"
+  },
+  "decoded": {
+    "size": 16838656,
+    "sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+    "first_eight_words_le": [
+      "0xe59ff018",
+      "0xe59ff018",
+      "0xe59ff018",
+      "0xe59ff018",
+      "0xe59ff018",
+      "0xe320f000",
+      "0xea000009",
+      "0xe59ff018"
+    ]
+  },
+  "algorithm": {
+    "name": "32-bit little-endian XOR in 0x80-byte blocks",
+    "source": "https://github.com/twang2218/pentax-firmware-tool/blob/3e2597b5d4cfa9ce242b6d3aeef32c28e64b6f73/index.js",
+    "regions": [
+      {
+        "start": "0x00000000",
+        "end_exclusive": "0x00000100",
+        "base": "0x00000000",
+        "iv_offset": "0x00000100"
+      },
+      {
+        "start": "0x00000200",
+        "end_exclusive": "0x01000000",
+        "base": "0x00000000",
+        "iv_offset": "0x00000100"
+      },
+      {
+        "start": "0x01000080",
+        "end_exclusive": "0x0100f000",
+        "base": "0x01000000",
+        "iv_offset": "0x01000000"
+      }
+    ]
+  },
+  "headers": {
+    "primary_id": {
+      "offset": "0x00000100",
+      "text": "HOKKTKIYHTNTMU"
+    },
+    "copyright": {
+      "offset": "0x00000124",
+      "text": "Copyright (C) RICOH IMAGING COMPANY, LTD."
+    },
+    "model": {
+      "offset": "0x0000014e",
+      "text": "PENTAX K-3 II"
+    },
+    "version": {
+      "offset": "0x0000015c",
+      "text": "Version 1.12"
+    },
+    "vendor_id": {
+      "offset": "0x00000194",
+      "text": "RICOHIMG"
+    },
+    "internal_model": {
+      "offset": "0x000001ab",
+      "text": "DSC_K-3_II"
+    },
+    "secondary_id": {
+      "offset": "0x01000000",
+      "text": "OIOSMUON"
+    },
+    "secondary_model": {
+      "offset": "0x01000040",
+      "text": "PENTAX K-3MC"
+    }
+  }
+}

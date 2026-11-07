@@ -1,0 +1,7 @@
+.private/
+_workspace/
+__pycache__/
+*.pyc
+*.bin
+*.zip
+.venv/

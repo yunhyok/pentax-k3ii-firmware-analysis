@@ -1,0 +1,1461 @@
+{
+  "schema_version": 1,
+  "analysis_date": "2026-11-07",
+  "decoded_size": 16838656,
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "offset_space": "decoded file, same offsets as input",
+  "candidate_main_image_base": 33554432,
+  "reset_target_address": 33554944,
+  "vectors": [
+    {
+      "name": "reset",
+      "vector_offset": 0,
+      "pointer_offset": 32,
+      "target_address": 33554944,
+      "target_file_offset": 512,
+      "target_first_16_sha256": "64803de49de8a245511cc132622f68f863f1343e4832a4026ec66b6ab2e61c9d"
+    },
+    {
+      "name": "undefined",
+      "vector_offset": 4,
+      "pointer_offset": 36,
+      "target_address": 36618580,
+      "target_file_offset": 3064148,
+      "target_first_16_sha256": "dd3548a81e1ddd43a87c7c8cc509702f94d27577883b5e1451d741c7ff7a61fd"
+    },
+    {
+      "name": "SVC",
+      "vector_offset": 8,
+      "pointer_offset": 40,
+      "target_address": 36618756,
+      "target_file_offset": 3064324,
+      "target_first_16_sha256": "914f371626839b7265537db20db183b1862df3138b98a75ee2fa94154a8f3d4a"
+    },
+    {
+      "name": "prefetch abort",
+      "vector_offset": 12,
+      "pointer_offset": 44,
+      "target_address": 36618876,
+      "target_file_offset": 3064444,
+      "target_first_16_sha256": "4dd060f8d7daa0eebee8e1c85eccea5c10e75e95c77f2b8f4baf958e7b20fac7"
+    },
+    {
+      "name": "data abort",
+      "vector_offset": 16,
+      "pointer_offset": 48,
+      "target_address": 36618892,
+      "target_file_offset": 3064460,
+      "target_first_16_sha256": "b95c146ae890e00b1be1ee6485879148323282e9fc8b131b46fece064e2d8e8d"
+    },
+    {
+      "name": "FIQ",
+      "vector_offset": 28,
+      "pointer_offset": 60,
+      "target_address": 36618944,
+      "target_file_offset": 3064512,
+      "target_first_16_sha256": "e221a8c3a5ea34858e42f3591f684a89ac4ee4c2bf3d4556b040ba746b8ccab8"
+    }
+  ],
+  "irq_branch_target_offset": 68,
+  "midr_check": {
+    "instruction_range": [
+      524,
+      556
+    ],
+    "range_sha256": "68e3d7cce5b2d6021670394deb48d5814c67f41431f345b61d373cecd39b825c",
+    "mask_pointer_literal_offset": 1112,
+    "expected_pointer_literal_offset": 1116,
+    "mask_offset": 1096,
+    "expected_offset": 1100,
+    "mask": 65520,
+    "expected_masked_value": 49296,
+    "part_number": 3081,
+    "inference": "Startup distinguishes a Cortex-A9 part-number path (0xC09); live MIDR and exact SoC unobserved."
+  },
+  "ascii_runs_min_length_6": 30254,
+  "seeds": [
+    {
+      "name": "T-Kernel name",
+      "text": "T-Kernel",
+      "offsets": [
+        10986458
+      ],
+      "length_with_nul": 9,
+      "sha256_with_nul": "a4b34e1750a7b38b3d5bfd4d17d30b8b6e5b5bc02b68045f06e23f3e4b39b80c",
+      "interpretation": "literal/diagnostic evidence only; no runtime behavior established"
+    },
+    {
+      "name": "T-Kernel diagnostic",
+      "text": "T-Kernel/OS SVC in execution",
+      "offsets": [
+        6379456
+      ],
+      "length_with_nul": 29,
+      "sha256_with_nul": "eda7f2fe4ad826f29e1ce2803c6bf54ee67aabab7e9e16a02d2db9b0d7d50149",
+      "interpretation": "literal/diagnostic evidence only; no runtime behavior established"
+    },
+    {
+      "name": "RAW development diagnostic",
+      "text": "Allocate ERR! in DevelopmentRawImage()",
+      "offsets": [
+        5419356
+      ],
+      "length_with_nul": 40,
+      "sha256_with_nul": "61ff9629ce9cbc7ae0a0f0f3f9602d91da716e89902e00d3381db7e38d6f9af3",
+      "interpretation": "literal/diagnostic evidence only; no runtime behavior established"
+    },
+    {
+      "name": "tone/gamma diagnostic",
+      "text": "#### CColorInterpolationDriver::DumpToneGamma() ####",
+      "offsets": [
+        5968529
+      ],
+      "length_with_nul": 54,
+      "sha256_with_nul": "a9faa50289e65dd21f0f5592057cc70ae4ebb5672225a8dee53ce8b89257559e",
+      "interpretation": "literal/diagnostic evidence only; no runtime behavior established"
+    },
+    {
+      "name": "AF diagnostic",
+      "text": "/////CalcMoveObjectDriveDefocusError/////",
+      "offsets": [
+        424644
+      ],
+      "length_with_nul": 43,
+      "sha256_with_nul": "d20d8e3bc3aa338a4eaeb6d36b9b37d57022e0b46bf7ffef86e7afae64a62e60",
+      "interpretation": "literal/diagnostic evidence only; no runtime behavior established"
+    },
+    {
+      "name": "HDMI resource name",
+      "text": "HdmiOutputSet",
+      "offsets": [
+        10979802
+      ],
+      "length_with_nul": 14,
+      "sha256_with_nul": "779893d2c16028775634e9a711d3cfca4a42e670a0516263d606c4a05a58dc70",
+      "interpretation": "literal/diagnostic evidence only; no runtime behavior established"
+    },
+    {
+      "name": "secondary header",
+      "text": "PENTAX K-3MC   ",
+      "offsets": [
+        16777280
+      ],
+      "length_with_nul": 16,
+      "sha256_with_nul": "9aea1508c6746a81abdad5a5a8de08961aab2e365fc7770c3e86ea0fd4a4c4e1",
+      "interpretation": "literal/diagnostic evidence only; no runtime behavior established"
+    }
+  ],
+  "hdmi_pointer_offsets": [
+    10180340,
+    10180360,
+    10180660,
+    10180960
+  ],
+  "bounded_exact_marker_counts": {
+    "Linux version": 0,
+    "SC2000": 0,
+    "milbeaut": 0,
+    "SHELLCMD": 0,
+    "Cortex": 0
+  },
+  "main_region_sha256": "3201eb09baa953102807e1977ac856f90a91e2e78835e82fab4ddbcb182392af",
+  "secondary_region_size": 61440,
+  "secondary_region_sha256": "14c983a45e16e940e27c36e344e1e44b79efe3970dbbc92fbbd22a9208d2961d",
+  "entropy_bits_per_byte": 5.757986,
+  "entropy_windows_64k": [
+    {
+      "offset": 0,
+      "length": 65536,
+      "bits_per_byte": 4.274016
+    },
+    {
+      "offset": 65536,
+      "length": 65536,
+      "bits_per_byte": 4.846621
+    },
+    {
+      "offset": 131072,
+      "length": 65536,
+      "bits_per_byte": 5.882896
+    },
+    {
+      "offset": 196608,
+      "length": 65536,
+      "bits_per_byte": 5.937875
+    },
+    {
+      "offset": 262144,
+      "length": 65536,
+      "bits_per_byte": 5.772793
+    },
+    {
+      "offset": 327680,
+      "length": 65536,
+      "bits_per_byte": 5.823306
+    },
+    {
+      "offset": 393216,
+      "length": 65536,
+      "bits_per_byte": 5.993252
+    },
+    {
+      "offset": 458752,
+      "length": 65536,
+      "bits_per_byte": 5.928441
+    },
+    {
+      "offset": 524288,
+      "length": 65536,
+      "bits_per_byte": 5.895714
+    },
+    {
+      "offset": 589824,
+      "length": 65536,
+      "bits_per_byte": 5.800492
+    },
+    {
+      "offset": 655360,
+      "length": 65536,
+      "bits_per_byte": 5.799881
+    },
+    {
+      "offset": 720896,
+      "length": 65536,
+      "bits_per_byte": 6.236327
+    },
+    {
+      "offset": 786432,
+      "length": 65536,
+      "bits_per_byte": 5.085654
+    },
+    {
+      "offset": 851968,
+      "length": 65536,
+      "bits_per_byte": 6.205012
+    },
+    {
+      "offset": 917504,
+      "length": 65536,
+      "bits_per_byte": 4.072255
+    },
+    {
+      "offset": 983040,
+      "length": 65536,
+      "bits_per_byte": -0.0
+    },
+    {
+      "offset": 1048576,
+      "length": 65536,
+      "bits_per_byte": -0.0
+    },
+    {
+      "offset": 1114112,
+      "length": 65536,
+      "bits_per_byte": 0.002007
+    },
+    {
+      "offset": 1179648,
+      "length": 65536,
+      "bits_per_byte": 5.8389
+    },
+    {
+      "offset": 1245184,
+      "length": 65536,
+      "bits_per_byte": 5.828094
+    },
+    {
+      "offset": 1310720,
+      "length": 65536,
+      "bits_per_byte": 5.74172
+    },
+    {
+      "offset": 1376256,
+      "length": 65536,
+      "bits_per_byte": 2.932072
+    },
+    {
+      "offset": 1441792,
+      "length": 65536,
+      "bits_per_byte": -0.0
+    },
+    {
+      "offset": 1507328,
+      "length": 65536,
+      "bits_per_byte": -0.0
+    },
+    {
+      "offset": 1572864,
+      "length": 65536,
+      "bits_per_byte": -0.0
+    },
+    {
+      "offset": 1638400,
+      "length": 65536,
+      "bits_per_byte": 0.002007
+    },
+    {
+      "offset": 1703936,
+      "length": 65536,
+      "bits_per_byte": 0.925845
+    },
+    {
+      "offset": 1769472,
+      "length": 65536,
+      "bits_per_byte": -0.0
+    },
+    {
+      "offset": 1835008,
+      "length": 65536,
+      "bits_per_byte": 0.102381
+    },
+    {
+      "offset": 1900544,
+      "length": 65536,
+      "bits_per_byte": 1.220766
+    },
+    {
+      "offset": 1966080,
+      "length": 65536,
+      "bits_per_byte": 0.001475
+    },
+    {
+      "offset": 2031616,
+      "length": 65536,
+      "bits_per_byte": 0.001475
+    },
+    {
+      "offset": 2097152,
+      "length": 65536,
+      "bits_per_byte": 0.001475
+    },
+    {
+      "offset": 2162688,
+      "length": 65536,
+      "bits_per_byte": 0.001475
+    },
+    {
+      "offset": 2228224,
+      "length": 65536,
+      "bits_per_byte": 0.001475
+    },
+    {
+      "offset": 2293760,
+      "length": 65536,
+      "bits_per_byte": 0.001475
+    },
+    {
+      "offset": 2359296,
+      "length": 65536,
+      "bits_per_byte": 0.001475
+    },
+    {
+      "offset": 2424832,
+      "length": 65536,
+      "bits_per_byte": 0.001475
+    },
+    {
+      "offset": 2490368,
+      "length": 65536,
+      "bits_per_byte": 0.001475
+    },
+    {
+      "offset": 2555904,
+      "length": 65536,
+      "bits_per_byte": 0.001475
+    },
+    {
+      "offset": 2621440,
+      "length": 65536,
+      "bits_per_byte": 0.001475
+    },
+    {
+      "offset": 2686976,
+      "length": 65536,
+      "bits_per_byte": 0.002797
+    },
+    {
+      "offset": 2752512,
+      "length": 65536,
+      "bits_per_byte": 0.001475
+    },
+    {
+      "offset": 2818048,
+      "length": 65536,
+      "bits_per_byte": 0.002797
+    },
+    {
+      "offset": 2883584,
+      "length": 65536,
+      "bits_per_byte": 0.925845
+    },
+    {
+      "offset": 2949120,
+      "length": 65536,
+      "bits_per_byte": -0.0
+    },
+    {
+      "offset": 3014656,
+      "length": 65536,
+      "bits_per_byte": 6.615141
+    },
+    {
+      "offset": 3080192,
+      "length": 65536,
+      "bits_per_byte": 5.881251
+    },
+    {
+      "offset": 3145728,
+      "length": 65536,
+      "bits_per_byte": 5.82567
+    },
+    {
+      "offset": 3211264,
+      "length": 65536,
+      "bits_per_byte": 5.628699
+    },
+    {
+      "offset": 3276800,
+      "length": 65536,
+      "bits_per_byte": 5.831495
+    },
+    {
+      "offset": 3342336,
+      "length": 65536,
+      "bits_per_byte": 5.830086
+    },
+    {
+      "offset": 3407872,
+      "length": 65536,
+      "bits_per_byte": 5.791892
+    },
+    {
+      "offset": 3473408,
+      "length": 65536,
+      "bits_per_byte": 5.827127
+    },
+    {
+      "offset": 3538944,
+      "length": 65536,
+      "bits_per_byte": 5.767069
+    },
+    {
+      "offset": 3604480,
+      "length": 65536,
+      "bits_per_byte": 5.755924
+    },
+    {
+      "offset": 3670016,
+      "length": 65536,
+      "bits_per_byte": 5.801352
+    },
+    {
+      "offset": 3735552,
+      "length": 65536,
+      "bits_per_byte": 5.645213
+    },
+    {
+      "offset": 3801088,
+      "length": 65536,
+      "bits_per_byte": 5.737461
+    },
+    {
+      "offset": 3866624,
+      "length": 65536,
+      "bits_per_byte": 5.915667
+    },
+    {
+      "offset": 3932160,
+      "length": 65536,
+      "bits_per_byte": 5.876071
+    },
+    {
+      "offset": 3997696,
+      "length": 65536,
+      "bits_per_byte": 5.920268
+    },
+    {
+      "offset": 4063232,
+      "length": 65536,
+      "bits_per_byte": 5.964156
+    },
+    {
+      "offset": 4128768,
+      "length": 65536,
+      "bits_per_byte": 5.953613
+    },
+    {
+      "offset": 4194304,
+      "length": 65536,
+      "bits_per_byte": 5.893046
+    },
+    {
+      "offset": 4259840,
+      "length": 65536,
+      "bits_per_byte": 5.863246
+    },
+    {
+      "offset": 4325376,
+      "length": 65536,
+      "bits_per_byte": 5.730536
+    },
+    {
+      "offset": 4390912,
+      "length": 65536,
+      "bits_per_byte": 5.785128
+    },
+    {
+      "offset": 4456448,
+      "length": 65536,
+      "bits_per_byte": 5.997523
+    },
+    {
+      "offset": 4521984,
+      "length": 65536,
+      "bits_per_byte": 5.909585
+    },
+    {
+      "offset": 4587520,
+      "length": 65536,
+      "bits_per_byte": 6.013596
+    },
+    {
+      "offset": 4653056,
+      "length": 65536,
+      "bits_per_byte": 5.966566
+    },
+    {
+      "offset": 4718592,
+      "length": 65536,
+      "bits_per_byte": 5.904947
+    },
+    {
+      "offset": 4784128,
+      "length": 65536,
+      "bits_per_byte": 5.893565
+    },
+    {
+      "offset": 4849664,
+      "length": 65536,
+      "bits_per_byte": 5.955094
+    },
+    {
+      "offset": 4915200,
+      "length": 65536,
+      "bits_per_byte": 6.242234
+    },
+    {
+      "offset": 4980736,
+      "length": 65536,
+      "bits_per_byte": 6.359496
+    },
+    {
+      "offset": 5046272,
+      "length": 65536,
+      "bits_per_byte": 6.260495
+    },
+    {
+      "offset": 5111808,
+      "length": 65536,
+      "bits_per_byte": 6.067944
+    },
+    {
+      "offset": 5177344,
+      "length": 65536,
+      "bits_per_byte": 5.974966
+    },
+    {
+      "offset": 5242880,
+      "length": 65536,
+      "bits_per_byte": 5.79254
+    },
+    {
+      "offset": 5308416,
+      "length": 65536,
+      "bits_per_byte": 5.848415
+    },
+    {
+      "offset": 5373952,
+      "length": 65536,
+      "bits_per_byte": 6.008248
+    },
+    {
+      "offset": 5439488,
+      "length": 65536,
+      "bits_per_byte": 5.997575
+    },
+    {
+      "offset": 5505024,
+      "length": 65536,
+      "bits_per_byte": 6.308459
+    },
+    {
+      "offset": 5570560,
+      "length": 65536,
+      "bits_per_byte": 6.063366
+    },
+    {
+      "offset": 5636096,
+      "length": 65536,
+      "bits_per_byte": 6.039042
+    },
+    {
+      "offset": 5701632,
+      "length": 65536,
+      "bits_per_byte": 5.808749
+    },
+    {
+      "offset": 5767168,
+      "length": 65536,
+      "bits_per_byte": 6.109111
+    },
+    {
+      "offset": 5832704,
+      "length": 65536,
+      "bits_per_byte": 6.007022
+    },
+    {
+      "offset": 5898240,
+      "length": 65536,
+      "bits_per_byte": 6.207958
+    },
+    {
+      "offset": 5963776,
+      "length": 65536,
+      "bits_per_byte": 6.295427
+    },
+    {
+      "offset": 6029312,
+      "length": 65536,
+      "bits_per_byte": 5.8402
+    },
+    {
+      "offset": 6094848,
+      "length": 65536,
+      "bits_per_byte": 5.820189
+    },
+    {
+      "offset": 6160384,
+      "length": 65536,
+      "bits_per_byte": 5.751683
+    },
+    {
+      "offset": 6225920,
+      "length": 65536,
+      "bits_per_byte": 6.037903
+    },
+    {
+      "offset": 6291456,
+      "length": 65536,
+      "bits_per_byte": 6.098938
+    },
+    {
+      "offset": 6356992,
+      "length": 65536,
+      "bits_per_byte": 6.097556
+    },
+    {
+      "offset": 6422528,
+      "length": 65536,
+      "bits_per_byte": 6.065779
+    },
+    {
+      "offset": 6488064,
+      "length": 65536,
+      "bits_per_byte": 6.080081
+    },
+    {
+      "offset": 6553600,
+      "length": 65536,
+      "bits_per_byte": 5.945338
+    },
+    {
+      "offset": 6619136,
+      "length": 65536,
+      "bits_per_byte": 5.991816
+    },
+    {
+      "offset": 6684672,
+      "length": 65536,
+      "bits_per_byte": 6.042075
+    },
+    {
+      "offset": 6750208,
+      "length": 65536,
+      "bits_per_byte": 6.160477
+    },
+    {
+      "offset": 6815744,
+      "length": 65536,
+      "bits_per_byte": 5.972258
+    },
+    {
+      "offset": 6881280,
+      "length": 65536,
+      "bits_per_byte": 5.960599
+    },
+    {
+      "offset": 6946816,
+      "length": 65536,
+      "bits_per_byte": 5.822325
+    },
+    {
+      "offset": 7012352,
+      "length": 65536,
+      "bits_per_byte": 5.983285
+    },
+    {
+      "offset": 7077888,
+      "length": 65536,
+      "bits_per_byte": 5.994231
+    },
+    {
+      "offset": 7143424,
+      "length": 65536,
+      "bits_per_byte": 5.903826
+    },
+    {
+      "offset": 7208960,
+      "length": 65536,
+      "bits_per_byte": 5.92473
+    },
+    {
+      "offset": 7274496,
+      "length": 65536,
+      "bits_per_byte": 5.720257
+    },
+    {
+      "offset": 7340032,
+      "length": 65536,
+      "bits_per_byte": 6.063039
+    },
+    {
+      "offset": 7405568,
+      "length": 65536,
+      "bits_per_byte": 6.048361
+    },
+    {
+      "offset": 7471104,
+      "length": 65536,
+      "bits_per_byte": 5.976207
+    },
+    {
+      "offset": 7536640,
+      "length": 65536,
+      "bits_per_byte": 6.101814
+    },
+    {
+      "offset": 7602176,
+      "length": 65536,
+      "bits_per_byte": 5.850209
+    },
+    {
+      "offset": 7667712,
+      "length": 65536,
+      "bits_per_byte": 5.974187
+    },
+    {
+      "offset": 7733248,
+      "length": 65536,
+      "bits_per_byte": 5.911132
+    },
+    {
+      "offset": 7798784,
+      "length": 65536,
+      "bits_per_byte": 5.688554
+    },
+    {
+      "offset": 7864320,
+      "length": 65536,
+      "bits_per_byte": 5.825765
+    },
+    {
+      "offset": 7929856,
+      "length": 65536,
+      "bits_per_byte": 6.214582
+    },
+    {
+      "offset": 7995392,
+      "length": 65536,
+      "bits_per_byte": 6.169176
+    },
+    {
+      "offset": 8060928,
+      "length": 65536,
+      "bits_per_byte": 5.847598
+    },
+    {
+      "offset": 8126464,
+      "length": 65536,
+      "bits_per_byte": 5.628111
+    },
+    {
+      "offset": 8192000,
+      "length": 65536,
+      "bits_per_byte": 6.056274
+    },
+    {
+      "offset": 8257536,
+      "length": 65536,
+      "bits_per_byte": 5.722354
+    },
+    {
+      "offset": 8323072,
+      "length": 65536,
+      "bits_per_byte": 6.019458
+    },
+    {
+      "offset": 8388608,
+      "length": 65536,
+      "bits_per_byte": 6.006456
+    },
+    {
+      "offset": 8454144,
+      "length": 65536,
+      "bits_per_byte": 6.069721
+    },
+    {
+      "offset": 8519680,
+      "length": 65536,
+      "bits_per_byte": 5.894596
+    },
+    {
+      "offset": 8585216,
+      "length": 65536,
+      "bits_per_byte": 6.01286
+    },
+    {
+      "offset": 8650752,
+      "length": 65536,
+      "bits_per_byte": 6.127654
+    },
+    {
+      "offset": 8716288,
+      "length": 65536,
+      "bits_per_byte": 5.874898
+    },
+    {
+      "offset": 8781824,
+      "length": 65536,
+      "bits_per_byte": 5.850453
+    },
+    {
+      "offset": 8847360,
+      "length": 65536,
+      "bits_per_byte": 6.09417
+    },
+    {
+      "offset": 8912896,
+      "length": 65536,
+      "bits_per_byte": 5.809842
+    },
+    {
+      "offset": 8978432,
+      "length": 65536,
+      "bits_per_byte": 5.894897
+    },
+    {
+      "offset": 9043968,
+      "length": 65536,
+      "bits_per_byte": 5.891068
+    },
+    {
+      "offset": 9109504,
+      "length": 65536,
+      "bits_per_byte": 5.943424
+    },
+    {
+      "offset": 9175040,
+      "length": 65536,
+      "bits_per_byte": 5.983368
+    },
+    {
+      "offset": 9240576,
+      "length": 65536,
+      "bits_per_byte": 6.007389
+    },
+    {
+      "offset": 9306112,
+      "length": 65536,
+      "bits_per_byte": 5.801998
+    },
+    {
+      "offset": 9371648,
+      "length": 65536,
+      "bits_per_byte": 5.868502
+    },
+    {
+      "offset": 9437184,
+      "length": 65536,
+      "bits_per_byte": 5.79571
+    },
+    {
+      "offset": 9502720,
+      "length": 65536,
+      "bits_per_byte": 5.790621
+    },
+    {
+      "offset": 9568256,
+      "length": 65536,
+      "bits_per_byte": 5.853416
+    },
+    {
+      "offset": 9633792,
+      "length": 65536,
+      "bits_per_byte": 5.801079
+    },
+    {
+      "offset": 9699328,
+      "length": 65536,
+      "bits_per_byte": 5.824847
+    },
+    {
+      "offset": 9764864,
+      "length": 65536,
+      "bits_per_byte": 5.817131
+    },
+    {
+      "offset": 9830400,
+      "length": 65536,
+      "bits_per_byte": 5.996435
+    },
+    {
+      "offset": 9895936,
+      "length": 65536,
+      "bits_per_byte": 5.738376
+    },
+    {
+      "offset": 9961472,
+      "length": 65536,
+      "bits_per_byte": 3.135088
+    },
+    {
+      "offset": 10027008,
+      "length": 65536,
+      "bits_per_byte": 3.058484
+    },
+    {
+      "offset": 10092544,
+      "length": 65536,
+      "bits_per_byte": 3.200748
+    },
+    {
+      "offset": 10158080,
+      "length": 65536,
+      "bits_per_byte": 3.146756
+    },
+    {
+      "offset": 10223616,
+      "length": 65536,
+      "bits_per_byte": 2.702073
+    },
+    {
+      "offset": 10289152,
+      "length": 65536,
+      "bits_per_byte": 4.396168
+    },
+    {
+      "offset": 10354688,
+      "length": 65536,
+      "bits_per_byte": 5.03116
+    },
+    {
+      "offset": 10420224,
+      "length": 65536,
+      "bits_per_byte": 4.696369
+    },
+    {
+      "offset": 10485760,
+      "length": 65536,
+      "bits_per_byte": 3.682758
+    },
+    {
+      "offset": 10551296,
+      "length": 65536,
+      "bits_per_byte": 4.268126
+    },
+    {
+      "offset": 10616832,
+      "length": 65536,
+      "bits_per_byte": 4.644026
+    },
+    {
+      "offset": 10682368,
+      "length": 65536,
+      "bits_per_byte": 5.908524
+    },
+    {
+      "offset": 10747904,
+      "length": 65536,
+      "bits_per_byte": 3.539907
+    },
+    {
+      "offset": 10813440,
+      "length": 65536,
+      "bits_per_byte": 5.727403
+    },
+    {
+      "offset": 10878976,
+      "length": 65536,
+      "bits_per_byte": 5.870087
+    },
+    {
+      "offset": 10944512,
+      "length": 65536,
+      "bits_per_byte": 5.08681
+    },
+    {
+      "offset": 11010048,
+      "length": 65536,
+      "bits_per_byte": 4.534702
+    },
+    {
+      "offset": 11075584,
+      "length": 65536,
+      "bits_per_byte": 4.392468
+    },
+    {
+      "offset": 11141120,
+      "length": 65536,
+      "bits_per_byte": -0.0
+    },
+    {
+      "offset": 11206656,
+      "length": 65536,
+      "bits_per_byte": -0.0
+    },
+    {
+      "offset": 11272192,
+      "length": 65536,
+      "bits_per_byte": -0.0
+    },
+    {
+      "offset": 11337728,
+      "length": 65536,
+      "bits_per_byte": -0.0
+    },
+    {
+      "offset": 11403264,
+      "length": 65536,
+      "bits_per_byte": -0.0
+    },
+    {
+      "offset": 11468800,
+      "length": 65536,
+      "bits_per_byte": -0.0
+    },
+    {
+      "offset": 11534336,
+      "length": 65536,
+      "bits_per_byte": -0.0
+    },
+    {
+      "offset": 11599872,
+      "length": 65536,
+      "bits_per_byte": -0.0
+    },
+    {
+      "offset": 11665408,
+      "length": 65536,
+      "bits_per_byte": -0.0
+    },
+    {
+      "offset": 11730944,
+      "length": 65536,
+      "bits_per_byte": -0.0
+    },
+    {
+      "offset": 11796480,
+      "length": 65536,
+      "bits_per_byte": -0.0
+    },
+    {
+      "offset": 11862016,
+      "length": 65536,
+      "bits_per_byte": -0.0
+    },
+    {
+      "offset": 11927552,
+      "length": 65536,
+      "bits_per_byte": -0.0
+    },
+    {
+      "offset": 11993088,
+      "length": 65536,
+      "bits_per_byte": -0.0
+    },
+    {
+      "offset": 12058624,
+      "length": 65536,
+      "bits_per_byte": -0.0
+    },
+    {
+      "offset": 12124160,
+      "length": 65536,
+      "bits_per_byte": -0.0
+    },
+    {
+      "offset": 12189696,
+      "length": 65536,
+      "bits_per_byte": 5.205996
+    },
+    {
+      "offset": 12255232,
+      "length": 65536,
+      "bits_per_byte": 5.428855
+    },
+    {
+      "offset": 12320768,
+      "length": 65536,
+      "bits_per_byte": 5.267256
+    },
+    {
+      "offset": 12386304,
+      "length": 65536,
+      "bits_per_byte": 5.483705
+    },
+    {
+      "offset": 12451840,
+      "length": 65536,
+      "bits_per_byte": 5.26427
+    },
+    {
+      "offset": 12517376,
+      "length": 65536,
+      "bits_per_byte": 5.271839
+    },
+    {
+      "offset": 12582912,
+      "length": 65536,
+      "bits_per_byte": 5.359475
+    },
+    {
+      "offset": 12648448,
+      "length": 65536,
+      "bits_per_byte": 5.537559
+    },
+    {
+      "offset": 12713984,
+      "length": 65536,
+      "bits_per_byte": 5.555928
+    },
+    {
+      "offset": 12779520,
+      "length": 65536,
+      "bits_per_byte": 5.567692
+    },
+    {
+      "offset": 12845056,
+      "length": 65536,
+      "bits_per_byte": 5.551258
+    },
+    {
+      "offset": 12910592,
+      "length": 65536,
+      "bits_per_byte": 5.104424
+    },
+    {
+      "offset": 12976128,
+      "length": 65536,
+      "bits_per_byte": 4.729076
+    },
+    {
+      "offset": 13041664,
+      "length": 65536,
+      "bits_per_byte": 4.795295
+    },
+    {
+      "offset": 13107200,
+      "length": 65536,
+      "bits_per_byte": 4.821744
+    },
+    {
+      "offset": 13172736,
+      "length": 65536,
+      "bits_per_byte": 5.14669
+    },
+    {
+      "offset": 13238272,
+      "length": 65536,
+      "bits_per_byte": 5.362778
+    },
+    {
+      "offset": 13303808,
+      "length": 65536,
+      "bits_per_byte": 5.46817
+    },
+    {
+      "offset": 13369344,
+      "length": 65536,
+      "bits_per_byte": 5.465602
+    },
+    {
+      "offset": 13434880,
+      "length": 65536,
+      "bits_per_byte": 6.311239
+    },
+    {
+      "offset": 13500416,
+      "length": 65536,
+      "bits_per_byte": 7.075653
+    },
+    {
+      "offset": 13565952,
+      "length": 65536,
+      "bits_per_byte": 6.918602
+    },
+    {
+      "offset": 13631488,
+      "length": 65536,
+      "bits_per_byte": 6.784645
+    },
+    {
+      "offset": 13697024,
+      "length": 65536,
+      "bits_per_byte": 6.915726
+    },
+    {
+      "offset": 13762560,
+      "length": 65536,
+      "bits_per_byte": 6.477213
+    },
+    {
+      "offset": 13828096,
+      "length": 65536,
+      "bits_per_byte": 6.787414
+    },
+    {
+      "offset": 13893632,
+      "length": 65536,
+      "bits_per_byte": 6.93167
+    },
+    {
+      "offset": 13959168,
+      "length": 65536,
+      "bits_per_byte": 6.92978
+    },
+    {
+      "offset": 14024704,
+      "length": 65536,
+      "bits_per_byte": 6.898386
+    },
+    {
+      "offset": 14090240,
+      "length": 65536,
+      "bits_per_byte": 6.652613
+    },
+    {
+      "offset": 14155776,
+      "length": 65536,
+      "bits_per_byte": 5.859888
+    },
+    {
+      "offset": 14221312,
+      "length": 65536,
+      "bits_per_byte": 5.277389
+    },
+    {
+      "offset": 14286848,
+      "length": 65536,
+      "bits_per_byte": 6.443945
+    },
+    {
+      "offset": 14352384,
+      "length": 65536,
+      "bits_per_byte": 5.659546
+    },
+    {
+      "offset": 14417920,
+      "length": 65536,
+      "bits_per_byte": 6.434729
+    },
+    {
+      "offset": 14483456,
+      "length": 65536,
+      "bits_per_byte": 7.620168
+    },
+    {
+      "offset": 14548992,
+      "length": 65536,
+      "bits_per_byte": 5.145621
+    },
+    {
+      "offset": 14614528,
+      "length": 65536,
+      "bits_per_byte": 4.951046
+    },
+    {
+      "offset": 14680064,
+      "length": 65536,
+      "bits_per_byte": 5.724373
+    },
+    {
+      "offset": 14745600,
+      "length": 65536,
+      "bits_per_byte": 5.484892
+    },
+    {
+      "offset": 14811136,
+      "length": 65536,
+      "bits_per_byte": 5.375289
+    },
+    {
+      "offset": 14876672,
+      "length": 65536,
+      "bits_per_byte": 6.561739
+    },
+    {
+      "offset": 14942208,
+      "length": 65536,
+      "bits_per_byte": 6.287195
+    },
+    {
+      "offset": 15007744,
+      "length": 65536,
+      "bits_per_byte": 3.021758
+    },
+    {
+      "offset": 15073280,
+      "length": 65536,
+      "bits_per_byte": 0.885301
+    },
+    {
+      "offset": 15138816,
+      "length": 65536,
+      "bits_per_byte": 0.918987
+    },
+    {
+      "offset": 15204352,
+      "length": 65536,
+      "bits_per_byte": 4.569452
+    },
+    {
+      "offset": 15269888,
+      "length": 65536,
+      "bits_per_byte": 6.046148
+    },
+    {
+      "offset": 15335424,
+      "length": 65536,
+      "bits_per_byte": 5.941892
+    },
+    {
+      "offset": 15400960,
+      "length": 65536,
+      "bits_per_byte": 5.690781
+    },
+    {
+      "offset": 15466496,
+      "length": 65536,
+      "bits_per_byte": 4.617839
+    },
+    {
+      "offset": 15532032,
+      "length": 65536,
+      "bits_per_byte": 4.398797
+    },
+    {
+      "offset": 15597568,
+      "length": 65536,
+      "bits_per_byte": 4.085423
+    },
+    {
+      "offset": 15663104,
+      "length": 65536,
+      "bits_per_byte": 3.977123
+    },
+    {
+      "offset": 15728640,
+      "length": 65536,
+      "bits_per_byte": 5.237696
+    },
+    {
+      "offset": 15794176,
+      "length": 65536,
+      "bits_per_byte": 7.743069
+    },
+    {
+      "offset": 15859712,
+      "length": 65536,
+      "bits_per_byte": 7.450819
+    },
+    {
+      "offset": 15925248,
+      "length": 65536,
+      "bits_per_byte": 6.652086
+    },
+    {
+      "offset": 15990784,
+      "length": 65536,
+      "bits_per_byte": 7.994668
+    },
+    {
+      "offset": 16056320,
+      "length": 65536,
+      "bits_per_byte": 6.726573
+    },
+    {
+      "offset": 16121856,
+      "length": 65536,
+      "bits_per_byte": 7.69494
+    },
+    {
+      "offset": 16187392,
+      "length": 65536,
+      "bits_per_byte": 7.604852
+    },
+    {
+      "offset": 16252928,
+      "length": 65536,
+      "bits_per_byte": 6.453976
+    },
+    {
+      "offset": 16318464,
+      "length": 65536,
+      "bits_per_byte": 7.950785
+    },
+    {
+      "offset": 16384000,
+      "length": 65536,
+      "bits_per_byte": 7.052916
+    },
+    {
+      "offset": 16449536,
+      "length": 65536,
+      "bits_per_byte": 4.991216
+    },
+    {
+      "offset": 16515072,
+      "length": 65536,
+      "bits_per_byte": -0.0
+    },
+    {
+      "offset": 16580608,
+      "length": 65536,
+      "bits_per_byte": -0.0
+    },
+    {
+      "offset": 16646144,
+      "length": 65536,
+      "bits_per_byte": -0.0
+    },
+    {
+      "offset": 16711680,
+      "length": 65536,
+      "bits_per_byte": 0.002007
+    },
+    {
+      "offset": 16777216,
+      "length": 61440,
+      "bits_per_byte": 3.98895
+    }
+  ],
+  "limitations": [
+    "Static analysis only; no camera execution or flashing.",
+    "A pointer-consistent candidate base is not a complete physical/runtime memory map.",
+    "Cortex-A9 part comparison does not identify silicon package, core count or clock.",
+    "T-Kernel strings support a software-family lead, not a verified OS version.",
+    "No named-record/LZ layout is transferred from K-3 Mark III.",
+    "Zero marker counts mean absence of these exact byte strings only.",
+    "Secondary region ISA and role remain unclassified."
+  ]
+}

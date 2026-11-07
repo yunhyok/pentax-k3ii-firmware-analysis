@@ -1,0 +1,28 @@
+{
+  "analysis_date": "2026-11-07",
+  "scope": "Initial static analysis of K-3 II v1.12 only",
+  "python": "3.12.3",
+  "node": "24.15.0",
+  "capstone": "5.0.7",
+  "matplotlib": "3.9.2",
+  "unit_tests_passed": 7,
+  "original_input_sha256": "a33485f351019960192891ef69ddc5d4904ef9e298671d9d9955679e4c901a9a",
+  "independent_decoder_byte_comparison": true,
+  "published_findings_reproduced": true,
+  "independent_review": "Startup instructions and data references reviewed with Capstone; no P0/P1/P2 findings. Two P3 hardening changes accepted: bounded CLI read and explicit LDR destination-register checks.",
+  "language_review": {
+    "route": "light",
+    "change_rate_percent": 0.3,
+    "self_check": "6/6",
+    "deterministic_gate": "OK",
+    "modality_restored": 0,
+    "runtime": "Native Codex worker; plugin metric and gate scripts"
+  },
+  "not_performed": [
+    "Camera flashing or physical camera execution",
+    "Whole firmware rebuild",
+    "Exact SoC and secondary-image ISA identification",
+    "Manufacturing or cryptographic-signature validation"
+  ],
+  "reference_project_commit": "b51d680202336a5872a66f99ca2924a2cb7c75fa"
+}
