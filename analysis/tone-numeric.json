@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "engine": "Unicorn 2.1.4",
+  "emulated_cpu": "Cortex-A9",
+  "checks": [
+    {
+      "case": "mixed ascending",
+      "kernel": "interpolation",
+      "outputs_compared": 65536,
+      "sha256": "af46d5ec18e572afc66bde41e6907103e3d1de927fe24bddd060d469a92db92a"
+    },
+    {
+      "case": "mixed ascending",
+      "kernel": "NEON expansion including Thumb fill",
+      "outputs_compared": 1280,
+      "sha256": "ca8f5dc731f8383ace755c99a6491404102a4dad17649e06a162ad9a99904e48"
+    },
+    {
+      "case": "descending",
+      "kernel": "interpolation",
+      "outputs_compared": 65536,
+      "sha256": "53195b1f116805768e53b6a68230fc2b11ecf45800771d3340b738ed2261a717"
+    },
+    {
+      "case": "descending",
+      "kernel": "NEON expansion including Thumb fill",
+      "outputs_compared": 1280,
+      "sha256": "669cf8ccadcea432b420645919ee931c900ac7ea5d5b78da5436d733027a3a49"
+    },
+    {
+      "case": "alternating endpoints",
+      "kernel": "interpolation",
+      "outputs_compared": 65536,
+      "sha256": "3c77fc45860d4b5eeebe1d0fd69085f3a82507bad1d5d9dab3c05faec52604e3"
+    },
+    {
+      "case": "alternating endpoints",
+      "kernel": "NEON expansion including Thumb fill",
+      "outputs_compared": 1280,
+      "sha256": "8dc44c7cd0b7398eca0f29d1143f0ee015466e8d6f270c19f1027f733a2bb398"
+    },
+    {
+      "case": "unsigned stress",
+      "kernel": "interpolation",
+      "outputs_compared": 65536,
+      "sha256": "8fbda5414555ad8bd84169f2b4747f6a90e22de0fb7c473bc7d583a33518383d"
+    },
+    {
+      "case": "unsigned stress",
+      "kernel": "NEON expansion including Thumb fill",
+      "outputs_compared": 1280,
+      "sha256": "bf4b1249ea68111c3035e611b64ce584782b9e99e8bcc577e11886b4f20a782d"
+    },
+    {
+      "case": "distinct source curves and samples",
+      "kernel": "four-curve composition",
+      "outputs_compared": 1024,
+      "sha256": "cf8b9597173aba8612a9f2645c24e715a010a980098ad768c41f7ffcf5504b19"
+    }
+  ],
+  "outputs_compared": 268288,
+  "apply_checks": [
+    {
+      "curve_banks": 4,
+      "bytes_per_curve_bank": 2560,
+      "additional_copy_bytes": 32,
+      "register_words_compared": 4
+    },
+    {
+      "curve_banks": 4,
+      "bytes_per_curve_bank": 4096,
+      "additional_copy_bytes": 32,
+      "register_words_compared": 4
+    }
+  ],
+  "limits": [
+    "Synthetic data, original instructions, no camera execution.",
+    "Base curve producers are outside numeric replay. Device addresses are backed by synthetic RAM.",
+    "The NEON expansion check includes the original Thumb fill helper."
+  ]
+}

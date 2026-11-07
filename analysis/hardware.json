@@ -1,0 +1,207 @@
+{
+  "analysis_date": "2026-11-08",
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "main_cpu": {
+    "finding": "Cortex-A9 part-number startup path; exact SoC unknown",
+    "part_number": 3081,
+    "evidence": "findings.json:midr_check",
+    "nonmatching_path": {
+      "start_address": 33555488,
+      "mailbox_address": 3221233660,
+      "expected_word": 2774162085,
+      "target_address": 33685760,
+      "embedded_header_offset": 131072,
+      "description": "Additional CP15 ARM bootstrap, core and role not identified"
+    }
+  },
+  "chip_version_reader": {
+    "function_address": 41237612,
+    "mmio_address": 3489665024,
+    "mask": 4026531840,
+    "diagnostic_call_address": 39622924,
+    "diagnostic_format_offset": 6068840,
+    "live_value": null
+  },
+  "library_marker": {
+    "text": "M7 for Fujitsu",
+    "file_offset": 10838761,
+    "sha256": "885f3411889654604a9f164f0e1031249462212eeb2bcf5ef0ea76f205f2316a",
+    "meaning": "library attribution, not SoC identity"
+  },
+  "secondary": {
+    "isa": "F2MC-8L-compatible",
+    "exact_part": null,
+    "interpretation": "Strong static ISA match, not a package marking or hardware observation",
+    "file_range": [
+      16777216,
+      16838656
+    ],
+    "rom_range": [
+      4096,
+      65536
+    ],
+    "reset_vector": 4224,
+    "mode_data": 0,
+    "instructions": [
+      {
+        "rom_address": 4224,
+        "file_offset": 16777344,
+        "bytes": "e4024e",
+        "instruction": "MOVW A,#0x024e"
+      },
+      {
+        "rom_address": 4227,
+        "file_offset": 16777347,
+        "bytes": "e1",
+        "instruction": "MOVW SP,A"
+      },
+      {
+        "rom_address": 4228,
+        "file_offset": 16777348,
+        "bytes": "70",
+        "instruction": "MOVW A,PS"
+      },
+      {
+        "rom_address": 4229,
+        "file_offset": 16777349,
+        "bytes": "e407ff",
+        "instruction": "MOVW A,#0x07ff"
+      },
+      {
+        "rom_address": 4232,
+        "file_offset": 16777352,
+        "bytes": "63",
+        "instruction": "ANDW A"
+      },
+      {
+        "rom_address": 4233,
+        "file_offset": 16777353,
+        "bytes": "71",
+        "instruction": "MOVW PS,A"
+      },
+      {
+        "rom_address": 4234,
+        "file_offset": 16777354,
+        "bytes": "70",
+        "instruction": "MOVW A,PS"
+      },
+      {
+        "rom_address": 4235,
+        "file_offset": 16777355,
+        "bytes": "e40030",
+        "instruction": "MOVW A,#0x0030"
+      },
+      {
+        "rom_address": 4238,
+        "file_offset": 16777358,
+        "bytes": "73",
+        "instruction": "ORW A"
+      },
+      {
+        "rom_address": 4239,
+        "file_offset": 16777359,
+        "bytes": "71",
+        "instruction": "MOVW PS,A"
+      },
+      {
+        "rom_address": 4240,
+        "file_offset": 16777360,
+        "bytes": "e77553",
+        "instruction": "MOVW EP,#0x7553"
+      },
+      {
+        "rom_address": 4243,
+        "file_offset": 16777363,
+        "bytes": "e40875",
+        "instruction": "MOVW A,#0x0875"
+      },
+      {
+        "rom_address": 4246,
+        "file_offset": 16777366,
+        "bytes": "e4000c",
+        "instruction": "MOVW A,#0x000c"
+      },
+      {
+        "rom_address": 4249,
+        "file_offset": 16777369,
+        "bytes": "3172c1",
+        "instruction": "CALL 0x72c1"
+      }
+    ],
+    "interrupt_vectors": [
+      {
+        "rom_address": 65500,
+        "target": 9144
+      },
+      {
+        "rom_address": 65502,
+        "target": 9144
+      },
+      {
+        "rom_address": 65504,
+        "target": 9144
+      },
+      {
+        "rom_address": 65506,
+        "target": 9144
+      },
+      {
+        "rom_address": 65508,
+        "target": 9144
+      },
+      {
+        "rom_address": 65510,
+        "target": 9144
+      },
+      {
+        "rom_address": 65512,
+        "target": 9144
+      },
+      {
+        "rom_address": 65514,
+        "target": 9125
+      },
+      {
+        "rom_address": 65516,
+        "target": 9096
+      },
+      {
+        "rom_address": 65518,
+        "target": 9144
+      },
+      {
+        "rom_address": 65520,
+        "target": 9144
+      },
+      {
+        "rom_address": 65522,
+        "target": 9144
+      },
+      {
+        "rom_address": 65524,
+        "target": 9009
+      },
+      {
+        "rom_address": 65526,
+        "target": 8980
+      },
+      {
+        "rom_address": 65528,
+        "target": 8957
+      },
+      {
+        "rom_address": 65530,
+        "target": 8934
+      }
+    ],
+    "shared_handler_address": 9144,
+    "prefix_sha256": "03e0477e19a163109c40af22b797c8208de12c3a8e8eca9dbdbef97e588d32dd",
+    "manual": "https://www.infineon.com/assets/row/public/documents/10/57/infineon-f2mc-8l-mb89580b-bw-series-hardware-manual-additionaltechnicalinformation-en.pdf",
+    "manual_printed_pages": "323-329; CPU vector table"
+  },
+  "limitations": [
+    "No live MIDR, chip-version register, or board marking was read.",
+    "F2MC-8L-compatible encoding does not distinguish compatible derivatives or MCU part numbers.",
+    "Neither MB86S22A nor an MB89-series part is attributed to this camera."
+  ]
+}

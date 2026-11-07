@@ -1,0 +1,320 @@
+{
+  "schema_version": 1,
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "offset_space": "Decoded file offsets. Addresses and object offsets are named separately.",
+  "candidate_code_base": 33554432,
+  "diagnostics": [
+    {
+      "adr": 5968228,
+      "string_offset": 5968528,
+      "text": "#### CColorInterpolationDriver::DumpToneGamma() ####"
+    },
+    {
+      "adr": 5968248,
+      "string_offset": 5968584,
+      "text": "IO_B2Y.F_B2Y.TGCTL"
+    },
+    {
+      "adr": 5968260,
+      "string_offset": 5968624,
+      "text": "IO_B2Y.F_B2Y.TCTBLCTL"
+    },
+    {
+      "adr": 5967616,
+      "string_offset": 5967756,
+      "text": "#### CColorInterpolationDriver::DumpColorMatrixUnit1() ####"
+    }
+  ],
+  "direct_edges": [
+    {
+      "purpose": "dump to tone dump",
+      "instruction": 5978684,
+      "target": 5968224
+    },
+    {
+      "purpose": "dump to color matrix dump",
+      "instruction": 5978692,
+      "target": 5967612
+    },
+    {
+      "purpose": "tone dump banner to formatter",
+      "instruction": 5968232,
+      "target": 7369708
+    },
+    {
+      "purpose": "TGCTL dump to formatter",
+      "instruction": 5968252,
+      "target": 7369708
+    },
+    {
+      "purpose": "wrapper to prepare",
+      "instruction": 4967620,
+      "target": 5103044
+    },
+    {
+      "purpose": "wrapper to apply",
+      "instruction": 4967912,
+      "target": 5103164
+    },
+    {
+      "purpose": "prepare to base curve selector",
+      "instruction": 5103132,
+      "target": 5102264
+    },
+    {
+      "purpose": "prepare to three-curve adjustment",
+      "instruction": 5103140,
+      "target": 5101268
+    },
+    {
+      "purpose": "prepare tail branch to composer",
+      "instruction": 5103152,
+      "target": 5100588
+    },
+    {
+      "purpose": "selector to regular producer",
+      "instruction": 5102600,
+      "target": 5097856
+    },
+    {
+      "purpose": "selector to mode-6 producer",
+      "instruction": 5102708,
+      "target": 5101860
+    },
+    {
+      "purpose": "composer to interpolator, first curve",
+      "instruction": 5100816,
+      "target": 5100524
+    },
+    {
+      "purpose": "composer to interpolator, second curve",
+      "instruction": 5100844,
+      "target": 5100524
+    },
+    {
+      "purpose": "composer to interpolator, third curve",
+      "instruction": 5100876,
+      "target": 5100524
+    },
+    {
+      "purpose": "composer to table expander, first curve",
+      "instruction": 5100980,
+      "target": 5097744
+    },
+    {
+      "purpose": "composer to table expander, second curve",
+      "instruction": 5100996,
+      "target": 5097744
+    },
+    {
+      "purpose": "composer to table expander, third curve",
+      "instruction": 5101012,
+      "target": 5097744
+    },
+    {
+      "purpose": "composer to table expander, weighted curve",
+      "instruction": 5101028,
+      "target": 5097744
+    },
+    {
+      "purpose": "apply to TCYC setter",
+      "instruction": 5103236,
+      "target": 5990012
+    },
+    {
+      "purpose": "apply to additional table count getter",
+      "instruction": 5103744,
+      "target": 5215788
+    },
+    {
+      "purpose": "apply to additional table getter",
+      "instruction": 5103756,
+      "target": 5991408
+    },
+    {
+      "purpose": "apply to additional table copy",
+      "instruction": 5103768,
+      "target": 7415960
+    }
+  ],
+  "code_range_sha256": {
+    "0x4dc910..0x4dc980": "54c2bded9dee1a710cd94bb16a187ed6b95d573a0e1fbb30e4caedec172c2b88",
+    "0x4dc980..0x4dcfcc": "20c12dd2377f6977567f44efcecc71849074f5aa8d3987d96cbf21bbb8da4d3a",
+    "0x4dd3ec..0x4dd42c": "48d5fa13e54e9ee871b49fb1ec22c5e110ca2f5b6fef7715f70487b40023006f",
+    "0x4dd42c..0x4dd60c": "cda6396a98ea34bef9920b7760065ebb8c8a2e95f28ce5c2cc85174fd8d0b184",
+    "0x4dd924..0x4ddab8": "a2833975c72b87bd748163382ad8e90c41ca2aa26aff7e1a8df830619087ebb5",
+    "0x4dde3c..0x4de1a8": "3612773135e01e057cf9602743aa277fa362b77396bcf1b9c975807d5beb7581",
+    "0x5b1160..0x5b1290": "ecc599bc38c35386e6d3ae2653eda5e4db452b7efb3d6a569833e9b4b283b736"
+  },
+  "prepare_apply": {
+    "constructed_vtable_address": 44436940,
+    "subobject_offset": 1108,
+    "wrapper_pending_byte_offset": 11,
+    "descriptor_pointer_offset": 520
+  },
+  "registers": {
+    "b2y_base_address": 537001984,
+    "TGCTL": {
+      "address": 537004032,
+      "setters": [
+        {
+          "call": 5103204,
+          "setter": 5989536,
+          "descriptor_offset": 0,
+          "bit": 0,
+          "width": 1
+        },
+        {
+          "call": 5103220,
+          "setter": 5989584,
+          "descriptor_offset": 1,
+          "bit": 1,
+          "width": 1
+        },
+        {
+          "call": 5103252,
+          "setter": 5989632,
+          "descriptor_offset": 16,
+          "bit": 16,
+          "width": 1
+        },
+        {
+          "call": 5103296,
+          "setter": 5989680,
+          "descriptor_offset": 20,
+          "bit": 17,
+          "width": 1
+        },
+        {
+          "call": 5103268,
+          "setter": 5989728,
+          "descriptor_offset": 17,
+          "bit": 24,
+          "width": 1
+        },
+        {
+          "call": 5103324,
+          "setter": 5989776,
+          "descriptor_offset": 24,
+          "bit": 25,
+          "width": 1
+        }
+      ]
+    },
+    "TCTBLCTL": {
+      "address": 537004036,
+      "setters": [
+        {
+          "call": 5103340,
+          "setter": 5989824,
+          "descriptor_offset": 28,
+          "bit": 0,
+          "width": 2
+        },
+        {
+          "call": 5103356,
+          "setter": 5989860,
+          "descriptor_offset": 30,
+          "bit": 4,
+          "width": 2
+        },
+        {
+          "call": 5103372,
+          "setter": 5989896,
+          "descriptor_offset": 32,
+          "bit": 8,
+          "width": 2
+        },
+        {
+          "call": 5103388,
+          "setter": 5989932,
+          "descriptor_offset": 33,
+          "bit": 16,
+          "width": 1
+        },
+        {
+          "call": 5103404,
+          "setter": 5989976,
+          "descriptor_offset": 34,
+          "bit": 24,
+          "width": 6
+        }
+      ]
+    },
+    "TCYC": {
+      "address": 537004040,
+      "setter": 5990012,
+      "descriptor_offsets": [
+        4,
+        8,
+        12
+      ],
+      "field_width": 12
+    },
+    "CC1CTL_diagnostic_read_address": 537004160
+  },
+  "curve_generation": {
+    "regular_entry": 5097856,
+    "selector_6_entry": 5101860,
+    "output_halfwords": 256,
+    "output_cap": 16384,
+    "composed_curve_count": 4,
+    "companion_weights": [
+      77,
+      150,
+      29
+    ],
+    "interpolation_input_step": 64,
+    "packed_halfwords": 1280
+  },
+  "additional_table": {
+    "address": 547356672,
+    "source_object_offset": 524,
+    "count_object_offset": 100898,
+    "copy_length": "four times a u16 count"
+  },
+  "curve_banks": [
+    {
+      "address": 547491840,
+      "getter": 5991424,
+      "source_object_offset": 82444,
+      "copy_calls": {
+        "2560_bytes": 5103880,
+        "4096_bytes": 5103968
+      }
+    },
+    {
+      "address": 547495936,
+      "getter": 5991432,
+      "source_object_offset": 86540,
+      "copy_calls": {
+        "2560_bytes": 5103900,
+        "4096_bytes": 5103988
+      }
+    },
+    {
+      "address": 547500032,
+      "getter": 5991440,
+      "source_object_offset": 90636,
+      "copy_calls": {
+        "2560_bytes": 5103920,
+        "4096_bytes": 5104008
+      }
+    },
+    {
+      "address": 547504128,
+      "getter": 5991448,
+      "source_object_offset": 94732,
+      "copy_calls": {
+        "2560_bytes": 5103940,
+        "4096_bytes": 5104028
+      }
+    }
+  ],
+  "limits": [
+    "Static trace for this decoded image.",
+    "Selector and descriptor field names are descriptive. Camera menu mapping is unverified.",
+    "Device memory behavior, physical addresses and pixel stage timing are unmeasured.",
+    "Table 0x20a00000 contents and exact per-pixel hardware transfer function remain open."
+  ]
+}

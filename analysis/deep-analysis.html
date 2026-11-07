@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="PENTAX K-3 II v1.12의 CPU 식별 근거와 RAW 현상, 톤·감마 생성 및 B2Y 설정 경로를 추적한 재현 가능한 정적 분석.">
+<title>K-3 II 심층 분석 — CPU와 RAW·톤·감마 경로</title>
+<link rel="stylesheet" href="../assets/report.css">
+</head>
+<body>
+<header>
+<div class="eyebrow">PENTAX K-3 II · firmware 1.12 · 2026-11-08</div>
+<h1>CPU 식별 근거와<br>RAW·톤·감마 경로</h1>
+<p class="lead">K-3 III에서 사용한 코드 참조 추적과 원본 명령 실행 검증을 K-3 II에 적용했다. 보조 이미지의 F²MC-8L 호환 명령열, RAW 현상 함수, 톤 곡선 생성과 B2Y 설정 경로를 확인했다. 정확한 SoC·MCU 부품 번호와 전체 픽셀 처리 순서는 아직 확정하지 못했다.</p>
+<nav aria-label="보고서 탐색"><a href="../index.html">초기 분석</a><a href="#comparison">K-3 III와 비교</a><a href="#hardware">CPU·보조 영역</a><a href="#raw">RAW 현상</a><a href="#tone">톤·감마</a><a href="#validation">검증·재현</a><a href="#next">남은 연결</a></nav>
+</header>
+<main>
+<section aria-labelledby="summary"><h2 id="summary">이번에 확인한 범위</h2>
+<div class="table-scroll"><table><thead><tr><th scope="col">대상</th><th scope="col">확인한 내용</th><th scope="col">남은 문제</th></tr></thead><tbody>
+<tr><td>주 CPU·SoC</td><td>MIDR의 Cortex-A9 부품 번호 비교, 별도 ARM 시작 경로, 칩 버전 레지스터를 읽는 코드</td><td>실제 MIDR·패키지 표기·정확한 SoC</td></tr>
+<tr><td>K-3MC 보조 이미지</td><td>F²MC-8L 호환 초기화 명령, 리셋 벡터 <code>0x1080</code>, 인터럽트 벡터와 반환</td><td>정확한 MCU 모델·보드 연결·담당 기능</td></tr>
+<tr><td>RAW 현상</td><td><code>DevelopmentRawImage</code> 진단의 실제 참조, 호출 지점 4곳, 조건부 표본 변환, 컨트롤러 상태 설정·신호 전달</td><td>컨트롤러에서 ISP 설정까지의 연결</td></tr>
+<tr><td>톤·감마</td><td>곡선 선택 → 보간 → 4개 곡선 구성 → 테이블 확장 → B2Y 레지스터·테이블 쓰기</td><td>메뉴 이름 매핑·실제 ISP 픽셀 수식·출력 색차</td></tr>
+</tbody></table></div>
+<p class="caption">직접 근거: <a href="hardware.json">CPU·보조 영역</a> · <a href="raw-path.json">RAW 경로</a> · <a href="tone-path.json">톤·감마 경로</a>. 함수 이름 중 진단 문자열에 없는 이름은 분석용 설명이다.</p>
+<p class="note">이 문서의 <strong>VA</strong>는 주 이미지의 분석용 주소 <code>0x02000000 + 파일 오프셋</code>이다. <strong>ROM</strong>은 보조 이미지에 적용한 별도 주소다. MMIO·테이블 주소는 코드가 사용하는 값이며 실제 물리 주소나 장치의 동작을 측정한 결과는 아니다.</p>
+</section>
+
+<section aria-labelledby="comparison"><h2 id="comparison">1. K-3 III와 같은 항목을 분석할 수 있는가</h2>
+<p>분석 절차는 적용할 수 있다. K-3 II에도 A32 코드, 가상 함수표, 진단 문자열과 레지스터 접근 함수가 남아 있다. 다만 K-3 III의 명령 번호·주소·데이터 구조를 옮기는 방식은 쓸 수 없다. 아래 표는 K-3 III의 공개 분석 항목을 기준으로 이번 K-3 II 분석에서 확인한 범위를 정리했다.</p>
+<div class="table-scroll"><table><thead><tr><th scope="col">같이 검토한 항목</th><th scope="col">K-3 II 적용 결과</th><th scope="col">판정</th></tr></thead><tbody>
+<tr><td>파일 식별·내부 형식</td><td>해시 고정, XOR 해제, 독립 디코더 전체 바이트 대조</td><td>적용 완료</td></tr>
+<tr><td>주소 매핑·코드 진입점</td><td>주 이미지 기준 주소와 별도 보조 ROM 매핑</td><td>대상 범위 검증</td></tr>
+<tr><td>SoC·보조 CPU</td><td>부품 번호 비교 경로와 F²MC-8L 호환 코드 식별</td><td>정확한 부품 번호 미확정</td></tr>
+<tr><td>명령 카탈로그·디스패처</td><td>K-3 III의 957개 명령표에 대응하는 자체 테이블은 미식별</td><td>별도 탐색 필요</td></tr>
+<tr><td>RAW 현상·작업 전달</td><td>현상 함수와 컨트롤러 전달 코드까지 추적</td><td>일부 연결 확보</td></tr>
+<tr><td>컬러모드·리소스 이름</td><td>일반 경로와 selector=6 곡선 생산자 구분</td><td>카메라 메뉴 이름 미연결</td></tr>
+<tr><td>감마·톤 수치 연산</td><td>원본 A32/NEON 보간·곡선 구성·테이블 확장 실행 대조</td><td>268,288개 출력 일치</td></tr>
+<tr><td>ISP 설정·버퍼 전달</td><td>TGCTL·TCTBLCTL과 4개 테이블 목적지 확인</td><td>합성 메모리에서 적용 함수 검증</td></tr>
+<tr><td>WB·색 행렬·클리핑</td><td>관련 B2Y 진단 항목과 CC1CTL 읽기 주소 확인</td><td>설정 생산자·수식 추적 필요</td></tr>
+<tr><td>JPEG 양자화·완료 처리</td><td>RAW 작업과 최종 JPEG 인코더 연결은 아직 미확정</td><td>추적 방법 적용 가능</td></tr>
+<tr><td>AF·셔터·GPIO</td><td>진단·기능 문자열은 있으나 이번 심층 검증 대상은 아님</td><td>자체 객체·핀 근거 필요</td></tr>
+<tr><td>Lightroom·카메라 출력 재현</td><td>테이블과 UI 이름, RAW/JPEG 짝 자료가 더 필요</td><td>현재 결과만으로 평가 불가</td></tr>
+</tbody></table></div>
+<p class="caption">비교 기준은 K-3 III 저장소의 고정 커밋 <code>b51d680</code>이다: <a href="https://github.com/yunhyok/pentax-k3iii-firmware-analysis/blob/b51d680202336a5872a66f99ca2924a2cb7c75fa/analysis/index.html">명령·AF 분석</a> · <a href="https://github.com/yunhyok/pentax-k3iii-firmware-analysis/blob/b51d680202336a5872a66f99ca2924a2cb7c75fa/analysis/color-algorithms.html">색 연산</a> · <a href="https://github.com/yunhyok/pentax-k3iii-firmware-analysis/blob/b51d680202336a5872a66f99ca2924a2cb7c75fa/analysis/pipeline-report.html">ISP·JPEG 경로</a> · <a href="https://github.com/yunhyok/pentax-k3iii-firmware-analysis/blob/b51d680202336a5872a66f99ca2924a2cb7c75fa/analysis/color-lightroom.html">Lightroom 검토</a>.</p>
+</section>
+
+<section aria-labelledby="hardware"><h2 id="hardware">2. CPU 계열과 정확한 부품 번호를 구분한다</h2>
+<p>리코가 공개한 엔진명은 <strong>PRIME III</strong>다. 이는 SoC 부품 번호가 아니다. 주 시작 코드는 MIDR에서 부품 번호 <code>0xC09</code>를 비교하므로 Cortex-A9를 구분하는 경로가 있다는 사실은 확인할 수 있다. 하지만 이 정적 비교만으로 실장 SoC, 코어 수와 클럭을 결정할 수는 없다. <a href="https://www.ricoh-imaging.co.jp/english/products/k-3-2/feature/05.html">리코 제품 설명</a> · <a href="https://documentation-service.arm.com/static/5f0370fccafe527e86f5bfb2">Arm Cortex-A9 TRM §4.3.1</a> · <a href="findings.json">시작 코드 검사</a></p>
+<figure><figcaption>공식 PRIME III 소개 이미지</figcaption><img src="https://www.ricoh-imaging.co.jp/english/products/k-3-2/feature/img/bod_img_05_02.jpg" alt="리코가 K-3 II 제품 페이지에 게시한 PRIME III 이미지. 칩 위에는 PENTAX 로고가 보이며 실리콘 부품 번호는 보이지 않는다." width="300" height="255" style="max-width:100%;height:auto"><p class="caption">출처: <a href="https://www.ricoh-imaging.co.jp/english/products/k-3-2/feature/05.html">RICOH IMAGING</a>. 제품 소개 이미지이며 판독 가능한 SoC 부품 번호를 제공하지 않는다. 원격 이미지를 표시하므로 이 사진은 인터넷 연결이 필요하다.</p></figure>
+<figure><figcaption>01 / 구분해야 할 세 가지 실행 코드 근거</figcaption>
+<div class="columns"><div><h3>주 이미지의 ARM 경로</h3><div class="map"><div class="range">VA 0x0200020C</div><div>MIDR 읽기 → <code>&amp; 0xFFF0</code> → <code>0xC090</code> 비교</div><div class="range">일치 경로</div><div>VA <code>0x0200022C</code><br>VFP 활성화와 주 초기화로 진행</div><div class="range">불일치 경로</div><div>VA <code>0x02000420</code><br><code>0xC0001FFC</code>에서 <code>0xA55A5AA5</code> 대기 → <code>0x02020100</code>으로 분기</div></div></div>
+<div><h3>별도 K-3MC 이미지</h3><div class="map"><div class="range">파일 0x01000000</div><div>보조 헤더·독립 XOR 구간<br>전체 60 KiB</div><div class="range">ROM 0xFFFE</div><div>big-endian 리셋 벡터 <code>10 80</code><br>→ ROM <code>0x1080</code></div><div class="range">파일 0x01000080</div><div>F²MC-8L 호환 초기화 명령열<br>스택·PS 설정 → ROM <code>0x72C1</code> 호출</div></div></div></div>
+<p class="caption">왼쪽 아래는 추가 ARM 시작 코드다. 이것과 오른쪽 8비트 계열 코드를 하나의 “보조 CPU”로 합치지 않는다. 세 경로의 관찰만으로 물리 칩의 개수나 연결 구조를 확정할 수 없다. <a href="hardware.json">주소·명령·벡터 근거</a></p></figure>
+<h3>추가 ARM 시작 경로와 칩 버전 읽기</h3>
+<p>MIDR 비교가 맞지 않으면 공유 메모리로 보이는 주소를 대기한 뒤 <code>0x02020100</code>으로 이동한다. 이 위치에는 CP15 제어 레지스터를 다루는 ARM 시작 코드가 있으며, 앞쪽 파일 <code>0x20000</code>에는 별도의 모델·버전 헤더가 있다. 이 경로의 코어 종류와 역할은 미확정이다.</p>
+<p>또한 VA <code>0x02753C6C</code>는 <code>0xD0001000</code>을 읽어 상위 4비트만 남긴다. VA <code>0x025C990C</code>의 호출과 <code>CHIP VER</code> 출력 형식이 연결된다. 칩 식별을 위한 실측 후보는 확보했지만 실제 읽기 값은 없다. 이 값을 부품 번호로 변환하는 표도 아직 찾지 못했다. <a href="hardware.json">정적 검사 결과</a></p>
+<h3>F²MC-8L 호환 코드라는 판단 근거</h3>
+<p>보조 영역을 ROM <code>0x1000–0xFFFF</code>에 대응시키면 리셋 벡터가 페이로드 첫 명령을 가리킨다. <code>E4 02 4E</code>는 <code>MOVW A,#0x024E</code>, 다음 <code>E1</code>은 <code>MOVW SP,A</code>로 해석된다. 이어지는 PS 마스크 설정과 절대 호출도 Fujitsu 명령표에 맞는다. 인터럽트 벡터 여러 개가 가리키는 ROM <code>0x23B8</code>에는 레지스터 저장·복구와 <code>RETI</code>가 있다. <a href="https://www.infineon.com/assets/row/public/documents/10/57/infineon-f2mc-8l-mb89580b-bw-series-hardware-manual-additionaltechnicalinformation-en.pdf">Fujitsu CM25-10142-3E, CPU 벡터 표·부록 B</a></p>
+<p>따라서 F²MC-8L <strong>호환 명령어 계열</strong>이라는 판단은 강하게 뒷받침된다. 다만 호환 파생 제품까지 구분하지는 못한다. 이 설명에 사용한 매뉴얼의 MB89580B/BW를 실제 카메라 부품으로 지목하는 것은 아니다. <a href="../verify_hardware.py">초기 14개 명령·벡터 검증기</a></p>
+<details><summary>Fujitsu/Milbeaut 후보를 확정하지 않은 이유</summary><p>펌웨어에 Fujitsu의 M7 영상 안정화 라이브러리 명칭이 남아 있다. 이는 관련 소프트웨어의 단서다. 반면 공개 MB86S22 사양은 Cortex-A5를 명시한다. M7이라는 문자열만으로 K-3 II를 MB86S22로 확정하면 Cortex-A9 비교 경로와의 관계를 설명하지 못한다. 두 프로세서가 함께 있다는 근거도 아직 없다. K-3 III의 SC2000A 역시 이 모델의 부품 증거로 쓰지 않았다. <a href="https://www.socionextcn.com.cn/en/service/assp/image-processor/51.html">Socionext MB86S22 사양</a></p><p>정확한 부품 번호를 결정하려면 K-3 II PCB의 판독 가능한 패키지 표기, 제조사 부품 자료 또는 실측 ID와 공식 대응표가 필요하다. 이번에 확인한 공개 자료에서는 이를 확보하지 못했다.</p></details>
+</section>
+
+<section aria-labelledby="raw"><h2 id="raw">3. RAW 현상 함수에서 컨트롤러 전달까지</h2>
+<p><code>DevelopmentRawImage()</code> 문자열 포인터는 단순 검색으로 참조를 찾지 못했다. 실제 코드는 PC 상대 <code>ADD</code> 명령으로 문자열 주소를 만든다. VA <code>0x0252ADF4</code>에서 진단 문자열을 참조하는 것을 확인했고, 이를 포함하는 함수의 진입점은 <code>0x02529664</code>다. 네 호출 지점 <code>0x0268F928</code>, <code>0x02690554</code>, <code>0x02691040</code>, <code>0x02692098</code>을 따로 검증했다. <a href="raw-path.json">명령어·호출 대상·구간 해시</a></p>
+<figure><figcaption>02 / RAW 제어 경로 — 이번에 연결한 범위</figcaption><div class="flow"><div class="stage"><strong>현상 호출</strong><span>확인한 호출 지점 4곳<br>→ VA <code>0x02529664</code></span></div><div class="arrow" aria-hidden="true">→</div><div class="stage"><strong>버퍼·작업 준비</strong><span>할당 실패 분기<br>조건부 표본 변환·작업 링크 설정</span></div><div class="arrow" aria-hidden="true">→</div><div class="stage"><strong>컨트롤러 전달</strong><span>VA <code>0x026DB894</code><br>상태 설정 → 신호 전달</span></div></div><p class="note">여기서 톤 준비·적용 함수까지 이어지는 경로와 큐 사용 여부는 미확정이다. 이 간격을 실제 호출 화살표로 표시하지 않았다.</p></figure>
+<p>할당 함수 후보 <code>0x0270C56C</code>의 반환값이 0이면 오류 진단으로 분기한다. 성공 경로에서는 작업 객체의 <code>+0x20C8</code>, <code>+0x20D0</code>, <code>+0x20C4</code>에 링크를 설정하는 작은 함수들이 호출된다. 컨트롤러 래퍼는 <code>0x025A11F8</code>을 거친 뒤 컨트롤러 <code>+0x340</code>의 신호 객체에 값 1을 전달한다. 이는 CPU 제어 흐름이며 센서 픽셀의 처리 순서와는 구별해야 한다. <a href="../verify_raw_path.py">경로 검증 코드</a></p>
+<h3>원본 명령으로 확인한 표본 변환</h3>
+<p>VA <code>0x0252AE94–0x0252AEC0</code>의 루프는 16비트 표본을 읽고 2비트 왼쪽으로 이동시킨 뒤 하위 16비트를 저장한다. 앞선 조건이 맞을 때만 이 루프를 사용하며 다른 경로는 건너뛴다.</p>
+<pre><code>dst[i] = (src_u16[i] &lt;&lt; 2) &amp; 0xFFFF
+
+예: 0x0001 → 0x0004
+    0x3FFF → 0xFFFC
+    0x4000 → 0x0000</code></pre>
+<p>빈 입력, 단일 표본, 경계값, 고정 시드 난수의 4개 합성 사례에서 원본 A32 명령과 참조식이 일치했다. 출력 263개와 함께 버퍼 경계, 원본 보존도 확인했다. 이 루프만으로 입력 RAW가 항상 14비트라고 단정할 수는 없다. <a href="raw-numeric.json">실행 결과</a> · <a href="../verify_raw_numeric.py">재현 코드</a></p>
+</section>
+
+<section aria-labelledby="tone"><h2 id="tone">4. 곡선 생성에서 B2Y 설정까지</h2>
+<p>이번 추적은 진단 함수의 레지스터 읽기와 실제 쓰기 함수를 같은 주소로 맞추는 데서 시작했다. <code>DumpToneGamma</code>의 읽기와 설정 함수가 모두 <code>TGCTL = 0x20020800</code>, <code>TCTBLCTL = 0x20020804</code>를 사용한다. 따라서 해당 이름은 근처 문자열을 임의로 붙인 것이 아니라 진단 출력과 접근 주소를 대조한 결과다. <a href="tone-path.json">ADR·레지스터·호출 근거</a></p>
+<figure><figcaption>03 / 톤 설정의 생산자와 소비자 <span class="tag">CPU 설정 흐름이며 픽셀 통과 순서가 아님</span></figcaption>
+<div class="flow"><div class="stage"><strong>준비</strong><span>VA <code>0x024DDDC4</code><br>설명자 저장·곡선 선택</span></div><div class="arrow" aria-hidden="true">→</div><div class="stage"><strong>곡선 구성</strong><span><code>0x024DD42C</code><br>3개 곡선 + 가중 합 곡선</span></div><div class="arrow" aria-hidden="true">→</div><div class="stage"><strong>확장·보관</strong><span><code>0x024DC910</code><br>4개 객체 버퍼에 저장</span></div></div>
+<div class="flow"><div class="stage"><strong>공통 래퍼</strong><span><code>+0x454</code> 하위 객체<br>준비 뒤 <code>+0xB</code> 플래그 설정</span></div><div class="arrow" aria-hidden="true">→</div><div class="stage"><strong>적용</strong><span>VA <code>0x024DDE3C</code><br>플래그·설명자에 따라 쓰기</span></div><div class="arrow" aria-hidden="true">→</div><div class="stage"><strong>B2Y 제어·테이블</strong><span><code>0x20020800</code> 등<br><code>0x20A21000–0x20A24000</code></span></div></div>
+<p class="caption">생성자가 설치하는 vtable <code>0x02A60DCC</code>의 슬롯 <code>+0x18/+0x1C</code>가 준비·적용 함수를 가리킨다. 래퍼의 두 호출도 같은 하위 객체를 전달한다. 따라서 서로 다른 객체의 함수를 우연히 이어 붙인 관계가 아니다.</p></figure>
+<h3>곡선 선택·보간·확장</h3>
+<p>선택 함수 <code>0x024DDAB8</code>는 일반 생산자 <code>0x024DC980</code>와 selector=6 생산자 <code>0x024DD924</code>를 구분한다. 두 생산자는 256개 halfword와 상한 <code>0x4000</code>을 다룬다. selector=6을 K-3 III의 리버설 모드와 곧바로 같은 이름으로 부르지는 않았다. 메뉴·리소스 연결이 더 필요하다.</p>
+<p>보간 함수 <code>0x024DD3EC</code>의 입력을 <code>x</code>, 256개 항목의 곡선을 <code>C</code>라 하면 다음과 같다. 음수 차분의 나눗셈은 0 방향 절삭이며, 단순한 Python 음수 정수 나눗셈과 다를 수 있다.</p>
+<pre><code>q = x &gt;&gt; 6;  f = x &amp; 63
+q &gt;= 255 : C[255]
+그 외     : C[q] + trunc0((C[q+1] - C[q]) * f / 64)</code></pre>
+<p>구성 함수는 세 곡선을 각각 보간한 뒤 <code>(77·A + 150·B + 29·C) &gt;&gt; 8</code>로 네 번째 곡선을 만든다. 계수는 휘도 가중치 형태지만 이 사실만으로 실제 색 공간·채널 배치나 ISP의 픽셀 계산식을 확정하지 않는다.</p>
+<p>확장 함수는 각 구간을 4개 값으로 늘리고 끝값 256개를 덧붙여 총 1,280개 halfword, 즉 <code>0xA00</code>바이트를 만든다. NEON 연산의 16비트 순환, 산술 시프트와 <code>0–0x4000</code> 제한을 그대로 반영해 검증했다. 끝에 덧붙이는 값은 별도 제한 없이 원래 마지막 halfword를 사용한다. <a href="../verify_tone_numeric.py">독립 참조식과 원본 명령 실행</a></p>
+<h3>테이블 목적지와 제어 레지스터</h3>
+<div class="table-scroll"><table><thead><tr><th scope="col">소스 객체 오프셋</th><th scope="col">코드가 쓰는 목적지</th><th scope="col">확인된 전달</th></tr></thead><tbody>
+<tr><td><code>+0x1420C</code></td><td><code>0x20A21000</code></td><td>첫 번째 곡선</td></tr>
+<tr><td><code>+0x1520C</code></td><td><code>0x20A22000</code></td><td>두 번째 곡선</td></tr>
+<tr><td><code>+0x1620C</code></td><td><code>0x20A23000</code></td><td>세 번째 곡선</td></tr>
+<tr><td><code>+0x1720C</code></td><td><code>0x20A24000</code></td><td>가중 합 곡선</td></tr>
+<tr><td><code>+0x20C</code></td><td><code>0x20A00000</code></td><td>별도 테이블. 전달 길이는 저장된 개수의 4배</td></tr>
+</tbody></table></div>
+<p>곡선별 복사 길이는 조건에 따라 <code>0xA00</code> 또는 <code>0x1000</code>이다. 두 길이의 분기를 합성 메모리에서 모두 실행해 소스·목적지 바이트와 복사 뒤 남는 영역을 대조했다. <code>0x1000</code> 분기가 언제 실제 촬영에 선택되는지는 별도 문제다.</p>
+<p>TGCTL의 비트 0·1·16·17·24·25와 TCTBLCTL의 여러 필드를 설명자에서 읽어 수정하는 함수도 연결했다. 읽기-수정-쓰기 방식이라 관련 없는 비트는 보존한다. 다만 각 비트를 “감마 켜기”, “특정 색 공간 선택”처럼 이름 붙일 공식 레지스터 정의는 아직 없다. <a href="tone-path.json">필드 위치 목록</a> · <a href="tone-numeric.json">적용 함수 실행 대조</a></p>
+</section>
+
+<section aria-labelledby="validation"><h2 id="validation">5. 무엇을 실행해 검증했는가</h2>
+<p>코드 판독에는 Capstone 5.0.7을 사용했고 수치 연산은 Unicorn 2.1.4로 격리 실행했다. Cortex-A9 에뮬레이터 설정은 해당 명령을 실행하기 위한 선택이며 카메라의 실장 칩을 확인한 증거는 아니다. 외부 장치 대신 합성 RAM을 배치했으므로 DMA·IRQ·센서·물리 ISP 동작은 검증하지 않았다.</p>
+<p>기본 곡선 생산자 두 함수는 정적으로 추적했다. 아래 실행 대조는 그 뒤의 보간·구성·확장과 적용 함수에 한정하며 생산자 자체의 계산을 모두 실행한 결과는 아니다.</p>
+<div class="table-scroll"><table><thead><tr><th scope="col">검증 대상</th><th scope="col">결과</th><th scope="col">범위</th></tr></thead><tbody>
+<tr><td>보간 함수</td><td>262,144개 출력 일치</td><td>4개 곡선 × 모든 u16 입력 65,536개</td></tr>
+<tr><td>NEON 테이블 확장</td><td>5,120개 출력 일치</td><td>4개 곡선 × 1,280 halfword, 원본 Thumb 끝값 채우기 포함</td></tr>
+<tr><td>3개 곡선과 가중 합 구성</td><td>1,024개 출력 일치</td><td>원본 구성 루프 × 4개 결과 곡선</td></tr>
+<tr><td>톤 적용 함수</td><td>2개 합성 사례 통과</td><td>제어 워드·별도 테이블·4개 곡선 복사·플래그·미변경 영역</td></tr>
+<tr><td>RAW 표본 변환</td><td>4개 사례·263개 출력 일치</td><td>빈 입력·경계값·고정 시드 난수·버퍼 경계</td></tr>
+</tbody></table></div>
+<p class="caption"><a href="tone-numeric.json">톤 수치 실행 결과</a> · <a href="raw-numeric.json">RAW 수치 실행 결과</a> · <a href="validation.json">도구·검사 기록</a>. 출력 개수는 카메라 이미지 수나 독립 함수 개수가 아니다.</p>
+<h3>재현 명령</h3>
+<p>먼저 <a href="../index.html#reproduce">초기 분석의 절차</a>로 공식 v1.12 파일을 해제한다. 기본 정적 검증은 Python 표준 라이브러리만 사용한다. 원본 펌웨어는 저장소에 포함하지 않았다.</p>
+<pre><code>python verify_hardware.py .private/decoded/decoded.bin --compare analysis/hardware.json
+python verify_raw_path.py .private/decoded/decoded.bin --compare analysis/raw-path.json
+python verify_tone_path.py .private/decoded/decoded.bin --compare analysis/tone-path.json
+python -m unittest discover -s tests -v
+python verify_publication.py
+
+# 선택 사항: 별도 Python 환경에 실행 엔진 설치
+python -m pip install unicorn==2.1.4
+python verify_raw_numeric.py .private/decoded/decoded.bin --compare analysis/raw-numeric.json
+python verify_tone_numeric.py .private/decoded/decoded.bin --compare analysis/tone-numeric.json</code></pre>
+<details><summary>REA 및 자동 디컴파일 결과의 취급</summary><p>REA가 남긴 기존 ZIP 식별 증거를 재사용했다. 이 Windows 환경의 펌웨어 Binwalk 경로와 원시 ARM 네이티브 분석 공급자는 준비되지 않아 이번 코드 분석은 Python·Capstone·Unicorn으로 진행했다. 이를 REA 자체가 만든 코드 증거로 표시하지 않았다. <a href="rea-summary.json">REA 증거·제약</a></p><p>angr 10.0.5는 RAW 현상 범위에서 블록 710개를 찾았지만, 자동 생성된 C 유사 코드는 함수 앞부분만 담았다. 조건부 호출과 점프 테이블을 포함한 전체 함수 설명으로는 채택하지 않았다. 공개 결론은 확인한 명령열·직접 분기·바이트 해시와 격리 실행 결과에 한정했다.</p></details>
+</section>
+
+<section aria-labelledby="next"><h2 id="next">6. 다음 분석에서 연결해야 할 지점</h2>
+<p>RAW 컨트롤러 래퍼의 후속 처리에서 톤 래퍼의 준비·적용 호출까지 연결하는 것이 다음 우선 과제다. 이 구간이 확인돼야 곡선이 어떤 현상 조건에서 적용되는지 더 정확히 설명할 수 있다. 그다음 selector와 UI 리소스를 연결하고, WB·색 행렬·클리핑과 JPEG 인코더의 설정 생산자를 같은 방식으로 추적한다.</p>
+<p>현재 자료로는 “RAW → WB → 행렬 → 감마 → 톤 → JPEG”를 확정 순서로 그릴 수 없다. 확인한 것은 설정 코드와 테이블 전달 관계다. 하드웨어 내부의 픽셀 순서, 디모자이킹 수식, 특정 커스텀 이미지의 실제 색 재현은 추가 근거가 필요하다.</p>
+<p>정확한 SoC·보조 MCU 부품 번호도 미확정으로 남겼다. 주 이미지의 추가 ARM 경로, F²MC-8L 호환 보조 코드와 패키지 부품 번호를 각각 관리해 추정이 사실로 굳어지지 않도록 한다.</p>
+</section>
+</main>
+<footer>2026-11-08 심층 분석 공개분 · <a href="https://github.com/yunhyok/pentax-k3ii-firmware-analysis">GitHub 저장소</a> · <a href="../index.html#sources">출처·라이선스·공개 범위</a><br>원본 펌웨어·해제본·전체 디스어셈블은 재배포하지 않는다. 플래싱·실기 실행은 수행하지 않았다.</footer>
+</body></html>

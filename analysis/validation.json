@@ -1,16 +1,45 @@
 {
-  "analysis_date": "2026-11-07",
-  "scope": "Initial static analysis of K-3 II v1.12 only",
+  "analysis_date": "2026-11-08",
+  "scope": "Initial identity/decoder evidence plus bounded CPU, secondary ISA, RAW controller and tone path analysis",
   "python": "3.12.3",
   "node": "24.15.0",
   "capstone": "5.0.7",
   "matplotlib": "3.9.2",
-  "unit_tests_passed": 7,
+  "unit_tests_passed": 13,
   "original_input_sha256": "a33485f351019960192891ef69ddc5d4904ef9e298671d9d9955679e4c901a9a",
   "independent_decoder_byte_comparison": true,
   "published_findings_reproduced": true,
-  "independent_review": "Startup instructions and data references reviewed with Capstone; no P0/P1/P2 findings. Two P3 hardening changes accepted: bounded CLI read and explicit LDR destination-register checks.",
-  "language_review": {
+  "independent_review": "Native worker reviewed hardware and RAW evidence; accepted P2 correction from job submission to controller handoff. Coordinator reran all six observation/numeric snapshots and reviewed tone evidence.",
+  "not_performed": [
+    "Camera flashing or physical camera execution",
+    "Whole firmware rebuild",
+    "Exact SoC or auxiliary MCU package identification",
+    "Complete RAW-to-JPEG flow or physical ISP pixel transfer function",
+    "Manufacturing or cryptographic-signature validation"
+  ],
+  "reference_project_commit": "b51d680202336a5872a66f99ca2924a2cb7c75fa",
+  "initial_analysis_date": "2026-11-07",
+  "unicorn": "2.1.4",
+  "angr": "10.0.5 (partial RAW pseudocode rejected)",
+  "deep_analysis": {
+    "static_snapshots_reproduced": [
+      "findings",
+      "hardware",
+      "raw-path",
+      "tone-path"
+    ],
+    "numeric_snapshots_reproduced": [
+      "raw-numeric",
+      "tone-numeric"
+    ],
+    "tone_outputs_compared": 268288,
+    "tone_apply_cases": 2,
+    "raw_cases": 4,
+    "raw_samples": 263,
+    "physical_hardware_executed": false,
+    "html_documents_checked": 2
+  },
+  "initial_language_review": {
     "route": "light",
     "change_rate_percent": 0.3,
     "self_check": "6/6",
@@ -18,11 +47,13 @@
     "modality_restored": 0,
     "runtime": "Native Codex worker; plugin metric and gate scripts"
   },
-  "not_performed": [
-    "Camera flashing or physical camera execution",
-    "Whole firmware rebuild",
-    "Exact SoC and secondary-image ISA identification",
-    "Manufacturing or cryptographic-signature validation"
-  ],
-  "reference_project_commit": "b51d680202336a5872a66f99ca2924a2cb7c75fa"
+  "language_review": {
+    "route": "standard",
+    "deterministic_gate": "PASS",
+    "change_rate_percent": 0.52,
+    "sentences_touched": 4,
+    "sentences_reviewed": 138,
+    "runtime": "Native Codex worker; plugin metric and gate scripts",
+    "numbers_dropped": 0
+  }
 }

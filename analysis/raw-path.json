@@ -1,0 +1,162 @@
+{
+  "analysis_date": "2026-11-08",
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "base": 33554432,
+  "entry_address": 38966884,
+  "name_evidence": "inline DevelopmentRawImage diagnostic",
+  "edges": [
+    {
+      "instruction_address": 40433960,
+      "target_address": 38966884,
+      "instruction_word": "0xebfa674d",
+      "label": "caller 1"
+    },
+    {
+      "instruction_address": 40437076,
+      "target_address": 38966884,
+      "instruction_word": "0xebfa6442",
+      "label": "caller 2"
+    },
+    {
+      "instruction_address": 40439872,
+      "target_address": 38966884,
+      "instruction_word": "0xebfa6187",
+      "label": "caller 3"
+    },
+    {
+      "instruction_address": 40444056,
+      "target_address": 38966884,
+      "instruction_word": "0xebfa5d71",
+      "label": "caller 4"
+    },
+    {
+      "instruction_address": 38972856,
+      "target_address": 40945004,
+      "instruction_word": "0xeb0785eb",
+      "label": "allocation candidate"
+    },
+    {
+      "instruction_address": 38972864,
+      "target_address": 38972916,
+      "instruction_word": "0x0a00000b",
+      "label": "zero result to error diagnostic"
+    },
+    {
+      "instruction_address": 38972920,
+      "target_address": 40924140,
+      "instruction_word": "0xeb07717b",
+      "label": "diagnostic formatter"
+    },
+    {
+      "instruction_address": 38972996,
+      "target_address": 38974748,
+      "instruction_word": "0xea0001b4",
+      "label": "failure to common epilogue"
+    },
+    {
+      "instruction_address": 38973028,
+      "target_address": 38973120,
+      "instruction_word": "0x1a000015",
+      "label": "nonzero flags bypass sample conversion"
+    },
+    {
+      "instruction_address": 38973256,
+      "target_address": 40745108,
+      "instruction_word": "0xeb06c251",
+      "label": "invoke controller wrapper"
+    },
+    {
+      "instruction_address": 38973700,
+      "target_address": 40745108,
+      "instruction_word": "0xeb06c1e2",
+      "label": "invoke controller wrapper"
+    },
+    {
+      "instruction_address": 38973716,
+      "target_address": 40745108,
+      "instruction_word": "0xeb06c1de",
+      "label": "invoke controller wrapper"
+    },
+    {
+      "instruction_address": 38973732,
+      "target_address": 40745108,
+      "instruction_word": "0xeb06c1da",
+      "label": "invoke controller wrapper"
+    },
+    {
+      "instruction_address": 38973748,
+      "target_address": 40745108,
+      "instruction_word": "0xeb06c1d6",
+      "label": "invoke controller wrapper"
+    },
+    {
+      "instruction_address": 40745156,
+      "target_address": 39457272,
+      "instruction_word": "0xebfb164b",
+      "label": "set pending state"
+    },
+    {
+      "instruction_address": 40745168,
+      "target_address": 40745096,
+      "instruction_word": "0xeaffffec",
+      "label": "signal wrapper"
+    },
+    {
+      "instruction_address": 40745104,
+      "target_address": 40944588,
+      "instruction_word": "0xea00c2cd",
+      "label": "signal object at controller+0x340"
+    }
+  ],
+  "ranges": [
+    {
+      "label": "development orchestrator",
+      "file_start": 5412452,
+      "file_end_exclusive": 5420352,
+      "sha256": "6c6648adffaa40539e33efba3b1a3dad77dc2d255383b7bf48ad4b16f7a72d81"
+    },
+    {
+      "label": "conditional sample loop",
+      "file_start": 5418644,
+      "file_end_exclusive": 5418688,
+      "sha256": "dc33822c9f2757e87f63a8ce7320ea67c34d776b37f4ff28354f1532a8e06d15"
+    },
+    {
+      "label": "controller handoff",
+      "file_start": 7190676,
+      "file_end_exclusive": 7190740,
+      "sha256": "06f1a0d21230e8aed9d90b196a72b03c481497e8e0a4c05b3d9ddf3ec3be084b"
+    },
+    {
+      "label": "pending state",
+      "file_start": 5902840,
+      "file_end_exclusive": 5902900,
+      "sha256": "35ad9dd531448e8e37b2f9f93f9fcc66a06feefc8872a24a2b27c5a9ec141fab"
+    },
+    {
+      "label": "job link setters",
+      "file_start": 7525152,
+      "file_end_exclusive": 7525208,
+      "sha256": "5e2da4f613e7512347d44927534d1bb2791de608deca4cde7f0327abae1a6101"
+    }
+  ],
+  "conditional_sample_loop": {
+    "start_address": 38973076,
+    "stop_address": 38973120,
+    "formula": "dst[i] = (src_u16[i] << 2) & 0xffff",
+    "guard": "r10 | r9 == 0 at 0x0252ae60; both values originate earlier",
+    "input_bit_depth": "not established by this loop alone"
+  },
+  "job_fields": {
+    "0x20c8": "link set by 0x0272d320",
+    "0x20d0": "link set by 0x0272d334",
+    "0x20c4": "link set by 0x0272d340",
+    "0x20ae": "u16 field set by 0x0272d34c"
+  },
+  "limits": [
+    "Four direct callers are checked; this is not a complete caller inventory.",
+    "Controller handoff is traced; queue semantics, asynchronous consumer and connection to the tone wrapper are unverified.",
+    "No complete RAW-to-JPEG pixel transform or ISP stage order is established.",
+    "angr 10.0.5 found 710 blocks but emitted truncated pseudocode; that output was rejected as a whole-function explanation."
+  ]
+}

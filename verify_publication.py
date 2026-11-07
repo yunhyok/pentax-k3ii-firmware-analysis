@@ -33,23 +33,27 @@ class Document(HTMLParser):
 
 def main():
     root = Path(__file__).resolve().parent
+    files = subprocess.check_output(["git", "ls-files", "--cached", "--others", "--exclude-standard"], cwd=root, text=True).splitlines()
+    documents = {root / name: Document((root / name).read_text(encoding="utf-8"))
+                 for name in files if name.endswith(".html")}
     text = (root / "index.html").read_text(encoding="utf-8")
-    doc = Document(text)
-    assert doc.lang == "ko" and doc.tags.count("h1") == 1 and doc.tags.count("main") == 1
-    assert len(doc.ids) == len(set(doc.ids)), "duplicate HTML IDs"
-    assert "{{" not in text and "<!-- HUMANIZE" not in text
     local = 0
-    for link in doc.links:
-        url = urlsplit(link)
-        if url.scheme or url.netloc:
-            assert url.scheme == "https", link
-            continue
-        path = (root / unquote(url.path)).resolve() if url.path else root / "index.html"
-        assert path.is_relative_to(root) and path.is_file(), link
-        assert ".private" not in path.relative_to(root).parts, link
-        if url.fragment and path.name == "index.html":
-            assert unquote(url.fragment) in doc.ids, link
-        local += 1
+    for source, doc in documents.items():
+        assert doc.lang == "ko" and doc.tags.count("h1") == 1 and doc.tags.count("main") == 1, source
+        assert len(doc.ids) == len(set(doc.ids)), f"duplicate HTML IDs: {source}"
+        body = source.read_text(encoding="utf-8")
+        assert "{{" not in body and "<!-- HUMANIZE" not in body, source
+        for link in doc.links:
+            url = urlsplit(link)
+            if url.scheme or url.netloc:
+                assert url.scheme == "https", link
+                continue
+            path = (source.parent / unquote(url.path)).resolve() if url.path else source
+            assert path.is_relative_to(root) and path.is_file(), link
+            assert ".private" not in path.relative_to(root).parts, link
+            if url.fragment and path in documents:
+                assert unquote(url.fragment) in documents[path].ids, link
+            local += 1
     for path in (root / "assets").glob("*.svg"):
         ET.parse(path)
     inventory = json.loads((root / "analysis/inventory.json").read_text(encoding="utf-8"))
@@ -62,12 +66,14 @@ def main():
     assert findings["midr_check"]["part_number"] == 0xC09
     for value in (inventory["input"]["sha256"], findings["decoded_sha256"], "0x02000000", "0xC090", "30,254"):
         assert value in text, value
-    files = subprocess.check_output(["git", "ls-files", "--cached", "--others", "--exclude-standard"], cwd=root, text=True).splitlines()
+    for name in ("hardware", "raw-path", "raw-numeric", "tone-path", "tone-numeric"):
+        evidence = json.loads((root / f"analysis/{name}.json").read_text(encoding="utf-8"))
+        assert evidence["decoded_sha256"] == findings["decoded_sha256"], name
     for name in files:
         path = Path(name)
         assert not any(part in {".private", "_workspace", "__pycache__"} for part in path.parts), name
         assert path.suffix.lower() not in {".bin", ".zip", ".pyc", ".exe", ".dll"}, name
-    print(json.dumps({"passed": True, "local_links_checked": local, "public_files_checked": len(files),
+    print(json.dumps({"passed": True, "html_documents_checked": len(documents), "local_links_checked": local, "public_files_checked": len(files),
                       "evidence_identity_consistent": True, "svg_xml_valid": True}, indent=2))
 
 
