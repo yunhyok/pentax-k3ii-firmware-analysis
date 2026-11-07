@@ -1,0 +1,363 @@
+{
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "address_convention": "file offsets; add 0x02000000 for main-image VA",
+  "selector": {
+    "recipe_offset": "0x44",
+    "getter": "0x52671c",
+    "setter": "0x73dc74",
+    "tone_recipe_pointer_offset": "0x18a18",
+    "special_value": 6,
+    "special_producer": "0x4dd924"
+  },
+  "edges": [
+    {
+      "call": "0x4bcc8c",
+      "target": "0x4de1e0"
+    },
+    {
+      "call": "0x4ddaec",
+      "target": "0x52671c"
+    },
+    {
+      "call": "0x4ddc74",
+      "target": "0x4dd924"
+    },
+    {
+      "call": "0x658bf0",
+      "target": "0x6ef3b8"
+    },
+    {
+      "call": "0x658c04",
+      "target": "0x73dc74"
+    },
+    {
+      "call": "0x66a8a0",
+      "target": "0x70145c"
+    },
+    {
+      "call": "0x66a8ac",
+      "target": "0x73dc74"
+    },
+    {
+      "call": "0x7014a0",
+      "target": "0x6fe180"
+    },
+    {
+      "call": "0x76d674",
+      "target": "0x4db21c"
+    },
+    {
+      "call": "0x76d684",
+      "target": "0x6ef39c"
+    },
+    {
+      "call": "0x78e314",
+      "target": "0x7dd7e8"
+    },
+    {
+      "call": "0x78e70c",
+      "target": "0x78ceb4"
+    },
+    {
+      "call": "0x78cec8",
+      "target": "0x6ef3b8"
+    }
+  ],
+  "source_paths": [
+    "stored recipe byte +0x9c (parameter 0) -> 0x658bdc -> recipe word +0x44",
+    "0x70145c input object +0x14 -> block +0x328 + 10*profile + parameter + 1048*bank",
+    "0x76d648 family -> default profile getter 0x4db21c -> stored recipe byte +0x9c"
+  ],
+  "metadata_bridge": {
+    "dispatcher": "0x78e300",
+    "tag": "0x004f",
+    "handler": "0x78ceb4",
+    "source_byte": "+0x9c",
+    "selector_to_tag_value": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      6,
+      7,
+      8,
+      9,
+      10,
+      5
+    ],
+    "selector_6_tag_value": 7,
+    "label_inference": "Reversal Film, by Pentax ImageTone metadata mapping",
+    "label_source": "https://github.com/exiftool/exiftool/blob/9b8664dfcf2c609d3cc8925d380e98ad2a379f9b/lib/Image/ExifTool/Pentax.pm"
+  },
+  "limits": [
+    "Selector, menu order and EXIF ImageTone are distinct numeric namespaces.",
+    "Default profile initialization does not prove the camera's active saved settings.",
+    "Reversal Film is identified through the metadata bridge, not a decoded on-screen resource.",
+    "The label of common profile ID 41 is not resolved even though its default selector is 6."
+  ],
+  "numeric": {
+    "engine": "Unicorn 2.1.4",
+    "default_profiles": [
+      {
+        "profile_id": 0,
+        "selector": 0,
+        "record_address": "0x40481f68"
+      },
+      {
+        "profile_id": 1,
+        "selector": 1,
+        "record_address": "0x40481f74"
+      },
+      {
+        "profile_id": 2,
+        "selector": 2,
+        "record_address": "0x40481f80"
+      },
+      {
+        "profile_id": 3,
+        "selector": 3,
+        "record_address": "0x40481f8c"
+      },
+      {
+        "profile_id": 4,
+        "selector": 4,
+        "record_address": "0x40481f98"
+      },
+      {
+        "profile_id": 5,
+        "selector": 5,
+        "record_address": "0x40481fa4"
+      },
+      {
+        "profile_id": 6,
+        "selector": 6,
+        "record_address": "0x404820f4"
+      },
+      {
+        "profile_id": 7,
+        "selector": 7,
+        "record_address": "0x4048210c"
+      },
+      {
+        "profile_id": 8,
+        "selector": 8,
+        "record_address": "0x40481fb0"
+      },
+      {
+        "profile_id": 9,
+        "selector": 9,
+        "record_address": "0x40481fbc"
+      },
+      {
+        "profile_id": 10,
+        "selector": 10,
+        "record_address": "0x40481fc8"
+      },
+      {
+        "profile_id": 11,
+        "selector": 0,
+        "record_address": "0x40481f68"
+      },
+      {
+        "profile_id": 12,
+        "selector": 1,
+        "record_address": "0x40481fd4"
+      },
+      {
+        "profile_id": 13,
+        "selector": 2,
+        "record_address": "0x40481fe0"
+      },
+      {
+        "profile_id": 14,
+        "selector": 3,
+        "record_address": "0x40481fec"
+      },
+      {
+        "profile_id": 15,
+        "selector": 0,
+        "record_address": "0x40481ff8"
+      },
+      {
+        "profile_id": 16,
+        "selector": 1,
+        "record_address": "0x40482004"
+      },
+      {
+        "profile_id": 17,
+        "selector": 2,
+        "record_address": "0x40482010"
+      },
+      {
+        "profile_id": 18,
+        "selector": 1,
+        "record_address": "0x4048201c"
+      },
+      {
+        "profile_id": 19,
+        "selector": 1,
+        "record_address": "0x40482028"
+      },
+      {
+        "profile_id": 20,
+        "selector": 1,
+        "record_address": "0x40482034"
+      },
+      {
+        "profile_id": 21,
+        "selector": 1,
+        "record_address": "0x40482040"
+      },
+      {
+        "profile_id": 22,
+        "selector": 1,
+        "record_address": "0x4048204c"
+      },
+      {
+        "profile_id": 23,
+        "selector": 2,
+        "record_address": "0x40482058"
+      },
+      {
+        "profile_id": 24,
+        "selector": 1,
+        "record_address": "0x40482064"
+      },
+      {
+        "profile_id": 25,
+        "selector": 1,
+        "record_address": "0x40482070"
+      },
+      {
+        "profile_id": 26,
+        "selector": 0,
+        "record_address": "0x4048207c"
+      },
+      {
+        "profile_id": 27,
+        "selector": 2,
+        "record_address": "0x40482088"
+      },
+      {
+        "profile_id": 28,
+        "selector": 1,
+        "record_address": "0x40482094"
+      },
+      {
+        "profile_id": 29,
+        "selector": 1,
+        "record_address": "0x404820ac"
+      },
+      {
+        "profile_id": 30,
+        "selector": 1,
+        "record_address": "0x404820b8"
+      },
+      {
+        "profile_id": 31,
+        "selector": 0,
+        "record_address": "0x40481f68"
+      },
+      {
+        "profile_id": 32,
+        "selector": 0,
+        "record_address": "0x40481f68"
+      },
+      {
+        "profile_id": 33,
+        "selector": 1,
+        "record_address": "0x404820e8"
+      },
+      {
+        "profile_id": 34,
+        "selector": 2,
+        "record_address": "0x404820dc"
+      },
+      {
+        "profile_id": 35,
+        "selector": 3,
+        "record_address": "0x404820c4"
+      },
+      {
+        "profile_id": 36,
+        "selector": 1,
+        "record_address": "0x404820d0"
+      },
+      {
+        "profile_id": 37,
+        "selector": 4,
+        "record_address": "0x404820a0"
+      },
+      {
+        "profile_id": 38,
+        "selector": 3,
+        "record_address": "0x404820c4"
+      },
+      {
+        "profile_id": 39,
+        "selector": 4,
+        "record_address": "0x404820a0"
+      },
+      {
+        "profile_id": 40,
+        "selector": 0,
+        "record_address": "0x40481f68"
+      },
+      {
+        "profile_id": 41,
+        "selector": 6,
+        "record_address": "0x40482100"
+      }
+    ],
+    "profiles_compared": 42,
+    "setter_getter_cases": 7,
+    "metadata_dispatcher_cases": [
+      {
+        "selector": 0,
+        "tag_0x004f": 0
+      },
+      {
+        "selector": 1,
+        "tag_0x004f": 1
+      },
+      {
+        "selector": 2,
+        "tag_0x004f": 2
+      },
+      {
+        "selector": 3,
+        "tag_0x004f": 3
+      },
+      {
+        "selector": 4,
+        "tag_0x004f": 4
+      },
+      {
+        "selector": 5,
+        "tag_0x004f": 6
+      },
+      {
+        "selector": 6,
+        "tag_0x004f": 7
+      },
+      {
+        "selector": 7,
+        "tag_0x004f": 8
+      },
+      {
+        "selector": 8,
+        "tag_0x004f": 9
+      },
+      {
+        "selector": 9,
+        "tag_0x004f": 10
+      },
+      {
+        "selector": 10,
+        "tag_0x004f": 5
+      }
+    ],
+    "scope": "Original A32 initializers and getters; RAM-backed globals, no camera execution."
+  }
+}

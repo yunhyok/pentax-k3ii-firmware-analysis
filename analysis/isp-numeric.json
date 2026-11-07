@@ -1,0 +1,337 @@
+{
+  "schema_version": 1,
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "unicorn_version": "2.1.4",
+  "cpu": "Cortex-A9 emulator model",
+  "wb_cases": [
+    {
+      "case": "zero and edge",
+      "path": "descriptor offset and gain",
+      "mmio_sha256": "d22e013fc87b5caea616236e713e2b2eaf6681ab69ef568afadfa40b3a932bb6"
+    },
+    {
+      "case": "zero and edge",
+      "path": "right-shift gain",
+      "mmio_sha256": "8130bc034eadd89f86702545c9ca48106e5cd16a299e1cf7caaa46603c351d30"
+    },
+    {
+      "case": "out of field",
+      "path": "descriptor offset and gain",
+      "mmio_sha256": "ce79d3b010a1da65eca4e66bc488497eb9ca3a4379c69751a4eeccc1ee18e6ce"
+    },
+    {
+      "case": "out of field",
+      "path": "right-shift gain",
+      "mmio_sha256": "7359663a25ef6ca7cd80c757e36393daccc33c0a38184521e17bbf4cadf9414d"
+    },
+    {
+      "case": "quantizer boundaries",
+      "path": "descriptor offset and gain",
+      "mmio_sha256": "293cacea21eb0c729d5c45fd950bda4abc497945c9deccd1a60cfb5dfbe1d9ce"
+    },
+    {
+      "case": "quantizer boundaries",
+      "path": "right-shift gain",
+      "mmio_sha256": "47d6e12bfb39207617a4d9c158a601fb2d233a00fb7f3c7d775f6c7a637ac683"
+    },
+    {
+      "case": "distinct channels",
+      "path": "descriptor offset and gain",
+      "mmio_sha256": "8ec50a21dde7350c53e4abfefe2dba435521dba82ebf44887bdafdd6bfe429c0"
+    },
+    {
+      "case": "distinct channels",
+      "path": "right-shift gain",
+      "mmio_sha256": "c2cb030577e20ab5bec8e8d7d927257518dc4db6a023d00f91c9a339b5b572eb"
+    }
+  ],
+  "matrix_cases": [
+    {
+      "factor_selector": 0,
+      "gain_input": 256,
+      "cc1_bypass_bit": 0,
+      "CC0_coefficients": [
+        -147,
+        -66,
+        341,
+        -326,
+        35,
+        419,
+        -351,
+        -432,
+        911
+      ],
+      "mmio_sha256": "861fbcd222b782111fbe8ada3ef04134ec1cc9f58f9648dc916fdfde17d57e4a"
+    },
+    {
+      "factor_selector": 1,
+      "gain_input": 256,
+      "cc1_bypass_bit": 1,
+      "CC0_coefficients": [
+        -520,
+        641,
+        61,
+        -165,
+        478,
+        -131,
+        -4,
+        419,
+        -233
+      ],
+      "mmio_sha256": "1e57a594713e717a45a1901f9e3fe4b13f5e1bc0cda9426c9e2233d565ecfe0f"
+    },
+    {
+      "factor_selector": 2,
+      "gain_input": 256,
+      "cc1_bypass_bit": 0,
+      "CC0_coefficients": [
+        -1438,
+        715,
+        979,
+        902,
+        -484,
+        -162,
+        -6,
+        798,
+        -536
+      ],
+      "mmio_sha256": "048f6f813a700fbaf4bef955956356382c8a6dbae5c8cb9c7e3718e4d3857ce4"
+    },
+    {
+      "factor_selector": 3,
+      "gain_input": 256,
+      "cc1_bypass_bit": 1,
+      "CC0_coefficients": [
+        -187,
+        -515,
+        1064,
+        645,
+        -1159,
+        876,
+        289,
+        -50,
+        123
+      ],
+      "mmio_sha256": "a508fecd9db773956de51698bd8a21c0af56fdcaf86f0663a203bd01b3c0b940"
+    },
+    {
+      "factor_selector": 4,
+      "gain_input": 256,
+      "cc1_bypass_bit": 0,
+      "CC0_coefficients": [
+        -983,
+        2030,
+        -535,
+        916,
+        -127,
+        -277,
+        242,
+        1642,
+        -1372
+      ],
+      "mmio_sha256": "3fdb5ec44074fc1dd12bf6ba9ce18788698a3145ec8f97055dfc52899105ad26"
+    },
+    {
+      "factor_selector": 5,
+      "gain_input": 256,
+      "cc1_bypass_bit": 1,
+      "CC0_coefficients": [
+        -562,
+        271,
+        547,
+        -694,
+        661,
+        289,
+        -913,
+        476,
+        693
+      ],
+      "mmio_sha256": "104a1ae749701979dbffe3d24f1634ed0b8149bf337335e7c3f7ca3cec7620e2"
+    },
+    {
+      "factor_selector": 2,
+      "gain_input": 0,
+      "cc1_bypass_bit": 0,
+      "CC0_coefficients": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "mmio_sha256": "f9fb973955073b90f28f8f97bf7f0f854d46a3fa06cc89268ba6829d90c626ac"
+    },
+    {
+      "factor_selector": 4,
+      "gain_input": 4096,
+      "cc1_bypass_bit": 1,
+      "CC0_coefficients": [
+        2047,
+        2047,
+        -2048,
+        2047,
+        2047,
+        2047,
+        -1744,
+        2047,
+        -2048
+      ],
+      "mmio_sha256": "50ff691663638acff9ee0f797c10ef85f503a6e09b889f120b3d5f282fa42834"
+    },
+    {
+      "factor_selector": 4,
+      "gain_input": 65535,
+      "cc1_bypass_bit": 0,
+      "CC0_coefficients": [
+        -2048,
+        2047,
+        2047,
+        -2048,
+        -2048,
+        2047,
+        2047,
+        2047,
+        2047
+      ],
+      "mmio_sha256": "ba2e984c29bf42b1884e595c937bd2d4fe3951fbfbbb4743d7514f544e6fdc43"
+    },
+    {
+      "factor_selector": 65535,
+      "gain_input": 65535,
+      "cc1_bypass_bit": 1,
+      "CC0_coefficients": [
+        2047,
+        2047,
+        2047,
+        2047,
+        2047,
+        -2048,
+        -2048,
+        -2048,
+        2047
+      ],
+      "mmio_sha256": "50bf0d9852712b46fd5db819cfcd62bc5c0ef136a36c85d593633056d30a0618"
+    }
+  ],
+  "clamp_boundary": {
+    "input": [
+      -32768,
+      -2049,
+      -2048,
+      -2047,
+      -1,
+      0,
+      2047,
+      2048,
+      32767
+    ],
+    "output": [
+      -2048,
+      -2048,
+      -2048,
+      -2047,
+      -1,
+      0,
+      2047,
+      2047,
+      2047
+    ]
+  },
+  "matrix_product_cases": [
+    {
+      "case": "rounding",
+      "outputs": [
+        0,
+        1,
+        1,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "case": "32-bit accumulator wrap",
+      "outputs": [
+        -24,
+        -24,
+        -24,
+        -24,
+        -24,
+        -24,
+        -24,
+        -24,
+        -24
+      ]
+    },
+    {
+      "case": "negative accumulator wrap",
+      "outputs": [
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12
+      ]
+    }
+  ],
+  "tone_clip_case": {
+    "entry": 5103164,
+    "descriptor_u32_pairs": [
+      [
+        4294934528,
+        305419896
+      ],
+      [
+        268468223,
+        65536
+      ],
+      [
+        98305,
+        2147450880
+      ],
+      [
+        4294967295,
+        4294967295
+      ]
+    ],
+    "TC_CLP_words": [
+      1450737664,
+      65535,
+      2147483649,
+      4294934527
+    ],
+    "mmio_sha256": "85c94242ff5eb13d24cce595d6659c3d0df7cf006bef172a9cf71ff115ad2017"
+  },
+  "scope": {
+    "mmio_bytes_compared_per_case": 4096,
+    "wb_instruction_spans": [
+      "0x57bd28..0x57be78",
+      "0x626468..0x6264e0"
+    ],
+    "matrix_entries": [
+      "0x4c2598 CC0 prepare",
+      "0x4c255c YC prepare",
+      "0x4c2158 CC1 prepare",
+      "0x4c2c18 apply"
+    ],
+    "clamp_instruction_span": "0x4c2720..0x4c2760"
+  },
+  "limits": [
+    "Synthetic records and RAM-backed registers. No physical ISP, frame or camera execution.",
+    "Tone clipping runs through full apply with upload flags clear; separate tone verification covers the uploads.",
+    "WB caller fragments are seeded at valid internal entry points; upstream estimation is untested.",
+    "CC1 bypass and active paths are covered; the MC apply branch after its clip setters is disabled.",
+    "The signed coefficient clamp is CPU behavior. The pixel comparison and transfer function remain unknown."
+  ]
+}

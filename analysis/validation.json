@@ -1,20 +1,21 @@
 {
   "analysis_date": "2026-11-08",
-  "scope": "Initial identity/decoder evidence plus bounded CPU, secondary ISA, RAW controller and tone path analysis",
+  "scope": "Initial identity/decoder and CPU analysis, plus RAW-to-tone job dispatch, JPEG boundaries, selector metadata mapping, WB, matrix and clip paths",
   "python": "3.12.3",
   "node": "24.15.0",
   "capstone": "5.0.7",
   "matplotlib": "3.9.2",
-  "unit_tests_passed": 13,
+  "unit_tests_passed": 16,
   "original_input_sha256": "a33485f351019960192891ef69ddc5d4904ef9e298671d9d9955679e4c901a9a",
   "independent_decoder_byte_comparison": true,
   "published_findings_reproduced": true,
-  "independent_review": "Native worker reviewed hardware and RAW evidence; accepted P2 correction from job submission to controller handoff. Coordinator reran all six observation/numeric snapshots and reviewed tone evidence.",
+  "independent_review": "Initial hardware/RAW review and six snapshot replays retained below. For the pipeline update, workers independently checked the selector metadata dispatcher and reviewed ISP evidence. Coordinator accepted conditional matrix-product and tone-cache corrections, inspected completion/Exif/output instructions, and independently reproduced all four new snapshots.",
   "not_performed": [
     "Camera flashing or physical camera execution",
     "Whole firmware rebuild",
     "Exact SoC or auxiliary MCU package identification",
     "Complete RAW-to-JPEG flow or physical ISP pixel transfer function",
+    "Actual UI selection event to tone selector binding",
     "Manufacturing or cryptographic-signature validation"
   ],
   "reference_project_commit": "b51d680202336a5872a66f99ca2924a2cb7c75fa",
@@ -55,5 +56,40 @@
     "sentences_reviewed": 138,
     "runtime": "Native Codex worker; plugin metric and gate scripts",
     "numbers_dropped": 0
+  },
+  "pipeline_analysis": {
+    "snapshots_reproduced": ["pipeline-flow", "selector-path", "isp-paths", "isp-numeric"],
+    "recipe_factory_cases": 11,
+    "recipe_arrays_entries_each": 128,
+    "recipe_heap_allocator_stubbed": true,
+    "selector_default_profiles": 42,
+    "selector_setter_getter_cases": 7,
+    "metadata_dispatcher_cases": 11,
+    "metadata_dispatcher_stubs": 0,
+    "wb_cases": 8,
+    "matrix_prepare_apply_cases": 10,
+    "matrix_product_cases": 3,
+    "coefficient_clamp_boundary_inputs": 9,
+    "tone_clip_apply_cases": 1,
+    "mmio_shadow_bytes_compared_per_case": 4096,
+    "physical_hardware_executed": false,
+    "offline_publication_check": {
+      "passed": true,
+      "html_documents_checked": 3,
+      "local_links_checked": 95,
+      "public_files_checked": 46,
+      "evidence_identity_consistent": true,
+      "svg_xml_valid": true
+    }
+  },
+  "pipeline_language_review": {
+    "scope": "Extracted introduction and sections 1-6 before the final JPEG and job-recipe additions; those additions received coordinator review",
+    "route": "light",
+    "deterministic_gate": "OK",
+    "change_rate_percent": 0.62,
+    "sentences_touched": 3,
+    "sentences_reviewed": 82,
+    "numbers_dropped": 0,
+    "runtime": "Native Codex worker; plugin metric and gate scripts"
   }
 }

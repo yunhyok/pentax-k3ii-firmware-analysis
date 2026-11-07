@@ -1,0 +1,961 @@
+{
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "base": 33554432,
+  "offset_convention": "File offsets, with zero-based recipe indices",
+  "static": {
+    "edges": {
+      "job_registration": [
+        [
+          7471168,
+          5902456
+        ],
+        [
+          7471184,
+          7189252
+        ],
+        [
+          7471196,
+          5863284
+        ],
+        [
+          7471212,
+          5863776
+        ],
+        [
+          7471224,
+          5863716
+        ],
+        [
+          5412564,
+          5903896
+        ],
+        [
+          5903920,
+          5903540
+        ],
+        [
+          5903936,
+          5681888
+        ],
+        [
+          5903960,
+          5903328
+        ],
+        [
+          5903340,
+          5903188
+        ],
+        [
+          5418824,
+          7190676
+        ],
+        [
+          7190724,
+          5902840
+        ],
+        [
+          7190736,
+          7190664
+        ],
+        [
+          7190672,
+          7390156
+        ]
+      ],
+      "worker": [
+        [
+          7197396,
+          7195412
+        ],
+        [
+          7195508,
+          7390216
+        ],
+        [
+          7195524,
+          7390184
+        ],
+        [
+          7195588,
+          5903012
+        ],
+        [
+          5903080,
+          7446140
+        ],
+        [
+          5903100,
+          5681888
+        ],
+        [
+          7196468,
+          8505192
+        ],
+        [
+          7196488,
+          7196560
+        ],
+        [
+          7196492,
+          7196568
+        ],
+        [
+          7196580,
+          7193296
+        ],
+        [
+          7196952,
+          8505208
+        ]
+      ],
+      "recipe": [
+        [
+          5418028,
+          7828708
+        ],
+        [
+          5418072,
+          7828708
+        ],
+        [
+          5418116,
+          7828708
+        ],
+        [
+          5418200,
+          7828708
+        ],
+        [
+          5418244,
+          7828708
+        ],
+        [
+          5418288,
+          7828708
+        ],
+        [
+          5418324,
+          7828708
+        ],
+        [
+          5418348,
+          7828708
+        ],
+        [
+          7828732,
+          7792556
+        ],
+        [
+          5418040,
+          6635708
+        ],
+        [
+          5418084,
+          6635708
+        ],
+        [
+          5418212,
+          6635708
+        ],
+        [
+          5418256,
+          6635708
+        ],
+        [
+          5418300,
+          6635708
+        ],
+        [
+          5418360,
+          6635708
+        ],
+        [
+          8505196,
+          8073928
+        ],
+        [
+          8505204,
+          8603684
+        ],
+        [
+          8505244,
+          8603668
+        ]
+      ],
+      "message_dispatch": [
+        [
+          7193316,
+          8505200
+        ],
+        [
+          7193372,
+          8239368
+        ],
+        [
+          7193384,
+          8239392
+        ],
+        [
+          7193396,
+          6646148
+        ],
+        [
+          7193408,
+          8239376
+        ],
+        [
+          7193420,
+          8239384
+        ],
+        [
+          7193440,
+          7334456
+        ],
+        [
+          7334460,
+          7441128
+        ],
+        [
+          7441208,
+          5399300
+        ],
+        [
+          7334512,
+          7441248
+        ]
+      ],
+      "tone_dispatch": [
+        [
+          7189948,
+          8245576
+        ],
+        [
+          5659992,
+          5748188
+        ],
+        [
+          5752028,
+          5749444
+        ],
+        [
+          5659856,
+          5070676
+        ],
+        [
+          5070764,
+          4957756
+        ],
+        [
+          5660024,
+          5525716
+        ],
+        [
+          5660036,
+          5863532
+        ],
+        [
+          6646196,
+          6646280
+        ],
+        [
+          6646284,
+          6646420
+        ],
+        [
+          5749552,
+          7526604
+        ],
+        [
+          5749684,
+          7687332
+        ],
+        [
+          5749692,
+          5749944
+        ],
+        [
+          5749840,
+          7686932
+        ],
+        [
+          4959272,
+          5124516
+        ],
+        [
+          4959340,
+          5124436
+        ],
+        [
+          4959364,
+          4959296
+        ],
+        [
+          4967620,
+          5103044
+        ],
+        [
+          4967912,
+          5103164
+        ]
+      ],
+      "tone_completion": [
+        [
+          7192332,
+          7191020
+        ],
+        [
+          7191176,
+          7191776
+        ],
+        [
+          7191784,
+          6675508
+        ],
+        [
+          7191800,
+          7192076
+        ],
+        [
+          7192084,
+          7191820
+        ],
+        [
+          7191824,
+          7190676
+        ]
+      ],
+      "raw_pipe": [
+        [
+          7190216,
+          8757928
+        ],
+        [
+          5659880,
+          5734688
+        ],
+        [
+          5737980,
+          5737400
+        ],
+        [
+          5737692,
+          5736060
+        ],
+        [
+          5736448,
+          5496324
+        ],
+        [
+          7191156,
+          7191584
+        ],
+        [
+          7191588,
+          6675508
+        ],
+        [
+          7191592,
+          7192076
+        ]
+      ],
+      "scaler_dispatch": [
+        [
+          7190004,
+          8508260
+        ],
+        [
+          5660320,
+          5762280
+        ],
+        [
+          5770244,
+          5769628
+        ],
+        [
+          5769736,
+          5767220
+        ],
+        [
+          5767372,
+          5765380
+        ]
+      ],
+      "jpeg_codec": [
+        [
+          7190160,
+          8895620
+        ],
+        [
+          5660676,
+          5719592
+        ],
+        [
+          5725432,
+          5723580
+        ],
+        [
+          5723912,
+          5723012
+        ],
+        [
+          5723364,
+          5489708
+        ],
+        [
+          5723420,
+          5493100
+        ],
+        [
+          5490728,
+          5488900
+        ],
+        [
+          5488924,
+          4943096
+        ],
+        [
+          5489180,
+          4943096
+        ],
+        [
+          5490756,
+          4942844
+        ],
+        [
+          5491024,
+          7223636
+        ]
+      ],
+      "store_dispatch": [
+        [
+          7190188,
+          8245568
+        ],
+        [
+          5661384,
+          5920572
+        ],
+        [
+          5938352,
+          5936900
+        ],
+        [
+          5937128,
+          5932944
+        ],
+        [
+          5937216,
+          5925864
+        ],
+        [
+          7191116,
+          7191884
+        ],
+        [
+          7191972,
+          7191820
+        ],
+        [
+          5661428,
+          5863360
+        ],
+        [
+          7615804,
+          8564008
+        ],
+        [
+          8565716,
+          8564168
+        ]
+      ],
+      "exif_writer": [
+        [
+          8154000,
+          8179812
+        ],
+        [
+          8181232,
+          8180996
+        ]
+      ]
+    },
+    "jpeg_huffman_tables": [
+      {
+        "start": 10779644,
+        "end_exclusive": 10779852,
+        "symbol_counts": [
+          12,
+          162
+        ],
+        "sha256": "a811c2965454c769a416476088df6e55c001719c05742209ab58b75b82215c25"
+      },
+      {
+        "start": 10779852,
+        "end_exclusive": 10780060,
+        "symbol_counts": [
+          12,
+          162
+        ],
+        "sha256": "42a1dc793adda224d00478d570dd611a563d92497590f9d65a09fc29a60b9f71"
+      }
+    ],
+    "ranges": {
+      "raw_recipe_selection": {
+        "start": 5417864,
+        "end_exclusive": 5418368,
+        "sha256": "1b65ae48e69d9aa4900e1a01fd0d7834b68a33ea34ee3e032c4a1ef5ca4a538c"
+      },
+      "controller_submit_and_signal": {
+        "start": 7190664,
+        "end_exclusive": 7190740,
+        "sha256": "effe0c4318739f2ebb28d04b3a4dd652f436a8205b730dafc1848b23de80a671"
+      },
+      "pending_job_selection": {
+        "start": 5903012,
+        "end_exclusive": 5903144,
+        "sha256": "694de04845900162666bc00f63066b0f26670c13b19383d00a75d50f324b4f50"
+      },
+      "controller_module_message": {
+        "start": 7193296,
+        "end_exclusive": 7193444,
+        "sha256": "7d87e93f7dc0bca728e6e0c286748ed6714d05017c4a053687505fe4fabdc694"
+      },
+      "tone_receiver": {
+        "start": 5749444,
+        "end_exclusive": 5750900,
+        "sha256": "1f182e8b1eeffc3a10d9882921342d8ab017b6f76e77822ab00504e28f32eefc"
+      },
+      "tone_prepare_dispatch": {
+        "start": 4959164,
+        "end_exclusive": 4959368,
+        "sha256": "e5478b921b217f0283c232d021cb59c026a419f174076cab07e7ffc40506b154"
+      },
+      "jpeg_table_loader": {
+        "start": 5488900,
+        "end_exclusive": 5489484,
+        "sha256": "4b4e6dedb05146fca0a0d3b41173c2c7e537d560d789e44285592cc2e41480fd"
+      },
+      "jpeg_codec_config": {
+        "start": 5489708,
+        "end_exclusive": 5491096,
+        "sha256": "df58465ea29f128449c6290b2781b84f7f3a54667c731f78c4e5fba8cace547e"
+      },
+      "jpeg_mmio_table_select": {
+        "start": 4943096,
+        "end_exclusive": 4943260,
+        "sha256": "d1f9c5f0701fb5c1c3d6b473d7ac9970af3ed357556f869124f2ac60fe58769f"
+      },
+      "jpeg_quantization_reference": {
+        "start": 10779516,
+        "end_exclusive": 10779644,
+        "sha256": "b9624f4fc813d17d6ba4f1ce5088a9858f7d92ed99912f17cbd9be09a7e8fddb"
+      },
+      "store_image_command": {
+        "start": 5937060,
+        "end_exclusive": 5937304,
+        "sha256": "25d77ad9849fd344db1106b05976e2351b664f9fe98b089a3e5454477a46c6c0"
+      },
+      "exif_jpeg_header_writer": {
+        "start": 8180060,
+        "end_exclusive": 8180140,
+        "sha256": "e1dadd14afcb5531d17ea0ef3e66f4850ee0fbc019ccf08a8cb09549901c87e3"
+      },
+      "exif_jpeg_output": {
+        "start": 8302928,
+        "end_exclusive": 8303112,
+        "sha256": "52eac4e2ca2d6a6b3235f9a0ddb827de74ea3cd7f14989576554c51369f3d30b"
+      }
+    },
+    "literal_reads": {
+      "7189300": 44475432,
+      "7189964": 6291458,
+      "7190204": 8388609,
+      "5748228": 44491548,
+      "4957764": 44453060,
+      "5750880": 6291459,
+      "5920596": 44480668,
+      "5937064": 8388609,
+      "5937288": 8388609,
+      "5734712": 44464296,
+      "5762304": 44475596,
+      "5769676": 7372801,
+      "7190176": 12582915,
+      "5719624": 44470288,
+      "5723640": 12582915,
+      "5488988": 44334076,
+      "5489184": 44334284,
+      "5489376": 44333948,
+      "4943096": 537853952,
+      "4942844": 537853952,
+      "8564016": 44517908,
+      "8179820": 44417652,
+      "8180100": 43931371
+    },
+    "vtable_slots": {
+      "10921036": 7195412,
+      "10921060": 7192328,
+      "10921132": 7197392,
+      "10937220": 7334480,
+      "10937224": 5752024,
+      "10898648": 4959164,
+      "10898652": 4959220,
+      "10898656": 4967716,
+      "10898676": 4967280,
+      "10926300": 7334480,
+      "10926304": 5938348,
+      "10909932": 5737976,
+      "10921232": 5770240,
+      "10915928": 5725428,
+      "10963584": 8565696,
+      "10863232": 8180060,
+      "10863244": 8181192,
+      "10863252": 8302928
+    },
+    "a32_anchor_offsets": [
+      5863284,
+      5863776,
+      5863716,
+      5903932,
+      7190716,
+      7190664,
+      7190668,
+      7195496,
+      7195504,
+      7195576,
+      6635708,
+      8505192,
+      8505200,
+      8505216,
+      7196472,
+      7196480,
+      7196560,
+      7196568,
+      7193360,
+      7193368,
+      7193424,
+      8239368,
+      8239376,
+      8239384,
+      8239392,
+      7526604,
+      7334536,
+      7334540,
+      8245576,
+      7189960,
+      7189968,
+      5659996,
+      5748260,
+      5752024,
+      5749504,
+      5749512,
+      6646280,
+      6646420,
+      5070768,
+      5525716,
+      5863532,
+      5749796,
+      7686932,
+      5749844,
+      5749860,
+      5749868,
+      4959184,
+      4959192,
+      4959200,
+      4959216,
+      4959312,
+      4959356,
+      5750884,
+      5750892,
+      7192328,
+      7191776,
+      8245568,
+      5661388,
+      7190200,
+      7190208,
+      5920624,
+      5938348,
+      5925964,
+      5925972,
+      8180060,
+      8180064,
+      8180068,
+      8180072,
+      8180076,
+      8180080,
+      8180084,
+      8180108,
+      8180116,
+      8181248,
+      8181256,
+      8303032,
+      8303040,
+      8303096,
+      8303104,
+      5417864,
+      5417872,
+      5418020,
+      5418024,
+      5418064,
+      5418068,
+      5418156,
+      5418192,
+      5418196,
+      5418236,
+      5418240,
+      5902872,
+      5681888,
+      5903092,
+      7334532,
+      5659884,
+      5734732,
+      5737976,
+      7190228,
+      7190232,
+      7190236,
+      5737876,
+      5737880,
+      5660324,
+      7190016,
+      7190024,
+      5770240,
+      8895620,
+      5660680,
+      5719652,
+      5725428,
+      5723644,
+      7190172,
+      7190180,
+      5489008,
+      5489092,
+      5489432,
+      5489468,
+      4942852,
+      4942860,
+      5863364,
+      7615812,
+      5324616,
+      7883168,
+      8564024,
+      8565732,
+      8565744
+    ],
+    "marker_offsets": [
+      5922132,
+      8181348,
+      10376939
+    ]
+  },
+  "recipe_emulation": {
+    "engine": "Unicorn 2.1.4",
+    "factory": 7792556,
+    "heap_stub": 7415848,
+    "step_limit_per_selector": 100000,
+    "array_offsets": [
+      0,
+      256,
+      512
+    ],
+    "array_entries": 128,
+    "trailer_offset": 768,
+    "trailer_value": 1,
+    "selectors": {
+      "0xb": {
+        "populated_prefix_length": 36,
+        "stage_indices": {
+          "raw_pipe": [
+            0
+          ],
+          "tone_dispatch": [
+            6
+          ],
+          "alternate_tone_dispatch": [],
+          "scaler_dispatch": [
+            29
+          ],
+          "store_dispatch": [],
+          "direct_jpeg_dispatch": []
+        }
+      },
+      "0xc": {
+        "populated_prefix_length": 42,
+        "stage_indices": {
+          "raw_pipe": [
+            0
+          ],
+          "tone_dispatch": [
+            6
+          ],
+          "alternate_tone_dispatch": [],
+          "scaler_dispatch": [
+            30
+          ],
+          "store_dispatch": [
+            34
+          ],
+          "direct_jpeg_dispatch": []
+        }
+      },
+      "0xd": {
+        "populated_prefix_length": 34,
+        "stage_indices": {
+          "raw_pipe": [
+            0
+          ],
+          "tone_dispatch": [
+            5
+          ],
+          "alternate_tone_dispatch": [],
+          "scaler_dispatch": [
+            25
+          ],
+          "store_dispatch": [],
+          "direct_jpeg_dispatch": []
+        }
+      },
+      "0xe": {
+        "populated_prefix_length": 45,
+        "stage_indices": {
+          "raw_pipe": [
+            0
+          ],
+          "tone_dispatch": [
+            12
+          ],
+          "alternate_tone_dispatch": [],
+          "scaler_dispatch": [],
+          "store_dispatch": [],
+          "direct_jpeg_dispatch": []
+        }
+      },
+      "0xf": {
+        "populated_prefix_length": 46,
+        "stage_indices": {
+          "raw_pipe": [
+            4
+          ],
+          "tone_dispatch": [
+            10
+          ],
+          "alternate_tone_dispatch": [],
+          "scaler_dispatch": [
+            37
+          ],
+          "store_dispatch": [],
+          "direct_jpeg_dispatch": []
+        }
+      },
+      "0x10": {
+        "populated_prefix_length": 55,
+        "stage_indices": {
+          "raw_pipe": [
+            0
+          ],
+          "tone_dispatch": [
+            15
+          ],
+          "alternate_tone_dispatch": [],
+          "scaler_dispatch": [
+            36
+          ],
+          "store_dispatch": [],
+          "direct_jpeg_dispatch": []
+        }
+      },
+      "0x11": {
+        "populated_prefix_length": 83,
+        "stage_indices": {
+          "raw_pipe": [
+            4
+          ],
+          "tone_dispatch": [
+            40
+          ],
+          "alternate_tone_dispatch": [
+            16
+          ],
+          "scaler_dispatch": [
+            72
+          ],
+          "store_dispatch": [],
+          "direct_jpeg_dispatch": []
+        }
+      },
+      "0x12": {
+        "populated_prefix_length": 45,
+        "stage_indices": {
+          "raw_pipe": [
+            0
+          ],
+          "tone_dispatch": [
+            12
+          ],
+          "alternate_tone_dispatch": [],
+          "scaler_dispatch": [],
+          "store_dispatch": [],
+          "direct_jpeg_dispatch": []
+        }
+      },
+      "0x13": {
+        "populated_prefix_length": 51,
+        "stage_indices": {
+          "raw_pipe": [
+            4
+          ],
+          "tone_dispatch": [
+            10
+          ],
+          "alternate_tone_dispatch": [],
+          "scaler_dispatch": [
+            38
+          ],
+          "store_dispatch": [
+            42
+          ],
+          "direct_jpeg_dispatch": []
+        }
+      },
+      "0x14": {
+        "populated_prefix_length": 32,
+        "stage_indices": {
+          "raw_pipe": [
+            0
+          ],
+          "tone_dispatch": [],
+          "alternate_tone_dispatch": [],
+          "scaler_dispatch": [],
+          "store_dispatch": [],
+          "direct_jpeg_dispatch": []
+        }
+      },
+      "0x15": {
+        "populated_prefix_length": 87,
+        "stage_indices": {
+          "raw_pipe": [
+            4
+          ],
+          "tone_dispatch": [
+            41
+          ],
+          "alternate_tone_dispatch": [
+            16
+          ],
+          "scaler_dispatch": [
+            72
+          ],
+          "store_dispatch": [
+            77
+          ],
+          "direct_jpeg_dispatch": []
+        }
+      }
+    }
+  },
+  "limits": [
+    "Recipe factory alone ran under bounded emulation with the heap allocator stubbed.",
+    "Tone prepare variant and RAW job resubmission are conditional firmware branches.",
+    "The JPEG encoder receives command 0x00c00003, but none of the generated RAW recipes directly dispatches operation 5 to module 8.",
+    "StoreImage dispatch, the JPEG encoder and EXIF JPEG packaging are independently verified boundaries.",
+    "The path from processed pixels to JPEG compression and from compression to the EXIF writer remains unresolved.",
+    "No live event scheduling, hardware image processing or physical file output was observed."
+  ]
+}

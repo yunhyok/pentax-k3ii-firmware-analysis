@@ -1,0 +1,1070 @@
+{
+  "schema_version": 1,
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "candidate_code_base": 33554432,
+  "offset_space": "Decoded file offsets except addresses and explicitly named object/record offsets.",
+  "direct_edges": [
+    {
+      "site": 5103648,
+      "target": 5991128,
+      "link": true
+    },
+    {
+      "site": 5103668,
+      "target": 5991196,
+      "link": true
+    },
+    {
+      "site": 5103688,
+      "target": 5991272,
+      "link": true
+    },
+    {
+      "site": 5103708,
+      "target": 5991340,
+      "link": true
+    },
+    {
+      "site": 5750376,
+      "target": 5813152,
+      "link": true
+    },
+    {
+      "site": 5750388,
+      "target": 5813280,
+      "link": true
+    },
+    {
+      "site": 5751628,
+      "target": 5813152,
+      "link": true
+    },
+    {
+      "site": 5751744,
+      "target": 5813280,
+      "link": true
+    },
+    {
+      "site": 5813168,
+      "target": 5123892,
+      "link": true
+    },
+    {
+      "site": 5813196,
+      "target": 5123908,
+      "link": true
+    },
+    {
+      "site": 5813224,
+      "target": 5123900,
+      "link": true
+    },
+    {
+      "site": 5813252,
+      "target": 5123884,
+      "link": true
+    },
+    {
+      "site": 5813188,
+      "target": 5979908,
+      "link": true
+    },
+    {
+      "site": 5813276,
+      "target": 5979948,
+      "link": false
+    },
+    {
+      "site": 5813216,
+      "target": 5979988,
+      "link": true
+    },
+    {
+      "site": 5813244,
+      "target": 5980028,
+      "link": true
+    },
+    {
+      "site": 5813296,
+      "target": 5118324,
+      "link": true
+    },
+    {
+      "site": 5813324,
+      "target": 5118340,
+      "link": true
+    },
+    {
+      "site": 5813352,
+      "target": 5118332,
+      "link": true
+    },
+    {
+      "site": 5813380,
+      "target": 5118316,
+      "link": true
+    },
+    {
+      "site": 5813316,
+      "target": 5980228,
+      "link": true
+    },
+    {
+      "site": 5813404,
+      "target": 5980248,
+      "link": false
+    },
+    {
+      "site": 5813344,
+      "target": 5980268,
+      "link": true
+    },
+    {
+      "site": 5813372,
+      "target": 5980288,
+      "link": true
+    },
+    {
+      "site": 5750060,
+      "target": 7685052,
+      "link": true
+    },
+    {
+      "site": 5750068,
+      "target": 7883352,
+      "link": true
+    },
+    {
+      "site": 5750172,
+      "target": 7451984,
+      "link": true
+    },
+    {
+      "site": 5750196,
+      "target": 7451984,
+      "link": true
+    },
+    {
+      "site": 5750220,
+      "target": 7451984,
+      "link": true
+    },
+    {
+      "site": 5750244,
+      "target": 7451984,
+      "link": true
+    },
+    {
+      "site": 5750176,
+      "target": 7594456,
+      "link": true
+    },
+    {
+      "site": 5750200,
+      "target": 7594472,
+      "link": true
+    },
+    {
+      "site": 5750224,
+      "target": 7594464,
+      "link": true
+    },
+    {
+      "site": 5750248,
+      "target": 7594448,
+      "link": true
+    },
+    {
+      "site": 5750188,
+      "target": 7883328,
+      "link": true
+    },
+    {
+      "site": 5750212,
+      "target": 7883344,
+      "link": true
+    },
+    {
+      "site": 5750236,
+      "target": 7883336,
+      "link": true
+    },
+    {
+      "site": 5750260,
+      "target": 7883320,
+      "link": true
+    },
+    {
+      "site": 6448236,
+      "target": 8244088,
+      "link": true
+    },
+    {
+      "site": 6448248,
+      "target": 8244120,
+      "link": true
+    },
+    {
+      "site": 6448260,
+      "target": 8244112,
+      "link": true
+    },
+    {
+      "site": 6448272,
+      "target": 8244080,
+      "link": true
+    },
+    {
+      "site": 6448284,
+      "target": 7883352,
+      "link": true
+    },
+    {
+      "site": 6448296,
+      "target": 7883328,
+      "link": true
+    },
+    {
+      "site": 6448308,
+      "target": 7883344,
+      "link": true
+    },
+    {
+      "site": 6448320,
+      "target": 7883336,
+      "link": true
+    },
+    {
+      "site": 6448332,
+      "target": 7883320,
+      "link": true
+    },
+    {
+      "site": 6448348,
+      "target": 5813280,
+      "link": true
+    },
+    {
+      "site": 4967380,
+      "target": 4990836,
+      "link": true
+    },
+    {
+      "site": 4967808,
+      "target": 4992024,
+      "link": true
+    },
+    {
+      "site": 4967912,
+      "target": 5103164,
+      "link": true
+    },
+    {
+      "site": 4990876,
+      "target": 4990360,
+      "link": true
+    },
+    {
+      "site": 4990892,
+      "target": 4990300,
+      "link": true
+    },
+    {
+      "site": 4990904,
+      "target": 4989360,
+      "link": true
+    },
+    {
+      "site": 4990920,
+      "target": 4989272,
+      "link": false
+    },
+    {
+      "site": 4990420,
+      "target": 4999392,
+      "link": true
+    },
+    {
+      "site": 4990404,
+      "target": 5472600,
+      "link": true
+    },
+    {
+      "site": 4990448,
+      "target": 4990164,
+      "link": true
+    },
+    {
+      "site": 4990480,
+      "target": 4990164,
+      "link": true
+    },
+    {
+      "site": 4990528,
+      "target": 4990164,
+      "link": true
+    },
+    {
+      "site": 4990820,
+      "target": 5219932,
+      "link": true
+    },
+    {
+      "site": 4990340,
+      "target": 4990164,
+      "link": true
+    },
+    {
+      "site": 4989320,
+      "target": 5219964,
+      "link": true
+    },
+    {
+      "site": 4989340,
+      "target": 7416272,
+      "link": true
+    },
+    {
+      "site": 4989348,
+      "target": 5219956,
+      "link": true
+    },
+    {
+      "site": 4990348,
+      "target": 5220004,
+      "link": true
+    },
+    {
+      "site": 4989380,
+      "target": 5219924,
+      "link": true
+    },
+    {
+      "site": 4992032,
+      "target": 4991904,
+      "link": true
+    },
+    {
+      "site": 4992040,
+      "target": 4991812,
+      "link": true
+    },
+    {
+      "site": 4992048,
+      "target": 4991080,
+      "link": true
+    },
+    {
+      "site": 4992060,
+      "target": 4990932,
+      "link": false
+    },
+    {
+      "site": 4991944,
+      "target": 5980804,
+      "link": true
+    },
+    {
+      "site": 4991960,
+      "target": 5980848,
+      "link": true
+    },
+    {
+      "site": 4991972,
+      "target": 5980884,
+      "link": true
+    },
+    {
+      "site": 4991984,
+      "target": 5981152,
+      "link": true
+    },
+    {
+      "site": 4992000,
+      "target": 5981252,
+      "link": true
+    },
+    {
+      "site": 4992020,
+      "target": 5981288,
+      "link": false
+    },
+    {
+      "site": 4990972,
+      "target": 5991536,
+      "link": true
+    },
+    {
+      "site": 4990996,
+      "target": 5991584,
+      "link": true
+    },
+    {
+      "site": 4991012,
+      "target": 5991624,
+      "link": true
+    },
+    {
+      "site": 4991032,
+      "target": 5991936,
+      "link": true
+    },
+    {
+      "site": 4991052,
+      "target": 5992008,
+      "link": true
+    },
+    {
+      "site": 4991076,
+      "target": 5992072,
+      "link": false
+    },
+    {
+      "site": 4991836,
+      "target": 5992136,
+      "link": true
+    },
+    {
+      "site": 4991856,
+      "target": 5992448,
+      "link": true
+    },
+    {
+      "site": 4991876,
+      "target": 5992520,
+      "link": true
+    },
+    {
+      "site": 4991900,
+      "target": 5992584,
+      "link": false
+    },
+    {
+      "site": 4991116,
+      "target": 5989336,
+      "link": true
+    },
+    {
+      "site": 4991136,
+      "target": 5989400,
+      "link": true
+    },
+    {
+      "site": 4991156,
+      "target": 5989472,
+      "link": true
+    }
+  ],
+  "white_balance": {
+    "offset_apply": 5813152,
+    "gain_apply": 5813280,
+    "fields": [
+      {
+        "adr": 5977160,
+        "string_offset": 5977600,
+        "label": "OFSTRR",
+        "read_anchor": 5977156,
+        "setter": 5979908,
+        "write_field": 5979932,
+        "address": 537002112,
+        "bit_offset": 0,
+        "width": 14,
+        "input_offset": 0
+      },
+      {
+        "adr": 5977180,
+        "string_offset": 5977640,
+        "label": "OFSTBB",
+        "read_anchor": 5977176,
+        "setter": 5979948,
+        "write_field": 5979972,
+        "address": 537002112,
+        "bit_offset": 16,
+        "width": 14,
+        "input_offset": 6
+      },
+      {
+        "adr": 5977196,
+        "string_offset": 5977680,
+        "label": "OFSTGR",
+        "read_anchor": 5977200,
+        "setter": 5979988,
+        "write_field": 5980012,
+        "address": 537002116,
+        "bit_offset": 0,
+        "width": 14,
+        "input_offset": 2
+      },
+      {
+        "adr": 5977216,
+        "string_offset": 5977720,
+        "label": "OFSTGB",
+        "read_anchor": 5977220,
+        "setter": 5980028,
+        "write_field": 5980052,
+        "address": 537002116,
+        "bit_offset": 16,
+        "width": 14,
+        "input_offset": 4
+      },
+      {
+        "adr": 5977248,
+        "string_offset": 5977800,
+        "label": "WBGARR",
+        "read_anchor": 5977240,
+        "setter": 5980228,
+        "write_field": 5980236,
+        "address": 537002124,
+        "bit_offset": 0,
+        "width": 11,
+        "input_offset": 0
+      },
+      {
+        "adr": 5977264,
+        "string_offset": 5977840,
+        "label": "WBGABB",
+        "read_anchor": 5977256,
+        "setter": 5980248,
+        "write_field": 5980256,
+        "address": 537002124,
+        "bit_offset": 16,
+        "width": 11,
+        "input_offset": 6
+      },
+      {
+        "adr": 5977280,
+        "string_offset": 5977880,
+        "label": "WBGAGR",
+        "read_anchor": 5977272,
+        "setter": 5980268,
+        "write_field": 5980276,
+        "address": 537002128,
+        "bit_offset": 0,
+        "width": 11,
+        "input_offset": 2
+      },
+      {
+        "adr": 5977296,
+        "string_offset": 5977920,
+        "label": "WBGAGB",
+        "read_anchor": 5977288,
+        "setter": 5980288,
+        "write_field": 5980296,
+        "address": 537002128,
+        "bit_offset": 16,
+        "width": 11,
+        "input_offset": 4
+      }
+    ],
+    "record_channel_order": [
+      "RR",
+      "GR",
+      "GB",
+      "BB"
+    ],
+    "offset_encoding": "(-u16) & 0x3fff",
+    "gain_encoding": "u16 & 0x7ff",
+    "direct_gain": {
+      "context_pointer_offset": 148,
+      "gain_record_offsets": [
+        0,
+        2,
+        4,
+        6
+      ],
+      "offset_record_offsets": [
+        8,
+        10,
+        12,
+        14
+      ],
+      "caller_fragment": 5750056
+    },
+    "shifted_gain": {
+      "caller_fragment": 6448232,
+      "object_record_offset": 876,
+      "gain_record_offsets": [
+        58,
+        60,
+        62,
+        64
+      ],
+      "logical_right_shift": 5
+    }
+  },
+  "matrix_prepare_apply": {
+    "parent_subobject_offset": 356,
+    "parent_pending_byte_offset": 6,
+    "prepare_entry": 4990836,
+    "apply_entry": 4992024,
+    "CC0CTL": {
+      "adr": 5976584,
+      "string_offset": 5976744,
+      "label": "CC0CTL",
+      "address": 537002240,
+      "control_write_helper": 5980804,
+      "mode_write_helper": 5980848,
+      "object_control_byte": 8,
+      "object_mode_halfword": 10
+    },
+    "CC1CTL": {
+      "adr": 5967636,
+      "string_offset": 5967820,
+      "label": "CC1CTL",
+      "address": 537004160,
+      "control_write_helper": 5991536,
+      "mode_write_helper": 5991584,
+      "object_control_byte": 484,
+      "object_mode_byte": 485
+    },
+    "control_fields": {
+      "bit0": "object control byte != 0",
+      "bits5_4": "low two bits of mode"
+    },
+    "CC1_nonzero_control": "Write control bit 0, then return before mode, coefficients or clips.",
+    "CC0_selector": "Low byte of prepare argument indexes descriptor+0xc pointer array.",
+    "YC_selector": "Prepare argument shifted right 8 indexes descriptor+0x1c pointer array.",
+    "CC1_source": "Nine halfwords copied from *(descriptor+0x8c); clip pointer is descriptor+0x90."
+  },
+  "matrix_registers": {
+    "CC0K": {
+      "apply": 4991904,
+      "setter": 5980884,
+      "object_source_offset": 12,
+      "coefficient_count": 9,
+      "first_address": 537002272,
+      "last_address": 537002288,
+      "coefficient_field_width": 12,
+      "alternating_bit_offsets": [
+        0,
+        16
+      ],
+      "write_fields": [
+        5980896,
+        5980912,
+        5980928,
+        5980944,
+        5980960,
+        5980976,
+        5980992,
+        5981008,
+        5981024
+      ],
+      "diagnostics": [
+        {
+          "adr": 5976596,
+          "string_offset": 5976784,
+          "label": "CC0K.CC0K1"
+        },
+        {
+          "adr": 5976608,
+          "string_offset": 5976824,
+          "label": "CC0K.CC0K2"
+        },
+        {
+          "adr": 5976620,
+          "string_offset": 5976864,
+          "label": "CC0K.CC0K3"
+        },
+        {
+          "adr": 5976632,
+          "string_offset": 5976904,
+          "label": "CC0K.CC0K4"
+        },
+        {
+          "adr": 5976644,
+          "string_offset": 5976944,
+          "label": "CC0K.CC0K5"
+        }
+      ]
+    },
+    "CC1K": {
+      "apply": 4990932,
+      "setter": 5991624,
+      "object_source_offset": 486,
+      "coefficient_count": 9,
+      "first_address": 537004192,
+      "last_address": 537004208,
+      "coefficient_field_width": 12,
+      "alternating_bit_offsets": [
+        0,
+        16
+      ],
+      "write_fields": [
+        5991640,
+        5991656,
+        5991676,
+        5991692,
+        5991712,
+        5991728,
+        5991748,
+        5991764,
+        5991788
+      ],
+      "diagnostics": [
+        {
+          "adr": 5967648,
+          "string_offset": 5967864,
+          "label": "CC1K.CC1K1"
+        },
+        {
+          "adr": 5967660,
+          "string_offset": 5967908,
+          "label": "CC1K.CC1K2"
+        },
+        {
+          "adr": 5967672,
+          "string_offset": 5967952,
+          "label": "CC1K.CC1K3"
+        },
+        {
+          "adr": 5967684,
+          "string_offset": 5967996,
+          "label": "CC1K.CC1K4"
+        },
+        {
+          "adr": 5967696,
+          "string_offset": 5968040,
+          "label": "CC1K.CC1K5"
+        }
+      ]
+    },
+    "YC": {
+      "apply": 4991812,
+      "setter": 5992136,
+      "object_source_offset": 36,
+      "coefficient_count": 9,
+      "first_address": 537004288,
+      "last_address": 537004304,
+      "coefficient_field_width": 13,
+      "alternating_bit_offsets": [
+        0,
+        16
+      ],
+      "write_fields": [
+        5992152,
+        5992168,
+        5992188,
+        5992204,
+        5992224,
+        5992240,
+        5992260,
+        5992276,
+        5992300
+      ],
+      "diagnostics": [
+        {
+          "adr": 5966916,
+          "string_offset": 5967120,
+          "label": "YC.YC1"
+        },
+        {
+          "adr": 5966928,
+          "string_offset": 5967164,
+          "label": "YC.YC2"
+        },
+        {
+          "adr": 5966940,
+          "string_offset": 5967208,
+          "label": "YC.YC3"
+        },
+        {
+          "adr": 5966952,
+          "string_offset": 5967252,
+          "label": "YC.YC4"
+        },
+        {
+          "adr": 5966964,
+          "string_offset": 5967296,
+          "label": "YC.YC5"
+        }
+      ]
+    }
+  },
+  "clip_registers": {
+    "CCYC_CLP": {
+      "apply": 4991904,
+      "addresses": [
+        537002308
+      ],
+      "setter_entries": [
+        5981252,
+        5981288
+      ],
+      "object_pointer_offset": 32,
+      "record_halfword_offsets": [
+        6,
+        8
+      ],
+      "field_widths": [
+        15,
+        16
+      ],
+      "field_bit_offsets": [
+        0,
+        16
+      ],
+      "preserved_bit": 15,
+      "diagnostics": [
+        {
+          "adr": 5976668,
+          "string_offset": 5977024,
+          "label": "CCYC_CLP"
+        }
+      ]
+    },
+    "CC1_CLP": {
+      "apply": 4990932,
+      "addresses": [
+        537004224,
+        537004228,
+        537004232
+      ],
+      "setter_entries": [
+        5991936,
+        5992008,
+        5992072
+      ],
+      "object_pointer_offset": 504,
+      "record_halfword_offsets": [
+        0,
+        2,
+        4,
+        6,
+        8,
+        10
+      ],
+      "field_widths": [
+        15,
+        16
+      ],
+      "field_bit_offsets": [
+        0,
+        16
+      ],
+      "preserved_bit": 15,
+      "diagnostics": [
+        {
+          "adr": 5967712,
+          "string_offset": 5968084,
+          "label": "CC1_CLP.word[0]"
+        },
+        {
+          "adr": 5967728,
+          "string_offset": 5968132,
+          "label": "CC1_CLP.word[1]"
+        },
+        {
+          "adr": 5967744,
+          "string_offset": 5968180,
+          "label": "CC1_CLP.word[2]"
+        }
+      ]
+    },
+    "YC_CLP": {
+      "apply": 4991812,
+      "addresses": [
+        537004320,
+        537004324,
+        537004328
+      ],
+      "setter_entries": [
+        5992448,
+        5992520,
+        5992584
+      ],
+      "object_pointer_offset": 56,
+      "record_halfword_offsets": [
+        0,
+        2,
+        4,
+        6,
+        8,
+        10
+      ],
+      "field_widths": [
+        15,
+        16
+      ],
+      "field_bit_offsets": [
+        0,
+        16
+      ],
+      "preserved_bit": 15,
+      "diagnostics": [
+        {
+          "adr": 5966980,
+          "string_offset": 5967340,
+          "label": "YC_CLP.word[0]"
+        },
+        {
+          "adr": 5966996,
+          "string_offset": 5967388,
+          "label": "YC_CLP.word[1]"
+        },
+        {
+          "adr": 5967012,
+          "string_offset": 5967436,
+          "label": "YC_CLP.word[2]"
+        }
+      ]
+    },
+    "MC_CLP": {
+      "apply": 4991080,
+      "addresses": [
+        537003916,
+        537003920,
+        537003924
+      ],
+      "setter_entries": [
+        5989336,
+        5989400,
+        5989472
+      ],
+      "object_pointer_offset": 480,
+      "record_halfword_offsets": [
+        0,
+        2,
+        4,
+        6,
+        8,
+        10
+      ],
+      "field_widths": [
+        15,
+        16
+      ],
+      "field_bit_offsets": [
+        0,
+        16
+      ],
+      "preserved_bit": 15,
+      "diagnostics": [
+        {
+          "adr": 5975932,
+          "string_offset": 5976428,
+          "label": "MC_CLP.word[0]"
+        },
+        {
+          "adr": 5975948,
+          "string_offset": 5976472,
+          "label": "MC_CLP.word[1]"
+        },
+        {
+          "adr": 5975964,
+          "string_offset": 5976520,
+          "label": "MC_CLP.word[2]"
+        }
+      ]
+    }
+  },
+  "tone_clip_registers": {
+    "apply": 5103164,
+    "descriptor_pointer_offset": 520,
+    "field_widths": [
+      15,
+      16
+    ],
+    "field_bit_offsets": [
+      0,
+      16
+    ],
+    "preserved_bit": 15,
+    "words": [
+      {
+        "adr": 5968468,
+        "string_offset": 5969188,
+        "label": "TC_CLP.word[0]",
+        "address": 537004140,
+        "descriptor_u32_offsets": [
+          116,
+          120
+        ],
+        "setter": 5991128,
+        "call": 5103648
+      },
+      {
+        "adr": 5968484,
+        "string_offset": 5969228,
+        "label": "TC_CLP.word[1]",
+        "address": 537004144,
+        "descriptor_u32_offsets": [
+          124,
+          128
+        ],
+        "setter": 5991196,
+        "call": 5103668
+      },
+      {
+        "adr": 5968500,
+        "string_offset": 5969272,
+        "label": "TC_CLP.word[2]",
+        "address": 537004148,
+        "descriptor_u32_offsets": [
+          132,
+          136
+        ],
+        "setter": 5991272,
+        "call": 5103688
+      },
+      {
+        "adr": 5968516,
+        "string_offset": 5969316,
+        "label": "TC_CLP.word[3]",
+        "address": 537004152,
+        "descriptor_u32_offsets": [
+          140,
+          144
+        ],
+        "setter": 5991340,
+        "call": 5103708
+      }
+    ]
+  },
+  "CC0_coefficient_math": {
+    "prepare_entry": 4990360,
+    "multiply_entry": 4990164,
+    "multiply": "Three signed halfword products in a wrapping 32-bit accumulator; add 0x1000, shift right 13, retain low 16 bits.",
+    "scale": "Multiply signed halfwords by a derived u16 factor and divide by 4096 toward zero; retain low 16 bits.",
+    "factor": {
+      "gain_object_offset": 528,
+      "selector_object_offset": 530,
+      "multipliers": [
+        64,
+        91,
+        128,
+        181,
+        256
+      ],
+      "fallback_multiplier": 128,
+      "divisor": 256
+    },
+    "diagonal": "Replace each diagonal with twice the factor minus the sum of its two off-diagonals, retaining low 16 bits.",
+    "clamp_loop": 4990752,
+    "clamp_input": "s16",
+    "clamp_bounds": [
+      -2048,
+      2047
+    ]
+  },
+  "code_range_sha256": {
+    "0x57bd28..0x57be78": "820ce5775232aa79ea44a2622bc75af86546cc72c44a3f34e4f1e3fd053aa5e3",
+    "0x58b3a0..0x58b4a0": "ef233919dc0b94d2243f630e4e775c79a2ff38b5f9011403db3bf1eb4dd19d9d",
+    "0x626468..0x6264e0": "bb5b0b27046d9d099dfdaeea5a9edf060c0b6e656bc093480a2cc626e1fb197c",
+    "0x4c2158..0x4c21b0": "d60e780142ff9836942eccab3cda948f331b47fdaaeaf0b978a855bdde822029",
+    "0x4c24d4..0x4c2868": "2988906c6eb283c971e95a66569cd150b90182a759b64e9798e6359920204aee",
+    "0x4c2868..0x4c2c40": "9229c8ebb406cc611c129f5b08e48774dc1bdc2ccd710fc9624cc62cb2c226e6",
+    "0x5b3f04..0x5b40d4": "d73d6ccbb132bab63b5816bd26928a6a6657af06555a5efdb6092c601fc66ba3",
+    "0x5b4284..0x5b448c": "51948dd2ee6d405d63ae2e44074c0907c1dc6d161ff9491f85f3a66a3012fdde",
+    "0x5b63d8..0x5b64a0": "78da660cbb72cb905b4a2c12b7cd57a67c9f10a62b11421c58bf3a7c8ab2fd32",
+    "0x5b6c70..0x5b70c8": "b319f332c27b0962255b97cf9ca71b20f7ba9ca86d1c15b4d5ed4f2e298894dc",
+    "0x4de010..0x4de060": "02610632f4cbcda6d21f01140a1859751059bbef5a56cea94817874841e7546d",
+    "0x5b6ad8..0x5b6bf0": "ce0cf5a277231766acc791cbc70624a4862aaea43f1063a5c6a16281350a4cc6"
+  },
+  "limits": [
+    "CPU programming order does not establish the hardware pixel pipeline order.",
+    "BFI/UBFX establish field encoding, not the hardware clip comparison signedness, endpoint role or physical transfer function.",
+    "The signed CPU clamp applies to CC0 coefficients, not to sensor or output pixels.",
+    "Descriptor contents, camera menu labels, WB estimation and real-camera rendering are not identified by this trace."
+  ]
+}

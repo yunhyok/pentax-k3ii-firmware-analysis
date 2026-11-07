@@ -14,6 +14,7 @@
 <nav aria-label="보고서 탐색"><a href="../index.html">초기 분석</a><a href="#comparison">K-3 III와 비교</a><a href="#hardware">CPU·보조 영역</a><a href="#raw">RAW 현상</a><a href="#tone">톤·감마</a><a href="#validation">검증·재현</a><a href="#next">남은 연결</a></nav>
 </header>
 <main>
+<p class="note">이 문서는 첫 심층 분석 시점의 기록이다. 이후 확인한 작업 목록·톤 연결, selector=6의 메타데이터 대응, WB·색 행렬·클리핑은 <a href="pipeline-analysis.html">후속 분석 보고서</a>에 정리했다. 아래의 미확정 목록은 당시 범위를 나타낸다.</p>
 <section aria-labelledby="summary"><h2 id="summary">이번에 확인한 범위</h2>
 <div class="table-scroll"><table><thead><tr><th scope="col">대상</th><th scope="col">확인한 내용</th><th scope="col">남은 문제</th></tr></thead><tbody>
 <tr><td>주 CPU·SoC</td><td>MIDR의 Cortex-A9 부품 번호 비교, 별도 ARM 시작 경로, 칩 버전 레지스터를 읽는 코드</td><td>실제 MIDR·패키지 표기·정확한 SoC</td></tr>
