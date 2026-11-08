@@ -1,0 +1,1755 @@
+{
+  "firmware_version": "1.12",
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "image_base": 33554432,
+  "replay": {
+    "unicorn_version": "2.1.4",
+    "virtual_calls": [
+      {
+        "call_file_offset": 6640464,
+        "slot": 28,
+        "target_file_offset": 6677928
+      },
+      {
+        "call_file_offset": 6640480,
+        "slot": 112,
+        "target_file_offset": 6684248
+      },
+      {
+        "call_file_offset": 6640496,
+        "slot": 48,
+        "target_file_offset": 6679936
+      },
+      {
+        "call_file_offset": 6640524,
+        "slot": 56,
+        "target_file_offset": 6680272
+      },
+      {
+        "call_file_offset": 6640540,
+        "slot": 52,
+        "target_file_offset": 6679960
+      },
+      {
+        "call_file_offset": 6640556,
+        "slot": 32,
+        "target_file_offset": 6677988
+      },
+      {
+        "call_file_offset": 6640572,
+        "slot": 124,
+        "target_file_offset": 6685112
+      },
+      {
+        "call_file_offset": 6640588,
+        "slot": 36,
+        "target_file_offset": 6678448
+      },
+      {
+        "call_file_offset": 6640604,
+        "slot": 40,
+        "target_file_offset": 6679144
+      }
+    ],
+    "stop_file_offset": 6640608,
+    "whole_prepare": {
+      "slots_in_order": [
+        28,
+        112,
+        48,
+        56,
+        52,
+        32,
+        124,
+        36,
+        40,
+        60,
+        44,
+        64,
+        68,
+        72,
+        76,
+        84,
+        88,
+        92,
+        96,
+        80,
+        100,
+        116,
+        104,
+        108,
+        120
+      ],
+      "targets_in_order": [
+        6677928,
+        6684248,
+        6679936,
+        6680272,
+        6679960,
+        6677988,
+        6685112,
+        6678448,
+        6679144,
+        6681312,
+        6679832,
+        6681408,
+        6681776,
+        6682668,
+        6682764,
+        6683096,
+        6683184,
+        6683360,
+        6683436,
+        6682872,
+        6683492,
+        6684328,
+        6683720,
+        6684040,
+        6684576
+      ],
+      "caller_return_sentinel_va": 269422592,
+      "returned_cases": [
+        {
+          "job_kind": 0,
+          "call_path": [
+            6677928,
+            6684248,
+            6679936,
+            6680272,
+            6679960,
+            6677988,
+            6685112,
+            6678448,
+            6679144,
+            6681312,
+            6679832,
+            6681408,
+            6681776,
+            6682668,
+            6682764,
+            6683096,
+            6683184,
+            6683360,
+            6683436,
+            6682872,
+            6683492,
+            6684328,
+            6683720,
+            6684040,
+            6684576,
+            6639292,
+            6639288
+          ],
+          "returned": 268697600,
+          "pixel_flags": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "mask": 1,
+          "observed_image_or_0x13c_writes": 0,
+          "metadata_writes_relative_to_capture": [
+            [
+              44112,
+              2,
+              0
+            ],
+            [
+              44114,
+              2,
+              0
+            ],
+            [
+              46152,
+              2,
+              0
+            ],
+            [
+              46154,
+              2,
+              0
+            ],
+            [
+              48192,
+              2,
+              0
+            ],
+            [
+              48194,
+              2,
+              0
+            ],
+            [
+              45132,
+              2,
+              0
+            ],
+            [
+              45134,
+              2,
+              0
+            ],
+            [
+              47172,
+              2,
+              0
+            ],
+            [
+              47174,
+              2,
+              0
+            ],
+            [
+              49212,
+              2,
+              0
+            ],
+            [
+              49214,
+              2,
+              0
+            ]
+          ],
+          "initial_pixel_flags": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "unchanged_capture_pointer_offsets": [
+            152,
+            316,
+            352,
+            516
+          ]
+        },
+        {
+          "job_kind": 6,
+          "call_path": [
+            6677928,
+            6684248,
+            6679936,
+            6680272,
+            6679960,
+            6677988,
+            6685112,
+            6678448,
+            6679144,
+            6681312,
+            6679832,
+            6681408,
+            6681776,
+            6682668,
+            6682764,
+            6683096,
+            6683184,
+            6683360,
+            6683436,
+            6682872,
+            6683492,
+            6684328,
+            6683720,
+            6684040,
+            6684576,
+            6639292,
+            6639288
+          ],
+          "returned": 268697600,
+          "pixel_flags": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "mask": 1,
+          "observed_image_or_0x13c_writes": 0,
+          "metadata_writes_relative_to_capture": [
+            [
+              44112,
+              2,
+              0
+            ],
+            [
+              44114,
+              2,
+              0
+            ],
+            [
+              46152,
+              2,
+              0
+            ],
+            [
+              46154,
+              2,
+              0
+            ],
+            [
+              48192,
+              2,
+              0
+            ],
+            [
+              48194,
+              2,
+              0
+            ],
+            [
+              45132,
+              2,
+              0
+            ],
+            [
+              45134,
+              2,
+              0
+            ],
+            [
+              47172,
+              2,
+              0
+            ],
+            [
+              47174,
+              2,
+              0
+            ],
+            [
+              49212,
+              2,
+              0
+            ],
+            [
+              49214,
+              2,
+              0
+            ]
+          ],
+          "initial_pixel_flags": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "unchanged_capture_pointer_offsets": [
+            152,
+            316,
+            352,
+            516
+          ]
+        },
+        {
+          "job_kind": 11,
+          "call_path": [
+            6677928,
+            6684248,
+            6679936,
+            6681408,
+            6681776,
+            6682668,
+            6682764,
+            6683096,
+            6683184,
+            6683360,
+            6683436,
+            6682872,
+            6683492,
+            6684328,
+            6683720,
+            6684040,
+            6639292,
+            6639288
+          ],
+          "returned": 268697600,
+          "pixel_flags": [
+            161,
+            178,
+            195,
+            212
+          ],
+          "mask": 64,
+          "observed_image_or_0x13c_writes": 0,
+          "metadata_writes_relative_to_capture": [
+            [
+              44112,
+              2,
+              0
+            ],
+            [
+              44114,
+              2,
+              0
+            ],
+            [
+              46152,
+              2,
+              0
+            ],
+            [
+              46154,
+              2,
+              0
+            ],
+            [
+              48192,
+              2,
+              0
+            ],
+            [
+              48194,
+              2,
+              0
+            ],
+            [
+              45132,
+              2,
+              0
+            ],
+            [
+              45134,
+              2,
+              0
+            ],
+            [
+              47172,
+              2,
+              0
+            ],
+            [
+              47174,
+              2,
+              0
+            ],
+            [
+              49212,
+              2,
+              0
+            ],
+            [
+              49214,
+              2,
+              0
+            ]
+          ],
+          "initial_pixel_flags": [
+            161,
+            178,
+            195,
+            212
+          ],
+          "unchanged_capture_pointer_offsets": [
+            152,
+            316,
+            352,
+            516
+          ]
+        }
+      ],
+      "metadata_pointer_offsets": [
+        49860,
+        49864,
+        49868,
+        49872,
+        49876,
+        49880
+      ],
+      "metadata_record_offsets": [
+        43104,
+        44124,
+        45144,
+        46164,
+        47184,
+        48204
+      ],
+      "container_constructor_slice": {
+        "entry_file_offset": 6634412,
+        "stop_before_file_offset": 5940276
+      },
+      "pointer_publication_slice": [
+        6634868,
+        6634952
+      ],
+      "metadata_constructor_entry_offsets": [
+        43104,
+        44124,
+        45144,
+        46164,
+        47184,
+        48204
+      ],
+      "metadata_objects_checked_bytes": 1020,
+      "only_changed_metadata_offsets": [
+        1008,
+        1009,
+        1010,
+        1011
+      ],
+      "image_canary_sha256": "110009dcee21620b166f3abfecb5eff7a873be729d1c2d53822e7acc5f34eb9b"
+    },
+    "prefix_cases": [
+      {
+        "inputs": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "outputs": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "end_file_offset": 6640512
+      },
+      {
+        "inputs": [
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "outputs": [
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "end_file_offset": 6640512
+      },
+      {
+        "inputs": [
+          0,
+          0,
+          0,
+          0,
+          2
+        ],
+        "outputs": [
+          0,
+          0,
+          0,
+          0,
+          2
+        ],
+        "end_file_offset": 6640512
+      },
+      {
+        "inputs": [
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        "outputs": [
+          0,
+          0,
+          0,
+          0,
+          3
+        ],
+        "end_file_offset": 6640512
+      },
+      {
+        "inputs": [
+          0,
+          0,
+          0,
+          0,
+          4
+        ],
+        "outputs": [
+          0,
+          0,
+          0,
+          0,
+          4
+        ],
+        "end_file_offset": 6640512
+      },
+      {
+        "inputs": [
+          0,
+          0,
+          0,
+          0,
+          5
+        ],
+        "outputs": [
+          0,
+          0,
+          0,
+          0,
+          5
+        ],
+        "end_file_offset": 6640640
+      },
+      {
+        "inputs": [
+          0,
+          0,
+          0,
+          0,
+          6
+        ],
+        "outputs": [
+          0,
+          0,
+          0,
+          0,
+          6
+        ],
+        "end_file_offset": 6640512
+      },
+      {
+        "inputs": [
+          0,
+          0,
+          0,
+          0,
+          7
+        ],
+        "outputs": [
+          0,
+          0,
+          0,
+          0,
+          7
+        ],
+        "end_file_offset": 6640640
+      },
+      {
+        "inputs": [
+          0,
+          0,
+          0,
+          0,
+          8
+        ],
+        "outputs": [
+          0,
+          0,
+          0,
+          0,
+          8
+        ],
+        "end_file_offset": 6640640
+      },
+      {
+        "inputs": [
+          0,
+          0,
+          0,
+          0,
+          9
+        ],
+        "outputs": [
+          0,
+          0,
+          0,
+          0,
+          9
+        ],
+        "end_file_offset": 6640512
+      },
+      {
+        "inputs": [
+          0,
+          0,
+          0,
+          0,
+          10
+        ],
+        "outputs": [
+          0,
+          0,
+          0,
+          0,
+          10
+        ],
+        "end_file_offset": 6640512
+      },
+      {
+        "inputs": [
+          0,
+          0,
+          0,
+          0,
+          11
+        ],
+        "outputs": [
+          0,
+          0,
+          0,
+          0,
+          11
+        ],
+        "end_file_offset": 6640640
+      },
+      {
+        "inputs": [
+          8,
+          1,
+          0,
+          0,
+          0
+        ],
+        "outputs": [
+          0,
+          1,
+          4660,
+          0,
+          0
+        ],
+        "end_file_offset": 6640512
+      },
+      {
+        "inputs": [
+          9,
+          0,
+          1,
+          0,
+          6
+        ],
+        "outputs": [
+          1,
+          0,
+          0,
+          1,
+          6
+        ],
+        "end_file_offset": 6640512
+      },
+      {
+        "inputs": [
+          10,
+          1,
+          1,
+          0,
+          0
+        ],
+        "outputs": [
+          0,
+          1,
+          4660,
+          1,
+          0
+        ],
+        "end_file_offset": 6640512
+      },
+      {
+        "inputs": [
+          12,
+          1,
+          1,
+          1,
+          6
+        ],
+        "outputs": [
+          1,
+          1,
+          4660,
+          0,
+          6
+        ],
+        "end_file_offset": 6640512
+      },
+      {
+        "inputs": [
+          13,
+          0,
+          1,
+          0,
+          6
+        ],
+        "outputs": [
+          0,
+          0,
+          0,
+          1,
+          6
+        ],
+        "end_file_offset": 6640512
+      },
+      {
+        "inputs": [
+          0,
+          0,
+          1,
+          1,
+          0
+        ],
+        "outputs": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "end_file_offset": 6640512
+      },
+      {
+        "inputs": [
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        "outputs": [
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        "end_file_offset": 6640512
+      },
+      {
+        "inputs": [
+          9,
+          1,
+          1,
+          0,
+          5
+        ],
+        "outputs": [
+          1,
+          1,
+          4660,
+          1,
+          5
+        ],
+        "end_file_offset": 6640640
+      },
+      {
+        "inputs": [
+          12,
+          1,
+          1,
+          0,
+          11
+        ],
+        "outputs": [
+          1,
+          1,
+          4660,
+          1,
+          11
+        ],
+        "end_file_offset": 6640640
+      }
+    ],
+    "complete_cases": [
+      {
+        "job_kind": 0,
+        "inputs": {},
+        "A": 8192,
+        "CAP_3c": 0,
+        "CAP_3d": 0,
+        "policy_result": 1,
+        "policy_flags": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold_call_arguments": [
+          [
+            8192,
+            124,
+            0,
+            0
+          ]
+        ],
+        "early_fields": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced": false,
+        "provider62_tags": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "job_kind": 6,
+        "inputs": {},
+        "A": 8192,
+        "CAP_3c": 0,
+        "CAP_3d": 0,
+        "policy_result": 1,
+        "policy_flags": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "threshold_call_arguments": [
+          [
+            8192,
+            124,
+            0,
+            0
+          ]
+        ],
+        "early_fields": [
+          0,
+          0,
+          0,
+          0,
+          6
+        ],
+        "forced": false,
+        "provider62_tags": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "job_kind": 0,
+        "inputs": {
+          "b": 0,
+          "key6": 48,
+          "tag95": 1
+        },
+        "A": 32768,
+        "CAP_3c": 0,
+        "CAP_3d": 0,
+        "policy_result": 4,
+        "policy_flags": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "threshold_call_arguments": [
+          [
+            32768,
+            0,
+            0,
+            0
+          ]
+        ],
+        "early_fields": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced": false,
+        "provider62_tags": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "job_kind": 6,
+        "inputs": {
+          "b": 0,
+          "key6": 48,
+          "tag95": 1
+        },
+        "A": 32768,
+        "CAP_3c": 0,
+        "CAP_3d": 0,
+        "policy_result": 4,
+        "policy_flags": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "threshold_call_arguments": [
+          [
+            32768,
+            0,
+            0,
+            0
+          ]
+        ],
+        "early_fields": [
+          0,
+          0,
+          0,
+          0,
+          6
+        ],
+        "forced": false,
+        "provider62_tags": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "job_kind": 0,
+        "inputs": {
+          "b": 68
+        },
+        "A": 8192,
+        "CAP_3c": 1,
+        "CAP_3d": 0,
+        "policy_result": 4,
+        "policy_flags": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "threshold_call_arguments": [
+          [
+            8192,
+            68,
+            0,
+            0
+          ]
+        ],
+        "early_fields": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced": true,
+        "provider62_tags": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "job_kind": 0,
+        "inputs": {
+          "b": 69
+        },
+        "A": 8192,
+        "CAP_3c": 0,
+        "CAP_3d": 0,
+        "policy_result": 2,
+        "policy_flags": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold_call_arguments": [
+          [
+            8192,
+            69,
+            0,
+            0
+          ]
+        ],
+        "early_fields": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced": false,
+        "provider62_tags": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "job_kind": 0,
+        "inputs": {
+          "b": 36,
+          "tag95": 2,
+          "c": 599
+        },
+        "A": 8192,
+        "CAP_3c": 0,
+        "CAP_3d": 0,
+        "policy_result": 4,
+        "policy_flags": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "threshold_call_arguments": [
+          [
+            8192,
+            36,
+            59,
+            0
+          ],
+          [
+            8192,
+            36,
+            59,
+            0
+          ]
+        ],
+        "early_fields": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced": false,
+        "provider62_tags": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "job_kind": 0,
+        "inputs": {
+          "b": 36,
+          "tag95": 2,
+          "c": 600
+        },
+        "A": 8192,
+        "CAP_3c": 1,
+        "CAP_3d": 0,
+        "policy_result": 4,
+        "policy_flags": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "threshold_call_arguments": [
+          [
+            8192,
+            36,
+            60,
+            0
+          ],
+          [
+            8192,
+            36,
+            60,
+            0
+          ]
+        ],
+        "early_fields": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced": true,
+        "provider62_tags": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "job_kind": 0,
+        "inputs": {
+          "tag95": 1,
+          "debug25": 1
+        },
+        "A": 8192,
+        "CAP_3c": 1,
+        "CAP_3d": 0,
+        "policy_result": 4,
+        "policy_flags": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "threshold_call_arguments": [
+          [
+            8192,
+            124,
+            0,
+            0
+          ]
+        ],
+        "early_fields": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced": true,
+        "provider62_tags": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "job_kind": 0,
+        "inputs": {
+          "tag95": 1,
+          "debug25": 1,
+          "debug26": 1
+        },
+        "A": 8192,
+        "CAP_3c": 0,
+        "CAP_3d": 0,
+        "policy_result": 1,
+        "policy_flags": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold_call_arguments": [
+          [
+            8192,
+            124,
+            0,
+            0
+          ]
+        ],
+        "early_fields": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced": false,
+        "provider62_tags": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "job_kind": 0,
+        "inputs": {
+          "key0": 9,
+          "tag95": 1
+        },
+        "A": 8192,
+        "CAP_3c": 0,
+        "CAP_3d": 0,
+        "policy_result": 4,
+        "policy_flags": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "threshold_call_arguments": [],
+        "early_fields": [
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced": true,
+        "provider62_tags": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "job_kind": 6,
+        "inputs": {
+          "key0": 12,
+          "tag95": 1
+        },
+        "A": 8192,
+        "CAP_3c": 0,
+        "CAP_3d": 0,
+        "policy_result": 4,
+        "policy_flags": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "threshold_call_arguments": [],
+        "early_fields": [
+          1,
+          0,
+          0,
+          0,
+          6
+        ],
+        "forced": true,
+        "provider62_tags": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "job_kind": 0,
+        "inputs": {
+          "key2f": 1,
+          "tagf5": 1,
+          "word20b6": 1
+        },
+        "A": 8192,
+        "CAP_3c": 0,
+        "CAP_3d": 0,
+        "policy_result": 1,
+        "policy_flags": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold_call_arguments": [
+          [
+            8192,
+            124,
+            0,
+            0
+          ]
+        ],
+        "early_fields": [
+          0,
+          1,
+          4660,
+          0,
+          0
+        ],
+        "forced": false,
+        "provider62_tags": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "job_kind": 0,
+        "inputs": {
+          "key2f": 1,
+          "tagf5": 1,
+          "word20b6": 2
+        },
+        "A": 8192,
+        "CAP_3c": 0,
+        "CAP_3d": 0,
+        "policy_result": 4,
+        "policy_flags": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "threshold_call_arguments": [
+          [
+            8192,
+            124,
+            0,
+            0
+          ]
+        ],
+        "early_fields": [
+          0,
+          1,
+          4660,
+          0,
+          0
+        ],
+        "forced": true,
+        "provider62_tags": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "job_kind": 0,
+        "inputs": {
+          "key22": 1,
+          "key6": 56
+        },
+        "A": 32768,
+        "CAP_3c": 0,
+        "CAP_3d": 0,
+        "policy_result": 1,
+        "policy_flags": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold_call_arguments": [
+          [
+            32768,
+            124,
+            0,
+            0
+          ]
+        ],
+        "early_fields": [
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        "forced": false,
+        "provider62_tags": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "job_kind": 0,
+        "inputs": {
+          "key22": 1,
+          "debug66": 1,
+          "key6": 56
+        },
+        "A": 65536,
+        "CAP_3c": 0,
+        "CAP_3d": 0,
+        "policy_result": 1,
+        "policy_flags": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold_call_arguments": [
+          [
+            65536,
+            124,
+            0,
+            0
+          ]
+        ],
+        "early_fields": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced": false,
+        "provider62_tags": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "job_kind": 0,
+        "inputs": {
+          "provider8": 16384,
+          "key6": 48
+        },
+        "A": 65536,
+        "CAP_3c": 0,
+        "CAP_3d": 0,
+        "policy_result": 1,
+        "policy_flags": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold_call_arguments": [
+          [
+            65536,
+            124,
+            0,
+            0
+          ]
+        ],
+        "early_fields": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced": false,
+        "provider62_tags": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "job_kind": 0,
+        "inputs": {
+          "provider62": true
+        },
+        "A": 8192,
+        "CAP_3c": 0,
+        "CAP_3d": 0,
+        "policy_result": 1,
+        "policy_flags": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold_call_arguments": [
+          [
+            8192,
+            124,
+            0,
+            0
+          ]
+        ],
+        "early_fields": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced": false,
+        "provider62_tags": [
+          18,
+          5,
+          10,
+          15,
+          20,
+          52,
+          7
+        ]
+      },
+      {
+        "job_kind": 0,
+        "inputs": {
+          "provider62": true,
+          "key0": 9,
+          "tag95": 1
+        },
+        "A": 8192,
+        "CAP_3c": 0,
+        "CAP_3d": 1,
+        "policy_result": 4,
+        "policy_flags": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "threshold_call_arguments": [],
+        "early_fields": [
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced": true,
+        "provider62_tags": [
+          18,
+          5,
+          10,
+          15,
+          20,
+          52,
+          7
+        ]
+      },
+      {
+        "job_kind": 0,
+        "inputs": {
+          "b": 68,
+          "tag95": 2,
+          "c": 32767
+        },
+        "A": 8192,
+        "CAP_3c": 0,
+        "CAP_3d": 0,
+        "policy_result": 3,
+        "policy_flags": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold_call_arguments": [
+          [
+            8192,
+            68,
+            3276,
+            0
+          ],
+          [
+            8192,
+            68,
+            3276,
+            0
+          ]
+        ],
+        "early_fields": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced": false,
+        "provider62_tags": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "job_kind": 0,
+        "inputs": {
+          "b": 68,
+          "tag95": 2,
+          "c": -32768,
+          "key0": 9
+        },
+        "A": 8192,
+        "CAP_3c": 1,
+        "CAP_3d": 0,
+        "policy_result": 4,
+        "policy_flags": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "threshold_call_arguments": [
+          [
+            8192,
+            68,
+            4294964020,
+            1
+          ]
+        ],
+        "early_fields": [
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "forced": true,
+        "provider62_tags": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "execution_replacements": [],
+    "ordered_file_offsets": [
+      6677928,
+      6684248,
+      6679936,
+      6680272,
+      6679960,
+      6677988,
+      6685112,
+      6678448,
+      6679144
+    ],
+    "threshold_table_sha256": "df06f02c8d320eeadee4a785a6c85930106541251b3e600ccc307d1b07fb462c",
+    "prepare_prefix_sha256": "d13282817fce2a65fef45e1efad0e587db89747ed8a83fc1b147e80ee707f0ba"
+  },
+  "scope": [
+    "The original manager, lookup singleton and two nested reader constructors execute in prefix controls; full-return controls also execute the third nested reader and a second singleton constructor. Capture vtable, initialization guards, configuration slots, settings, markers, fixed RAM mirrors and debug bytes are prepared. The complete capture constructor and whole startup are not executed.",
+    "Twenty-one prefix controls execute the first three calls and the original job-kind branch. Kinds5/7/8/11 stop at the alternate boundary655400; other tested kinds stop at655380. The second set contains twenty-one independent executions from6552B0 through the ninth virtual call and native policy return, stopping at6553E0 before the remaining preparation calls. Prepare itself has not returned at this prefix stop; three separate controls then execute prepare through its actual return.",
+    "The code hook only observes entries and arguments; no execution is replaced. Native stores create A at capture+240 and flags3C/5F/4F/52, which the policy consumes in the same execution. Child B, signed C and other inputs are synthetic; physical units and actual menu selection remain unestablished.",
+    "ID8/9/62 registry lookups execute on an empty manager. Their following getters return fixed RAM addresses independently of the lookup result. A valid ID62-associated mirror is tested only on B>=7C; the low-B valid-marker floating-point path is outside scope.",
+    "Three separate full-return controls add a prepared pointer table row and a singleton initialized guard. The original constructor call653BAC is stopped inside5AA3DC at5AA434 after the six73DD60 element constructors; later container sibling initialization is omitted. Separate original pointer publication slice653D74..653DC8 binds the six embedded3FC-byte records; no six independent allocations or supplied record pointers. Native setters seed two halfwords and neighboring bytes are canaries before prepare. Whole capture construction and its outer allocation remain outside scope. They execute65557C then654EB8 BX LR to the caller sentinel, with R0 and SP checked. The slot1 direct-alias setter produces98/13C;160/204 are prepared. Kind11 starts with nonzero A1/B2/C3/D4 pixel-flag canaries and retains them; the fixture does not claim original flag clearing. Whole capture construction, allocation, subsequent scheduling, image processing, live sensor data, JPEG output and physical capture are not executed."
+  ]
+}

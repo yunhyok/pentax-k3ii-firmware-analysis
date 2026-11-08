@@ -1,5 +1,7 @@
 # PENTAX K-3 II v1.12 펌웨어 분석
 
+[촬영 준비의 연속 호출](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/capture-prepare.html): 원본 아홉 호출을 거쳐 정책 입력을 생산하는 21건과 앞부분 분기 21건을 실행 대체 없이 검증했습니다. 별도 세 사례는 준비 함수의 실제 반환까지 실행해 이미지 포인터 보존과 원본 생산자가 연결한 내장 레코드 여섯 개의 메타데이터 초기화를 대조했습니다. 실제 촬영 작업은 미검증입니다.
+
 [픽셀 보정 활성값과 작업 준비 분기](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/pixel-policy.html): 원본 정책 53건, 조회표 364개 셀과 경계 21건, 준비 분기 12건을 검증했습니다. 정책→패킷→같은 버퍼의 보정을 연결했으며, 종류 11의 준비 분기가 정책 호출 블록을 건너뛰는 조건을 구분했습니다.
 
 [보존 픽셀 레코드와 촬영 패킷](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/pixel-records.html): 섹터 15~19의 공급자 10개를 원본 픽셀 보정과 연결했습니다. 같은 버퍼의 순차 수정, 적재 캐시와 재적재 경계, 패킷 활성 0/1 및 섹터 저장 요청 18개를 검증했습니다. 별도 [좌표 경계 여섯 대조](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/pixel-records.html#coordinate-boundary)는 중심 검사와 이웃 주소 검사를 구분합니다. 실제 촬영 도달과 물리 기록은 미검증입니다.
@@ -88,6 +90,7 @@ python verify_settings_storage.py .private/decoded/decoded.bin --compare analysi
 python verify_preserved_record.py .private/decoded/decoded.bin --compare analysis/preserved-record.json
 python verify_pixel_records.py .private/decoded/decoded.bin --compare analysis/pixel-records.json
 python verify_pixel_policy.py .private/decoded/decoded.bin --compare analysis/pixel-policy.json
+python verify_capture_prepare.py .private/decoded/decoded.bin --compare analysis/capture-prepare.json
 python verify_tone_rebuild.py .private/decoded/decoded.bin --zig <Zig-0.17.1-실행파일> --compare analysis/tone-rebuild.json
 python -m unittest discover -s tests -v
 python verify_publication.py

@@ -763,6 +763,64 @@
       "two_diagrams_visually_checked": true,
       "inner_width": 1897,
       "document_scroll_width": 1882
+    },
+    "type_comparison_fix": {
+      "commit": "f98997c1e192ca8b5daee66b5b5b7233d67def0a",
+      "ci": "success",
+      "pages": "success",
+      "http_files_byte_exact": 2,
+      "unit_tests": 21,
+      "optimized_unit_tests": 21,
+      "native_optimized_valid_snapshot": "PASS",
+      "native_optimized_bool_to_int_snapshot": "rejected"
+    }
+  },
+  "capture_prepare": {
+    "original_ARM_replay": true,
+    "native_prefix_cases": 21,
+    "native_through_policy_cases": 21,
+    "native_virtual_calls_in_order": 9,
+    "execution_replacements": 0,
+    "full_prepare_return_executed": true,
+    "coordinator_replayed_snapshot": true,
+    "independent_review": "No P0-P2 on private22/18 baseline. Accepted P3 remove repeated neutral case, distinguish ID62-associated fixed mirror from registered provider, name stop6553E0 accurately. Coordinator added three original branch controls: mirror flag, zero threshold cell, flag short-circuit. Tail private3-case review no P0-P2: actual BX LR/SP/R0, image canary, six exact metadata ranges. Accepted P3 kind11 nonzero A1/B2/C3/D4 retention and 12 original halfword writes. Final public review: original embedded constructor-prefix and pointer stores matched; all writes intersecting six full record extents independently equal12 halfword resets, selected allocator entries absent; integer1\u21921.0/true rejected. Accepted P3 diagram says embedded records.",
+    "physical_capture": false,
+    "full_prepare_return_cases": 3,
+    "virtual_call_counts": [
+      25,
+      25,
+      16
+    ],
+    "observed_entry_counts": [
+      27,
+      27,
+      18
+    ],
+    "metadata_zero_halfword_stores_each": 12,
+    "kind11_nonzero_pixel_flags_preserved": true,
+    "language_review": {
+      "route": "standard",
+      "paragraphs": 12,
+      "change_rate_percent": 0.1,
+      "sentences_touched": 3,
+      "sentences_total": 64,
+      "self_check": "6/6",
+      "deterministic_gate": "PASS",
+      "modality_loss": 0
+    },
+    "type_preserving_snapshot_compare": "PASS: native optimized genuine snapshot accepted; false-to-int mutation rejected",
+    "native_embedded_record_bytes": 1020,
+    "native_embedded_record_constructors": 6,
+    "native_pointer_stores": 6,
+    "container_constructor_stop_before_file_offset": "0x5AA434",
+    "complete_container_constructor_executed": false,
+    "embedded_records_language_review": {
+      "route": "light",
+      "paragraphs": 3,
+      "change_rate_percent": 0,
+      "self_check": "6/6",
+      "deterministic_gate": "PASS",
+      "modality_loss": 0
     }
   }
 }

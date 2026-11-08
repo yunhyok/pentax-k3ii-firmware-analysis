@@ -2,7 +2,7 @@
   "model": "PENTAX K-3 II",
   "firmware_version": "1.12",
   "baseline_commit": "66c85ea53f52b6e9489d742b5bd63e50e543055e",
-  "updated_at": "2026-11-08T17:43:47+09:00",
+  "updated_at": "2026-11-08T18:18:24+09:00",
   "goals": [
     {
       "id": "firmware_rebuild",
@@ -31,7 +31,10 @@
         "verify_pixel_records.py",
         "analysis/pixel-policy.html",
         "analysis/pixel-policy.json",
-        "verify_pixel_policy.py"
+        "verify_pixel_policy.py",
+        "analysis/capture-prepare.html",
+        "analysis/capture-prepare.json",
+        "verify_capture_prepare.py"
       ],
       "gaps": [
         "Only same-size edits; insertion/deletion and relocation are unsupported.",
@@ -42,7 +45,7 @@
       ],
       "next_actions": [
         "Continue offline caller/state-dependency analysis; the proven C tone leaf is a pinned64-byte A32 build, not a whole-firmware rebuild.",
-        "Continue offline investigation of auxiliary remote receiver, preserved sectors20..21, sector14 app-copy writeback and complete preparation paths before pixel policy.",
+        "Continue offline investigation of auxiliary remote receiver, preserved sectors20..21, sector14 app-copy writeback and remaining capture-constructor/allocation paths.",
         "Keep physical update outside the current offline scope."
       ]
     },
@@ -161,7 +164,8 @@
     "Sector14 providerID0 uses32bytes at VA021C0000 and RAM4042C4F0. Native marker load, five-word bulk methods, appcopy1528 and copy-only message setter reproduce.",
     "Diagnostic code exports the fifth word as the first SerialNo(UID) CSV argument; two format branches are replayed only up to formatter entry. Physical UID identity and file I/O are unverified.",
     "Sector14 save with onlyID0 registered traverses79 IDs, overlays16 halfwords and reaches599914 with65536 halfwords. Same-content case also calls the backend; statuses0..3 are injected and preserved. Other provider regions and physical writes are unverified.",
-    "Separate pixel boundary controls: native center validation rejects x=width/y=height but neighbor UXTH can cross a row or address beyond the logical image. Six native address/value controls use synthetic RAM; real sensor table constraints and padding are unknown."
+    "Separate pixel boundary controls: native center validation rejects x=width/y=height but neighbor UXTH can cross a row or address beyond the logical image. Six native address/value controls use synthetic RAM; real sensor table constraints and padding are unknown.",
+    "Native capture prepare6552B0 follows all nine virtual calls through pixel policy return to stop6553E0 with no execution replacements in21 controls. Another21 prefix controls include original skip kinds5/7/8/11; original early producers create5F/4F/52 and A240/3C consumed by policy. Another3 prepared-state cases return through original BX LR with25/25/16 virtual calls, preserving native slot1 image alias and resetting only two halfwords in six native embedded3FC-byte records. The partial container ctor stops before5AA434, and native653D74..653DC8 publishes their interior pointers. Kind11 retains nonzero pixel flag canaries. Actual capture remains unexecuted."
   ],
   "validation": {
     "commands": [
@@ -407,15 +411,24 @@
       }
     },
     "pixel-policy": {
-      "commit": "496800b991d5d702fcab96ef65173a41f7511bed",
+      "commit": "f98997c1e192ca8b5daee66b5b5b7233d67def0a",
       "path": "analysis/pixel-policy.json",
       "html_path": "analysis/pixel-policy.html",
       "verifier_path": "verify_pixel_policy.py",
       "replay": "python verify_pixel_policy.py decoded.bin --compare analysis/pixel-policy.json",
       "sha256": "9ae20720e23affa69152d4e2b97093f3dbc468c0608d82c605f8b2d4eb36bf61",
       "html_sha256": "c1256517969aea84dfe41bf74db478bcf3b071edce4a9a467cd017566168ca14",
-      "verifier_sha256": "873aa7ad152ea43a93f751e52912a08cbafd695197eb932ae835d481d71f21e0"
+      "verifier_sha256": "89d384f5fadf1ac20df680e483a105d21858f47f3a352b75487f0eded39a8c6b",
+      "previous_commit": "496800b991d5d702fcab96ef65173a41f7511bed",
+      "snapshot_type_fix": {
+        "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42465794373",
+        "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42465793560",
+        "ci": "success",
+        "pages": "success",
+        "http_files_byte_exact": 2,
+        "native_optimized_bool_to_int_negative_control": "PASS"
+      }
     }
   },
-  "offline_work_in_progress": "Continuous capture preparation before pixel policy; native nine-call chain privately replayed, independent review in progress. Separate coordinate-boundary controls published and verified."
+  "offline_work_in_progress": "Publishing capture preparation with native embedded-record producer/reset linkage; remaining outer constructor allocation/RTOS and downstream buffer-use history stay offline research targets."
 }
