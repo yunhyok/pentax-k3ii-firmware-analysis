@@ -541,6 +541,19 @@
       "self_check": "6/6",
       "deterministic_gate": "PASS",
       "wording_changes": 0
+    },
+    "publication": {
+      "commit": "f4f0fa9e4185f81f474acd50501c0e9c715e6f9f",
+      "ci": "success",
+      "pages": "success",
+      "http_files_byte_exact": 10,
+      "fresh_clone_snapshot": "PASS",
+      "html_documents": 17,
+      "local_links": 422,
+      "public_files": 108,
+      "two_diagrams_visually_checked": true,
+      "inner_width": 1897,
+      "document_scroll_width": 1882
     }
   }
 }
