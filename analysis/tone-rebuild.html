@@ -20,7 +20,7 @@ otherwise: return curve[index]
 <figure><figcaption>도식 1. C 소스에서 원본 호출자 대조까지</figcaption><div class="flow" role="group" aria-label="C 소스를 ARM 대상으로 컴파일하고 ELF를 검사한 뒤 메모리의 원본 함수64바이트만 교체해 원본 호출자를 실행">
 <div class="stage"><strong>C 소스</strong><span>256개 u16 곡선<br>정수 보간·상한 처리<br>사용하지 않는 문맥 인자 유지</span></div><div class="arrow" aria-hidden="true">→</div>
 <div class="stage"><strong>ARM 빌드·ELF 검사</strong><span>Cortex-A9 · A32 · -Os<br>.text와 함수 심벌 모두 64바이트<br>.text 재배치·미해결 심벌 없음</span></div><div class="arrow" aria-hidden="true">→</div>
-<div class="stage"><strong>메모리 안에서 대조</strong><span>원본 호출 명령은 그대로 실행<br>9곳 × 256회 호출<br>출력·레지스터·메모리 접근 확인</span></div></div></figure>
+<div class="stage"><strong>메모리 안에서 대조</strong><span>호출자 9곳 × 256회<br>호출자: 출력·레지스터 보존 대조<br>직접 함수 사례: 메모리 접근 관찰</span></div></div></figure>
 <p>Zig 0.17.1에 포함된 Clang 22.1.8을 사용했다. 생성 ELF는 32비트 little-endian ARM EABI 5이며 함수 심벌 전체가 4바이트 정렬된 A32 코드다. <code>.ARM.exidx</code>와 그 재배치 메타데이터도 존재하지만 사용한 영역은 검증된 <code>.text</code> 64바이트뿐이다. ELF 전체를 펌웨어에 넣지 않았다. 컴파일러 버전·옵션과 생성 코드 해시는 <a href="tone-rebuild.json">JSON 기록</a>에 고정했다.</p>
 </section>
 
