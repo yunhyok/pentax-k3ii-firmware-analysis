@@ -696,5 +696,33 @@
       "inner_width": 1897,
       "document_scroll_width": 1882
     }
+  },
+  "pixel_policy": {
+    "original_ARM_replay": true,
+    "static_calls": 39,
+    "static_tail_branches": 3,
+    "static_words": 46,
+    "literal_uses": 13,
+    "code_ranges": 11,
+    "table_cells": 364,
+    "table_boundary_cases": 21,
+    "whole_policy_cases": 53,
+    "bounded_prepare_gate_cases": 12,
+    "connected_cases": 2,
+    "policy_execution_replacements": [],
+    "connected_execution_replacements": [
+      "0x785F70"
+    ],
+    "coordinator_replayed_snapshot": true,
+    "independent_review": "No P0-P2. Constructor-default and prepared B fixtures kept separate. Three pre-gate and five pre-dispatch calls remain outside bounded preparation replay.",
+    "physical_capture": false,
+    "language_review": {
+      "route": "light",
+      "paragraphs": 10,
+      "change_rate_percent": 0.1,
+      "self_check": "6/6",
+      "deterministic_gate": "PASS",
+      "modality_loss": 0
+    }
   }
 }

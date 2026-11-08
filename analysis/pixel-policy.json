@@ -1,0 +1,3229 @@
+{
+  "firmware_version": "1.12",
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "image_base": 33554432,
+  "static": {
+    "calls": [
+      [
+        6679152,
+        5659752
+      ],
+      [
+        6679156,
+        7887196
+      ],
+      [
+        6679188,
+        7666108
+      ],
+      [
+        6679244,
+        7273988
+      ],
+      [
+        6679252,
+        7271504
+      ],
+      [
+        6679288,
+        5902420
+      ],
+      [
+        6679300,
+        7884368
+      ],
+      [
+        6679332,
+        7416520
+      ],
+      [
+        6679352,
+        5902064
+      ],
+      [
+        6679444,
+        7367472
+      ],
+      [
+        6679464,
+        7367472
+      ],
+      [
+        6679484,
+        7443256
+      ],
+      [
+        6679540,
+        7367472
+      ],
+      [
+        6679560,
+        7367472
+      ],
+      [
+        6679580,
+        7367472
+      ],
+      [
+        6679600,
+        7367472
+      ],
+      [
+        6679616,
+        7367448
+      ],
+      [
+        6679632,
+        7887536
+      ],
+      [
+        6679688,
+        7367472
+      ],
+      [
+        6679724,
+        7665964
+      ],
+      [
+        6679740,
+        7665964
+      ],
+      [
+        6679756,
+        7666012
+      ],
+      [
+        6679772,
+        7666012
+      ],
+      [
+        6679792,
+        8578784
+      ],
+      [
+        6679808,
+        8578784
+      ],
+      [
+        6679824,
+        8578784
+      ],
+      [
+        7367460,
+        7327468
+      ],
+      [
+        7367484,
+        7367440
+      ],
+      [
+        7327484,
+        7241372
+      ],
+      [
+        7327488,
+        7527852
+      ],
+      [
+        7666120,
+        7528928
+      ],
+      [
+        7666124,
+        7528452
+      ],
+      [
+        7666152,
+        7528392
+      ],
+      [
+        7666156,
+        7527916
+      ],
+      [
+        6674068,
+        7448728
+      ],
+      [
+        5773224,
+        7577224
+      ],
+      [
+        5773304,
+        7455504
+      ],
+      [
+        5773320,
+        7455488
+      ],
+      [
+        5773332,
+        7579116
+      ]
+    ],
+    "tail_branches": [
+      [
+        7327496,
+        7527052
+      ],
+      [
+        7665984,
+        7687356
+      ],
+      [
+        7666032,
+        7687364
+      ]
+    ],
+    "word_checks": 46,
+    "literal_uses": [
+      [
+        5659752,
+        1077983140
+      ],
+      [
+        5659816,
+        1078448392
+      ],
+      [
+        7357528,
+        1077975536
+      ],
+      [
+        7357592,
+        1078298012
+      ],
+      [
+        7280392,
+        1078057104
+      ],
+      [
+        7779448,
+        1077980772
+      ],
+      [
+        7779512,
+        1077981420
+      ],
+      [
+        7527852,
+        1078064064
+      ],
+      [
+        7527056,
+        1520805210
+      ],
+      [
+        7528928,
+        2147483648
+      ],
+      [
+        7528392,
+        2147549184
+      ],
+      [
+        7253376,
+        44530860
+      ],
+      [
+        7254420,
+        43903632
+      ]
+    ],
+    "range_sha256": [
+      {
+        "start": 6679144,
+        "end_exclusive": 6679832,
+        "sha256": "98ea7ba103857026a16810eaed3f55621c279db596b0438a5319d15904edcc0e"
+      },
+      {
+        "start": 5902064,
+        "end_exclusive": 5902456,
+        "sha256": "2f3b4dc578f008cf05f6651619453b29adb5046bf7f3407f4aab672228fdfeaf"
+      },
+      {
+        "start": 7253368,
+        "end_exclusive": 7253432,
+        "sha256": "51f1d6292b94d49c582ccee7bbb2b38130cc6a499d7f6c98155f49be3dee794b"
+      },
+      {
+        "start": 7254400,
+        "end_exclusive": 7254492,
+        "sha256": "fc973abb541e0766b253bba6e8038685e101b1a839f06c685436c632b642a270"
+      },
+      {
+        "start": 7665964,
+        "end_exclusive": 7666168,
+        "sha256": "81d64cd0b32dad868caa2991bc9ceee9bb55af7270ab98e2179af611be45620e"
+      },
+      {
+        "start": 7367440,
+        "end_exclusive": 7369000,
+        "sha256": "334ccc0d4e5d835d4966d5695c0b3f69a0bb2fb9a737c49358f30555e992f8ad"
+      },
+      {
+        "start": 7327468,
+        "end_exclusive": 7327500,
+        "sha256": "1d2526d55b95f6fb421345e5d0a3828e1826fb00e1032d9504a6de4410d30333"
+      },
+      {
+        "start": 8578784,
+        "end_exclusive": 8578804,
+        "sha256": "e878d5c4bf100f71b2af3afecfaf14a03ef829e77e39662b3bcd70514e6c7155"
+      },
+      {
+        "start": 6674000,
+        "end_exclusive": 6674100,
+        "sha256": "9c7d0ba87886adc0122af0d701b3e07da43f8a409f221b58b6000457b08a3d02"
+      },
+      {
+        "start": 5773132,
+        "end_exclusive": 5773336,
+        "sha256": "9de51c748b2fb84e3931b0e77e3c715e40009f97bd093a82ddb81840cba450fb"
+      },
+      {
+        "start": 6640304,
+        "end_exclusive": 6640640,
+        "sha256": "2a31d3243870479fad4df82b4dc026ec282bca0740562fab8a0dc9f75c9fc838"
+      }
+    ],
+    "lookup": {
+      "tables": [
+        {
+          "file_offset": 10379842,
+          "sha256": "7ef86995c2567ad94bfe2068b6f175c3a6a500f86754f2da072c0bf92da7a5cf"
+        },
+        {
+          "file_offset": 10379946,
+          "sha256": "7ef86995c2567ad94bfe2068b6f175c3a6a500f86754f2da072c0bf92da7a5cf"
+        },
+        {
+          "file_offset": 10380050,
+          "sha256": "7ef86995c2567ad94bfe2068b6f175c3a6a500f86754f2da072c0bf92da7a5cf"
+        },
+        {
+          "file_offset": 10380154,
+          "sha256": "cdc7fb6399761f22babaf83ca4b68ea902da61a0a97c7fd411c90669ffa121c6"
+        },
+        {
+          "file_offset": 10380258,
+          "sha256": "ffc19af801905008d675c2481747d44536bb03e0beb180dcb0e36acabc917924"
+        },
+        {
+          "file_offset": 10380362,
+          "sha256": "fb21a4b43019a762fb76200224701d2234135ce375f352a55ce0383816872619"
+        },
+        {
+          "file_offset": 10380466,
+          "sha256": "19e20b33170de3c02bc4f913b095fe8bc311ba91b093ee1d489711a3a8cdee00"
+        }
+      ],
+      "table_shape": [
+        7,
+        4,
+        13
+      ],
+      "entry_bytes": 2,
+      "capture_fields": {
+        "A": 576,
+        "B": 840,
+        "C": 8346
+      },
+      "key_4_descriptor_file_offset": 10349232,
+      "A_unsigned_upper_inclusive": [
+        16384,
+        32768,
+        65536
+      ],
+      "B_unsigned_lower_descending": [
+        124,
+        116,
+        108,
+        100,
+        92,
+        84,
+        76,
+        68,
+        60,
+        52,
+        44,
+        36
+      ],
+      "C_after_signed_divide_10_lower": [
+        0,
+        10,
+        20,
+        30,
+        40,
+        50
+      ]
+    },
+    "configuration_layout": {
+      "slot_base": 24,
+      "slot_stride": 16,
+      "word_offsets_in_slot": [
+        0,
+        8
+      ],
+      "capture_output_offsets": [
+        456,
+        460,
+        464,
+        468
+      ],
+      "flag_0x4a_marker_vas": [
+        2147483648,
+        2147549184
+      ]
+    },
+    "tag_layout": {
+      "pointer_offset": 6720,
+      "halfword_tags": [
+        63,
+        64,
+        65
+      ]
+    },
+    "debug_keys": [
+      {
+        "key": 15,
+        "byte_offset": 11,
+        "entry_file_offset": 7368116
+      },
+      {
+        "key": 25,
+        "byte_offset": 12,
+        "entry_file_offset": 7368060
+      },
+      {
+        "key": 26,
+        "byte_offset": 13,
+        "entry_file_offset": 7368068
+      },
+      {
+        "key": 27,
+        "byte_offset": 14,
+        "entry_file_offset": 7368076
+      },
+      {
+        "key": 28,
+        "byte_offset": 15,
+        "entry_file_offset": 7368084
+      },
+      {
+        "key": 29,
+        "byte_offset": 16,
+        "entry_file_offset": 7368092
+      },
+      {
+        "key": 30,
+        "byte_offset": 17,
+        "entry_file_offset": 7368100
+      }
+    ]
+  },
+  "replay": {
+    "unicorn_version": "2.1.4",
+    "lookup_checks": {
+      "distinct_cells": 364,
+      "additional_boundaries": 21,
+      "observed_result_sha256": "d4f91f3ee58e9e5355575e48213285edb3371c3624f94376ca60216e153f46c8"
+    },
+    "bounded_prepare_gate_cases": [
+      {
+        "job_kind": 0,
+        "native_flags_2080_2081_2082": [
+          0,
+          0,
+          0
+        ],
+        "gate_boundary": 6640512,
+        "policy_block_skipped": false
+      },
+      {
+        "job_kind": 1,
+        "native_flags_2080_2081_2082": [
+          0,
+          0,
+          0
+        ],
+        "gate_boundary": 6640512,
+        "policy_block_skipped": false
+      },
+      {
+        "job_kind": 2,
+        "native_flags_2080_2081_2082": [
+          0,
+          0,
+          0
+        ],
+        "gate_boundary": 6640512,
+        "policy_block_skipped": false
+      },
+      {
+        "job_kind": 3,
+        "native_flags_2080_2081_2082": [
+          0,
+          0,
+          0
+        ],
+        "gate_boundary": 6640512,
+        "policy_block_skipped": false
+      },
+      {
+        "job_kind": 4,
+        "native_flags_2080_2081_2082": [
+          0,
+          0,
+          0
+        ],
+        "gate_boundary": 6640512,
+        "policy_block_skipped": false
+      },
+      {
+        "job_kind": 5,
+        "native_flags_2080_2081_2082": [
+          1,
+          0,
+          0
+        ],
+        "gate_boundary": 6640640,
+        "policy_block_skipped": true
+      },
+      {
+        "job_kind": 6,
+        "native_flags_2080_2081_2082": [
+          0,
+          0,
+          0
+        ],
+        "gate_boundary": 6640512,
+        "policy_block_skipped": false
+      },
+      {
+        "job_kind": 7,
+        "native_flags_2080_2081_2082": [
+          1,
+          1,
+          0
+        ],
+        "gate_boundary": 6640640,
+        "policy_block_skipped": true
+      },
+      {
+        "job_kind": 8,
+        "native_flags_2080_2081_2082": [
+          1,
+          1,
+          0
+        ],
+        "gate_boundary": 6640640,
+        "policy_block_skipped": true
+      },
+      {
+        "job_kind": 9,
+        "native_flags_2080_2081_2082": [
+          0,
+          0,
+          0
+        ],
+        "gate_boundary": 6640512,
+        "policy_block_skipped": false
+      },
+      {
+        "job_kind": 10,
+        "native_flags_2080_2081_2082": [
+          0,
+          0,
+          0
+        ],
+        "gate_boundary": 6640512,
+        "policy_block_skipped": false
+      },
+      {
+        "job_kind": 11,
+        "native_flags_2080_2081_2082": [
+          1,
+          0,
+          1
+        ],
+        "gate_boundary": 6640640,
+        "policy_block_skipped": true
+      }
+    ],
+    "whole_policy_cases": [
+      {
+        "case": "native_result_1",
+        "inputs": {
+          "A": 16384,
+          "B": 124,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379946,
+        "selector_result": 1,
+        "flags_47_to_4a": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          100,
+          101,
+          200,
+          201
+        ],
+        "tags_3f_40_41": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "case": "native_result_2",
+        "inputs": {
+          "A": 16384,
+          "B": 68,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379960,
+        "selector_result": 2,
+        "flags_47_to_4a": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          102,
+          103,
+          202,
+          203
+        ],
+        "tags_3f_40_41": [
+          0,
+          0,
+          2
+        ]
+      },
+      {
+        "case": "native_result_3",
+        "inputs": {
+          "A": 16384,
+          "B": 36,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379968,
+        "selector_result": 3,
+        "flags_47_to_4a": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          0,
+          0,
+          3
+        ]
+      },
+      {
+        "case": "native_result_4",
+        "inputs": {
+          "A": 32768,
+          "B": 0,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379996,
+        "selector_result": 4,
+        "flags_47_to_4a": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          1,
+          1,
+          4
+        ]
+      },
+      {
+        "case": "native_result_4_job_kind_6",
+        "inputs": {
+          "A": 32768,
+          "B": 0,
+          "C": 0,
+          "job_kind": 6,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379996,
+        "selector_result": 4,
+        "flags_47_to_4a": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          1,
+          0,
+          4
+        ]
+      },
+      {
+        "case": "native_result_4_job_kind_5",
+        "inputs": {
+          "A": 32768,
+          "B": 0,
+          "C": 0,
+          "job_kind": 5,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379996,
+        "selector_result": 4,
+        "flags_47_to_4a": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          1,
+          1,
+          4
+        ]
+      },
+      {
+        "case": "native_result_4_job_kind_11",
+        "inputs": {
+          "A": 32768,
+          "B": 0,
+          "C": 0,
+          "job_kind": 11,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379996,
+        "selector_result": 4,
+        "flags_47_to_4a": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          1,
+          1,
+          4
+        ]
+      },
+      {
+        "case": "force_3c_job_kind_0",
+        "inputs": {
+          "A": 16384,
+          "B": 124,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 60,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": true,
+        "cell_file_offset": null,
+        "selector_result": 4,
+        "flags_47_to_4a": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          1,
+          1,
+          4
+        ]
+      },
+      {
+        "case": "force_3c_job_kind_6",
+        "inputs": {
+          "A": 16384,
+          "B": 124,
+          "C": 0,
+          "job_kind": 6,
+          "force_byte_offset": 60,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": true,
+        "cell_file_offset": null,
+        "selector_result": 4,
+        "flags_47_to_4a": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          1,
+          0,
+          4
+        ]
+      },
+      {
+        "case": "force_5f_job_kind_0",
+        "inputs": {
+          "A": 16384,
+          "B": 124,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 95,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": true,
+        "cell_file_offset": null,
+        "selector_result": 4,
+        "flags_47_to_4a": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          1,
+          1,
+          4
+        ]
+      },
+      {
+        "case": "force_5f_job_kind_6",
+        "inputs": {
+          "A": 16384,
+          "B": 124,
+          "C": 0,
+          "job_kind": 6,
+          "force_byte_offset": 95,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": true,
+        "cell_file_offset": null,
+        "selector_result": 4,
+        "flags_47_to_4a": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          1,
+          0,
+          4
+        ]
+      },
+      {
+        "case": "three_field_force_gate",
+        "inputs": {
+          "A": 16384,
+          "B": 124,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            1,
+            2
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379946,
+        "selector_result": 1,
+        "flags_47_to_4a": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          100,
+          101,
+          200,
+          201
+        ],
+        "tags_3f_40_41": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "case": "three_field_force_gate",
+        "inputs": {
+          "A": 16384,
+          "B": 124,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            1,
+            0,
+            2
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379946,
+        "selector_result": 1,
+        "flags_47_to_4a": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          100,
+          101,
+          200,
+          201
+        ],
+        "tags_3f_40_41": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "case": "three_field_force_gate",
+        "inputs": {
+          "A": 16384,
+          "B": 124,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            1,
+            1,
+            1
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379946,
+        "selector_result": 1,
+        "flags_47_to_4a": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          100,
+          101,
+          200,
+          201
+        ],
+        "tags_3f_40_41": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "case": "three_field_force_gate",
+        "inputs": {
+          "A": 16384,
+          "B": 124,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            1,
+            1,
+            2
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": true,
+        "cell_file_offset": null,
+        "selector_result": 4,
+        "flags_47_to_4a": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          1,
+          1,
+          4
+        ]
+      },
+      {
+        "case": "configuration_4a_gate",
+        "inputs": {
+          "A": 16384,
+          "B": 124,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379946,
+        "selector_result": 1,
+        "flags_47_to_4a": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          100,
+          101,
+          200,
+          201
+        ],
+        "tags_3f_40_41": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "case": "configuration_4a_gate",
+        "inputs": {
+          "A": 16384,
+          "B": 124,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            1
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379946,
+        "selector_result": 1,
+        "flags_47_to_4a": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          100,
+          101,
+          200,
+          201
+        ],
+        "tags_3f_40_41": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "case": "configuration_4a_gate",
+        "inputs": {
+          "A": 16384,
+          "B": 124,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            1,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379946,
+        "selector_result": 1,
+        "flags_47_to_4a": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          100,
+          101,
+          200,
+          201
+        ],
+        "tags_3f_40_41": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "case": "configuration_4a_gate",
+        "inputs": {
+          "A": 16384,
+          "B": 124,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            1,
+            1
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379946,
+        "selector_result": 1,
+        "flags_47_to_4a": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          100,
+          101,
+          200,
+          201
+        ],
+        "tags_3f_40_41": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "case": "configuration_4a_gate",
+        "inputs": {
+          "A": 16384,
+          "B": 124,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            1,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379946,
+        "selector_result": 1,
+        "flags_47_to_4a": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          100,
+          101,
+          200,
+          201
+        ],
+        "tags_3f_40_41": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "case": "configuration_4a_gate",
+        "inputs": {
+          "A": 16384,
+          "B": 124,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            1,
+            0,
+            1
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379946,
+        "selector_result": 1,
+        "flags_47_to_4a": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          100,
+          101,
+          200,
+          201
+        ],
+        "tags_3f_40_41": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "case": "configuration_4a_gate",
+        "inputs": {
+          "A": 16384,
+          "B": 124,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            1,
+            1,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379946,
+        "selector_result": 1,
+        "flags_47_to_4a": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          100,
+          101,
+          200,
+          201
+        ],
+        "tags_3f_40_41": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "case": "configuration_4a_gate",
+        "inputs": {
+          "A": 16384,
+          "B": 124,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            1,
+            1,
+            1
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379946,
+        "selector_result": 1,
+        "flags_47_to_4a": [
+          1,
+          1,
+          0,
+          1
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          100,
+          101,
+          200,
+          201
+        ],
+        "tags_3f_40_41": [
+          1,
+          0,
+          1
+        ]
+      },
+      {
+        "case": "debug_disabled_ignores_keys",
+        "inputs": {
+          "A": 16384,
+          "B": 124,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [
+            15,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30
+          ],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379946,
+        "selector_result": 1,
+        "flags_47_to_4a": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          100,
+          101,
+          200,
+          201
+        ],
+        "tags_3f_40_41": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "case": "debug_1d_enables_49",
+        "inputs": {
+          "A": 16384,
+          "B": 124,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": true,
+          "debug_keys": [
+            29
+          ],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379946,
+        "selector_result": 1,
+        "flags_47_to_4a": [
+          1,
+          1,
+          1,
+          0
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          100,
+          101,
+          200,
+          201
+        ],
+        "tags_3f_40_41": [
+          0,
+          1,
+          1
+        ]
+      },
+      {
+        "case": "debug_1a_clears_result_4",
+        "inputs": {
+          "A": 32768,
+          "B": 0,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": true,
+          "debug_keys": [
+            26
+          ],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379996,
+        "selector_result": 4,
+        "flags_47_to_4a": [
+          1,
+          1,
+          0,
+          1
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          1,
+          0,
+          4
+        ]
+      },
+      {
+        "case": "debug_1a_after_1d",
+        "inputs": {
+          "A": 16384,
+          "B": 124,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": true,
+          "debug_keys": [
+            29,
+            26
+          ],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379946,
+        "selector_result": 1,
+        "flags_47_to_4a": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          100,
+          101,
+          200,
+          201
+        ],
+        "tags_3f_40_41": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "case": "debug_1b_clears_47",
+        "inputs": {
+          "A": 32768,
+          "B": 0,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": true,
+          "debug_keys": [
+            27
+          ],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379996,
+        "selector_result": 4,
+        "flags_47_to_4a": [
+          0,
+          1,
+          1,
+          1
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          1,
+          1,
+          4
+        ]
+      },
+      {
+        "case": "debug_1c_clears_48",
+        "inputs": {
+          "A": 32768,
+          "B": 0,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": true,
+          "debug_keys": [
+            28
+          ],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379996,
+        "selector_result": 4,
+        "flags_47_to_4a": [
+          1,
+          0,
+          1,
+          1
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          1,
+          1,
+          4
+        ]
+      },
+      {
+        "case": "debug_0f_clears_all",
+        "inputs": {
+          "A": 32768,
+          "B": 0,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": true,
+          "debug_keys": [
+            15,
+            29
+          ],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379996,
+        "selector_result": 4,
+        "flags_47_to_4a": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          0,
+          0,
+          4
+        ]
+      },
+      {
+        "case": "debug_1e_config_pair",
+        "inputs": {
+          "A": 16384,
+          "B": 124,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": true,
+          "debug_keys": [
+            30
+          ],
+          "debug_pair": 1,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379946,
+        "selector_result": 1,
+        "flags_47_to_4a": [
+          1,
+          1,
+          0,
+          1
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          100,
+          101,
+          200,
+          201
+        ],
+        "tags_3f_40_41": [
+          1,
+          0,
+          1
+        ]
+      },
+      {
+        "case": "debug_1e_config_pair",
+        "inputs": {
+          "A": 16384,
+          "B": 124,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": true,
+          "debug_keys": [
+            30,
+            25
+          ],
+          "debug_pair": 2,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379946,
+        "selector_result": 1,
+        "flags_47_to_4a": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          102,
+          103,
+          202,
+          203
+        ],
+        "tags_3f_40_41": [
+          0,
+          0,
+          1
+        ]
+      },
+      {
+        "case": "debug_1e_config_pair",
+        "inputs": {
+          "A": 16384,
+          "B": 124,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": true,
+          "debug_keys": [
+            30
+          ],
+          "debug_pair": 3,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379946,
+        "selector_result": 1,
+        "flags_47_to_4a": [
+          1,
+          1,
+          0,
+          1
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          1,
+          0,
+          1
+        ]
+      },
+      {
+        "case": "id3_marker_and_debug_9a",
+        "inputs": {
+          "A": 32768,
+          "B": 0,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379996,
+        "selector_result": 4,
+        "flags_47_to_4a": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          1,
+          1,
+          4
+        ]
+      },
+      {
+        "case": "id3_marker_and_debug_9a",
+        "inputs": {
+          "A": 32768,
+          "B": 0,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 1,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379996,
+        "selector_result": 4,
+        "flags_47_to_4a": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          1,
+          1,
+          4
+        ]
+      },
+      {
+        "case": "id3_marker_and_debug_9a",
+        "inputs": {
+          "A": 32768,
+          "B": 0,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": true,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379996,
+        "selector_result": 4,
+        "flags_47_to_4a": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "threshold": 1,
+        "id3_marker_check": 1,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          1,
+          1,
+          4
+        ]
+      },
+      {
+        "case": "id3_marker_and_debug_9a",
+        "inputs": {
+          "A": 32768,
+          "B": 0,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": true,
+          "debug_0x9a": 1,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379996,
+        "selector_result": 4,
+        "flags_47_to_4a": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "threshold": 1,
+        "id3_marker_check": 1,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          0,
+          0,
+          4
+        ]
+      },
+      {
+        "case": "signed_C_boundary",
+        "inputs": {
+          "A": 32768,
+          "B": 36,
+          "C": -32768,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379890,
+        "selector_result": 3,
+        "flags_47_to_4a": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          0,
+          0,
+          3
+        ]
+      },
+      {
+        "case": "signed_C_boundary",
+        "inputs": {
+          "A": 32768,
+          "B": 36,
+          "C": -10,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379890,
+        "selector_result": 3,
+        "flags_47_to_4a": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          0,
+          0,
+          3
+        ]
+      },
+      {
+        "case": "signed_C_boundary",
+        "inputs": {
+          "A": 32768,
+          "B": 36,
+          "C": -9,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379994,
+        "selector_result": 3,
+        "flags_47_to_4a": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          0,
+          0,
+          3
+        ]
+      },
+      {
+        "case": "signed_C_boundary",
+        "inputs": {
+          "A": 32768,
+          "B": 36,
+          "C": -1,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379994,
+        "selector_result": 3,
+        "flags_47_to_4a": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          0,
+          0,
+          3
+        ]
+      },
+      {
+        "case": "signed_C_boundary",
+        "inputs": {
+          "A": 32768,
+          "B": 36,
+          "C": 0,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379994,
+        "selector_result": 3,
+        "flags_47_to_4a": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          0,
+          0,
+          3
+        ]
+      },
+      {
+        "case": "signed_C_boundary",
+        "inputs": {
+          "A": 32768,
+          "B": 36,
+          "C": 99,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10379994,
+        "selector_result": 3,
+        "flags_47_to_4a": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          0,
+          0,
+          3
+        ]
+      },
+      {
+        "case": "signed_C_boundary",
+        "inputs": {
+          "A": 32768,
+          "B": 36,
+          "C": 100,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10380098,
+        "selector_result": 3,
+        "flags_47_to_4a": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          0,
+          0,
+          3
+        ]
+      },
+      {
+        "case": "signed_C_boundary",
+        "inputs": {
+          "A": 32768,
+          "B": 36,
+          "C": 199,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10380098,
+        "selector_result": 3,
+        "flags_47_to_4a": [
+          1,
+          1,
+          0,
+          0
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          0,
+          0,
+          3
+        ]
+      },
+      {
+        "case": "signed_C_boundary",
+        "inputs": {
+          "A": 32768,
+          "B": 36,
+          "C": 200,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10380202,
+        "selector_result": 4,
+        "flags_47_to_4a": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          1,
+          1,
+          4
+        ]
+      },
+      {
+        "case": "signed_C_boundary",
+        "inputs": {
+          "A": 32768,
+          "B": 36,
+          "C": 299,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10380202,
+        "selector_result": 4,
+        "flags_47_to_4a": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          1,
+          1,
+          4
+        ]
+      },
+      {
+        "case": "signed_C_boundary",
+        "inputs": {
+          "A": 32768,
+          "B": 36,
+          "C": 300,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10380306,
+        "selector_result": 4,
+        "flags_47_to_4a": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          1,
+          1,
+          4
+        ]
+      },
+      {
+        "case": "signed_C_boundary",
+        "inputs": {
+          "A": 32768,
+          "B": 36,
+          "C": 399,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10380306,
+        "selector_result": 4,
+        "flags_47_to_4a": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          1,
+          1,
+          4
+        ]
+      },
+      {
+        "case": "signed_C_boundary",
+        "inputs": {
+          "A": 32768,
+          "B": 36,
+          "C": 400,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10380410,
+        "selector_result": 4,
+        "flags_47_to_4a": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          1,
+          1,
+          4
+        ]
+      },
+      {
+        "case": "signed_C_boundary",
+        "inputs": {
+          "A": 32768,
+          "B": 36,
+          "C": 499,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10380410,
+        "selector_result": 4,
+        "flags_47_to_4a": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          1,
+          1,
+          4
+        ]
+      },
+      {
+        "case": "signed_C_boundary",
+        "inputs": {
+          "A": 32768,
+          "B": 36,
+          "C": 500,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10380514,
+        "selector_result": 4,
+        "flags_47_to_4a": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          1,
+          1,
+          4
+        ]
+      },
+      {
+        "case": "signed_C_boundary",
+        "inputs": {
+          "A": 32768,
+          "B": 36,
+          "C": 32767,
+          "job_kind": 0,
+          "force_byte_offset": 0,
+          "option_4f_f5_20b6": [
+            0,
+            0,
+            0
+          ],
+          "debug_enable": false,
+          "debug_keys": [],
+          "debug_pair": 0,
+          "id3_marker_valid": false,
+          "debug_0x9a": 0,
+          "config_4a_markers_and_byte": [
+            0,
+            0,
+            0
+          ]
+        },
+        "forced": false,
+        "cell_file_offset": 10380514,
+        "selector_result": 4,
+        "flags_47_to_4a": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "threshold": 1,
+        "id3_marker_check": 0,
+        "config_words_1c8_to_1d4": [
+          104,
+          105,
+          204,
+          205
+        ],
+        "tags_3f_40_41": [
+          1,
+          1,
+          4
+        ]
+      }
+    ],
+    "policy_execution_replacements": [],
+    "connected_packet_cases": [
+      {
+        "policy": {
+          "case": "connected_job_kind_0",
+          "inputs": {
+            "A": 32768,
+            "B": 0,
+            "C": 0,
+            "job_kind": 0,
+            "force_byte_offset": 0,
+            "option_4f_f5_20b6": [
+              0,
+              0,
+              0
+            ],
+            "debug_enable": true,
+            "debug_keys": [
+              27,
+              28
+            ],
+            "debug_pair": 0,
+            "id3_marker_valid": false,
+            "debug_0x9a": 0,
+            "config_4a_markers_and_byte": [
+              0,
+              0,
+              0
+            ]
+          },
+          "forced": false,
+          "cell_file_offset": 10379996,
+          "selector_result": 4,
+          "flags_47_to_4a": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "threshold": 1,
+          "id3_marker_check": 0,
+          "config_words_1c8_to_1d4": [
+            104,
+            105,
+            204,
+            205
+          ],
+          "tags_3f_40_41": [
+            1,
+            1,
+            4
+          ]
+        },
+        "event_id": 18350081,
+        "payload_flags_8_9_a": [
+          0,
+          0,
+          1
+        ],
+        "observed_entries": [
+          7577224,
+          7579116,
+          7578116,
+          7888752,
+          7577472,
+          7577344,
+          7577472,
+          7577344
+        ],
+        "center_values": [
+          300,
+          450
+        ],
+        "image_sha256": "69358f904a37a7cb2da8b127d1be233dcf95e063901570c2dae9b526bccf3a83"
+      },
+      {
+        "policy": {
+          "case": "connected_job_kind_6",
+          "inputs": {
+            "A": 32768,
+            "B": 0,
+            "C": 0,
+            "job_kind": 6,
+            "force_byte_offset": 0,
+            "option_4f_f5_20b6": [
+              0,
+              0,
+              0
+            ],
+            "debug_enable": true,
+            "debug_keys": [
+              27,
+              28
+            ],
+            "debug_pair": 0,
+            "id3_marker_valid": false,
+            "debug_0x9a": 0,
+            "config_4a_markers_and_byte": [
+              0,
+              0,
+              0
+            ]
+          },
+          "forced": false,
+          "cell_file_offset": 10379996,
+          "selector_result": 4,
+          "flags_47_to_4a": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "threshold": 1,
+          "id3_marker_check": 0,
+          "config_words_1c8_to_1d4": [
+            104,
+            105,
+            204,
+            205
+          ],
+          "tags_3f_40_41": [
+            1,
+            0,
+            4
+          ]
+        },
+        "event_id": 18350081,
+        "payload_flags_8_9_a": [
+          0,
+          0,
+          0
+        ],
+        "observed_entries": [
+          7577224
+        ],
+        "center_values": [
+          9999,
+          8888
+        ],
+        "image_sha256": "6789e4d7eb18aff0091b768becae2508af75fa04ef49f87ec7972dad92428cf9"
+      }
+    ],
+    "connected_execution_replacements": {
+      "0x785f70": "Elapsed-time query returns zero."
+    }
+  },
+  "scope": [
+    "Policy fixtures prepare capture input fields, initialized guards, configuration slots, marker words and debug fields. The nested key reader is constructed by original code; the complete capture constructor and upstream producers are outside these slices.",
+    "A, B and C name three inputs by their object offsets and observed arithmetic. Their physical units and camera menu mappings remain unestablished. The fixture supplies the internal job kind at capture +0x2084.",
+    "A separate bounded preparation replay produces flags from job kinds0..11, skips three intervening virtual calls, and follows the original +0x2080 branch. The separate policy-entry dispatch slice also skips five preceding calls after the fall-through boundary. Direct whole-policy cases for kinds5/11 are conditional controls, not evidence that normal preparation invokes the policy for those kinds.",
+    "Connected cases use the same capture state for policy and packet construction. A prepared event envelope supplies the original payload to the handler slice; frame, image, records and debug overrides are synthetic.",
+    "No execution replacements are used in the policy. The only replacement in the connected path is the correction elapsed-time query. The replay stops inside the handler; task scheduling, live capture and sensor data are outside scope."
+  ]
+}

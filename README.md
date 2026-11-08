@@ -1,5 +1,7 @@
 # PENTAX K-3 II v1.12 펌웨어 분석
 
+[픽셀 보정 활성값과 작업 준비 분기](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/pixel-policy.html): 원본 정책 53건, 조회표 364개 셀과 경계 21건, 준비 분기 12건을 검증했습니다. 정책→패킷→같은 버퍼의 보정을 연결했으며, 종류 11의 준비 분기가 정책 호출 블록을 건너뛰는 조건을 구분했습니다.
+
 [보존 픽셀 레코드와 촬영 패킷](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/pixel-records.html): 섹터 15~19의 공급자 10개를 원본 픽셀 보정과 연결했습니다. 같은 버퍼의 순차 수정, 적재 캐시와 재적재 경계, 패킷 활성 0/1 및 섹터 저장 요청 18개를 검증했습니다. 실제 촬영 도달과 물리 기록은 미검증입니다.
 
 [보존 섹터 14의 진단 레코드](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/preserved-record.html): 등록 ID 0의 32바이트 적재, 애플리케이션 사본, SerialNo(UID) 진단 인수와 섹터 저장 요청을 연결했습니다. 실제 장치 식별값·사본의 역전달·물리 기록은 미검증입니다.
@@ -85,6 +87,7 @@ python verify_ui_dispatch.py .private/decoded/decoded.bin --compare analysis/ui-
 python verify_settings_storage.py .private/decoded/decoded.bin --compare analysis/settings-storage.json
 python verify_preserved_record.py .private/decoded/decoded.bin --compare analysis/preserved-record.json
 python verify_pixel_records.py .private/decoded/decoded.bin --compare analysis/pixel-records.json
+python verify_pixel_policy.py .private/decoded/decoded.bin --compare analysis/pixel-policy.json
 python verify_tone_rebuild.py .private/decoded/decoded.bin --zig <Zig-0.17.1-실행파일> --compare analysis/tone-rebuild.json
 python -m unittest discover -s tests -v
 python verify_publication.py

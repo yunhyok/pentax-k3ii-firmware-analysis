@@ -2,7 +2,7 @@
   "model": "PENTAX K-3 II",
   "firmware_version": "1.12",
   "baseline_commit": "66c85ea53f52b6e9489d742b5bd63e50e543055e",
-  "updated_at": "2026-11-08T17:28:13+09:00",
+  "updated_at": "2026-11-08T17:40:48+09:00",
   "goals": [
     {
       "id": "firmware_rebuild",
@@ -28,7 +28,10 @@
         "verify_preserved_record.py",
         "analysis/pixel-records.html",
         "analysis/pixel-records.json",
-        "verify_pixel_records.py"
+        "verify_pixel_records.py",
+        "analysis/pixel-policy.html",
+        "analysis/pixel-policy.json",
+        "verify_pixel_policy.py"
       ],
       "gaps": [
         "Only same-size edits; insertion/deletion and relocation are unsupported.",
@@ -39,7 +42,7 @@
       ],
       "next_actions": [
         "Continue offline caller/state-dependency analysis; the proven C tone leaf is a pinned64-byte A32 build, not a whole-firmware rebuild.",
-        "Continue offline investigation of auxiliary remote receiver, preserved sectors20..21, sector14 app-copy writeback and pixel-correction enable producers.",
+        "Continue offline investigation of auxiliary remote receiver, preserved sectors20..21, sector14 app-copy writeback and complete preparation paths before pixel policy.",
         "Keep physical update outside the current offline scope."
       ]
     },
@@ -283,7 +286,11 @@
       "mobile_layout": "not checked"
     },
     "local_preview": "Unavailable under tool policy; published HTTPS preview verified instead.",
-    "pending_local_artifacts": [],
+    "pending_local_artifacts": [
+      "verify_pixel_policy.py",
+      "analysis/pixel-policy.json",
+      "analysis/pixel-policy.html"
+    ],
     "checksum_sentinel_fix": {
       "commit": "9521f6881b356429ed0b8b58123c6483e23eddd5",
       "ci": "success",
@@ -321,7 +328,10 @@
       "html_path": "analysis/settings-storage.html",
       "verifier_path": "verify_settings_storage.py",
       "html_sha256": "50901bb9ba32963ede2ac6965d666f0318394033de45f6ad0d7ed60e847657d8",
-      "verifier_sha256": "ef4de15ad437d2300ac838b4547a5793cac160ffecb1dd3d98d65cf16562bd3c"
+      "verifier_sha256": "ef4de15ad437d2300ac838b4547a5793cac160ffecb1dd3d98d65cf16562bd3c",
+      "request_wording_clarification_commit": "c7205bf48e7e5e33cf03f2892bead51658206699",
+      "clarified_html_sha256": "c520e98178f1733867f37013a6050dfc090f9c10525a812fbd46846da9bd3351",
+      "clarification_ci_pages": "success; served HTML byte-exact"
     },
     "tone-rebuild": {
       "commit": "f7c9aa4adcb0a74739fd3fc8033f1f97163789f5",
@@ -350,14 +360,23 @@
       "clarified_html_sha256": "07c1dc7ece7ea296d2f519a33fe63a92f35b8a8cf980a98dd3e24fbb1d552777"
     },
     "ui-dispatch": {
-      "commit": "bc2cb06d43de0b1f5729bb6e05f2bf8c91c2c595",
+      "commit": "73d97c7fa33771ac4d180a18da6e49befa1c92e3",
       "path": "analysis/ui-dispatch.json",
-      "sha256": "d737ba8ce53f3d127e76cc1633c4e76d805026803bd149b6873265049e9e9547",
+      "sha256": "3877daf2249ce24fa9efa3860d6393019a601bfed4bea3efbae4fa2a6356eb1a",
       "html_path": "analysis/ui-dispatch.html",
-      "html_sha256": "b5ca8cb6b319cc473670fdae6467ba63bafb3b20e540ba7f3d30cdf9342444b1",
+      "html_sha256": "a7c854293723c6f314f7b025bc483995b301b7dc5ff05491abd332bc0097b451",
       "verifier_path": "verify_ui_dispatch.py",
-      "verifier_sha256": "8ecbbae816aeaba3df69afc105e250311190a0629a882b560c10e7db10c0aeb8",
-      "replay": "python verify_ui_dispatch.py decoded.bin --compare analysis/ui-dispatch.json"
+      "verifier_sha256": "4d80c6aea2f53613e66eb383b74e3cee6c16fcf016447b194018f2b5e3b1f397",
+      "replay": "python verify_ui_dispatch.py decoded.bin --compare analysis/ui-dispatch.json",
+      "previous_commit": "bc2cb06d43de0b1f5729bb6e05f2bf8c91c2c595",
+      "additional_controls_publication": {
+        "ci": "success",
+        "pages": "success",
+        "http_files_byte_exact": 4,
+        "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42463351049",
+        "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42463350539",
+        "fresh_clone_snapshot": "PASS"
+      }
     },
     "preserved-record": {
       "commit": "c3516d0c7e1ac79c119b1629fe23496a41638881",
@@ -380,5 +399,5 @@
       "verifier_sha256": "33a6d61ec4465f4ce541332d92a8eaf81824ddcea932818682b0574292ab4ac2"
     }
   },
-  "offline_work_in_progress": "Pixel correction policy0x65EA68 producer and post-policy overrides; private native probes pass, public verification and review in progress."
+  "offline_work_in_progress": "Pixel policy original function and bounded preparation gates verified; public publication in progress. Continuous preparation prefix is next private work."
 }
