@@ -674,6 +674,20 @@
       "self_check": "6/6",
       "deterministic_gate": "PASS",
       "modality_loss": 0
+    },
+    "publication": {
+      "commit": "f36497c045a77e88b16268774620ab4c30f7e476",
+      "ci": "success",
+      "pages": "success",
+      "http_files_byte_exact": 9,
+      "fresh_clone_snapshot": "PASS",
+      "unit_tests": 20,
+      "html_documents": 20,
+      "local_links": 491,
+      "public_files": 117,
+      "three_diagrams_visually_checked": true,
+      "inner_width": 1897,
+      "document_scroll_width": 1882
     }
   }
 }

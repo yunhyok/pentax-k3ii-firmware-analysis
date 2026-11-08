@@ -2,7 +2,7 @@
   "model": "PENTAX K-3 II",
   "firmware_version": "1.12",
   "baseline_commit": "66c85ea53f52b6e9489d742b5bd63e50e543055e",
-  "updated_at": "2026-11-08T17:25:18+09:00",
+  "updated_at": "2026-11-08T17:28:13+09:00",
   "goals": [
     {
       "id": "firmware_rebuild",
@@ -262,32 +262,28 @@
   ],
   "scope_clarification": "AF changes are future work. Current scope is sufficiently deep foundational research; exact target lens information is not a blocker.",
   "publication": {
-    "analysis_commit": "c3516d0c7e1ac79c119b1629fe23496a41638881",
-    "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42461600420",
-    "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42461600267",
+    "analysis_commit": "f36497c045a77e88b16268774620ab4c30f7e476",
+    "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42462917958",
+    "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42462917444",
     "ci": "success",
     "pages": "success",
     "http_files_byte_exact": 9,
     "fresh_clone_repack_and_af_snapshots": "PASS",
     "fresh_clone_unit_tests": 20,
-    "fresh_clone_html_documents": 19,
-    "fresh_clone_local_links": 468,
+    "fresh_clone_html_documents": 20,
+    "fresh_clone_local_links": 491,
     "browser": {
       "surface": "published HTTPS in Chrome",
       "reports": [
-        "preserved-record.html"
+        "pixel-records.html"
       ],
-      "figures_per_report": 2,
+      "figures_per_report": 3,
       "inner_width": 1897,
       "document_scroll_width": 1882,
       "mobile_layout": "not checked"
     },
     "local_preview": "Unavailable under tool policy; published HTTPS preview verified instead.",
-    "pending_local_artifacts": [
-      "analysis/pixel-records.html",
-      "analysis/pixel-records.json",
-      "verify_pixel_records.py"
-    ],
+    "pending_local_artifacts": [],
     "checksum_sentinel_fix": {
       "commit": "9521f6881b356429ed0b8b58123c6483e23eddd5",
       "ci": "success",
@@ -296,14 +292,15 @@
       "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42453856476",
       "served_files_byte_exact": 5
     },
-    "previous_analysis_commit": "bc2cb06d43de0b1f5729bb6e05f2bf8c91c2c595",
+    "previous_analysis_commit": "c3516d0c7e1ac79c119b1629fe23496a41638881",
     "fresh_clone_installation_ui_af_snapshots": "PASS",
-    "fresh_clone_public_files": 114,
+    "fresh_clone_public_files": 117,
     "fresh_clone_color_and_settings_snapshots": "PASS",
     "fresh_clone_tone_C_snapshot": "PASS",
     "fresh_clone_af_input_snapshot": "PASS",
     "fresh_clone_ui_dispatch_snapshot": "PASS",
-    "fresh_clone_preserved_record_snapshot": "PASS"
+    "fresh_clone_preserved_record_snapshot": "PASS",
+    "fresh_clone_pixel_records_snapshot": "PASS"
   },
   "frozen_evidence": {
     "color-ui": {
@@ -371,6 +368,17 @@
       "verifier_path": "verify_preserved_record.py",
       "verifier_sha256": "0953f44bf00a0a7c2ce619248caabb5e646c893f4ddb57065b8a1e523339687a",
       "replay": "python verify_preserved_record.py decoded.bin --compare analysis/preserved-record.json"
+    },
+    "pixel-records": {
+      "commit": "f36497c045a77e88b16268774620ab4c30f7e476",
+      "path": "analysis/pixel-records.json",
+      "html_path": "analysis/pixel-records.html",
+      "verifier_path": "verify_pixel_records.py",
+      "replay": "python verify_pixel_records.py decoded.bin --compare analysis/pixel-records.json",
+      "sha256": "c0b489f96207e61ef30b0d9e47234abb0621274b5548fcbeb6d6867eeab540dc",
+      "html_sha256": "f57a9a6172da14c41ea8021fbd7dbb89d415b3a20e76d30988076c0a0e371685",
+      "verifier_sha256": "33a6d61ec4465f4ce541332d92a8eaf81824ddcea932818682b0574292ab4ac2"
     }
-  }
+  },
+  "offline_work_in_progress": "Pixel correction policy0x65EA68 producer and post-policy overrides; private native probes pass, public verification and review in progress."
 }
