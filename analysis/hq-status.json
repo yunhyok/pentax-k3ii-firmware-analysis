@@ -2,7 +2,7 @@
   "model": "PENTAX K-3 II",
   "firmware_version": "1.12",
   "baseline_commit": "66c85ea53f52b6e9489d742b5bd63e50e543055e",
-  "updated_at": "2026-11-08T17:40:48+09:00",
+  "updated_at": "2026-11-08T17:43:47+09:00",
   "goals": [
     {
       "id": "firmware_rebuild",
@@ -43,6 +43,7 @@
       "next_actions": [
         "Continue offline caller/state-dependency analysis; the proven C tone leaf is a pinned64-byte A32 build, not a whole-firmware rebuild.",
         "Continue offline investigation of auxiliary remote receiver, preserved sectors20..21, sector14 app-copy writeback and complete preparation paths before pixel policy.",
+        "Add separate neighbor-coordinate, row-wrap and wide-sum controls; center bounds alone do not establish valid neighbor access. No physical reachability claim.",
         "Keep physical update outside the current offline scope."
       ]
     },
@@ -265,32 +266,28 @@
   ],
   "scope_clarification": "AF changes are future work. Current scope is sufficiently deep foundational research; exact target lens information is not a blocker.",
   "publication": {
-    "analysis_commit": "f36497c045a77e88b16268774620ab4c30f7e476",
-    "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42462917958",
-    "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42462917444",
+    "analysis_commit": "496800b991d5d702fcab96ef65173a41f7511bed",
+    "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42464042294",
+    "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42464041913",
     "ci": "success",
     "pages": "success",
     "http_files_byte_exact": 9,
     "fresh_clone_repack_and_af_snapshots": "PASS",
     "fresh_clone_unit_tests": 20,
-    "fresh_clone_html_documents": 20,
-    "fresh_clone_local_links": 491,
+    "fresh_clone_html_documents": 21,
+    "fresh_clone_local_links": 516,
     "browser": {
       "surface": "published HTTPS in Chrome",
       "reports": [
-        "pixel-records.html"
+        "pixel-policy.html"
       ],
-      "figures_per_report": 3,
+      "figures_per_report": 2,
       "inner_width": 1897,
       "document_scroll_width": 1882,
       "mobile_layout": "not checked"
     },
     "local_preview": "Unavailable under tool policy; published HTTPS preview verified instead.",
-    "pending_local_artifacts": [
-      "verify_pixel_policy.py",
-      "analysis/pixel-policy.json",
-      "analysis/pixel-policy.html"
-    ],
+    "pending_local_artifacts": [],
     "checksum_sentinel_fix": {
       "commit": "9521f6881b356429ed0b8b58123c6483e23eddd5",
       "ci": "success",
@@ -299,15 +296,16 @@
       "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42453856476",
       "served_files_byte_exact": 5
     },
-    "previous_analysis_commit": "c3516d0c7e1ac79c119b1629fe23496a41638881",
+    "previous_analysis_commit": "f36497c045a77e88b16268774620ab4c30f7e476",
     "fresh_clone_installation_ui_af_snapshots": "PASS",
-    "fresh_clone_public_files": 117,
+    "fresh_clone_public_files": 120,
     "fresh_clone_color_and_settings_snapshots": "PASS",
     "fresh_clone_tone_C_snapshot": "PASS",
     "fresh_clone_af_input_snapshot": "PASS",
     "fresh_clone_ui_dispatch_snapshot": "PASS",
     "fresh_clone_preserved_record_snapshot": "PASS",
-    "fresh_clone_pixel_records_snapshot": "PASS"
+    "fresh_clone_pixel_records_snapshot": "PASS",
+    "fresh_clone_pixel_policy_snapshot": "PASS"
   },
   "frozen_evidence": {
     "color-ui": {
@@ -397,7 +395,17 @@
       "sha256": "c0b489f96207e61ef30b0d9e47234abb0621274b5548fcbeb6d6867eeab540dc",
       "html_sha256": "f57a9a6172da14c41ea8021fbd7dbb89d415b3a20e76d30988076c0a0e371685",
       "verifier_sha256": "33a6d61ec4465f4ce541332d92a8eaf81824ddcea932818682b0574292ab4ac2"
+    },
+    "pixel-policy": {
+      "commit": "496800b991d5d702fcab96ef65173a41f7511bed",
+      "path": "analysis/pixel-policy.json",
+      "html_path": "analysis/pixel-policy.html",
+      "verifier_path": "verify_pixel_policy.py",
+      "replay": "python verify_pixel_policy.py decoded.bin --compare analysis/pixel-policy.json",
+      "sha256": "9ae20720e23affa69152d4e2b97093f3dbc468c0608d82c605f8b2d4eb36bf61",
+      "html_sha256": "c1256517969aea84dfe41bf74db478bcf3b071edce4a9a467cd017566168ca14",
+      "verifier_sha256": "873aa7ad152ea43a93f751e52912a08cbafd695197eb932ae835d481d71f21e0"
     }
   },
-  "offline_work_in_progress": "Pixel policy original function and bounded preparation gates verified; public publication in progress. Continuous preparation prefix is next private work."
+  "offline_work_in_progress": "Continuous capture preparation before policy; isolated pixel-coordinate boundary controls requested by cross-model review."
 }
