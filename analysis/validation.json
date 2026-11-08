@@ -210,7 +210,7 @@
     "scope": "Extracted prose, excluding CSD capacity, request/descriptor capacity, JPEG retry-capacity, and large-request residual paragraphs; final technical additions received coordinator and SD-worker review",
     "route": "light",
     "risk_score": 0,
-    "deterministic_gate": "OK — 수렴",
+    "deterministic_gate": "OK \u2014 \uc218\ub834",
     "change_rate_percent": 0.63,
     "sentences_touched": 2,
     "sentences_reviewed": 82,
@@ -656,7 +656,7 @@
     "static_calls": 49,
     "constructor_registration_calls": 20,
     "static_tail_branches": 3,
-    "static_words": 38,
+    "static_words": 45,
     "code_ranges": 13,
     "providers": 10,
     "direct_correction_cases": 12,
@@ -695,6 +695,18 @@
       "three_diagrams_visually_checked": true,
       "inner_width": 1897,
       "document_scroll_width": 1882
+    },
+    "separate_coordinate_boundary_cases": 6,
+    "boundary_review": "No P0-P2. Six native load/store traces match the independent HQ control. Accepted P3: remove address-filter size label, distinguish five direct kernel inputs from one prepared loaded consumer descriptor.",
+    "boundary_language_review": {
+      "route": "light",
+      "paragraphs": 2,
+      "change_rate_percent": 1.1,
+      "sentences_touched": 2,
+      "sentences_total": 11,
+      "self_check": "6/6",
+      "deterministic_gate": "PASS",
+      "modality_loss": 0
     }
   },
   "pixel_policy": {

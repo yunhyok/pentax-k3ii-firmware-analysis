@@ -43,7 +43,6 @@
       "next_actions": [
         "Continue offline caller/state-dependency analysis; the proven C tone leaf is a pinned64-byte A32 build, not a whole-firmware rebuild.",
         "Continue offline investigation of auxiliary remote receiver, preserved sectors20..21, sector14 app-copy writeback and complete preparation paths before pixel policy.",
-        "Add separate neighbor-coordinate, row-wrap and wide-sum controls; center bounds alone do not establish valid neighbor access. No physical reachability claim.",
         "Keep physical update outside the current offline scope."
       ]
     },
@@ -161,7 +160,8 @@
     "Native wake8 slice writes app56=1 and allows original prehook/accept/registry traversal; wake10 clears it and rejects. Task wake values are injected and scheduler/rendering are unverified.",
     "Sector14 providerID0 uses32bytes at VA021C0000 and RAM4042C4F0. Native marker load, five-word bulk methods, appcopy1528 and copy-only message setter reproduce.",
     "Diagnostic code exports the fifth word as the first SerialNo(UID) CSV argument; two format branches are replayed only up to formatter entry. Physical UID identity and file I/O are unverified.",
-    "Sector14 save with onlyID0 registered traverses79 IDs, overlays16 halfwords and reaches599914 with65536 halfwords. Same-content case also calls the backend; statuses0..3 are injected and preserved. Other provider regions and physical writes are unverified."
+    "Sector14 save with onlyID0 registered traverses79 IDs, overlays16 halfwords and reaches599914 with65536 halfwords. Same-content case also calls the backend; statuses0..3 are injected and preserved. Other provider regions and physical writes are unverified.",
+    "Separate pixel boundary controls: native center validation rejects x=width/y=height but neighbor UXTH can cross a row or address beyond the logical image. Six native address/value controls use synthetic RAM; real sensor table constraints and padding are unknown."
   ],
   "validation": {
     "commands": [
@@ -407,5 +407,5 @@
       "verifier_sha256": "873aa7ad152ea43a93f751e52912a08cbafd695197eb932ae835d481d71f21e0"
     }
   },
-  "offline_work_in_progress": "Continuous capture preparation before policy; isolated pixel-coordinate boundary controls requested by cross-model review."
+  "offline_work_in_progress": "Continuous capture preparation before pixel policy, native nine-call chain privately replayed; publishing isolated coordinate-boundary controls separately."
 }

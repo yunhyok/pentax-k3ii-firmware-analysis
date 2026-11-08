@@ -216,7 +216,7 @@
         7577380
       ]
     ],
-    "word_checks": 38,
+    "word_checks": 45,
     "providers": [
       {
         "id": 88,
@@ -434,6 +434,92 @@
   },
   "replay": {
     "unicorn_version": "2.1.4",
+    "separate_pixel_boundary_controls": {
+      "logical_image_bytes": 512,
+      "cases": [
+        {
+          "case": "right_neighbor_crosses_row",
+          "load_offsets_bytes": [
+            [
+              290,
+              2
+            ]
+          ],
+          "store_offsets_bytes": [
+            [
+              286,
+              2
+            ]
+          ],
+          "value": 4567
+        },
+        {
+          "case": "left_neighbor_wraps_outside_logical_image",
+          "load_offsets_bytes": [
+            [
+              131324,
+              2
+            ]
+          ],
+          "store_offsets_bytes": [
+            [
+              256,
+              2
+            ]
+          ],
+          "value": 48879
+        },
+        {
+          "case": "two_maximum_range_samples",
+          "load_offsets_bytes": [
+            [
+              268,
+              2
+            ],
+            [
+              276,
+              2
+            ]
+          ],
+          "store_offsets_bytes": [
+            [
+              272,
+              2
+            ]
+          ],
+          "value": 65534
+        },
+        {
+          "case": "center_x_equals_width",
+          "load_offsets_bytes": [],
+          "store_offsets_bytes": [],
+          "value": null
+        },
+        {
+          "case": "center_y_equals_height",
+          "load_offsets_bytes": [],
+          "store_offsets_bytes": [],
+          "value": null
+        },
+        {
+          "case": "consumer_row_offset_wraps_to_1",
+          "load_offsets_bytes": [
+            [
+              52,
+              2
+            ]
+          ],
+          "store_offsets_bytes": [
+            [
+              48,
+              2
+            ]
+          ],
+          "value": 26,
+          "visited_records": 1
+        }
+      ]
+    },
     "registered_ids": [
       88,
       89,
@@ -1644,9 +1730,10 @@
   },
   "scope": [
     "Prepared owner and singleton guard skip full startup. Native constructors and registration slices bind the ten providers to the same manager.",
-    "Mapped flash and image inputs are synthetic. Native correction reads and writes the same 16-bit image buffer. Return value counts records visited, including per-record rejects. Selected neighbors stay within the synthetic image in all executing cases.",
+    "Mapped flash and image inputs are synthetic. Native correction reads and writes the same 16-bit image buffer. Return value counts records visited, including per-record rejects. Selected neighbors stay within the synthetic image in the primary correction and packet cases; separate boundary controls deliberately differ.",
     "The consumer stops at the first invalid descriptor. A fresh constructor leaves invalid slots zero; explicit loader re-entry can leave older descriptor fields in place after RAM is reinitialized.",
     "The event envelope, frame and capture flag inputs are prepared. The replay runs the original payload writer and handler slice, skipping handler base construction and task scheduling.",
+    "Five separate boundary cases call the kernel with prepared coordinates, flags and stack argument, including two invalid centers. One consumer case prepares an already-loaded descriptor and row offset. The existing synthetic RAM includes a sample beyond the logical image. These controls establish original address arithmetic, not real sensor-table contents or live capture reachability.",
     "Save requests cover sectors 14 through 19 with only the ten pixel providers registered. Sector 14 is carried through unchanged in this fixture. Physical writes, retention, calibration, sensor input and normal capture reachability are outside the replay."
   ]
 }

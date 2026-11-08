@@ -115,6 +115,13 @@ WORDS = {
     0x71C310: 0xE5D0000A,
     0x71A898: 0xE5C0100A,
     0x597F90: 0xE1D000B4,
+    0x739F38: 0xE1D000B0,
+    0x739F18: 0xE1C030B0,
+    0x73A028: 0xE6FF2070,
+    0x73A034: 0xE6FF1070,
+    0x73A080: 0xE6FF2070,
+    0x73A090: 0xE6FF1070,
+    0x73A668: 0xE6FF2070,
 }
 RANGES = (
     (0x76B830, 0x76B8D0),
@@ -567,8 +574,12 @@ def emulate(data, providers):
         for index, count in enumerate(count_inputs)
     ]
 
+    boundary_controls = replay_boundaries(
+        vm, uc, obj, image, stack, read, put, reg, run
+    )
     return {
         "unicorn_version": uc.__version__,
+        "separate_pixel_boundary_controls": boundary_controls,
         "registered_ids": [row["id"] for row in providers],
         "record_bytes": RECORD_BYTES,
         "initialized_flag": initialized,
@@ -586,6 +597,95 @@ def emulate(data, providers):
         "correction_execution_replacements": {
             "0x785f70": "Elapsed-time query returns zero."
         },
+    }
+
+
+def replay_boundaries(vm, uc, obj, image, stack, read, put, reg, run):
+    loads, stores, cases = [], [], []
+
+    def observe(_vm, _access, address, size, _value, _user):
+        off = reg("pc") - BASE
+        if off == 0x739F38:
+            loads.append([address - image, size])
+        elif off == 0x739F18:
+            stores.append([address - image, size])
+
+    hook = vm.hook_add(
+        uc.UC_HOOK_MEM_READ | uc.UC_HOOK_MEM_WRITE,
+        observe,
+    )
+
+    def prepare(samples):
+        run(0x739CF4, obj)
+        for off, val, size in ((4, 16, 2), (6, 16, 2), (0xC, image, 4), (0x10, 1, 2)):
+            put(obj + off, val, size)
+        vm.mem_write(image - 2, pack("<258H", 0xABCD, *range(256), 0xDCBA))
+        for offset, value in samples:
+            put(image + offset, value, 2)
+        loads.clear()
+        stores.clear()
+        return read(image - 2, 516)
+
+    def check(label, initial, samples, center, value):
+        require(loads, [[off, 2] for off, _ in samples], "exact original sample reads")
+        require(
+            stores,
+            [] if value is None else [[center, 2]],
+            "exact original pixel stores",
+        )
+        expected = (
+            initial
+            if value is None
+            else initial[: center + 2] + pack("<H", value) + initial[center + 4 :]
+        )
+        require(read(image - 2, 516), expected, "entire boundary image and canaries")
+        cases.append(
+            {
+                "case": label,
+                "load_offsets_bytes": loads.copy(),
+                "store_offsets_bytes": stores.copy(),
+                "value": value,
+            }
+        )
+
+    for label, x, y, flags, samples, value in (
+        ("right_neighbor_crosses_row", 15, 8, 2, ((290, 4567),), 4567),
+        (
+            "left_neighbor_wraps_outside_logical_image",
+            0,
+            8,
+            1,
+            ((131324, 0xBEEF),),
+            0xBEEF,
+        ),
+        ("two_maximum_range_samples", 8, 8, 3, ((268, 65535), (276, 65534)), 65534),
+        ("center_x_equals_width", 16, 8, 1, (), None),
+        ("center_y_equals_height", 8, 16, 4, (), None),
+    ):
+        initial = prepare(samples)
+        put(stack, 1)
+        run(KERNEL, obj, x, y, flags)
+        check(label, initial, samples, 2 * (16 * y + x), value)
+
+    initial = prepare(())
+    record = 0x10028000
+    for off, value, size in (
+        (0x12, 1, 1),
+        (0x20, 2, 4),
+        (0x44, 1, 1),
+        (0x4E, 1, 2),
+        (0x64, record, 4),
+    ):
+        put(obj + off, value, size)
+    vm.mem_write(record, pack("<3H", 8, 0xFFFF, 2))
+    count = run(CONSUMER, obj, image)
+    require(count, 1, "wrapped row visited count")
+    check("consumer_row_offset_wraps_to_1", initial, ((52, 26),), 48, 26)
+    cases[-1]["visited_records"] = count
+    vm.hook_del(hook)
+    return {
+        "logical_image_bytes": 512,
+        "cases": cases,
     }
 
 
@@ -798,9 +898,10 @@ def main():
         "replay": emulate(data, static["providers"]),
         "scope": [
             "Prepared owner and singleton guard skip full startup. Native constructors and registration slices bind the ten providers to the same manager.",
-            "Mapped flash and image inputs are synthetic. Native correction reads and writes the same 16-bit image buffer. Return value counts records visited, including per-record rejects. Selected neighbors stay within the synthetic image in all executing cases.",
+            "Mapped flash and image inputs are synthetic. Native correction reads and writes the same 16-bit image buffer. Return value counts records visited, including per-record rejects. Selected neighbors stay within the synthetic image in the primary correction and packet cases; separate boundary controls deliberately differ.",
             "The consumer stops at the first invalid descriptor. A fresh constructor leaves invalid slots zero; explicit loader re-entry can leave older descriptor fields in place after RAM is reinitialized.",
             "The event envelope, frame and capture flag inputs are prepared. The replay runs the original payload writer and handler slice, skipping handler base construction and task scheduling.",
+            "Five separate boundary cases call the kernel with prepared coordinates, flags and stack argument, including two invalid centers. One consumer case prepares an already-loaded descriptor and row offset. The existing synthetic RAM includes a sample beyond the logical image. These controls establish original address arithmetic, not real sensor-table contents or live capture reachability.",
             "Save requests cover sectors 14 through 19 with only the ten pixel providers registered. Sector 14 is carried through unchanged in this fixture. Physical writes, retention, calibration, sensor input and normal capture reachability are outside the replay.",
         ],
     }
