@@ -1,0 +1,1652 @@
+{
+  "firmware_version": "1.12",
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "image_base": 33554432,
+  "bank_bytes": 65536,
+  "static": {
+    "calls": [
+      [
+        7578100,
+        7779448
+      ],
+      [
+        7578104,
+        7886852
+      ],
+      [
+        7578128,
+        7578096
+      ],
+      [
+        7242972,
+        7241372
+      ],
+      [
+        7579164,
+        7881288
+      ],
+      [
+        7579172,
+        7888752
+      ],
+      [
+        7579248,
+        7577472
+      ],
+      [
+        7577536,
+        7577412
+      ],
+      [
+        7577660,
+        7577408
+      ],
+      [
+        7577752,
+        7577408
+      ],
+      [
+        7577804,
+        7416900
+      ],
+      [
+        7577824,
+        7577376
+      ],
+      [
+        7577848,
+        7369708
+      ],
+      [
+        7243084,
+        5872920
+      ],
+      [
+        7243608,
+        5873004
+      ],
+      [
+        7243644,
+        5872920
+      ],
+      [
+        7243864,
+        5872920
+      ],
+      [
+        7244084,
+        5872920
+      ],
+      [
+        7244304,
+        5872920
+      ],
+      [
+        7244524,
+        5872920
+      ],
+      [
+        7243740,
+        5873288
+      ],
+      [
+        7243836,
+        5873288
+      ],
+      [
+        7243960,
+        5873288
+      ],
+      [
+        7244056,
+        5873288
+      ],
+      [
+        7244180,
+        5873288
+      ],
+      [
+        7244276,
+        5873288
+      ],
+      [
+        7244400,
+        5873288
+      ],
+      [
+        7244496,
+        5873288
+      ],
+      [
+        7244620,
+        5873288
+      ],
+      [
+        7244716,
+        5873288
+      ],
+      [
+        7243848,
+        5873004
+      ],
+      [
+        7244068,
+        5873004
+      ],
+      [
+        7244288,
+        5873004
+      ],
+      [
+        7244508,
+        5873004
+      ],
+      [
+        7244728,
+        5873004
+      ],
+      [
+        5873072,
+        5871892
+      ],
+      [
+        6674020,
+        7448704
+      ],
+      [
+        6674032,
+        7448688
+      ],
+      [
+        6674044,
+        7448736
+      ],
+      [
+        6674056,
+        7448744
+      ],
+      [
+        6674068,
+        7448728
+      ],
+      [
+        6674080,
+        7448712
+      ],
+      [
+        6674096,
+        7448720
+      ],
+      [
+        5773136,
+        7526596
+      ],
+      [
+        5773188,
+        7526604
+      ],
+      [
+        5773224,
+        7577224
+      ],
+      [
+        5773304,
+        7455504
+      ],
+      [
+        5773320,
+        7455488
+      ],
+      [
+        5773332,
+        7579116
+      ]
+    ],
+    "tail_branches": [
+      [
+        7578112,
+        7242952
+      ],
+      [
+        7577376,
+        7577344
+      ],
+      [
+        7577408,
+        7577380
+      ]
+    ],
+    "word_checks": 38,
+    "providers": [
+      {
+        "id": 88,
+        "startup_file_offset": 7783976,
+        "registration_file_offset": 7780400,
+        "constructor_file_offset": 5865640,
+        "provider_va": 1077980976,
+        "vtable_file_offset": 10957488,
+        "flash_va": 35520512,
+        "ram_va": 1074987008
+      },
+      {
+        "id": 89,
+        "startup_file_offset": 7783996,
+        "registration_file_offset": 7780416,
+        "constructor_file_offset": 5866208,
+        "provider_va": 1077980980,
+        "vtable_file_offset": 10957548,
+        "flash_va": 35586048,
+        "ram_va": 1075052544
+      },
+      {
+        "id": 90,
+        "startup_file_offset": 7784016,
+        "registration_file_offset": 7780432,
+        "constructor_file_offset": 5866776,
+        "provider_va": 1077980984,
+        "vtable_file_offset": 10957608,
+        "flash_va": 35651584,
+        "ram_va": 1075118080
+      },
+      {
+        "id": 91,
+        "startup_file_offset": 7784036,
+        "registration_file_offset": 7780448,
+        "constructor_file_offset": 5867344,
+        "provider_va": 1077980988,
+        "vtable_file_offset": 10957668,
+        "flash_va": 35717120,
+        "ram_va": 1075183616
+      },
+      {
+        "id": 92,
+        "startup_file_offset": 7784056,
+        "registration_file_offset": 7780464,
+        "constructor_file_offset": 5867912,
+        "provider_va": 1077980992,
+        "vtable_file_offset": 10957728,
+        "flash_va": 35782656,
+        "ram_va": 1075249152
+      },
+      {
+        "id": 93,
+        "startup_file_offset": 7784076,
+        "registration_file_offset": 7780480,
+        "constructor_file_offset": 5868480,
+        "provider_va": 1077980996,
+        "vtable_file_offset": 10957788,
+        "flash_va": 35848192,
+        "ram_va": 1075314688
+      },
+      {
+        "id": 94,
+        "startup_file_offset": 7784096,
+        "registration_file_offset": 7780496,
+        "constructor_file_offset": 5869048,
+        "provider_va": 1077981000,
+        "vtable_file_offset": 10957848,
+        "flash_va": 35913728,
+        "ram_va": 1075380224
+      },
+      {
+        "id": 95,
+        "startup_file_offset": 7784116,
+        "registration_file_offset": 7780512,
+        "constructor_file_offset": 5869616,
+        "provider_va": 1077981004,
+        "vtable_file_offset": 10961416,
+        "flash_va": 35979264,
+        "ram_va": 1075445760
+      },
+      {
+        "id": 96,
+        "startup_file_offset": 7784136,
+        "registration_file_offset": 7780528,
+        "constructor_file_offset": 5870184,
+        "provider_va": 1077981008,
+        "vtable_file_offset": 10961476,
+        "flash_va": 36044800,
+        "ram_va": 1075511296
+      },
+      {
+        "id": 97,
+        "startup_file_offset": 7784156,
+        "registration_file_offset": 7780544,
+        "constructor_file_offset": 5870752,
+        "provider_va": 1077981012,
+        "vtable_file_offset": 10961536,
+        "flash_va": 36110336,
+        "ram_va": 1075576832
+      }
+    ],
+    "neighbor_table_file_offsets": [
+      10384168,
+      10384232
+    ],
+    "neighbor_dx": [
+      -2,
+      2,
+      0,
+      0,
+      -2,
+      2,
+      -2,
+      2,
+      -4,
+      4,
+      -4,
+      4,
+      -4,
+      4,
+      0,
+      0
+    ],
+    "neighbor_dy": [
+      0,
+      0,
+      -2,
+      2,
+      -2,
+      -2,
+      2,
+      2,
+      0,
+      0,
+      -2,
+      -2,
+      2,
+      2,
+      0,
+      0
+    ],
+    "zero_mask_diagnostic_file_offset": 7578800,
+    "original_bank_header_words": [
+      4294967295,
+      1073610752
+    ],
+    "range_sha256": [
+      {
+        "start": 7780400,
+        "end_exclusive": 7780560,
+        "sha256": "9f759c912f9df34095d64ed9188a13461dfe0d7b037ee972bf5720a0c9e20941"
+      },
+      {
+        "start": 7242952,
+        "end_exclusive": 7243048,
+        "sha256": "50b2a1a61ab88968de851913e2db1ccb929200f8d8e73fe103ccf61441d1b770"
+      },
+      {
+        "start": 7243048,
+        "end_exclusive": 7244808,
+        "sha256": "877b1bf323a1a5801345f42f7f8958d5dee4fcbc29b605be34abaae495812e1c"
+      },
+      {
+        "start": 5865284,
+        "end_exclusive": 5870964,
+        "sha256": "37afe638b20dfd7dba5e0f8f7062354eb83fae23582a2f0409bc1556f8f1d917"
+      },
+      {
+        "start": 10957488,
+        "end_exclusive": 10957908,
+        "sha256": "435cd35ddca330091ebf4017262895af71ed6f20ef35863a428ead0cf1e2aa08"
+      },
+      {
+        "start": 10961416,
+        "end_exclusive": 10961596,
+        "sha256": "61a37e9e5b6826382bac7dbd487b5bd3433c11e51c9314a65aaa6cff26088e95"
+      },
+      {
+        "start": 7576820,
+        "end_exclusive": 7576968,
+        "sha256": "9df82e1686c835ef6a9244e71236a65edfe6e7c248fde48c8109833bf7fc5bc9"
+      },
+      {
+        "start": 7577344,
+        "end_exclusive": 7577856,
+        "sha256": "bbad3c7d8305f50ce0abe6497e96f300ef8d352f75a48790f38994d61bfd73b7"
+      },
+      {
+        "start": 7578052,
+        "end_exclusive": 7579336,
+        "sha256": "ee63b0266fe04bd440e7346586e6a5c59fcd06cf49f374751b012250f4ad19a7"
+      },
+      {
+        "start": 10384168,
+        "end_exclusive": 10384296,
+        "sha256": "48c52c9b04a90a0356b4466bac6fd884bca3394eecf5a460da7932afb1dac1a2"
+      },
+      {
+        "start": 6674000,
+        "end_exclusive": 6674100,
+        "sha256": "9c7d0ba87886adc0122af0d701b3e07da43f8a409f221b58b6000457b08a3d02"
+      },
+      {
+        "start": 5773132,
+        "end_exclusive": 5773336,
+        "sha256": "9de51c748b2fb84e3931b0e77e3c715e40009f97bd093a82ddb81840cba450fb"
+      },
+      {
+        "start": 7577224,
+        "end_exclusive": 7577320,
+        "sha256": "687f346673fbbc5303ab2255bb15cc805a856be80be49449c7a415ebe8347246"
+      }
+    ]
+  },
+  "replay": {
+    "unicorn_version": "2.1.4",
+    "registered_ids": [
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97
+    ],
+    "record_bytes": 6,
+    "initialized_flag": 1,
+    "manager_later_save_flag": 1,
+    "ordered_native_correction": {
+      "descriptors": [
+        [
+          1,
+          1,
+          1074987016
+        ],
+        [
+          1,
+          1,
+          1075052552
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "visited_records": 2,
+      "kernel_arguments": [
+        [
+          8,
+          8,
+          3
+        ],
+        [
+          8,
+          10,
+          12
+        ]
+      ],
+      "native_writes": 2,
+      "lazy_loader_calls": 1,
+      "changed_centers": [
+        {
+          "x": 8,
+          "y": 8,
+          "before": 9999,
+          "after": 300
+        },
+        {
+          "x": 8,
+          "y": 10,
+          "before": 8888,
+          "after": 450
+        }
+      ],
+      "image_sha256": "69358f904a37a7cb2da8b127d1be233dcf95e063901570c2dae9b526bccf3a83"
+    },
+    "cached_entry_after_source_invalidated": {
+      "visited_records": 2,
+      "kernel_arguments": [
+        [
+          8,
+          8,
+          3
+        ],
+        [
+          8,
+          10,
+          12
+        ]
+      ],
+      "native_writes": 2,
+      "lazy_loader_calls": 0,
+      "changed_centers": [
+        {
+          "x": 8,
+          "y": 8,
+          "before": 9999,
+          "after": 300
+        },
+        {
+          "x": 8,
+          "y": 10,
+          "before": 8888,
+          "after": 450
+        }
+      ],
+      "image_sha256": "69358f904a37a7cb2da8b127d1be233dcf95e063901570c2dae9b526bccf3a83"
+    },
+    "explicit_reload_without_constructor": {
+      "bank_headers_after_reload": [
+        4294967295,
+        16382
+      ],
+      "descriptors_after_reload": [
+        [
+          1,
+          1,
+          1074987016
+        ],
+        [
+          1,
+          1,
+          1075052552
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    "fresh_object_controls": [
+      {
+        "case": "reversed_bank_order",
+        "threshold": 1,
+        "descriptors": [
+          [
+            1,
+            1,
+            1074987016
+          ],
+          [
+            1,
+            1,
+            1075052552
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "visited_records": 2,
+        "kernel_arguments": [
+          [
+            8,
+            10,
+            12
+          ],
+          [
+            8,
+            8,
+            3
+          ]
+        ],
+        "native_writes": 2,
+        "lazy_loader_calls": 1,
+        "changed_centers": [
+          {
+            "x": 8,
+            "y": 10,
+            "before": 8888,
+            "after": 5299
+          },
+          {
+            "x": 8,
+            "y": 8,
+            "before": 9999,
+            "after": 300
+          }
+        ],
+        "image_sha256": "4aed96dc52ccb2c1e19015dd0f747b57eb8bf868a62be8cc0edb879c1aa7c3ca"
+      },
+      {
+        "case": "two_records_one_bank",
+        "threshold": 1,
+        "descriptors": [
+          [
+            1,
+            2,
+            1074987016
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "visited_records": 2,
+        "kernel_arguments": [
+          [
+            8,
+            8,
+            3
+          ],
+          [
+            8,
+            10,
+            12
+          ]
+        ],
+        "native_writes": 2,
+        "lazy_loader_calls": 1,
+        "changed_centers": [
+          {
+            "x": 8,
+            "y": 8,
+            "before": 9999,
+            "after": 300
+          },
+          {
+            "x": 8,
+            "y": 10,
+            "before": 8888,
+            "after": 450
+          }
+        ],
+        "image_sha256": "69358f904a37a7cb2da8b127d1be233dcf95e063901570c2dae9b526bccf3a83"
+      },
+      {
+        "case": "first_invalid_bank_ends_walk",
+        "threshold": 1,
+        "descriptors": [
+          [
+            1,
+            1,
+            1074987016
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            1075118088
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "visited_records": 1,
+        "kernel_arguments": [
+          [
+            8,
+            8,
+            3
+          ]
+        ],
+        "native_writes": 1,
+        "lazy_loader_calls": 1,
+        "changed_centers": [
+          {
+            "x": 8,
+            "y": 8,
+            "before": 9999,
+            "after": 300
+          }
+        ],
+        "image_sha256": "cb32b41867505976170bcf1ad1656d430a34b7eafc813ba4ccf9f53700d1d5da"
+      },
+      {
+        "case": "all_invalid_markers_on_fresh_object",
+        "threshold": 1,
+        "descriptors": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "visited_records": 0,
+        "kernel_arguments": [],
+        "native_writes": 0,
+        "lazy_loader_calls": 1,
+        "changed_centers": [],
+        "image_sha256": "6789e4d7eb18aff0091b768becae2508af75fa04ef49f87ec7972dad92428cf9"
+      },
+      {
+        "case": "low_group_precedes_high_group",
+        "threshold": 1,
+        "descriptors": [
+          [
+            1,
+            1,
+            1074987016
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "visited_records": 1,
+        "kernel_arguments": [
+          [
+            8,
+            8,
+            769
+          ]
+        ],
+        "native_writes": 1,
+        "lazy_loader_calls": 1,
+        "changed_centers": [
+          {
+            "x": 8,
+            "y": 8,
+            "before": 9999,
+            "after": 200
+          }
+        ],
+        "image_sha256": "b3e2bb98a76e2a1c6eca178d6e7fbe4b8fc13b58d9466a2d8d12ba73f8232818"
+      },
+      {
+        "case": "first_two_bits_in_low_group",
+        "threshold": 1,
+        "descriptors": [
+          [
+            1,
+            1,
+            1074987016
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "visited_records": 1,
+        "kernel_arguments": [
+          [
+            8,
+            8,
+            7
+          ]
+        ],
+        "native_writes": 1,
+        "lazy_loader_calls": 1,
+        "changed_centers": [
+          {
+            "x": 8,
+            "y": 8,
+            "before": 9999,
+            "after": 300
+          }
+        ],
+        "image_sha256": "cb32b41867505976170bcf1ad1656d430a34b7eafc813ba4ccf9f53700d1d5da"
+      },
+      {
+        "case": "upper_group_uses_four_pixel_offsets",
+        "threshold": 1,
+        "descriptors": [
+          [
+            1,
+            1,
+            1074987016
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "visited_records": 1,
+        "kernel_arguments": [
+          [
+            8,
+            8,
+            768
+          ]
+        ],
+        "native_writes": 1,
+        "lazy_loader_calls": 1,
+        "changed_centers": [
+          {
+            "x": 8,
+            "y": 8,
+            "before": 136,
+            "after": 260
+          }
+        ],
+        "image_sha256": "7971a2921266fd354c43e6734d35b30593cf94f73372f0c59d66aaf737d86b37"
+      },
+      {
+        "case": "upper_threshold_bits_reject",
+        "threshold": 1,
+        "descriptors": [
+          [
+            1,
+            1,
+            1074987016
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "visited_records": 1,
+        "kernel_arguments": [
+          [
+            8,
+            8,
+            16385
+          ]
+        ],
+        "native_writes": 0,
+        "lazy_loader_calls": 1,
+        "changed_centers": [],
+        "image_sha256": "6789e4d7eb18aff0091b768becae2508af75fa04ef49f87ec7972dad92428cf9"
+      },
+      {
+        "case": "upper_threshold_bits_pass_at_equality",
+        "threshold": 2,
+        "descriptors": [
+          [
+            1,
+            1,
+            1074987016
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "visited_records": 1,
+        "kernel_arguments": [
+          [
+            8,
+            8,
+            16385
+          ]
+        ],
+        "native_writes": 1,
+        "lazy_loader_calls": 1,
+        "changed_centers": [
+          {
+            "x": 8,
+            "y": 8,
+            "before": 9999,
+            "after": 200
+          }
+        ],
+        "image_sha256": "b3e2bb98a76e2a1c6eca178d6e7fbe4b8fc13b58d9466a2d8d12ba73f8232818"
+      },
+      {
+        "case": "center_x_equal_to_width",
+        "threshold": 1,
+        "descriptors": [
+          [
+            1,
+            1,
+            1074987016
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "visited_records": 1,
+        "kernel_arguments": [
+          [
+            16,
+            8,
+            1
+          ]
+        ],
+        "native_writes": 0,
+        "lazy_loader_calls": 1,
+        "changed_centers": [],
+        "image_sha256": "6789e4d7eb18aff0091b768becae2508af75fa04ef49f87ec7972dad92428cf9"
+      }
+    ],
+    "loader_count_clamp": [
+      {
+        "bank_index": 0,
+        "injected_count_word": 2779064979,
+        "descriptor_count": 10899
+      },
+      {
+        "bank_index": 1,
+        "injected_count_word": 10900,
+        "descriptor_count": 10900
+      },
+      {
+        "bank_index": 2,
+        "injected_count_word": 65535,
+        "descriptor_count": 10900
+      }
+    ],
+    "packet_bridge_cases": [
+      {
+        "injected_capture_0x49": 0,
+        "payload_flags": [
+          0,
+          0,
+          0
+        ],
+        "observed_entries": [
+          7577224
+        ],
+        "payload_pointers_match_inputs": true,
+        "center_values": [
+          9999,
+          8888
+        ],
+        "image_sha256": "6789e4d7eb18aff0091b768becae2508af75fa04ef49f87ec7972dad92428cf9"
+      },
+      {
+        "injected_capture_0x49": 1,
+        "payload_flags": [
+          0,
+          0,
+          1
+        ],
+        "observed_entries": [
+          7577224,
+          7579116,
+          7888752,
+          7577472,
+          7577344,
+          7577472,
+          7577344
+        ],
+        "payload_pointers_match_inputs": true,
+        "center_values": [
+          300,
+          450
+        ],
+        "image_sha256": "69358f904a37a7cb2da8b127d1be233dcf95e063901570c2dae9b526bccf3a83"
+      }
+    ],
+    "save": {
+      "entry_file_offset": 7243048,
+      "request_entry_file_offset": 5871892,
+      "staging_va": 1078301188,
+      "registered_provider_ids": [
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97
+      ],
+      "read_addresses": [
+        35389440,
+        35520512,
+        35651584,
+        35782656,
+        35913728,
+        36044800
+      ],
+      "sector_14_provider_overlay": false,
+      "overlay_arguments": [
+        [
+          35520512,
+          1074987008,
+          32768
+        ],
+        [
+          35586048,
+          1075052544,
+          32768
+        ],
+        [
+          35651584,
+          1075118080,
+          32768
+        ],
+        [
+          35717120,
+          1075183616,
+          32768
+        ],
+        [
+          35782656,
+          1075249152,
+          32768
+        ],
+        [
+          35848192,
+          1075314688,
+          32768
+        ],
+        [
+          35913728,
+          1075380224,
+          32768
+        ],
+        [
+          35979264,
+          1075445760,
+          32768
+        ],
+        [
+          36044800,
+          1075511296,
+          32768
+        ],
+        [
+          36110336,
+          1075576832,
+          32768
+        ]
+      ],
+      "execution_replacements": {
+        "0x599f20": "Leading mailbox helper returns zero.",
+        "0x599f6c": "Trailing mailbox helper returns zero.",
+        "0x72c988": "Privileged CPU helper returns zero.",
+        "0x599914": "Records the original request and returns an injected status before media operations."
+      },
+      "cases": [
+        {
+          "manager_return": 2,
+          "requests": [
+            {
+              "destination_va": 35389440,
+              "halfwords": 65536,
+              "staging_sha256": "e93e276b3fe3a5a3c66457501b474c7a9add6e9663f528a796814cad1fbb4e83",
+              "injected_status": 0
+            },
+            {
+              "destination_va": 35520512,
+              "halfwords": 65536,
+              "staging_sha256": "7d3919fb311d5c9d16e950820727a8198c48ea99594cff6b0c3ccb3b83916230",
+              "injected_status": 1
+            },
+            {
+              "destination_va": 35651584,
+              "halfwords": 65536,
+              "staging_sha256": "801529843246499c3ef017327df06f7a7220af53450e57eeb8631444d288825a",
+              "injected_status": 2
+            },
+            {
+              "destination_va": 35782656,
+              "halfwords": 65536,
+              "staging_sha256": "801529843246499c3ef017327df06f7a7220af53450e57eeb8631444d288825a",
+              "injected_status": 0
+            },
+            {
+              "destination_va": 35913728,
+              "halfwords": 65536,
+              "staging_sha256": "801529843246499c3ef017327df06f7a7220af53450e57eeb8631444d288825a",
+              "injected_status": 0
+            },
+            {
+              "destination_va": 36044800,
+              "halfwords": 65536,
+              "staging_sha256": "801529843246499c3ef017327df06f7a7220af53450e57eeb8631444d288825a",
+              "injected_status": 1
+            }
+          ]
+        },
+        {
+          "manager_return": 3,
+          "requests": [
+            {
+              "destination_va": 35389440,
+              "halfwords": 65536,
+              "staging_sha256": "e93e276b3fe3a5a3c66457501b474c7a9add6e9663f528a796814cad1fbb4e83",
+              "injected_status": 3
+            },
+            {
+              "destination_va": 35520512,
+              "halfwords": 65536,
+              "staging_sha256": "7d3919fb311d5c9d16e950820727a8198c48ea99594cff6b0c3ccb3b83916230",
+              "injected_status": 0
+            },
+            {
+              "destination_va": 35651584,
+              "halfwords": 65536,
+              "staging_sha256": "801529843246499c3ef017327df06f7a7220af53450e57eeb8631444d288825a",
+              "injected_status": 1
+            },
+            {
+              "destination_va": 35782656,
+              "halfwords": 65536,
+              "staging_sha256": "801529843246499c3ef017327df06f7a7220af53450e57eeb8631444d288825a",
+              "injected_status": 2
+            },
+            {
+              "destination_va": 35913728,
+              "halfwords": 65536,
+              "staging_sha256": "801529843246499c3ef017327df06f7a7220af53450e57eeb8631444d288825a",
+              "injected_status": 0
+            },
+            {
+              "destination_va": 36044800,
+              "halfwords": 65536,
+              "staging_sha256": "801529843246499c3ef017327df06f7a7220af53450e57eeb8631444d288825a",
+              "injected_status": 1
+            }
+          ]
+        },
+        {
+          "manager_return": 0,
+          "requests": [
+            {
+              "destination_va": 35389440,
+              "halfwords": 65536,
+              "staging_sha256": "e93e276b3fe3a5a3c66457501b474c7a9add6e9663f528a796814cad1fbb4e83",
+              "injected_status": 0
+            },
+            {
+              "destination_va": 35520512,
+              "halfwords": 65536,
+              "staging_sha256": "7d3919fb311d5c9d16e950820727a8198c48ea99594cff6b0c3ccb3b83916230",
+              "injected_status": 0
+            },
+            {
+              "destination_va": 35651584,
+              "halfwords": 65536,
+              "staging_sha256": "801529843246499c3ef017327df06f7a7220af53450e57eeb8631444d288825a",
+              "injected_status": 0
+            },
+            {
+              "destination_va": 35782656,
+              "halfwords": 65536,
+              "staging_sha256": "801529843246499c3ef017327df06f7a7220af53450e57eeb8631444d288825a",
+              "injected_status": 0
+            },
+            {
+              "destination_va": 35913728,
+              "halfwords": 65536,
+              "staging_sha256": "801529843246499c3ef017327df06f7a7220af53450e57eeb8631444d288825a",
+              "injected_status": 0
+            },
+            {
+              "destination_va": 36044800,
+              "halfwords": 65536,
+              "staging_sha256": "801529843246499c3ef017327df06f7a7220af53450e57eeb8631444d288825a",
+              "injected_status": 0
+            }
+          ]
+        }
+      ]
+    },
+    "correction_execution_replacements": {
+      "0x785f70": "Elapsed-time query returns zero."
+    }
+  },
+  "scope": [
+    "Prepared owner and singleton guard skip full startup. Native constructors and registration slices bind the ten providers to the same manager.",
+    "Mapped flash and image inputs are synthetic. Native correction reads and writes the same 16-bit image buffer. Return value counts records visited, including per-record rejects. Selected neighbors stay within the synthetic image in all executing cases.",
+    "The consumer stops at the first invalid descriptor. A fresh constructor leaves invalid slots zero; explicit loader re-entry can leave older descriptor fields in place after RAM is reinitialized.",
+    "The event envelope, frame and capture flag inputs are prepared. The replay runs the original payload writer and handler slice, skipping handler base construction and task scheduling.",
+    "Save requests cover sectors 14 through 19 with only the ten pixel providers registered. Sector 14 is carried through unchanged in this fixture. Physical writes, retention, calibration, sensor input and normal capture reachability are outside the replay."
+  ]
+}

@@ -643,5 +643,37 @@
       "deterministic_gate": "PASS",
       "modality_loss": 0
     }
+  },
+  "pixel_records": {
+    "original_ARM_replay": true,
+    "static_calls": 49,
+    "constructor_registration_calls": 20,
+    "static_tail_branches": 3,
+    "static_words": 38,
+    "code_ranges": 13,
+    "providers": 10,
+    "direct_correction_cases": 12,
+    "packet_cases": 2,
+    "count_clamp_cases": 3,
+    "save_cases": 3,
+    "save_requests": 18,
+    "save_return_values": [
+      2,
+      3,
+      0
+    ],
+    "coordinator_replayed_snapshot": true,
+    "independent_review": "No P0-P2. Accepted P3 varied status maxima and nonperiodic sector14 source. Center bounds are not a claim of neighbor bounds.",
+    "physical_capture_or_flash_writes": false,
+    "language_review": {
+      "route": "standard",
+      "paragraphs": 10,
+      "change_rate_percent": 0.7,
+      "sentences_touched": 5,
+      "sentences_total": 49,
+      "self_check": "6/6",
+      "deterministic_gate": "PASS",
+      "modality_loss": 0
+    }
   }
 }

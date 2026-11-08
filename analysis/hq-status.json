@@ -2,7 +2,7 @@
   "model": "PENTAX K-3 II",
   "firmware_version": "1.12",
   "baseline_commit": "66c85ea53f52b6e9489d742b5bd63e50e543055e",
-  "updated_at": "2026-11-08T17:09:48+09:00",
+  "updated_at": "2026-11-08T17:25:18+09:00",
   "goals": [
     {
       "id": "firmware_rebuild",
@@ -25,18 +25,21 @@
         "rebuild/tone_interpolate.c",
         "analysis/preserved-record.html",
         "analysis/preserved-record.json",
-        "verify_preserved_record.py"
+        "verify_preserved_record.py",
+        "analysis/pixel-records.html",
+        "analysis/pixel-records.json",
+        "verify_pixel_records.py"
       ],
       "gaps": [
         "Only same-size edits; insertion/deletion and relocation are unsupported.",
         "Whole updater, internal ROM authentication, physical flash, reboot and capture have not been executed.",
-        "Auxiliary remote receiver/flash destination and remaining preserved sectors15..21 are unresolved. Sector14 ID0 record and save request are verified; meanings of four words and app-copy writeback remain unknown.",
+        "Auxiliary remote receiver/flash destination and preserved sectors20..21 remain unresolved. Sector14 ID0 and sectors15..19 pixel-record providers/load/correction/save requests are verified; physical writes, calibration and normal capture reachability remain unverified.",
         "Native NOR status polling is stubbed; recorded memory writes are not physical flash acceptance.",
         "C tone leaf changes APSR flags and r1/r2 scratch values. Three observed caller loops reset flags; unknown indirect callers and runtime timing remain unverified."
       ],
       "next_actions": [
         "Continue offline caller/state-dependency analysis; the proven C tone leaf is a pinned64-byte A32 build, not a whole-firmware rebuild.",
-        "Continue offline investigation of the auxiliary remote receiver, preserved sectors15..21 and sector14 application-copy writeback.",
+        "Continue offline investigation of auxiliary remote receiver, preserved sectors20..21, sector14 app-copy writeback and pixel-correction enable producers.",
         "Keep physical update outside the current offline scope."
       ]
     },
@@ -280,7 +283,11 @@
       "mobile_layout": "not checked"
     },
     "local_preview": "Unavailable under tool policy; published HTTPS preview verified instead.",
-    "pending_local_artifacts": [],
+    "pending_local_artifacts": [
+      "analysis/pixel-records.html",
+      "analysis/pixel-records.json",
+      "verify_pixel_records.py"
+    ],
     "checksum_sentinel_fix": {
       "commit": "9521f6881b356429ed0b8b58123c6483e23eddd5",
       "ci": "success",
