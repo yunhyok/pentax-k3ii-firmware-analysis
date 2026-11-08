@@ -1007,6 +1007,23 @@
     "coordinator_private_replay": "byte-identical",
     "independent_review": "No P0-P3 findings; source disassembly, normal/-O byte-exact replay, full backing poison controls and suppressed 74ED98 rejected by whole RAM comparison",
     "physical_capture": false,
-    "language_gate": "light; unchanged; deterministic gates PASS; modality restored 0"
+    "language_gate": "light; unchanged; deterministic gates PASS; modality restored 0",
+    "publication": {
+      "commit": "e4ebc71e1c2862ec63d29a946c5688265ed34eb4",
+      "ci": "success",
+      "pages": "success",
+      "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42470966912",
+      "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42470966261",
+      "http_files_byte_exact": 9,
+      "fresh_clone_optimized_snapshot": "PASS",
+      "unit_tests": 24,
+      "html_documents": 25,
+      "local_links": 614,
+      "public_files": 134,
+      "two_diagrams_visually_checked": true,
+      "inner_width": 1897,
+      "document_scroll_width": 1882,
+      "mobile_viewport_checked": false
+    }
   }
 }
