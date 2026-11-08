@@ -2,7 +2,7 @@
   "model": "PENTAX K-3 II",
   "firmware_version": "1.12",
   "baseline_commit": "66c85ea53f52b6e9489d742b5bd63e50e543055e",
-  "updated_at": "2026-11-08T17:01:17+09:00",
+  "updated_at": "2026-11-08T17:06:52+09:00",
   "goals": [
     {
       "id": "firmware_rebuild",
@@ -22,18 +22,21 @@
         "analysis/tone-rebuild.html",
         "analysis/tone-rebuild.json",
         "verify_tone_rebuild.py",
-        "rebuild/tone_interpolate.c"
+        "rebuild/tone_interpolate.c",
+        "analysis/preserved-record.html",
+        "analysis/preserved-record.json",
+        "verify_preserved_record.py"
       ],
       "gaps": [
         "Only same-size edits; insertion/deletion and relocation are unsupported.",
         "Whole updater, internal ROM authentication, physical flash, reboot and capture have not been executed.",
-        "Auxiliary remote receiver/flash destination and remaining preserved sectors 14..21 are unresolved.",
+        "Auxiliary remote receiver/flash destination and remaining preserved sectors15..21 are unresolved. Sector14 ID0 record and save request are verified; meanings of four words and app-copy writeback remain unknown.",
         "Native NOR status polling is stubbed; recorded memory writes are not physical flash acceptance.",
         "C tone leaf changes APSR flags and r1/r2 scratch values. Three observed caller loops reset flags; unknown indirect callers and runtime timing remain unverified."
       ],
       "next_actions": [
         "Continue offline caller/state-dependency analysis; the proven C tone leaf is a pinned64-byte A32 build, not a whole-firmware rebuild.",
-        "Continue offline investigation of the auxiliary remote receiver and preserved sectors 14..21.",
+        "Continue offline investigation of the auxiliary remote receiver, preserved sectors15..21 and sector14 application-copy writeback.",
         "Keep physical update outside the current offline scope."
       ]
     },
@@ -148,7 +151,10 @@
     "Twelve subsequent calculations read the same counter driver and additive state. Two full producer tails retain native resulting direction/state and pass requests367/40 to52E38 entry with argument8; counters are independently injected between slices.",
     "UI shared key1D native bank writer and app14B4 snapshot are distinct; reset event0112005E clears the app cache only. Nine filter and five runtime-setting cases reproduce.",
     "Original parent42 action1D passes the actual filter/interface into the pending record; occupied ordinary requests remain unchanged despite wake800. Typed task copy preserves padding, and the connected transition reaches B4 allocation entry for E8 bytes.",
-    "Native wake8 slice writes app56=1 and allows original prehook/accept/registry traversal; wake10 clears it and rejects. Task wake values are injected and scheduler/rendering are unverified."
+    "Native wake8 slice writes app56=1 and allows original prehook/accept/registry traversal; wake10 clears it and rejects. Task wake values are injected and scheduler/rendering are unverified.",
+    "Sector14 providerID0 uses32bytes at VA021C0000 and RAM4042C4F0. Native marker load, five-word bulk methods, appcopy1528 and copy-only message setter reproduce.",
+    "Diagnostic code exports the fifth word as the first SerialNo(UID) CSV argument; two format branches are replayed only up to formatter entry. Physical UID identity and file I/O are unverified.",
+    "Sector14 save with onlyID0 registered traverses79 IDs, overlays16 halfwords and reaches599914 with65536 halfwords. Same-content case also calls the backend; statuses0..3 are injected and preserved. Other provider regions and physical writes are unverified."
   ],
   "validation": {
     "commands": [
@@ -164,7 +170,8 @@
       "python verify_settings_storage.py decoded.bin --compare analysis/settings-storage.json",
       "python verify_tone_rebuild.py decoded.bin --zig <Zig0.17.1> --compare analysis/tone-rebuild.json",
       "python verify_af_input.py decoded.bin --compare analysis/af-input.json",
-      "python verify_ui_dispatch.py decoded.bin --compare analysis/ui-dispatch.json"
+      "python verify_ui_dispatch.py decoded.bin --compare analysis/ui-dispatch.json",
+      "python verify_preserved_record.py decoded.bin --compare analysis/preserved-record.json"
     ],
     "results": [
       "PASS: unchanged, one-byte menu edit and secondary corruption fixture decode and pass the bounded original validation.",
@@ -193,7 +200,8 @@
       "PASS: f4f0fa9 CI and Pages;10 served files byte-identical. Fresh clone reproduces AF-input snapshot and publication checks (17 HTML,422 local links,108 public files). Two diagrams visually checked; scroll width1882 < inner width1897. Prose light gate0%,0/49 sentences,modality loss0.",
       "PASS: coordinator independently replayed UI dispatch snapshot:52 branch anchors,22 range hashes,9 filters,5 runtime gates,2 parent notifications,5 occupied-queue cases and task copy/accept/reject/priority controls. Independent review found no P0-P2; added same-state native cache-zero rejection and clarified task boundaries.",
       "PASS: UI standard prose gate0.4%,6/56 sentences,modality loss0. HQ AF P3 corrected:54344 is the BL callsite; actual pulse+BA STRH is B97FC; coordinator disassembly confirmed.",
-      "PASS: bc2cb06 CI and Pages;10 served files byte-identical. Fresh clone reproduces UI dispatch snapshot,20 unit tests and publication checks (18 HTML,446 local links,111 public files). Two diagrams visually checked at1882px, no horizontal overflow."
+      "PASS: bc2cb06 CI and Pages;10 served files byte-identical. Fresh clone reproduces UI dispatch snapshot,20 unit tests and publication checks (18 HTML,446 local links,111 public files). Two diagrams visually checked at1882px, no horizontal overflow.",
+      "PASS: coordinator and independent reviewer reproduced preserved-record snapshot and original baseline. No P0-P2; accepted P3 nonperiodic SHAKE256 staging canary. Three marker cases,two CSV argument branches,five save cases and exact same-manager copy/message flow reproduce."
     ],
     "limits": [
       "Unicorn 2.1.4 synthetic memory; no physical device I/O.",
@@ -233,7 +241,10 @@
     "verify_af_input.py",
     "analysis/ui-dispatch.html",
     "analysis/ui-dispatch.json",
-    "verify_ui_dispatch.py"
+    "verify_ui_dispatch.py",
+    "analysis/preserved-record.html",
+    "analysis/preserved-record.json",
+    "verify_preserved_record.py"
   ],
   "blockers": [
     {
@@ -268,7 +279,11 @@
       "mobile_layout": "not checked"
     },
     "local_preview": "Unavailable under tool policy; published HTTPS preview verified instead.",
-    "pending_local_artifacts": [],
+    "pending_local_artifacts": [
+      "analysis/preserved-record.html",
+      "analysis/preserved-record.json",
+      "verify_preserved_record.py"
+    ],
     "checksum_sentinel_fix": {
       "commit": "9521f6881b356429ed0b8b58123c6483e23eddd5",
       "ci": "success",

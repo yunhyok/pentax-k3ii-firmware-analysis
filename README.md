@@ -1,5 +1,7 @@
 # PENTAX K-3 II v1.12 펌웨어 분석
 
+[보존 섹터 14의 진단 레코드](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/preserved-record.html): 등록 ID 0의 32바이트 적재, 애플리케이션 사본, SerialNo(UID) 진단 인수와 섹터 저장 요청을 연결했습니다. 실제 장치 식별값·사본의 역전달·물리 기록은 미검증입니다.
+
 [색공간 메뉴 알림과 화면 전환](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/ui-dispatch.html): 공유 상태의 키 0x1D, 필터 캐시, 대기·활성 레코드와 원본 전환 함수를 연결했습니다. 대상 0xB4의 0xE8바이트 할당 요청까지 재현했으며, 실제 버튼·RTOS 전달·화면 생성 완료는 미검증입니다.
 
 [AF 카운터·보정값 생산자](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/af-input.html): 타이머·UDC 생성자와 실제 레지스터 주소를 연결하고 보정값 분기 14건·후속 계산 12건을 원본 ARM으로 재현했습니다. 같은 객체의 요청 367·40이 구동 준비 입구까지 전달됐습니다. 두 시점의 카운터 변화와 물리 구동은 미검증입니다.
@@ -79,6 +81,7 @@ python verify_ui_resources.py .private/decoded/decoded.bin --compare analysis/ui
 python verify_color_ui.py .private/decoded/decoded.bin --compare analysis/color-ui.json
 python verify_ui_dispatch.py .private/decoded/decoded.bin --compare analysis/ui-dispatch.json
 python verify_settings_storage.py .private/decoded/decoded.bin --compare analysis/settings-storage.json
+python verify_preserved_record.py .private/decoded/decoded.bin --compare analysis/preserved-record.json
 python verify_tone_rebuild.py .private/decoded/decoded.bin --zig <Zig-0.17.1-실행파일> --compare analysis/tone-rebuild.json
 python -m unittest discover -s tests -v
 python verify_publication.py

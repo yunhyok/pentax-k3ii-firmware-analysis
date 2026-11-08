@@ -596,5 +596,39 @@
       "modality_loss": 0,
       "coordinator_reverted": "two states phrasing narrowed the original simultaneous reachability scope"
     }
+  },
+  "preserved_record": {
+    "original_ARM_replay": true,
+    "static_calls": 29,
+    "static_tail_branches": 8,
+    "static_words": 35,
+    "literal_uses": 17,
+    "vtable_slots": 8,
+    "code_ranges": 16,
+    "marker_load_cases": 3,
+    "diagnostic_argument_cases": 2,
+    "save_cases": 5,
+    "save_lookups_per_case": 79,
+    "overlays_per_case": 1,
+    "record_bytes": 32,
+    "sector_bytes": 131072,
+    "coordinator_replayed_snapshot": true,
+    "independent_review": "No P0-P2. Accepted P3 nonperiodic staging source pattern; independent SHAKE256 alternative also passed.",
+    "execution_replacements": [
+      "0x599F20",
+      "0x599F6C",
+      "0x72C988",
+      "0x599914"
+    ],
+    "physical_UID_or_flash_writes": false,
+    "publication": "pending",
+    "language_review": {
+      "route": "light",
+      "paragraphs": 9,
+      "change_rate_percent": 0.0,
+      "self_check": "6/6",
+      "deterministic_gate": "PASS",
+      "modality_loss": 0
+    }
   }
 }
