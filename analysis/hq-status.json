@@ -2,7 +2,7 @@
   "model": "PENTAX K-3 II",
   "firmware_version": "1.12",
   "baseline_commit": "66c85ea53f52b6e9489d742b5bd63e50e543055e",
-  "updated_at": "2026-11-08T18:43:45+09:00",
+  "updated_at": "2026-11-08T18:52:19+09:00",
   "goals": [
     {
       "id": "firmware_rebuild",
@@ -445,9 +445,36 @@
       "sha256": "04820eaa89fd6a0840e41f450dc2cb65cd1cc2224abed636aeddf5920750dfd1",
       "html_sha256": "6d1a1fc8c1a059eb37f2e864557aaf34e78cf380974bcf6d19e678990836e33c",
       "verifier_sha256": "974357fe130b631a7f701276c59ba7218f29ee1fb45c1f506f285afdecadcd84"
+    },
+    "store-image-records": {
+      "commit": "cb3b1dd64ba60fa1ca844e29f7d9679bf8b89945",
+      "path": "analysis/store-image-records.json",
+      "html_path": "analysis/store-image-records.html",
+      "verifier_path": "verify_store_image_records.py",
+      "replay": "python verify_store_image_records.py decoded.bin --compare analysis/store-image-records.json",
+      "publication": {
+        "commit": "cb3b1dd64ba60fa1ca844e29f7d9679bf8b89945",
+        "ci": "success",
+        "pages": "success",
+        "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42468831358",
+        "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42468831283",
+        "http_files_byte_exact": 9,
+        "fresh_clone_optimized_snapshot": "PASS",
+        "unit_tests": 24,
+        "html_documents": 23,
+        "local_links": 569,
+        "public_files": 128,
+        "three_diagrams_visually_checked": true,
+        "inner_width": 1897,
+        "document_scroll_width": 1882,
+        "mobile_viewport_checked": false
+      },
+      "sha256": "fed0ac0627e33d9792a5833d169c20a3b2b18ebee0abd47a32a38fb78b486f10",
+      "html_sha256": "f70bbb61ba34e5bfeb2ef52b8f70e264df3719b0b675185a088dc3573202c1a6",
+      "verifier_sha256": "f1196e0a39c101fe58e17309bfe8e74a64fdb50eb38afc9ae8252c20f11a80e6"
     }
   },
-  "offline_work_in_progress": "StoreImage native producer/consumer report prepared; finishing independent review, language gate and publication. Next offline lead: preserved sectors20/21 providers63/64/65 and their overlapping RAM records.",
+  "offline_work_in_progress": "Preserved sectors20/21 providers63/64/65 and original load/staging producers. Corrected static lead: provider64 is0xE000 bytes (slot size0x7000 halfwords), adjacent to provider65 at8001E000; the earlier overlapping-span note was incorrect. Native full-byte replay and policy-input linkage pending.",
   "snapshot_comparison_type_fix": {
     "commit": "bcacf0fd9aa4f77d35ca664bbb6e71cbdf830ea3",
     "shared_helper": "verify_findings.require_snapshot",
