@@ -5,14 +5,14 @@
   "node": "24.15.0",
   "capstone": "5.0.7",
   "matplotlib": "3.9.2",
-  "unit_tests_passed": 16,
+  "unit_tests_passed": 20,
   "original_input_sha256": "a33485f351019960192891ef69ddc5d4904ef9e298671d9d9955679e4c901a9a",
   "independent_decoder_byte_comparison": true,
   "published_findings_reproduced": true,
   "independent_review": "Initial hardware/RAW review and six snapshot replays retained below. For the pipeline update, workers independently checked the selector metadata dispatcher and reviewed ISP evidence. Coordinator accepted conditional matrix-product and tone-cache corrections, inspected completion/Exif/output instructions, and independently reproduced all four new snapshots. For the output/menu update, separate workers traced JPEG and GUI paths. A worker independently replayed and reviewed the Exif route; the coordinator independently replayed all three new snapshots and inspected event dispatch, JPEG alignment and capacity checks against disassembly. For the storage update, workers traced SD and alternate buffers. The SD worker independently replayed and reviewed the filesystem verifier and reviewed the final storage HTML. The coordinator replayed all three new snapshots, inspected critical ADMA, address selection, retry and buffer instructions, and corrected the diagram owner of the block callback to the filesystem-library volume object. For the backend B/CPP update, a worker traced CPP handoff while the coordinator traced backend B. Another worker independently reviewed and replayed both verifiers. The coordinator replayed both snapshots, checked the critical producer/consumer instructions and retained the masked-path and hardware-execution limits. The backend cache was poisoned with 0xA5 before the zero-tail assertion to prove the original clear actually executes. For the Pixel Shift/lifecycle update, separate workers implemented menu and buffer proofs. Another worker replayed and reviewed the common scaler gate and required queue-callsite wording. The menu worker independently replayed and reviewed the buffer verifier. The coordinator replayed all three final snapshots, checked producer/consumer instructions and synthesized the report. No P1 findings remained; queue delivery, output enablement and actual pixel completion are explicitly outside the descriptor proofs.",
   "not_performed": [
     "Camera flashing or physical camera execution",
-    "Whole firmware rebuild",
+    "Whole firmware rebuild from source and physical installation",
     "Exact SoC or auxiliary MCU package identification",
     "Manufacturing or cryptographic-signature validation",
     "Whole-frame hardware RAW-to-JPEG execution and physical ISP pixel transfer function",
@@ -392,5 +392,65 @@
     "gate": "OK",
     "manual_self_check": "6/6",
     "integrated_excerpt_matches_review": true
+  },
+  "installation_ui_analysis": {
+    "auxiliary_control_cases": 7,
+    "serial_cases": 4,
+    "primary_mailbox_cases": 9,
+    "primary_controller_cases": 7,
+    "ui_text_cases": 12,
+    "ui_event_cases": 12,
+    "ui_wrapper_states": 2,
+    "physical_flash_or_LCD": false,
+    "coordinator_snapshot_replays": true,
+    "update_entries": 2,
+    "update_blocks": 5,
+    "update_sector_cases": 6,
+    "update_pass_retry_cases": 3
+  },
+  "checksum_sentinel_correction": {
+    "computed_FFFFFFFF_rejected_both_sections": true,
+    "native_stored_values_checked_per_kind": 6,
+    "native_cases": 12,
+    "new_unit_test": "test_computed_bypass_sentinel_is_rejected_in_both_byte_orders",
+    "input_not_mutated_on_rejection": true
+  },
+  "af_control_analysis": {
+    "acquisition_cases": 8,
+    "body_control_cases": 14,
+    "lens_control_cases": 3,
+    "original_execution_replacement_offsets": [
+      "0x93f94"
+    ],
+    "coordinator_replay": true,
+    "sensor_input_generation_or_physical_drive": false
+  },
+  "installation_ui_af_review": {
+    "installation_independent_replay_cases": 43,
+    "open_P0_P1_P2_findings": 0,
+    "precision_corrections": [
+      "nonzero gate versus upstream normalized 0/1",
+      "image source low-bit alignment"
+    ],
+    "coordinator_replayed_all_three_snapshots": true,
+    "language": {
+      "route": "light",
+      "prose_paragraphs": [
+        22,
+        10
+      ],
+      "change_rate_percent": [
+        0,
+        0
+      ],
+      "sentences": [
+        101,
+        44
+      ],
+      "gate": "OK",
+      "modality_lost": 0,
+      "self_check": "6/6",
+      "subsequent_technical_precision_corrections": true
+    }
   }
 }

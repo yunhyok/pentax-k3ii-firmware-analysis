@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ko">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="K-3 II 렌즈 능력 조회 조건, AF 요청 계산과 바디·렌즈 구동 준비 전달을 원본 ARM으로 검증.">
+<title>K-3 II — AF 요청 계산과 구동 준비</title><link rel="stylesheet" href="../assets/report.css"></head>
+<body><header><div class="eyebrow">PENTAX K-3 II · firmware 1.12 · 2026-11-08</div>
+<h1>렌즈 능력 조회에서<br>AF 요청 계산과 구동 준비까지</h1>
+<p class="lead">렌즈 능력 조회의 실행 조건과 16비트 구동 요청의 생산자·소비자를 연결했다. 계산한 값은 원본 CAfMotor 준비 함수의 바디·렌즈 분기까지 전달됐다. 입력 센서의 계산과 호출 사이의 스케줄링은 아직 분석 범위 밖이며, 이번 결과는 향후 AF 변경에 필요한 기본 구조를 확인한 것이다.</p>
+<nav aria-label="보고서 탐색"><a href="af-drive.html">앞선 구동 분기</a><a href="#capability">능력 조회</a><a href="#body">바디 요청</a><a href="#lens">렌즈 응답</a><a href="#limits">검증 범위</a><a href="hq-status.json">연구 상태</a></nav></header>
+<main><p class="note">코드 위치는 해제 파일 오프셋이다. ITCM 실행 주소는 <code>VA</code>로 구분했다. CAfMotor·CAfPulse·CAfPosition의 명칭은 펌웨어 RTTI에 근거한다. 내부 요청값을 물리 이동 거리나 초점 오차 단위로 단정하지 않았다.</p>
+
+<section aria-labelledby="capability"><h2 id="capability">1. 능력 조회는 상태 비트와 캐시값으로 결정한다</h2>
+<p><code>0x94DC4</code>는 <code>[VA 0x40006064] + 1</code> 바이트의 비트 6을 확인한다. 비트가 꺼져 있으면 조회하지 않고 돌아간다. 켜져 있어도 <code>CLensKaf2+6</code>이 0이 아니면 기존 값을 사용해 <code>0x94E78</code>로 이어진다. 캐시가 0일 때만 명령 <code>0x8205</code>로 1바이트 응답을 요청한다. <a href="af-control.json">acquisition 조건과 사례 8건</a></p>
+<p>전송 상태가 0일 때만 응답을 능력 캐시에 기록한다. 응답 비트 0은 후속 초기화 분기를, 비트 6은 <a href="af-drive.html">앞서 확인한 바디·렌즈 구동 선택</a>을 가른다. 이번 구동 계산 검사는 원본 조회가 캐시에 기록한 <code>0x80</code>과 <code>0x40</code>을 이어 사용했다. 능력 판정 함수를 결과 상수로 대체하지 않았다. <a href="../verify_af_control.py">조회와 후속 객체 연결</a></p>
+</section>
+
+<section aria-labelledby="body"><h2 id="body">2. 같은 객체의 계산값을 다음 호출이 읽는다</h2>
+<figure><figcaption>도식 1. AF 애플리케이션의 두 호출 사이에서 전달되는 값</figcaption><div class="flow" role="group" aria-label="AF 애플리케이션이 모터의 계산 함수를 호출해 펄스 객체에 요청을 기록하고 다음 소비자가 구동 준비 함수로 전달">
+<div class="stage"><strong>생산자 0x5455C</strong><span>ITCM 호출 0xD7674<br>application+0x20의 모터<br>입력 정규화와 계산</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>CAfPulse+0xBC</strong><span>계산한 16비트 요청<br>0이면 일반 전달 생략<br>같은 객체를 두 호출에서 사용</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>소비자 0x547CC</strong><span>ITCM 호출 0xD7768<br>준비 조건·크기 구간 확인<br>0x52E38에 인수 8로 전달</span></div></div>
+<p class="caption">실행한 ITCM 구간은 VA 0x2248…0x225C와 VA 0x2348부터의 소비 호출이다. 그 사이의 펌웨어 스케줄링은 실행하지 않았다. 구동 준비 함수는 실제 분기점까지 실행했다.</p></figure>
+<p>능력 비트 6이 꺼진 바디 분기에서는 <code>0x544EC</code>가 입력을 정규화한다. 방향 플래그 <code>VA 0x00103116</code>이 0이면 입력을 <code>pulse+0xC2</code>에 복사하고 차감값 <code>VA 0x00103168</code>을 0으로 만든다. 플래그가 0이 아니면 입력의 비트 반전 하위 16비트를 차감값으로 저장하고 <code>pulse+0xC2</code>를 0으로 만든다. <a href="af-control.json">body_calculation_input과 원본 실행</a></p>
+<p>검사한 상태에서는 <code>pulse+0xC2 − [0x00103168] + [0x0010316E]</code>의 하위 16비트를 사용한다. 계산 플래그 <code>accessor+0xC5F</code>가 1이 아니거나 결과를 signed 16비트로 해석했을 때 음수이면 요청을 0으로 만든다. 전역 <code>0x001030AB = 0</code>, 준비 상태 3 등의 입력 조건을 고정한 검사다. 다른 상태의 전체 계산식으로 일반화하지 않았다. <a href="../verify_af_control.py">계산 조건과 14개 대조 입력</a></p>
+<div class="table-scroll"><table><thead><tr><th scope="col">합성 입력·계산 결과</th><th scope="col">원본 소비자의 동작</th></tr></thead><tbody>
+<tr><td>계산 플래그 0 또는 2, 계산값의 signed 해석이 음수</td><td>요청 0. 구동 준비 호출 없음</td></tr>
+<tr><td>요청 230, 준비 바이트 0 / 1</td><td>각각 전달 생략 / 구동 준비 호출</td></tr>
+<tr><td>요청 231…365</td><td><code>motor+0x60 = 0</code></td></tr>
+<tr><td>요청 366…400 / 401 이상</td><td><code>motor+0x60 = 1 / 2</code></td></tr>
+</tbody></table></div>
+<p>전달되는 사례에서는 요청값이 <code>pulse+0x9E</code>와 <code>position+0x166</code>에 기록된다. 이어 <code>0x52E38</code>을 실제 호출했고, 비트 6이 꺼진 객체는 파일 <code>0x52ED4</code>의 바디 분기에 도달했다. 구간 번호 0·1·2의 속도나 토크 같은 물리 의미는 아직 확인하지 않았다. <a href="af-control.json">body_control_cases의 전달 인수·도착 주소</a></p>
+</section>
+
+<section aria-labelledby="lens"><h2 id="lens">3. 렌즈 분기의 요청값은 0x8211 응답에서 나온다</h2>
+<figure><figcaption>도식 2. 렌즈 응답을 요청값으로 쓰는 조건</figcaption><div class="flow" role="group" aria-label="렌즈 명령 0x8211의 두 바이트 응답을 빅엔디언 값으로 읽어 부호와 계산 플래그를 확인하고 구동 준비로 전달">
+<div class="stage"><strong>0x4E684 · 렌즈 조회</strong><span>명령 0x8211<br>2바이트 응답 요청<br>0x94204 → 전송 함수</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>0xB995C · 값 읽기</strong><span>응답[0] × 256 + 응답[1]<br>부호·계산 플래그 확인<br>음수이면 요청 0</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>렌즈 구동 준비</strong><span>0x0102 응답 → 요청 258<br>0x52E38의 실제 호출<br>파일 0x52E98 분기에 도달</span></div></div></figure>
+<p>원본 <code>0x4E684</code>는 전송 호출의 반환 상태를 검사하지 않고 응답 버퍼를 읽는다. 전송 상태 7을 주면서 버퍼를 갱신하지 않은 대조에서는 이전 값 <code>0x0201</code>이 요청 513으로 재사용됐다. 이는 지정한 전송 경계에서의 호출자 동작이다. 실제 통신 실패가 항상 버퍼를 그대로 두는지는 확인하지 않았다. <a href="af-control.json">lens_error_without_reply_write</a></p>
+<p>반대로 정상 응답 <code>0xFFFF</code>는 음수로 처리돼 요청 0이 됐고 구동 준비를 호출하지 않았다. 정상 양수 <code>0x0102</code>는 요청 258과 잔량 필드 갱신을 거쳐 렌즈 분기에 도달했다. 이 분기는 능력 비트에 따른 제어 경로이며 SDM·DC·PLM의 물리 프로토콜을 각각 식별한 결과는 아니다. <a href="af-control.json">렌즈 계산 사례 3건</a></p>
+</section>
+
+<section aria-labelledby="limits"><h2 id="limits">4. 원본 제어 25건을 재현했고, 센서 계산은 남아 있다</h2>
+<pre><code>python verify_af_control.py decoded.bin --emulate --compare analysis/af-control.json
+python verify_af_drive.py decoded.bin --emulate --compare analysis/af-drive.json</code></pre>
+<p>Unicorn 2.1.4에서 능력 조회 8건, 바디 요청 계산·전달 14건, 렌즈 요청 3건을 실행했다. 55개 명령·상수, 61개 분기 목적지, RTTI 3개를 대조했고 코디네이터가 스냅샷을 다시 실행해 일치를 확인했다. 실행을 대체한 함수는 렌즈 전송 <code>0x93F94</code> 하나다. 나머지 객체·공유 메모리·상태값은 공개 검증기에 명시한 합성 입력이다. <a href="../verify_af_control.py">검증기</a></p>
+<p>위상차·콘트라스트 AF가 센서 신호에서 초점 오차를 만드는 알고리즘, 두 ITCM 호출 사이의 상태 전이, 구동 분기 이후 전체 제어와 실제 렌즈 움직임은 미검증이다. 정확한 렌즈 모델 정보가 없어도 이 기본 구조 분석은 계속할 수 있다. 모델별 패치나 렌즈 EEPROM 변경은 적용하지 않았다. <a href="hq-status.json">미해결 항목과 다음 작업</a></p>
+</section></main><footer>K-3 II v1.12 · <a href="af-drive.html">능력·구동 분기 보고서</a> · <a href="../README.md">저장소 안내</a></footer></body></html>

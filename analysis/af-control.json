@@ -1,0 +1,788 @@
+{
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "firmware_version": "1.12",
+  "image_base": 33554432,
+  "offset_units": "Decoded file offsets except execution addresses, memory addresses and object fields.",
+  "word_check_count": 55,
+  "class_records": {
+    "14CAfApplication": {
+      "name_offset": 857019,
+      "rtti": 853360,
+      "vtable": 863968
+    },
+    "8CAfMotor": {
+      "name_offset": 861712,
+      "rtti": 855952,
+      "vtable": 872348
+    },
+    "8CAfPulse": {
+      "name_offset": 861722,
+      "rtti": 855984,
+      "vtable": 872408
+    }
+  },
+  "branch_checks": [
+    {
+      "file_offset": 882292,
+      "target_va": 16840456
+    },
+    {
+      "file_offset": 950120,
+      "target_va": 33899868
+    },
+    {
+      "file_offset": 882536,
+      "target_va": 16840464
+    },
+    {
+      "file_offset": 950128,
+      "target_va": 33900492
+    },
+    {
+      "file_offset": 345376,
+      "target_va": 34305280
+    },
+    {
+      "file_offset": 949508,
+      "target_va": 9956
+    },
+    {
+      "file_offset": 883484,
+      "target_va": 16840516
+    },
+    {
+      "file_offset": 950180,
+      "target_va": 33764384
+    },
+    {
+      "file_offset": 209952,
+      "target_va": 34315904
+    },
+    {
+      "file_offset": 345396,
+      "target_va": 16839844
+    },
+    {
+      "file_offset": 345408,
+      "target_va": 34314092
+    },
+    {
+      "file_offset": 345420,
+      "target_va": 34305280
+    },
+    {
+      "file_offset": 345456,
+      "target_va": 33900008
+    },
+    {
+      "file_offset": 345528,
+      "target_va": 33867008
+    },
+    {
+      "file_offset": 345536,
+      "target_va": 33900036
+    },
+    {
+      "file_offset": 345616,
+      "target_va": 34314076
+    },
+    {
+      "file_offset": 345628,
+      "target_va": 34314044
+    },
+    {
+      "file_offset": 345664,
+      "target_va": 34305328
+    },
+    {
+      "file_offset": 345680,
+      "target_va": 34304208
+    },
+    {
+      "file_offset": 345736,
+      "target_va": 33875588
+    },
+    {
+      "file_offset": 345804,
+      "target_va": 34314284
+    },
+    {
+      "file_offset": 345832,
+      "target_va": 34314236
+    },
+    {
+      "file_offset": 345848,
+      "target_va": 34314284
+    },
+    {
+      "file_offset": 321172,
+      "target_va": 34161156
+    },
+    {
+      "file_offset": 321184,
+      "target_va": 34314588
+    },
+    {
+      "file_offset": 607656,
+      "target_va": 34163128
+    },
+    {
+      "file_offset": 608700,
+      "target_va": 34161768
+    },
+    {
+      "file_offset": 607352,
+      "target_va": 34160532
+    },
+    {
+      "file_offset": 346076,
+      "target_va": 34314260
+    },
+    {
+      "file_offset": 346104,
+      "target_va": 33901272
+    },
+    {
+      "file_offset": 346112,
+      "target_va": 33823456
+    },
+    {
+      "file_offset": 269028,
+      "target_va": 34308284
+    },
+    {
+      "file_offset": 346124,
+      "target_va": 34307812
+    },
+    {
+      "file_offset": 346132,
+      "target_va": 33867008
+    },
+    {
+      "file_offset": 346140,
+      "target_va": 33900652
+    },
+    {
+      "file_offset": 346232,
+      "target_va": 33900756
+    },
+    {
+      "file_offset": 346328,
+      "target_va": 33900812
+    },
+    {
+      "file_offset": 346384,
+      "target_va": 16839912
+    },
+    {
+      "file_offset": 949576,
+      "target_va": 3176
+    },
+    {
+      "file_offset": 876680,
+      "target_va": 15692
+    },
+    {
+      "file_offset": 346392,
+      "target_va": 33900704
+    },
+    {
+      "file_offset": 346404,
+      "target_va": 34307792
+    },
+    {
+      "file_offset": 346416,
+      "target_va": 34314084
+    },
+    {
+      "file_offset": 346428,
+      "target_va": 33893944
+    },
+    {
+      "file_offset": 346652,
+      "target_va": 33893944
+    },
+    {
+      "file_offset": 346832,
+      "target_va": 34314084
+    },
+    {
+      "file_offset": 346860,
+      "target_va": 33914812
+    },
+    {
+      "file_offset": 589988,
+      "target_va": 34164164
+    },
+    {
+      "file_offset": 597416,
+      "target_va": 34164164
+    },
+    {
+      "file_offset": 609748,
+      "target_va": 33770756
+    },
+    {
+      "file_offset": 216328,
+      "target_va": 34302036
+    },
+    {
+      "file_offset": 609764,
+      "target_va": 34315080
+    },
+    {
+      "file_offset": 609772,
+      "target_va": 34164344
+    },
+    {
+      "file_offset": 609784,
+      "target_va": 34161156
+    },
+    {
+      "file_offset": 608344,
+      "target_va": 34160532
+    },
+    {
+      "file_offset": 608360,
+      "target_va": 34315100
+    },
+    {
+      "file_offset": 609800,
+      "target_va": 34164336
+    },
+    {
+      "file_offset": 609812,
+      "target_va": 34161156
+    },
+    {
+      "file_offset": 312584,
+      "target_va": 34315080
+    },
+    {
+      "file_offset": 339588,
+      "target_va": 33867008
+    },
+    {
+      "file_offset": 339604,
+      "target_va": 33894100
+    }
+  ],
+  "ranges": {
+    "application_dispatch": {
+      "start": 882276,
+      "end_exclusive": 882548,
+      "sha256": "1342eb2446e2233672a46a344decad4c92ce125eeff8559477bbf4f250d66f6a"
+    },
+    "relocated_motor_veneers": {
+      "start": 950120,
+      "end_exclusive": 950132,
+      "sha256": "3c3010a1e68be6590a6398f795f58b1c624ff21d9823ba93b89c00e4555f52ce"
+    },
+    "motor_target_calculation": {
+      "start": 345324,
+      "end_exclusive": 346060,
+      "sha256": "ce75f3161920717b6375022102709de3c2b4bf1ab871638a2ae7a4faf125b8c9"
+    },
+    "motor_target_handoff": {
+      "start": 346060,
+      "end_exclusive": 346872,
+      "sha256": "16b0394c853f9e1f8fd036628e45b1271f26a042e93db89c376b353ecb86f1ce"
+    },
+    "motor_prepare_prefix": {
+      "start": 339512,
+      "end_exclusive": 339700,
+      "sha256": "5fe28cf4a9b8ea52662e67063a4db65ce5419395a5d7c300b3204ba3ac2c0da5"
+    },
+    "lens_acquisition_prefix": {
+      "start": 609732,
+      "end_exclusive": 609816,
+      "sha256": "c1186b69b6ad0334045f38eff556eb25f8c0dd412db0707591f351ef3b885e93"
+    },
+    "lens_response_store": {
+      "start": 608324,
+      "end_exclusive": 608368,
+      "sha256": "4b151d3d998ea59e7ccf9e61e787b54b8daea1e4cf31d08412e2b485486c2b4d"
+    },
+    "lens_control_query": {
+      "start": 321156,
+      "end_exclusive": 321188,
+      "sha256": "18ced21814a6dd307566594ce379b0e2d3c97311c99acdf69cf57d39b5c57bb3"
+    }
+  },
+  "acquisition": {
+    "entry": 609732,
+    "status_pointer_va": 1073766500,
+    "status_byte_offset": 1,
+    "status_mask": 64,
+    "cached_capability_offset": 6,
+    "cached_nonzero_continuation": 609912,
+    "query_if_cache_zero": 33285,
+    "query_payload_size": 1,
+    "status_zero_store": 760668,
+    "post_query_raw_bit0_continuations": {
+      "clear": 609904,
+      "set": 609804
+    },
+    "drive_predicate": 312576,
+    "drive_predicate_mask": 64
+  },
+  "control": {
+    "application_motor_pointer_offset": 32,
+    "producer_call": 882292,
+    "producer_entry": 345436,
+    "consumer_call": 882536,
+    "consumer_entry": 346060,
+    "body_calculation_gate_config_key": 711,
+    "body_calculation_gate_raw_values": [
+      1,
+      11,
+      12,
+      13,
+      19
+    ],
+    "body_calculation_gate_source_va": 1074270795,
+    "calculation_state_va": 1061090,
+    "fixture_calculation_state": 3,
+    "body_calculation_formula": "With global 0x001030ab clear and accessor+0xc5f equal to 1, use the low 16 bits of pulse+0xc2 minus [0x00103168] plus [0x0010316e], and clear the result if its signed interpretation is negative. Other values of the accessor gate also clear the result in this branch.",
+    "lens_calculation_query": {
+      "entry": 321156,
+      "command": 33297,
+      "reply_bytes": 2,
+      "response_word_order": "big-endian",
+      "calculation_entry": 345736,
+      "calculation_flag_offset": 3167,
+      "nonnegative_result_store": 345804,
+      "pulse_bookkeeping_offset": 186
+    },
+    "body_calculation_input": {
+      "pulse_offset_after_initial_copy": 194,
+      "direction_flag_va": 1061142,
+      "input_entry": 345324,
+      "raw_word_accessor": 761472,
+      "input_object_pointer_path": [
+        8,
+        4,
+        36
+      ],
+      "input_normalization": "For a zero direction flag, copy the input to pulse+0xc2 and clear the subtract halfword. For a nonzero flag, clear pulse+0xc2 and store the low 16 bits of the complemented input in the subtract halfword.",
+      "subtract_halfword_va": 1061224,
+      "add_halfword_va": 1061230,
+      "exact_one_accessor_byte_offset": 3167
+    },
+    "producer_output_pulse_offset": 188,
+    "consumer_low_request_cutoff": 230,
+    "body_large_request_band_cutoffs": [
+      365,
+      400
+    ],
+    "body_large_request_band_motor_offset": 96,
+    "position_copy_from_accessor_record_offset": 176,
+    "position_copy_destination_offset": 356,
+    "target_position_offset": 358,
+    "target_pulse_offset": 158,
+    "motor_prepare": 339512,
+    "motor_prepare_arg": 8
+  },
+  "numeric": {
+    "unicorn_version": "2.1.4",
+    "stubbed_file_offsets": [
+      606100
+    ],
+    "acquisition_cases": [
+      {
+        "case": "status_bit_clear",
+        "injected_status_byte": 128,
+        "prior_capability": 0,
+        "reply": null,
+        "transport_status": null,
+        "transactions": [],
+        "stored_capability": 0,
+        "drive_predicate": 0,
+        "end_va": null
+      },
+      {
+        "case": "nonzero_cached_body",
+        "injected_status_byte": 64,
+        "prior_capability": 128,
+        "reply": null,
+        "transport_status": null,
+        "transactions": [],
+        "stored_capability": 128,
+        "drive_predicate": 0,
+        "end_va": 34164344
+      },
+      {
+        "case": "nonzero_cached_lens",
+        "injected_status_byte": 64,
+        "prior_capability": 64,
+        "reply": null,
+        "transport_status": null,
+        "transactions": [],
+        "stored_capability": 64,
+        "drive_predicate": 1,
+        "end_va": 34164344
+      },
+      {
+        "case": "fresh_zero",
+        "injected_status_byte": 64,
+        "prior_capability": 0,
+        "reply": 0,
+        "transport_status": 0,
+        "transactions": [
+          [
+            33285,
+            1
+          ]
+        ],
+        "stored_capability": 0,
+        "drive_predicate": 0,
+        "end_va": 34164336
+      },
+      {
+        "case": "fresh_lens",
+        "injected_status_byte": 64,
+        "prior_capability": 0,
+        "reply": 64,
+        "transport_status": 0,
+        "transactions": [
+          [
+            33285,
+            1
+          ]
+        ],
+        "stored_capability": 64,
+        "drive_predicate": 1,
+        "end_va": 34164336
+      },
+      {
+        "case": "fresh_bit_zero_set",
+        "injected_status_byte": 64,
+        "prior_capability": 0,
+        "reply": 65,
+        "transport_status": 0,
+        "transactions": [
+          [
+            33285,
+            1
+          ]
+        ],
+        "stored_capability": 65,
+        "drive_predicate": 1,
+        "end_va": 34164236
+      },
+      {
+        "case": "failed_reply",
+        "injected_status_byte": 64,
+        "prior_capability": 0,
+        "reply": 65,
+        "transport_status": 7,
+        "transactions": [
+          [
+            33285,
+            1
+          ]
+        ],
+        "stored_capability": 0,
+        "drive_predicate": 0,
+        "end_va": 34164336
+      },
+      {
+        "case": "fresh_body",
+        "injected_status_byte": 64,
+        "prior_capability": 0,
+        "reply": 128,
+        "transport_status": 0,
+        "transactions": [
+          [
+            33285,
+            1
+          ]
+        ],
+        "stored_capability": 128,
+        "drive_predicate": 0,
+        "end_va": 34164336
+      }
+    ],
+    "body_control_cases": [
+      {
+        "case": "reverse_below_zero",
+        "step_halfword": 65435,
+        "direction_flag": 1,
+        "normalized_pulse_halfword": 0,
+        "normalized_subtract_halfword": 100,
+        "add_halfword": 90,
+        "configuration_value": 1,
+        "calculation_flag": 1,
+        "ready_byte": 1,
+        "computed_request": 0,
+        "band": null,
+        "prepare_argument": null,
+        "continuation_va": 9040,
+        "no_prepare_return": 1
+      },
+      {
+        "case": "reverse_positive",
+        "step_halfword": 65435,
+        "direction_flag": 1,
+        "normalized_pulse_halfword": 0,
+        "normalized_subtract_halfword": 100,
+        "add_halfword": 331,
+        "configuration_value": 1,
+        "calculation_flag": 1,
+        "ready_byte": 0,
+        "computed_request": 231,
+        "band": 0,
+        "prepare_argument": 8,
+        "continuation_va": 33894100,
+        "no_prepare_return": null
+      },
+      {
+        "case": "signed_upper_boundary",
+        "step_halfword": 32767,
+        "direction_flag": 0,
+        "normalized_pulse_halfword": 32767,
+        "normalized_subtract_halfword": 0,
+        "add_halfword": 1,
+        "configuration_value": 1,
+        "calculation_flag": 1,
+        "ready_byte": 1,
+        "computed_request": 0,
+        "band": null,
+        "prepare_argument": null,
+        "continuation_va": 9040,
+        "no_prepare_return": 1
+      },
+      {
+        "case": "large_at_signed_limit",
+        "step_halfword": 32767,
+        "direction_flag": 0,
+        "normalized_pulse_halfword": 32767,
+        "normalized_subtract_halfword": 0,
+        "add_halfword": 0,
+        "configuration_value": 1,
+        "calculation_flag": 1,
+        "ready_byte": 0,
+        "computed_request": 32767,
+        "band": 2,
+        "prepare_argument": 8,
+        "continuation_va": 33894100,
+        "no_prepare_return": null
+      },
+      {
+        "case": "calculation_flag_clear",
+        "step_halfword": 225,
+        "direction_flag": 0,
+        "normalized_pulse_halfword": 225,
+        "normalized_subtract_halfword": 0,
+        "add_halfword": 5,
+        "configuration_value": 1,
+        "calculation_flag": 0,
+        "ready_byte": 1,
+        "computed_request": 0,
+        "band": null,
+        "prepare_argument": null,
+        "continuation_va": 9040,
+        "no_prepare_return": 1
+      },
+      {
+        "case": "calculation_flag_other",
+        "step_halfword": 225,
+        "direction_flag": 0,
+        "normalized_pulse_halfword": 225,
+        "normalized_subtract_halfword": 0,
+        "add_halfword": 5,
+        "configuration_value": 1,
+        "calculation_flag": 2,
+        "ready_byte": 1,
+        "computed_request": 0,
+        "band": null,
+        "prepare_argument": null,
+        "continuation_va": 9040,
+        "no_prepare_return": 1
+      },
+      {
+        "case": "configuration_denies",
+        "step_halfword": 225,
+        "direction_flag": 0,
+        "normalized_pulse_halfword": null,
+        "normalized_subtract_halfword": null,
+        "add_halfword": 5,
+        "configuration_value": 0,
+        "calculation_flag": 1,
+        "ready_byte": 1,
+        "computed_request": 0,
+        "band": null,
+        "prepare_argument": null,
+        "continuation_va": 9040,
+        "no_prepare_return": 1
+      },
+      {
+        "case": "low_unready",
+        "step_halfword": 225,
+        "direction_flag": 0,
+        "normalized_pulse_halfword": 225,
+        "normalized_subtract_halfword": 0,
+        "add_halfword": 5,
+        "configuration_value": 1,
+        "calculation_flag": 1,
+        "ready_byte": 0,
+        "computed_request": 230,
+        "band": null,
+        "prepare_argument": null,
+        "continuation_va": 9040,
+        "no_prepare_return": 0
+      },
+      {
+        "case": "low_ready",
+        "step_halfword": 225,
+        "direction_flag": 0,
+        "normalized_pulse_halfword": 225,
+        "normalized_subtract_halfword": 0,
+        "add_halfword": 5,
+        "configuration_value": 1,
+        "calculation_flag": 1,
+        "ready_byte": 1,
+        "computed_request": 230,
+        "band": null,
+        "prepare_argument": 8,
+        "continuation_va": 33894100,
+        "no_prepare_return": null
+      },
+      {
+        "case": "first_band_lower",
+        "step_halfword": 226,
+        "direction_flag": 0,
+        "normalized_pulse_halfword": 226,
+        "normalized_subtract_halfword": 0,
+        "add_halfword": 5,
+        "configuration_value": 1,
+        "calculation_flag": 1,
+        "ready_byte": 0,
+        "computed_request": 231,
+        "band": 0,
+        "prepare_argument": 8,
+        "continuation_va": 33894100,
+        "no_prepare_return": null
+      },
+      {
+        "case": "first_band_upper",
+        "step_halfword": 360,
+        "direction_flag": 0,
+        "normalized_pulse_halfword": 360,
+        "normalized_subtract_halfword": 0,
+        "add_halfword": 5,
+        "configuration_value": 1,
+        "calculation_flag": 1,
+        "ready_byte": 0,
+        "computed_request": 365,
+        "band": 0,
+        "prepare_argument": 8,
+        "continuation_va": 33894100,
+        "no_prepare_return": null
+      },
+      {
+        "case": "second_band_lower",
+        "step_halfword": 361,
+        "direction_flag": 0,
+        "normalized_pulse_halfword": 361,
+        "normalized_subtract_halfword": 0,
+        "add_halfword": 5,
+        "configuration_value": 1,
+        "calculation_flag": 1,
+        "ready_byte": 0,
+        "computed_request": 366,
+        "band": 1,
+        "prepare_argument": 8,
+        "continuation_va": 33894100,
+        "no_prepare_return": null
+      },
+      {
+        "case": "second_band_upper",
+        "step_halfword": 395,
+        "direction_flag": 0,
+        "normalized_pulse_halfword": 395,
+        "normalized_subtract_halfword": 0,
+        "add_halfword": 5,
+        "configuration_value": 1,
+        "calculation_flag": 1,
+        "ready_byte": 0,
+        "computed_request": 400,
+        "band": 1,
+        "prepare_argument": 8,
+        "continuation_va": 33894100,
+        "no_prepare_return": null
+      },
+      {
+        "case": "third_band_lower",
+        "step_halfword": 396,
+        "direction_flag": 0,
+        "normalized_pulse_halfword": 396,
+        "normalized_subtract_halfword": 0,
+        "add_halfword": 5,
+        "configuration_value": 1,
+        "calculation_flag": 1,
+        "ready_byte": 0,
+        "computed_request": 401,
+        "band": 2,
+        "prepare_argument": 8,
+        "continuation_va": 33894100,
+        "no_prepare_return": null
+      }
+    ],
+    "lens_control_cases": [
+      {
+        "case": "lens_positive_reply",
+        "transport_status": 0,
+        "reply": 258,
+        "previous_response_word": 513,
+        "transactions": [
+          [
+            33297,
+            2
+          ]
+        ],
+        "computed_request": 258,
+        "pulse_remaining_halfword": 766,
+        "prepare_argument": 8,
+        "continuation_va": 33894040
+      },
+      {
+        "case": "lens_signed_negative",
+        "transport_status": 0,
+        "reply": 65535,
+        "previous_response_word": 513,
+        "transactions": [
+          [
+            33297,
+            2
+          ]
+        ],
+        "computed_request": 0,
+        "pulse_remaining_halfword": 1024,
+        "prepare_argument": null,
+        "continuation_va": 9040
+      },
+      {
+        "case": "lens_error_without_reply_write",
+        "transport_status": 7,
+        "reply": null,
+        "previous_response_word": 513,
+        "transactions": [
+          [
+            33297,
+            2
+          ]
+        ],
+        "computed_request": 513,
+        "pulse_remaining_halfword": 511,
+        "prepare_argument": 8,
+        "continuation_va": 33894040
+      }
+    ],
+    "boundaries": [
+      "Acquisition starts at 0x94dc4 with a prepared CLensSdm object and a synthetic byte through [0x40006064]. The only execution replacement is the 0x93f94 lens transfer hook. It injects a reply and status, or status alone for the explicitly modeled 0x8211 failure without a reply write. Probes stop at the unready return, cached continuation, or first branch after the original 0x8205 query.",
+      "The AF control fixtures execute two original slices of the same ITCM routine, VA 0x2248 through 0x225c and VA 0x2348 until the first body/lens split inside CAfMotor 0x52e38 (file 0x52ed4 / 0x52e98) or return to VA 0x2350. A read-only hook observes the actual prepare arguments. The slices share the same prepared application, motor, pulse and position objects. Firmware between the two slices and drive execution past that split are outside these cases.",
+      "Control fixtures use capability bytes written by the original 0x8205 acquisition path. Both sets use global 0x001030ab clear and preparation state 3. The lens-control fixtures also use raw CLensKaf2+0x1a bit 0 clear and accessor+0xc5f equal to 1. The status-only failure case shows caller behavior under the specified reply-buffer boundary, while the physical transport's failure behavior remains untested. Hardware sample sources, AF sensor/optics algorithms, full scheduler, remaining lens initialization and physical movement are outside the probes."
+    ]
+  }
+}

@@ -4,6 +4,7 @@
 <p class="lead">렌즈 명령 0x8205의 응답이 저장되는 곳과, 그 값을 읽어 렌즈 명령 또는 바디 드라이버로 분기하는 원본 코드를 연결했다. 합성 응답 6개에서 두 경로와 오류 시 값 보존을 확인했다. 실물 렌즈의 구동·AF 성능이나 특정 렌즈용 수정 펌웨어를 검증한 결과는 아니다.</p>
 <nav aria-label="보고서 탐색"><a href="../index.html">초기 분석</a><a href="#capability">능력값 생산자</a><a href="#drive">구동 분기</a><a href="#model">렌즈별 조건</a><a href="#validation">검증·한계</a><a href="rebuild.html">재포장</a><a href="hq-status.json">연구 상태</a></nav></header><main>
 <p class="note">코드 위치는 해제 이미지의 파일 오프셋이다. 일부 명령은 시작 시 SRAM으로 복사되므로 단순히 <code>0x02000000</code>을 더한 주소에서 실행하면 안 된다. 원본 복사 표 4개를 재현해 해당 실행 주소를 사용했다. <a href="af-drive.json">복사 표·클래스 RTTI·분기 근거</a></p>
+<p class="note"><a href="af-control.html">후속 AF 제어 분석</a>에서 능력 조회 조건과 요청값 계산·소비를 25개 원본 ARM 사례로 검증했다. 입력 센서 알고리즘과 물리 구동의 한계는 남아 있다.</p>
 <section aria-labelledby="capability"><h2 id="capability">1. 성공한 응답만 능력 바이트를 갱신한다</h2>
 <p><code>CLensSdm</code> 경로 <code>0x94DC4</code>는 <code>CLensKaf2+6</code>이 0이면 명령 <code>0x8205</code>를 준비한다. 디스패처 <code>0x94204</code>와 처리기 <code>0x94844</code>는 한 바이트를 요청하고 전송 결과가 0일 때만 <code>0xB9B5C</code>로 응답을 저장한다. <code>CAfLens</code>의 <code>0x4C500</code>은 그 바이트의 <code>0x40</code> 비트를 추출한다. <a href="../verify_af_drive.py">원본 생산자·저장·조회 검증</a></p>
 <figure><figcaption>도식 1. 능력값의 생산과 소비</figcaption><div class="flow" role="group" aria-label="명령8205의 한 바이트 응답이 성공할 때만 저장되고 비트6이 AF 분기로 전달됨">

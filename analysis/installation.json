@@ -1,0 +1,1478 @@
+{
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "firmware_version": "1.12",
+  "offset_units": "Decoded file offsets; addresses and object fields explicitly marked.",
+  "word_check_count": 27,
+  "branch_checks": [
+    {
+      "site": 6120460,
+      "target": 7589780
+    },
+    {
+      "site": 6121068,
+      "target": 7589876
+    },
+    {
+      "site": 6121080,
+      "target": 6488436
+    },
+    {
+      "site": 49168,
+      "target": 45912
+    },
+    {
+      "site": 49196,
+      "target": 46056
+    },
+    {
+      "site": 49232,
+      "target": 46184
+    },
+    {
+      "site": 49272,
+      "target": 45912
+    },
+    {
+      "site": 49480,
+      "target": 49104
+    },
+    {
+      "site": 49748,
+      "target": 49104
+    },
+    {
+      "site": 6121020,
+      "target": 6120252
+    },
+    {
+      "site": 6120280,
+      "target": 6116208
+    },
+    {
+      "site": 6116344,
+      "target": 6115900
+    },
+    {
+      "site": 6116396,
+      "target": 6115780
+    },
+    {
+      "site": 6116412,
+      "target": 6115712
+    },
+    {
+      "site": 6116004,
+      "target": 5595164
+    },
+    {
+      "site": 6115836,
+      "target": 5595520
+    },
+    {
+      "site": 5595308,
+      "target": 7120768
+    },
+    {
+      "site": 5595420,
+      "target": 7120768
+    },
+    {
+      "site": 5595680,
+      "target": 7120124
+    },
+    {
+      "site": 5595812,
+      "target": 7120124
+    },
+    {
+      "site": 893560,
+      "target": 891752
+    },
+    {
+      "site": 893580,
+      "target": 892408
+    },
+    {
+      "site": 893608,
+      "target": 892596
+    },
+    {
+      "site": 892424,
+      "target": 892332
+    },
+    {
+      "site": 892636,
+      "target": 892488
+    },
+    {
+      "site": 5871920,
+      "target": 6488380
+    },
+    {
+      "site": 5871940,
+      "target": 6488412
+    },
+    {
+      "site": 5871984,
+      "target": 6488340
+    },
+    {
+      "site": 5872008,
+      "target": 6488348
+    },
+    {
+      "site": 5872032,
+      "target": 6488412
+    }
+  ],
+  "range_sha256": {
+    "update_sector_control": "92277060b292d5ce17ef8dece4693b7e46eae3a004e76cc7b556cb997a6a4c7d",
+    "update_entry_after_auxiliary": "f551fa2aa40d42b3623a1f128b7f63af9a71be4ac25f7e1d0ea69b7759d51aa6",
+    "update_receive_allocation": "ca913de0a26a9f5678e091889f4c40e43a8206932cd755b45776b2d95b264407",
+    "auxiliary_program_read_compare_retry": "fb1c015959611e44227aac7853a07d248594d07b8a054f6f5287211c3dde83fc",
+    "auxiliary_serial_transactions": "d66b21d9da7a9ab7ec473825d0f5a0bcf9b107ab189150003acb871b8fee13bd",
+    "ram_copy": "a9d01da49065c7f0d7a0253bbd515c96dace76d7b22458b58da410b175328e5f",
+    "ram_copy_literals": "2fedf7580e6420a034b18dd2b29cd4399062d3a037609e4fc2cb1aff09da22fe",
+    "ram_mailbox_senders": "07e4358b692a689c3d03d4afc6f70f82617e341dd775783e04f57d6900a36488",
+    "mailbox_receiver": "1782585aaf2ba70d416d70a410873a7267b19938be91810c60f8de353468752a",
+    "nor_commands": "b0fdaabf0fb6fbf6e28af98f23dab988b120643ab581e3ce30b5ecfff98cbf86",
+    "sector_rewrite_control": "da8a7e10a151b23b551852c42c0dc8e3f19974a66b321c6b705eebc29d5770a3"
+  },
+  "auxiliary": {
+    "controller": 6116208,
+    "write": 6115900,
+    "readback": 6115780,
+    "compare": 6115712,
+    "image_relative_source": 16777216,
+    "image_relative_readback": 16838656,
+    "bytes": 61440,
+    "write_chunk_bytes": 64,
+    "write_chunks": 960,
+    "serial_tag": 240,
+    "compare_retries_total_attempts": 3,
+    "transport_error_retries": 0
+  },
+  "primary": {
+    "sender_source_offset": 45860,
+    "sender_copy_function": 7589876,
+    "sender_destination_va": 1076903936,
+    "sender_copy_bytes": 1580,
+    "receiver": 893048,
+    "mailbox_va": 3221233616,
+    "generic_sector_write_controller": 5871892,
+    "actual_update_entry": 49784,
+    "actual_update_sector_pass": 49276,
+    "actual_update_block_controller": 49104,
+    "staging_va": 1078301188,
+    "commands": {
+      "compare": 8,
+      "erase": 9,
+      "program": 10,
+      "reset": 11,
+      "staging_sum": 12
+    },
+    "nor_program_chunk_halfwords": 128,
+    "program_status_published_to_result_slot": false
+  },
+  "limits": [
+    "Synthetic RAM and explicit transport/status stubs; no physical writes or acceptance.",
+    "No full updater, interruption recovery, power-loss safety, reboot or capture validation.",
+    "NOR command patterns do not establish a manufacturer or exact chip part number.",
+    "Auxiliary tag 0xf0 is verified at the sender; the remote receiver and flash destination remain untraced.",
+    "Sequential CPU contexts do not model concurrent timing or cache coherency."
+  ],
+  "emulation": {
+    "auxiliary": {
+      "cases": [
+        {
+          "failure": "none",
+          "attempts": 1,
+          "writes": 960,
+          "reads": 1,
+          "errors": [],
+          "return": 1
+        },
+        {
+          "failure": "write_0",
+          "attempts": 1,
+          "writes": 1,
+          "reads": 0,
+          "errors": [
+            8680900
+          ],
+          "return": 0
+        },
+        {
+          "failure": "write_959",
+          "attempts": 1,
+          "writes": 960,
+          "reads": 0,
+          "errors": [
+            8680900
+          ],
+          "return": 0
+        },
+        {
+          "failure": "read",
+          "attempts": 1,
+          "writes": 960,
+          "reads": 1,
+          "errors": [
+            8680872
+          ],
+          "return": 0
+        },
+        {
+          "failure": "first_word",
+          "attempts": 3,
+          "writes": 2880,
+          "reads": 3,
+          "errors": [
+            8680844,
+            8680844,
+            8680844
+          ],
+          "return": 0
+        },
+        {
+          "failure": "last_word",
+          "attempts": 3,
+          "writes": 2880,
+          "reads": 3,
+          "errors": [
+            8680844,
+            8680844,
+            8680844
+          ],
+          "return": 0
+        },
+        {
+          "failure": "once",
+          "attempts": 2,
+          "writes": 1920,
+          "reads": 2,
+          "errors": [
+            8680844
+          ],
+          "return": 1
+        }
+      ],
+      "stub_offsets": [
+        5593004,
+        5593116,
+        5595164,
+        5595520,
+        5595916,
+        5595924,
+        5595988,
+        5596020,
+        5596084,
+        5897168,
+        5897280,
+        5897484,
+        5897492,
+        7334704,
+        7334828,
+        7388200,
+        8679840,
+        8680100,
+        8680200,
+        8680228,
+        8680256,
+        8680844,
+        8680872,
+        8680900
+      ],
+      "readback_source": "Synthetic serial reply copied from auxiliary image; selected errors injected at that boundary."
+    },
+    "serial": {
+      "cases": [
+        {
+          "direction": "write",
+          "case": "ok",
+          "return": 0,
+          "tx_bytes": 65,
+          "rx_calls": 65,
+          "tx_sha256": "1c7fc624e325022fc23a51f370c31949271c0eee80860aba526ce818ee65d91f"
+        },
+        {
+          "direction": "write",
+          "case": "handshake_error",
+          "return": 7,
+          "tx_bytes": 0,
+          "rx_calls": 0,
+          "tx_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "direction": "read",
+          "case": "ok",
+          "return": 0,
+          "tx_bytes": 65,
+          "rx_calls": 65,
+          "tx_sha256": "98ce42deef51d40269d542f5314bef2c7468d401ad5d85168bfab4c0108f75f7"
+        },
+        {
+          "direction": "read",
+          "case": "wrong_tag",
+          "return": 65540,
+          "tx_bytes": 1,
+          "rx_calls": 1,
+          "tx_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+        }
+      ],
+      "stub_offsets": [
+        5592792,
+        5593572,
+        5593652,
+        5593880,
+        7120124,
+        7120768,
+        7120888,
+        7120908,
+        7121784,
+        7355256,
+        7355300
+      ],
+      "other_stub": "Synthetic mutex virtual callback",
+      "payload": "Synthetic byte sequence 0..63"
+    },
+    "primary_mailbox": {
+      "cases": [
+        {
+          "case": "compare_equal",
+          "request": [
+            8,
+            34078720,
+            301998080,
+            256,
+            8
+          ],
+          "reply": [
+            8,
+            0,
+            8
+          ],
+          "sender_return": 0,
+          "flash_memory_write_count": 0,
+          "flash_memory_writes_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "poll_arguments": [],
+          "native_program_return": [],
+          "acknowledgments_cleared_by_receiver": true
+        },
+        {
+          "case": "compare_first",
+          "request": [
+            8,
+            34078720,
+            301998080,
+            256,
+            8
+          ],
+          "reply": [
+            8,
+            3,
+            8
+          ],
+          "sender_return": 3,
+          "flash_memory_write_count": 0,
+          "flash_memory_writes_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "poll_arguments": [],
+          "native_program_return": [],
+          "acknowledgments_cleared_by_receiver": true
+        },
+        {
+          "case": "compare_last",
+          "request": [
+            8,
+            34078720,
+            301998080,
+            256,
+            8
+          ],
+          "reply": [
+            8,
+            3,
+            8
+          ],
+          "sender_return": 3,
+          "flash_memory_write_count": 0,
+          "flash_memory_writes_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "poll_arguments": [],
+          "native_program_return": [],
+          "acknowledgments_cleared_by_receiver": true
+        },
+        {
+          "case": "erase_poll_success",
+          "request": [
+            9,
+            34078720,
+            0,
+            0,
+            9
+          ],
+          "reply": [
+            9,
+            0,
+            9
+          ],
+          "sender_return": 0,
+          "flash_memory_write_count": 6,
+          "flash_memory_writes_sha256": "94e94ac6f22a823cf718459c12799ae6969c471f702fba2c746d4569e2851607",
+          "poll_arguments": [
+            [
+              34078720,
+              65535
+            ]
+          ],
+          "native_program_return": [],
+          "acknowledgments_cleared_by_receiver": true
+        },
+        {
+          "case": "erase_poll_failure",
+          "request": [
+            9,
+            34078720,
+            0,
+            0,
+            9
+          ],
+          "reply": [
+            9,
+            1,
+            9
+          ],
+          "sender_return": 1,
+          "flash_memory_write_count": 6,
+          "flash_memory_writes_sha256": "94e94ac6f22a823cf718459c12799ae6969c471f702fba2c746d4569e2851607",
+          "poll_arguments": [
+            [
+              34078720,
+              65535
+            ]
+          ],
+          "native_program_return": [],
+          "acknowledgments_cleared_by_receiver": true
+        },
+        {
+          "case": "program_poll_success",
+          "request": [
+            10,
+            34078720,
+            301998080,
+            256,
+            10
+          ],
+          "reply": [
+            10,
+            0,
+            10
+          ],
+          "sender_return": 0,
+          "flash_memory_write_count": 267,
+          "flash_memory_writes_sha256": "9fda7a886ff1d51cc04d31bdba508aca39a027300365dbe7e374ff421449d0ab",
+          "poll_arguments": [
+            [
+              34078720,
+              256
+            ],
+            [
+              34078976,
+              256
+            ]
+          ],
+          "native_program_return": [
+            0
+          ],
+          "acknowledgments_cleared_by_receiver": true
+        },
+        {
+          "case": "program_poll_failure",
+          "request": [
+            10,
+            34078720,
+            301998080,
+            256,
+            10
+          ],
+          "reply": [
+            10,
+            0,
+            10
+          ],
+          "sender_return": 0,
+          "flash_memory_write_count": 137,
+          "flash_memory_writes_sha256": "8996399538152e44dced1de2da41214d2b71977e0c849599f29862736a181c6a",
+          "poll_arguments": [
+            [
+              34078720,
+              256
+            ]
+          ],
+          "native_program_return": [
+            2
+          ],
+          "acknowledgments_cleared_by_receiver": true
+        },
+        {
+          "case": "sum_equal",
+          "request": [
+            12,
+            301998080,
+            128,
+            3225403136,
+            12
+          ],
+          "reply": [
+            12,
+            0,
+            12
+          ],
+          "sender_return": 0,
+          "flash_memory_write_count": 0,
+          "flash_memory_writes_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "poll_arguments": [],
+          "native_program_return": [],
+          "acknowledgments_cleared_by_receiver": true
+        },
+        {
+          "case": "sum_changed_after_send",
+          "request": [
+            12,
+            301998080,
+            128,
+            3225403136,
+            12
+          ],
+          "reply": [
+            12,
+            3,
+            12
+          ],
+          "sender_return": 3,
+          "flash_memory_write_count": 0,
+          "flash_memory_writes_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "poll_arguments": [],
+          "native_program_return": [],
+          "acknowledgments_cleared_by_receiver": true
+        }
+      ],
+      "status_stub_offset": 892112,
+      "status_limit": "NOR polling returns a supplied 0/1; writes are recorded in synthetic mapped RAM, not a flash model.",
+      "program_result_loss": "Original receiver resets result slot to zero and never stores D9EB4 return before command-A acknowledgment."
+    },
+    "primary_control": {
+      "cases": [
+        {
+          "case": "already_equal",
+          "supplied_sum": 0,
+          "supplied_compare": [
+            0,
+            0
+          ],
+          "supplied_erase": 0,
+          "supplied_program": 0,
+          "return": 0,
+          "calls": [
+            "sum",
+            "compare"
+          ]
+        },
+        {
+          "case": "equal_with_bad_staging_sum",
+          "supplied_sum": 3,
+          "supplied_compare": [
+            0,
+            0
+          ],
+          "supplied_erase": 0,
+          "supplied_program": 0,
+          "return": 0,
+          "calls": [
+            "sum",
+            "compare"
+          ]
+        },
+        {
+          "case": "bad_staging_sum",
+          "supplied_sum": 3,
+          "supplied_compare": [
+            3,
+            0
+          ],
+          "supplied_erase": 0,
+          "supplied_program": 0,
+          "return": 3,
+          "calls": [
+            "sum",
+            "compare"
+          ]
+        },
+        {
+          "case": "erase_failure",
+          "supplied_sum": 0,
+          "supplied_compare": [
+            3,
+            0
+          ],
+          "supplied_erase": 1,
+          "supplied_program": 0,
+          "return": 1,
+          "calls": [
+            "sum",
+            "compare",
+            "erase"
+          ]
+        },
+        {
+          "case": "supplied_program_failure",
+          "supplied_sum": 0,
+          "supplied_compare": [
+            3,
+            0
+          ],
+          "supplied_erase": 0,
+          "supplied_program": 2,
+          "return": 2,
+          "calls": [
+            "sum",
+            "compare",
+            "erase",
+            "program"
+          ]
+        },
+        {
+          "case": "zero_program_reply_but_mismatch",
+          "supplied_sum": 0,
+          "supplied_compare": [
+            3,
+            3
+          ],
+          "supplied_erase": 0,
+          "supplied_program": 0,
+          "return": 3,
+          "calls": [
+            "sum",
+            "compare",
+            "erase",
+            "program",
+            "compare"
+          ]
+        },
+        {
+          "case": "write_and_compare_ok",
+          "supplied_sum": 0,
+          "supplied_compare": [
+            3,
+            0
+          ],
+          "supplied_erase": 0,
+          "supplied_program": 0,
+          "return": 0,
+          "calls": [
+            "sum",
+            "compare",
+            "erase",
+            "program",
+            "compare"
+          ]
+        }
+      ],
+      "stub_offsets": [
+        6488340,
+        6488348,
+        6488356,
+        6488364,
+        6488372,
+        6488380,
+        6488388,
+        6488396,
+        6488412,
+        7522696,
+        8500696,
+        8500852,
+        8500876
+      ],
+      "limit": "Controller decision tests supply wrapper results independently. They are not an end-to-end flash run; the actual command-A receiver never publishes the native failure value 2."
+    },
+    "actual_updater": {
+      "post_auxiliary_entries": [
+        {
+          "auxiliary_return": 0,
+          "entered_ram_updater": false,
+          "stop_va": 39675516
+        },
+        {
+          "auxiliary_return": 1,
+          "entered_ram_updater": true,
+          "stop_va": 1076907860
+        }
+      ],
+      "block_control_cases": [
+        {
+          "supplied_before_erase_program_after": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "return": 0,
+          "calls": [
+            "compare"
+          ]
+        },
+        {
+          "supplied_before_erase_program_after": [
+            3,
+            1,
+            0,
+            0
+          ],
+          "return": 1,
+          "calls": [
+            "compare",
+            "erase"
+          ]
+        },
+        {
+          "supplied_before_erase_program_after": [
+            3,
+            0,
+            2,
+            0
+          ],
+          "return": 2,
+          "calls": [
+            "compare",
+            "erase",
+            "program"
+          ]
+        },
+        {
+          "supplied_before_erase_program_after": [
+            3,
+            0,
+            0,
+            3
+          ],
+          "return": 3,
+          "calls": [
+            "compare",
+            "erase",
+            "program",
+            "compare"
+          ]
+        },
+        {
+          "supplied_before_erase_program_after": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "return": 0,
+          "calls": [
+            "compare",
+            "erase",
+            "program",
+            "compare"
+          ]
+        }
+      ],
+      "sector_cases": [
+        {
+          "variant": 0,
+          "supplied_failure_address": null,
+          "return": 0,
+          "sector_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            0
+          ]
+        },
+        {
+          "variant": 1,
+          "supplied_failure_address": null,
+          "return": 0,
+          "sector_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            13,
+            22,
+            0
+          ]
+        },
+        {
+          "variant": 0,
+          "supplied_failure_address": 33685504,
+          "return": 3,
+          "sector_indices": [
+            1
+          ]
+        },
+        {
+          "variant": 1,
+          "supplied_failure_address": 35258368,
+          "return": 0,
+          "sector_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            13,
+            22,
+            0
+          ]
+        },
+        {
+          "variant": 1,
+          "supplied_failure_address": 36438016,
+          "return": 3,
+          "sector_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            13,
+            22
+          ]
+        },
+        {
+          "variant": 0,
+          "supplied_failure_address": 33554432,
+          "return": 3,
+          "sector_indices": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            0
+          ]
+        }
+      ],
+      "whole_pass_retry_cases": [
+        {
+          "supplied_failed_passes": 0,
+          "attempts": 1,
+          "stop": "before final MMIO/power loop"
+        },
+        {
+          "supplied_failed_passes": 1,
+          "attempts": 2,
+          "stop": "before final MMIO/power loop"
+        },
+        {
+          "supplied_failed_passes": 16,
+          "attempts": 16,
+          "stop": "before final MMIO/power loop"
+        }
+      ],
+      "normal_update_variant": 0,
+      "normal_update_skipped_sector_indices": [
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
+      ],
+      "sector_bytes": 131072,
+      "normal_update_first_sector_last": true,
+      "variant1_first_special_sector_status_overwritten": true,
+      "stub_ram_offsets": [
+        46328,
+        46472,
+        50232,
+        50348,
+        50392,
+        50444,
+        50496,
+        50756,
+        50784,
+        50812,
+        50840,
+        50928,
+        51288
+      ],
+      "stub_system_vas": [
+        41077128,
+        41078360,
+        41146024,
+        41621092
+      ],
+      "limits": "Block tests supply mailbox-wrapper statuses; sector tests supply block results; pass-retry tests supply sector-pass results. Original decisions execute, but these layers are not an end-to-end flash model."
+    }
+  }
+}

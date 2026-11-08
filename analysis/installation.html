@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ko">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="K-3 II 보조 CPU의 전송·읽기 검증·재시도와 주 이미지 RAM 송신기·기록 오류 전달을 원본 ARM으로 검증한 보고서.">
+<title>K-3 II — 검사 이후 전송과 기록 오류</title><link rel="stylesheet" href="../assets/report.css"></head>
+<body><header><div class="eyebrow">PENTAX K-3 II · firmware 1.12 · 2026-11-08</div>
+<h1>업데이트 검사 다음의 전송과<br>기록 오류 전달을 추적했다</h1>
+<p class="lead">보조 CPU 경로는 64바이트씩 960회 전송하고 전체 60 KiB를 다시 읽어 비교한다. 주 이미지 경로는 RAM에 복사한 송신기와 공통 수신기를 거친다. 프로그램 함수의 오류값이 응답 슬롯에 기록되지 않는 지점을 확인했으며, 상위 함수의 후속 비교가 불일치를 반환하는 조건도 별도로 재현했다.</p>
+<nav aria-label="보고서 탐색"><a href="rebuild.html">앞선 재포장 분석</a><a href="#aux">보조 이미지</a><a href="#primary">주 이미지</a><a href="#errors">오류 전달</a><a href="#reproduce">재현·한계</a><a href="hq-status.json">연구 상태</a></nav></header>
+<main><p class="note">코드 위치는 해제 파일 오프셋이다. <code>VA</code> 표기는 실행·데이터 주소다. 원본 ARM 명령은 Unicorn의 합성 메모리에서 실행했다. 전송·GPIO·NOR 상태를 제공한 경계는 각 결과에 명시했다. 실물 장치에 기록한 결과는 아니다.</p>
+
+<section aria-labelledby="aux"><h2 id="aux">1. 보조 이미지: 전송 오류와 내용 불일치는 다르게 처리한다</h2>
+<p>두 이미지의 길이·표식·체크섬 검사 이후 호출 <code>0x5D663C → 0x5D633C</code>은 <code>0x5D5370</code>으로 이어진다. 이 함수가 전달하는 영역은 이미지 시작점에 <code>0x1000000</code>을 더한 보조 이미지다. 주 이미지 기록 전체를 이 함수와 같은 경로로 해석하면 안 된다. <a href="installation.json">분기·상수·실행 결과</a> · <a href="../verify_installation.py">검증 코드</a></p>
+<figure><figcaption>도식 1. 보조 이미지 전송과 검증</figcaption><div class="flow" role="group" aria-label="보조 이미지 960개 블록을 전송한 뒤 별도 버퍼에 전체를 읽어 비교하고 불일치일 때만 재시도">
+<div class="stage"><strong>0x5D523C · 전송</strong><span>원본 버퍼 + 0x1000000<br>64바이트 × 960개<br>태그 0xF0 · 오류면 즉시 종료</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>0x5D51C4 · 다시 읽기</strong><span>별도 버퍼 + 0x100F000<br>0xF000바이트 수신<br>읽기 오류도 즉시 종료</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>0x5D5180 · 비교</strong><span>0x3C00개 32비트 값 비교<br>같으면 성공 1<br>다르면 총 3회까지 전송 재시도</span></div></div>
+<p class="caption">다시 읽는 버퍼는 배포 파일 끝 다음에 놓인다. 호출부 0x5D6428은 원본 이미지와 수신 버퍼를 합한 0x101E000바이트를 요청한다. 검증기도 별도 수신 공간을 포함해 합성 메모리를 매핑했다.</p></figure>
+<div class="table-scroll"><table><thead><tr><th scope="col">원본 제어 함수에 공급한 조건</th><th scope="col">전송 호출 / 읽기 호출</th><th scope="col">반환</th></tr></thead><tbody>
+<tr><td>전송·읽기 성공, 내용 동일</td><td>960 / 1</td><td>1</td></tr>
+<tr><td>첫 블록 / 마지막 블록 전송 오류</td><td>1 / 0 또는 960 / 0</td><td>0 · 재시도 없음</td></tr>
+<tr><td>읽기 함수의 상태 오류</td><td>960 / 1</td><td>0 · 재시도 없음</td></tr>
+<tr><td>첫 워드 / 마지막 워드가 매번 다름</td><td>2,880 / 3</td><td>0 · 총 3회 비교</td></tr>
+<tr><td>첫 비교만 다르고 두 번째는 동일</td><td>1,920 / 2</td><td>1</td></tr>
+</tbody></table></div>
+<p>하위 <code>0x55601C</code>도 별도로 실행했다. 합성 64바이트 입력에서는 태그 <code>0xF0</code> 다음에 입력 64바이트가 순서대로 직렬 전송 함수에 전달됐다. 읽기 함수 <code>0x556180</code>은 0을 보내며 첫 응답이 기대 태그인지 검사한 뒤 데이터를 읽는다. 첫 응답을 <code>0xEF</code>로 바꾸면 데이터 읽기 전에 종료하고 <code>0x10004</code>를 반환했다. <code>0x55591C</code>가 오류 4와 당시 단계 1을 합쳐 저장한 값이다. 직렬 포트·동기화·핸드셰이크는 대체했다. <a href="installation.json">serial 사례 4건과 대체 함수 목록</a></p>
+</section>
+
+<section aria-labelledby="primary"><h2 id="primary">2. 주 이미지: RAM 송신기와 메모리 매핑 기록 명령</h2>
+<p><code>0x73CFF4</code>를 실행하면 파일 <code>0xB324</code>부터 <code>0x62C</code>바이트가 <code>VA 0x40304000</code>으로 복사된다. 복사 결과를 원본과 바이트 단위로 대조한 뒤 실제 래퍼 <code>0x630114/0x63011C/0x63015C</code>에서 RAM 송신기로 들어갔다. 비교·지우기·프로그램 요청은 앞서 합계 명령 7에서 확인한 <code>VA 0xC0001FD0</code> 계열 슬롯을 사용한다. <a href="installation.json">RAM 복사와 원본 송수신 실행</a></p>
+<figure><figcaption>도식 2. 주 이미지 기록 요청과 결과 반환</figcaption><div class="flow" role="group" aria-label="상위 기록 함수가 RAM의 송신기를 호출하고 공통 수신기가 비교 지우기 프로그램을 실행한 뒤 응답을 반환">
+<div class="stage"><strong>일반 섹터 쓰기 0x599914</strong><span>준비 버퍼 VA 0x40459204<br>합 검사 → 기존 내용 비교<br>필요하면 지우기 → 기록 → 재비교</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>RAM 송신기</strong><span>명령 8: 내용 비교<br>명령 9: 지우기<br>명령 0xA: 프로그램</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>수신기 0xDA078</strong><span>0xD9B68: 16비트 비교<br>0xD9DF8: 지우기와 상태 검사<br>0xD9EB4: 128개 16비트 값씩 기록</span></div></div>
+<p class="caption">송신기가 요청 두 곳을 0으로 지우면 수신기가 응답·결과 슬롯을 지운다. 그 뒤 송신기가 복귀한다. 완료값과 결과값은 원본 명령이 기록했다. 두 CPU 문맥은 순차 실행했으며 물리 동시성과 캐시 일관성은 재현하지 않았다.</p></figure>
+<p>지우기 함수는 <code>VA 0x02000AAA / 0x02000554</code>에 <code>AA·55·80·AA·55</code>를 기록한 뒤 대상 주소에 <code>30</code>을 쓴다. 프로그램 함수는 대상에 <code>25·7F</code>, 128개의 16비트 값, <code>29</code>를 순서대로 쓴다. 합성 RAM에서 명령 주소·데이터·횟수를 모두 대조했다. 이 패턴만으로 제조사나 정확한 플래시 부품 번호를 확정하지 않았다. <a href="../verify_installation.py">메모리 쓰기 순서 검증</a></p>
+</section>
+
+<section aria-labelledby="errors"><h2 id="errors">3. 프로그램 오류 2가 응답 슬롯에 남지 않는다</h2>
+<p>상태 검사 함수 <code>0xD9CD0</code>에 실패값 0을 제공하면 원본 프로그램 함수 <code>0xD9EB4</code>는 첫 블록 후 중단하고 2를 반환한다. 그러나 수신기의 <code>0xDA2A8</code> 호출 다음 명령은 <code>R0 = 0xA</code>다. 비교·지우기 분기와 달리 반환값을 결과 슬롯에 저장하지 않는다. 원본 수신기가 앞서 결과 슬롯을 지운 상태이므로 송신기는 완료값 <code>0xA</code>와 결과 0을 받는다. 이 차이는 성공·실패 사례에서 모두 확인했다. <a href="installation.json">program_poll_success / program_poll_failure</a></p>
+<p>일반 섹터 쓰기 함수 <code>0x599914</code>와 실제 업데이트의 블록 함수 <code>0xBFD0</code> 모두 프로그램 응답이 0이면 다시 내용을 비교한다. 래퍼 반환값을 공급한 별도 원본 제어 검사에서 기록 응답 0 뒤 비교 결과 3을 주면 최종 반환도 3이었다. 두 함수를 같은 진입점으로 취급하지 않았다. 프로그램 오류와 실제 플래시 내용 불일치가 실물에서 어떻게 나타나는지까지 검증한 결과는 아니다. <a href="installation.json">primary_control과 actual_updater의 블록 사례</a></p>
+<div class="table-scroll"><table><thead><tr><th scope="col">검사 단위</th><th scope="col">확인한 결과</th><th scope="col">공급·대체한 경계</th></tr></thead><tbody>
+<tr><td>원본 송신기 + 수신기 + 기록 루프</td><td>프로그램 반환 2, 응답 슬롯 0</td><td>NOR 상태 함수의 0/1. 메모리 쓰기는 합성 RAM</td></tr>
+<tr><td>상위 기록 제어 함수</td><td>응답 0 뒤 재비교 3 → 최종 3</td><td>송수신 래퍼의 각 반환값</td></tr>
+<tr><td>원본 비교 명령 8</td><td>동일 0, 첫·마지막 16비트 값 불일치 3</td><td>합성 비교 대상 버퍼. 비교·응답값은 대체하지 않음</td></tr>
+<tr><td>원본 합 비교 명령 0xC</td><td>동일 0, 요청 후 소스 변경 시 3</td><td>합성 준비 버퍼. 양쪽 합 계산은 원본 명령</td></tr>
+</tbody></table></div>
+<h3>실제 갱신에서는 첫 섹터를 마지막에 처리한다</h3>
+<p>앞선 보조 함수 <code>0x5D633C</code>는 0 또는 1을 반환하고, <code>0x5D6664</code>는 0일 때 갱신 진입을 건너뛴다. 반환값 1인 정상 경로에서는 <code>0x630174 → RAM의 0xC278</code>로 인수 <code>(2, 0)</code>을 전달했다. 앞서 <code>0x73CF94</code>가 파일 <code>0xB950…0xEF6E</code>를 <code>VA 0x4030462C</code>로 복사한다. 따라서 실제 업데이트의 <code>0xC07C → 0xBFD0</code>도 RAM 코드다. <a href="installation.json">원본 복사와 진입 분기 대조</a></p>
+<p>일반 진입의 두 번째 인수 0에서는 128 KiB 섹터 1…127 중 13…22를 건너뛰고, 나머지가 성공한 뒤 섹터 0을 마지막으로 처리한다. 블록 함수는 <code>((대상 VA − 0x02000000) &amp; ~1)</code>에 이미지 포인터를 더해 원본 버퍼를 고른다. 섹터 루프의 오류는 즉시 반환되고, 상위 <code>0xC278</code>는 전체 패스를 최대 16회 시도한다. 반복 검사에서는 마지막 MMIO·전원 제어 루프 진입 전에 멈췄다. <a href="installation.json">섹터 순서 6건과 패스 재시도 3건</a></p>
+<p>두 번째 인수가 1인 별도 분기는 기본 순회 후 섹터 13과 22를 추가 처리한다. 이때 첫 추가 호출의 반환값은 검사하지 않고 두 번째 호출 결과로 덮는다. 섹터 13에만 오류를 공급한 사례에서도 섹터 22와 0까지 진행해 최종 0을 반환했다. 일반 업데이트의 인수 0과 구분해야 하며, 이 별도 분기의 사용자 도달 조건은 아직 검증하지 않았다. <a href="installation.json">variant1_first_special_sector_status_overwritten</a></p>
+</section>
+
+<section aria-labelledby="reproduce"><h2 id="reproduce">4. 재현 범위와 다음 확인점</h2>
+<pre><code>python verify_installation.py decoded.bin --emulate --compare analysis/installation.json
+python verify_ui_resources.py decoded.bin --compare analysis/ui-resources.json
+python -m unittest discover -s tests -v
+python verify_publication.py</code></pre>
+<p>Unicorn 2.1.4에서 보조 제어 7건, 직렬 전달 4건, 주 이미지 송수신 9건, 일반 쓰기 제어 7건을 확인했다. 실제 갱신 루틴은 진입 2건, 블록 제어 5건, 섹터 순서 6건, 패스 재시도 3건을 추가했다. 해제본 SHA-256은 <code class="hash">1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc</code>로 고정한다. 공개 CI에는 펌웨어가 없으므로 문서·파일 경계와 단위 검사만 실행한다. 원본 명령 검증은 로컬 재현 결과다.</p>
+<p>보조 CPU의 원격 수신기와 실제 플래시 목적지, 보존 영역의 의미, 전원 중단 복구, 설치 후 부트 경로는 아직 검증하지 않았다. 각 단계의 반환값을 공급한 검사와 실제 연결 실행을 구분했으며 전체 설치를 실행한 결과는 아니다. NOR 상태 함수를 대체했으므로 물리 기록 성공도 주장하지 않는다. 이번 결과는 <a href="rebuild.html">재포장·검사</a> 다음의 제어 경로를 좁힌 것으로, 카메라 업데이트·부팅·촬영 수용은 별도 과제다.</p>
+</section></main><footer>K-3 II v1.12 · <a href="ui-resources.html">RAW 형식 메뉴와 텍스트 ABI</a> · <a href="../README.md">저장소 안내</a></footer></body></html>

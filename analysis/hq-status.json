@@ -2,24 +2,29 @@
   "model": "PENTAX K-3 II",
   "firmware_version": "1.12",
   "baseline_commit": "66c85ea53f52b6e9489d742b5bd63e50e543055e",
-  "updated_at": "2026-11-08T14:53:52+09:00",
+  "updated_at": "2026-11-08T15:21:46+09:00",
   "goals": [
     {
       "id": "firmware_rebuild",
-      "status": "offline_repack_and_original_validation_reproduced; device_installation_unverified",
+      "status": "offline_repack_verified; bounded_post_validation_transport_and_write_error_control_reproduced; physical_installation_unverified",
       "evidence": [
         "analysis/repack.json",
         "analysis/rebuild.html",
         "repack_firmware.py",
         "verify_repack.py",
-        "tests/test_repack.py"
+        "tests/test_repack.py",
+        "analysis/installation.html",
+        "analysis/installation.json",
+        "verify_installation.py"
       ],
       "gaps": [
         "Only same-size edits; insertion/deletion and relocation are unsupported.",
-        "Whole updater, internal ROM authentication, physical flash, reboot and capture have not been executed."
+        "Whole updater, internal ROM authentication, physical flash, reboot and capture have not been executed.",
+        "Auxiliary remote receiver/flash destination and meanings of primary preserved sectors remain unresolved.",
+        "Native NOR status polling is stubbed; recorded memory writes are not physical flash acceptance."
       ],
       "next_actions": [
-        "Trace post-validation installation destinations and error checks.",
+        "Investigate skipped/preserved sector content and the auxiliary remote receiver without physical writes.",
         "Keep physical update outside the current offline scope."
       ]
     },
@@ -44,39 +49,46 @@
     },
     {
       "id": "af_and_lens_drive",
-      "status": "basic_research_active; original_capability_to_lens_or_body_drive_branch_verified; patching_deferred",
+      "status": "basic_research_active; original_capability_acquisition_and_target_producer_consumer_to_actuator_split_verified; patching_deferred",
       "evidence": [
         "analysis/af-drive.html",
         "analysis/af-drive.json",
-        "verify_af_drive.py"
+        "verify_af_drive.py",
+        "analysis/af-control.html",
+        "analysis/af-control.json",
+        "verify_af_control.py"
       ],
       "gaps": [
-        "General lens-information acquisition, policy conditions, AF calculation and whole control state machine require deeper tracing.",
-        "The traced lens branch does not yet distinguish SDM/DC/PLM physical protocols.",
-        "Real lens responses and actuator behavior are future hardware-validation requirements, not blockers for current foundational research."
+        "AF hardware sample generation and optics/sensor algorithms are not connected to the proven control input.",
+        "Execution between the two native application slices and complete drive state machine remain untested.",
+        "SDM/DC/PLM physical protocol identity and real transport failure buffer behavior remain unverified; not blockers for current foundational analysis."
       ],
       "next_actions": [
-        "Trace lens-information readout and capability policy beyond bit 6.",
-        "Connect phase/contrast AF computation and control state to the proven actuator selection.",
-        "Document future modification boundaries; do not select or apply a lens-specific patch now."
+        "Trace producers of the AF input record and relevant shared calculation values.",
+        "Extend one coherent control state path where feasible without hardware.",
+        "Keep lens-specific patching and physical drive outside the present scope."
       ]
     },
     {
       "id": "k3iii_ui_port",
-      "status": "k3ii_menu_resource_event_and_profile_bindings_verified; cross_model_adapter_not_implemented",
+      "status": "k3ii_raw_format_resource_text_ABI_and_event_to_RAM_setting_contract_verified; cross_model_adapter_not_implemented",
       "evidence": [
         "analysis/superresolution-menu.json",
         "analysis/menu-events.json",
-        "analysis/superresolution-lifecycle.html"
+        "analysis/superresolution-lifecycle.html",
+        "analysis/ui-resources.html",
+        "analysis/ui-resources.json",
+        "verify_ui_resources.py"
       ],
       "gaps": [
-        "Binary render ABI and pixel resource format differ or remain unresolved.",
-        "A same-name menu item does not establish equal event IDs or setting enums.",
-        "No transferred UI has run on the K-3 II or Q7."
+        "Resource lookup/text preparation and UI state are bounded replays; LCD rasterization and physical input are untested.",
+        "RAM live/mirror setting writes are verified; persistent storage is untraced.",
+        "K-3 III and Q7 numeric IDs and rendering ABI need independent evidence; no UI transfer has run."
       ],
       "next_actions": [
-        "Verify K-3 II RAW File Format PEF/DNG widget IDs, pending state, apply events and profile setting 0x97 using original instructions.",
-        "Use the official RAW File Format semantic correspondence; do not reuse K-3 III numeric event IDs."
+        "Use capture color space sRGB/AdobeRGB as the common semantic UI target selected by the cross-model coordinator.",
+        "Bind the K-3 II color-space screen to original input/widget/event, pending/current state and getter/setter paths.",
+        "Replay bidirectional confirmation, cancellation, same-value confirmation and reopening with write counts; reuse proven text resource mechanisms."
       ]
     }
   ],
@@ -87,7 +99,18 @@
     "Command-7 sender 0x599fb8 and receiver 0xda078/0xda248 exchange a 32-bit additive sum. Sequential original CPU contexts reproduced the mailbox reply without supplying completion or result values.",
     "A repaired checksum also accepts intentionally corrupted secondary code, demonstrating that structural acceptance does not prove program correctness.",
     "Capability response 0x8205 writes CLensKaf2+6 only on transport success; original CAfLens bit-6 predicate drives both CAfMotor branches.",
-    "Six original AF cases distinguish bit 6, bit 7 and retained prior values on failure; three native model-profile dispatch cases also reproduce."
+    "Six original AF cases distinguish bit 6, bit 7 and retained prior values on failure; three native model-profile dispatch cases also reproduce.",
+    "Auxiliary updater sends 960 chunks of 64 bytes then reads 0xf000 bytes into a separate trailing buffer; only content mismatch retries, up to three total attempts.",
+    "Original RAM copy relocates 0xb324..0xb950 to VA 0x40304000; original mailbox command 8/9/A/C sender and receiver contexts reproduce.",
+    "Command-A receiver discards native program result 2 and acknowledges with a zero result slot. The upper controller independently tests content again after a zero program reply.",
+    "PEF=0 and DNG=1 selection changes pending state; seven apply events write setting 0x97 to the selected RAM live/mirror bank, while cancellation restores cached state.",
+    "Original type-4 resource lookup constructs text objects with locale pointer +0x90 and style +0x84; twelve native glyph-preparation cases reproduce.",
+    "Actual update entry after auxiliary success calls the relocated sector pass with arguments (2,0); variant 0 skips sectors 13..22 and writes sector 0 last.",
+    "Actual update retries a failed sector pass up to 16 times; alternate variant 1 ignores the first special-sector return before the second call.",
+    "Independent review found computed checksum FFFFFFFF could select the native bypass. Commit 9521f68 rejects this value in both endian sections before export; native sentinel comparison and regression tests pass.",
+    "Original capability query requires status bit 6 and a zero cache; body/lens control fixtures inherit the original cached response.",
+    "Two original ITCM application slices share the same motor object and pass a calculated 16-bit request to the original drive-preparation split with argument 8.",
+    "Lens command 0x8211 returns two big-endian bytes; under an explicitly supplied error-without-reply-update boundary, the caller uses the previous word."
   ],
   "validation": {
     "commands": [
@@ -95,7 +118,10 @@
       "python -m unittest tests.test_repack -v",
       "python verify_af_drive.py decoded.bin --emulate --compare analysis/af-drive.json",
       "python -m unittest discover -s tests -v",
-      "python verify_publication.py"
+      "python verify_publication.py",
+      "python verify_installation.py decoded.bin --emulate --compare analysis/installation.json",
+      "python verify_ui_resources.py decoded.bin --compare analysis/ui-resources.json",
+      "python verify_af_control.py decoded.bin --emulate --compare analysis/af-control.json"
     ],
     "results": [
       "PASS: unchanged, one-byte menu edit and secondary corruption fixture decode and pass the bounded original validation.",
@@ -105,7 +131,14 @@
       "PASS: 19 unit tests.",
       "PASS: Korean prose gate, 0.1% change, 6 of 87 sentences touched, no numeric or modality loss.",
       "PASS: published analysis commit CI and Pages deployment; 14 served files match committed bytes.",
-      "PASS: independent clean clone reproduces both new firmware snapshots and 19 unit tests."
+      "PASS: independent clean clone reproduces both new firmware snapshots and 19 unit tests.",
+      "PASS: auxiliary control 7, serial 4, primary mailbox 9 and upper control 7 original-code fixtures.",
+      "PASS: coordinator independently replayed 12 UI text cases, 12 event cases, invalid reverse selection and 2 wrapper states.",
+      "PASS: actual updater entry 2, block control 5, sector order/error 6 and pass retry 3 cases.",
+      "PASS: 20 unit tests after checksum-sentinel regression; native checksum 6 values x 2 image kinds reproduce.",
+      "PASS: coordinator replayed AF acquisition 8, body control 14 and lens control 3 cases with original drive-preparation prefixes.",
+      "PASS: independent installation review replayed 43 cases; no P0-P2 findings. Nonzero-vs-one wording and source alignment clarified.",
+      "PASS: light Korean review, installation/UI 22 and AF 10 prose paragraphs, 0% changes; deterministic gates passed. Subsequent installation precision corrections received technical review."
     ],
     "limits": [
       "Unicorn 2.1.4 synthetic memory; no physical device I/O.",
@@ -120,7 +153,16 @@
     "tests/test_repack.py",
     "analysis/af-drive.html",
     "analysis/af-drive.json",
-    "verify_af_drive.py"
+    "verify_af_drive.py",
+    "analysis/installation.html",
+    "analysis/installation.json",
+    "verify_installation.py",
+    "analysis/ui-resources.html",
+    "analysis/ui-resources.json",
+    "verify_ui_resources.py",
+    "analysis/af-control.html",
+    "analysis/af-control.json",
+    "verify_af_control.py"
   ],
   "blockers": [
     {
@@ -154,6 +196,23 @@
       "viewport_width": 1882,
       "af_document_scroll_width": 1882
     },
-    "local_preview": "Unavailable under tool policy; published HTTPS preview verified instead."
+    "local_preview": "Unavailable under tool policy; published HTTPS preview verified instead.",
+    "subsequent_status_commit": "fa79d693e83329429dc79d8841e3ffbe73965691",
+    "subsequent_status_ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42452542862",
+    "subsequent_status_pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42452542656",
+    "subsequent_status_checks": "success",
+    "pending_local_artifacts": [
+      "installation",
+      "ui-resources",
+      "af-control"
+    ],
+    "checksum_sentinel_fix": {
+      "commit": "9521f6881b356429ed0b8b58123c6483e23eddd5",
+      "ci": "success",
+      "pages": "success",
+      "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42453857624",
+      "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42453856476",
+      "served_files_byte_exact": 5
+    }
   }
 }

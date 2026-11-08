@@ -1,0 +1,412 @@
+{
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "candidate_load_base": 33554432,
+  "location_units": "Decoded file offsets unless an object offset, widget ID or address.",
+  "screen": {
+    "widget_table": 10040116,
+    "vtable": 10889700,
+    "item_id": 22020106,
+    "dispatch_entry_vslot_target": [
+      [
+        7167684,
+        188,
+        4084904
+      ],
+      [
+        7167696,
+        192,
+        4087428
+      ],
+      [
+        7167708,
+        196,
+        4087856
+      ],
+      [
+        7167744,
+        208,
+        4088644
+      ]
+    ],
+    "cached_choice_offset": 244,
+    "pending_choice_offset": 249,
+    "commit_events": [
+      0,
+      1,
+      6,
+      16,
+      17,
+      29,
+      32
+    ],
+    "pef_value": 0,
+    "dng_value": 1
+  },
+  "configuration": {
+    "id": 151,
+    "bank_table_row": 10825712,
+    "banks_by_active_index": [
+      0,
+      0,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "bank_stride": 1048,
+    "byte_offset_in_bank": 1567,
+    "active_index_offset": 9160,
+    "live_bank_base_offset": 20,
+    "mirror_pointer_offset": 12
+  },
+  "renderer": {
+    "vtable": 10867116,
+    "text_method_vslot": 12,
+    "text_prepare": 8862052,
+    "style_u16_offset": 132,
+    "locale_row_pointer_offset": 144,
+    "force_locale_zero_byte_offset": 172,
+    "locale_width_table": 14539656,
+    "wrapper_locale_sources": [
+      92,
+      96
+    ],
+    "wrapper_style_u16_offset": 100,
+    "prepared_descriptor_pointer_offset": 0,
+    "prepared_descriptor_count_u16_offset": 4
+  },
+  "resources": [
+    {
+      "label": "RAW File Format",
+      "widget_id": 22020160,
+      "record": 10041396,
+      "locale_row": 14941748,
+      "english_glyphs": 14993349,
+      "setup": 4080416,
+      "english_glyph_sha256": "12335d4de853fe6047694dcb91f41adc076a3dca801a8c443db2ab8fd60db56a"
+    },
+    {
+      "label": "PEF",
+      "widget_id": 22020163,
+      "record": 10041456,
+      "locale_row": 14941832,
+      "english_glyphs": 14993365,
+      "setup": 4080488,
+      "english_glyph_sha256": "29bd26f5304ba6eb505e343242bd2a391f1d76da40100bfc74f0d686f99c3ce7"
+    },
+    {
+      "label": "DNG",
+      "widget_id": 22020164,
+      "record": 10041476,
+      "locale_row": 14941916,
+      "english_glyphs": 14993369,
+      "setup": 4080512,
+      "english_glyph_sha256": "2a1bdd5bef28cfbb7e08af9e09663d67ce383a5e5252d5956b6f4d2c922afb05"
+    }
+  ],
+  "original_a32": {
+    "unicorn_version": "2.1.4",
+    "text_cases": [
+      {
+        "label": "RAW File Format",
+        "active_locale_index": 0,
+        "force_index_zero": false,
+        "used_locale_index": 0,
+        "source": 14993349,
+        "source_unit_bytes": 1,
+        "output_units_including_terminator": 16,
+        "output_sha256": "955988b920fa943ce19967a706ca5b901fd9a6e7033bf48fbfb9d45e61d18094"
+      },
+      {
+        "label": "RAW File Format",
+        "active_locale_index": 9,
+        "force_index_zero": false,
+        "used_locale_index": 9,
+        "source": 14720502,
+        "source_unit_bytes": 1,
+        "output_units_including_terminator": 1,
+        "output_sha256": "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7"
+      },
+      {
+        "label": "RAW File Format",
+        "active_locale_index": 10,
+        "force_index_zero": false,
+        "used_locale_index": 10,
+        "source": 14724936,
+        "source_unit_bytes": 2,
+        "output_units_including_terminator": 10,
+        "output_sha256": "c92c11b2db9eea8b1a315b13bbfa06aec591f5ea7ab13d67566aeb74bf011cd7"
+      },
+      {
+        "label": "RAW File Format",
+        "active_locale_index": 10,
+        "force_index_zero": true,
+        "used_locale_index": 0,
+        "source": 14993349,
+        "source_unit_bytes": 1,
+        "output_units_including_terminator": 16,
+        "output_sha256": "955988b920fa943ce19967a706ca5b901fd9a6e7033bf48fbfb9d45e61d18094"
+      },
+      {
+        "label": "PEF",
+        "active_locale_index": 0,
+        "force_index_zero": false,
+        "used_locale_index": 0,
+        "source": 14993365,
+        "source_unit_bytes": 1,
+        "output_units_including_terminator": 4,
+        "output_sha256": "312282e245d2456017b0ccc9615bfb5b37abd3637319366aa035f6c4e0ce1570"
+      },
+      {
+        "label": "PEF",
+        "active_locale_index": 9,
+        "force_index_zero": false,
+        "used_locale_index": 9,
+        "source": 14720503,
+        "source_unit_bytes": 1,
+        "output_units_including_terminator": 1,
+        "output_sha256": "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7"
+      },
+      {
+        "label": "PEF",
+        "active_locale_index": 10,
+        "force_index_zero": false,
+        "used_locale_index": 10,
+        "source": 14724956,
+        "source_unit_bytes": 2,
+        "output_units_including_terminator": 4,
+        "output_sha256": "2b7ac43fcc6e248546d3951f2503d39c31d43cf9fe2e186bd09d3d2bd36c5648"
+      },
+      {
+        "label": "PEF",
+        "active_locale_index": 10,
+        "force_index_zero": true,
+        "used_locale_index": 0,
+        "source": 14993365,
+        "source_unit_bytes": 1,
+        "output_units_including_terminator": 4,
+        "output_sha256": "312282e245d2456017b0ccc9615bfb5b37abd3637319366aa035f6c4e0ce1570"
+      },
+      {
+        "label": "DNG",
+        "active_locale_index": 0,
+        "force_index_zero": false,
+        "used_locale_index": 0,
+        "source": 14993369,
+        "source_unit_bytes": 1,
+        "output_units_including_terminator": 4,
+        "output_sha256": "39bb0e2f0b90ae6a3d41448324e9bde6073ea95d9e31302b6e061c06c2d2043d"
+      },
+      {
+        "label": "DNG",
+        "active_locale_index": 9,
+        "force_index_zero": false,
+        "used_locale_index": 9,
+        "source": 14720504,
+        "source_unit_bytes": 1,
+        "output_units_including_terminator": 1,
+        "output_sha256": "96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7"
+      },
+      {
+        "label": "DNG",
+        "active_locale_index": 10,
+        "force_index_zero": false,
+        "used_locale_index": 10,
+        "source": 14724964,
+        "source_unit_bytes": 2,
+        "output_units_including_terminator": 4,
+        "output_sha256": "56b1dc79d8b3388ecc783683d002741f7370d4e2996819f41db0747f67254c45"
+      },
+      {
+        "label": "DNG",
+        "active_locale_index": 10,
+        "force_index_zero": true,
+        "used_locale_index": 0,
+        "source": 14993369,
+        "source_unit_bytes": 1,
+        "output_units_including_terminator": 4,
+        "output_sha256": "39bb0e2f0b90ae6a3d41448324e9bde6073ea95d9e31302b6e061c06c2d2043d"
+      }
+    ],
+    "event_cases": [
+      {
+        "active_index": 1,
+        "storage_bank": 0,
+        "initial": 0,
+        "selected_widget": 22020164,
+        "departed_widget": 22020163,
+        "apply_item": 22020106,
+        "apply_event": 0,
+        "profile_committed": true,
+        "stored_value": 1,
+        "pending_after": 1
+      },
+      {
+        "active_index": 1,
+        "storage_bank": 0,
+        "initial": 0,
+        "selected_widget": 22020164,
+        "departed_widget": 22020163,
+        "apply_item": 22020106,
+        "apply_event": 1,
+        "profile_committed": true,
+        "stored_value": 1,
+        "pending_after": 1
+      },
+      {
+        "active_index": 1,
+        "storage_bank": 0,
+        "initial": 0,
+        "selected_widget": 22020164,
+        "departed_widget": 22020163,
+        "apply_item": 22020106,
+        "apply_event": 6,
+        "profile_committed": true,
+        "stored_value": 1,
+        "pending_after": 1
+      },
+      {
+        "active_index": 1,
+        "storage_bank": 0,
+        "initial": 0,
+        "selected_widget": 22020164,
+        "departed_widget": 22020163,
+        "apply_item": 22020106,
+        "apply_event": 16,
+        "profile_committed": true,
+        "stored_value": 1,
+        "pending_after": 1
+      },
+      {
+        "active_index": 1,
+        "storage_bank": 0,
+        "initial": 0,
+        "selected_widget": 22020164,
+        "departed_widget": 22020163,
+        "apply_item": 22020106,
+        "apply_event": 17,
+        "profile_committed": true,
+        "stored_value": 1,
+        "pending_after": 1
+      },
+      {
+        "active_index": 1,
+        "storage_bank": 0,
+        "initial": 0,
+        "selected_widget": 22020164,
+        "departed_widget": 22020163,
+        "apply_item": 22020106,
+        "apply_event": 29,
+        "profile_committed": true,
+        "stored_value": 1,
+        "pending_after": 1
+      },
+      {
+        "active_index": 1,
+        "storage_bank": 0,
+        "initial": 0,
+        "selected_widget": 22020164,
+        "departed_widget": 22020163,
+        "apply_item": 22020106,
+        "apply_event": 32,
+        "profile_committed": true,
+        "stored_value": 1,
+        "pending_after": 1
+      },
+      {
+        "active_index": 0,
+        "storage_bank": 0,
+        "initial": 1,
+        "selected_widget": 22020163,
+        "departed_widget": 22020164,
+        "apply_item": 22020106,
+        "apply_event": 6,
+        "profile_committed": true,
+        "stored_value": 0,
+        "pending_after": 0
+      },
+      {
+        "active_index": 2,
+        "storage_bank": 2,
+        "initial": 1,
+        "selected_widget": 22020163,
+        "departed_widget": 22020164,
+        "apply_item": 22020106,
+        "apply_event": 32,
+        "profile_committed": true,
+        "stored_value": 0,
+        "pending_after": 0
+      },
+      {
+        "active_index": 2,
+        "storage_bank": 2,
+        "initial": 1,
+        "selected_widget": 22020163,
+        "departed_widget": 22020164,
+        "apply_item": 22020106,
+        "apply_event": 3,
+        "profile_committed": false,
+        "stored_value": 1,
+        "pending_after": 1
+      },
+      {
+        "active_index": 1,
+        "storage_bank": 0,
+        "initial": 0,
+        "selected_widget": 22020164,
+        "departed_widget": 22020163,
+        "apply_item": 22020106,
+        "apply_event": 15,
+        "profile_committed": false,
+        "stored_value": 0,
+        "pending_after": 0
+      },
+      {
+        "active_index": 1,
+        "storage_bank": 0,
+        "initial": 0,
+        "selected_widget": 22020164,
+        "departed_widget": 22020163,
+        "apply_item": 22020107,
+        "apply_event": 6,
+        "profile_committed": false,
+        "stored_value": 0,
+        "pending_after": 1
+      }
+    ],
+    "invalid_reverse_value": 2,
+    "invalid_reverse_widget": 0,
+    "wrapper_state_replays": 2,
+    "allocators": [
+      7415848,
+      7415904
+    ],
+    "ui_refresh_stubs": [
+      4076008,
+      4076400,
+      5371048,
+      4074652,
+      7374708
+    ]
+  },
+  "range_hashes": {
+    "0x3e2c3c..0x3e2c88": "b645783d5271ada417970d2d5f2a65e0aabb689b5db4c80fabac133199778bb4",
+    "0x3e35f0..0x3e3620": "ad9012f4b62f22dccc15a949eb05840b2359cb27aa17a8c3a34e7e7bc1c4f159",
+    "0x3e53a4..0x3e53c0": "26765c20575cbcc3cdea591a01aa02c600acd945b6d6e392f6904acb1e6e19f1",
+    "0x3e54a8..0x3e57b0": "1cad9acfdbc9e21c76cfbdb57a535b452e299a81192bbd68aca3887ccca1f6b0",
+    "0x3e5e84..0x3e61a8": "e0b33b7e0483305bdd35b0a4695dc305b0ecf6d2893d891815b8ec9ec08ac09b",
+    "0x3e6344..0x3e639c": "d7b3ac39f62600e3b9f2a181e159f82940b73ba0e220ac9685e3bc9bb0ea2dac",
+    "0x70a1b8..0x70a3a8": "ca767511b29507bf3e29f676bd4984313f9ba34ed75da5fe29877903df2d4b52",
+    "0x82de20..0x82de7c": "3637d8c36c5182422edccc08d950b1a5d3fe117aec68a62ec9044cd27c893a8f",
+    "0x873964..0x873a58": "1ef22fb6688aa200123b8931de833e2da4fd31991023c088ec80200b2966890b",
+    "0x8c48d4..0x8c49c0": "aa2d6666282eafecf6d907112ace6f64c4d9d98d7dca34828d4a4228493467b2"
+  },
+  "limits": [
+    "Original resource lookup executes through construction of the text object. The execution stops at widget wrapper allocation. The separate wrapper-state fixtures supply two locale rows to exercise the setter and source selection.",
+    "Glyph payloads are opaque firmware codes. The tested English labels use codes plus 0x1e. Prepared glyph hashes include the terminating u16; no font atlas or bitmap output was extracted.",
+    "Event input, widget lookup and callbacks, refresh boundaries, active index and RAM banks are fixtures. The original configuration getter, setter and bank mapping execute.",
+    "Physical controls, LCD output, persistent save, encoding, and K-3 III internal IDs are outside these checks."
+  ]
+}

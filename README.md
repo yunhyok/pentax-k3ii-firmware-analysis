@@ -1,5 +1,13 @@
 # PENTAX K-3 II v1.12 펌웨어 분석
 
+[업데이트 전송·기록 오류](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/installation.html) · [RAW 형식 메뉴·텍스트 ABI](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/ui-resources.html)
+
+[AF 요청 계산·구동 준비](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/af-control.html): 능력 조회 조건과 같은 객체의 요청값 생산·소비를 원본 ARM 25건으로 검증했습니다. 바디·렌즈 구동 준비 분기까지 실행했으며 센서 입력 생성·호출 사이의 스케줄링·물리 구동은 미검증입니다.
+
+2026-11-08 설치 경로 후속: 보조 이미지의 64바이트 전송·전체 다시 읽기·불일치 재시도와 주 이미지 RAM 송신기·기록 명령을 원본 ARM으로 검증했습니다. 프로그램 함수의 오류 2가 명령 0xA 응답에 저장되지 않는 지점, 후속 비교, 실제 갱신의 섹터 순서와 최대 16회 시도를 구분해 확인했습니다. 합성 메모리 검사 43건이며 물리 기록·전체 설치는 미검증입니다.
+
+2026-11-08 UI 후속: RAW File Format의 PEF=0·DNG=1과 설정 0x97의 선택·적용·취소를 연결했습니다. 텍스트 준비 12건, 이벤트 12건과 래퍼 상태 2건을 재현했습니다. 기종 간 숫자 ID·바이너리 호환성이나 실제 LCD 표시는 입증하지 않았습니다.
+
 [무손실 재포장·원본 업데이트 검사](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/rebuild.html) · [렌즈 능력·AF 구동 분기](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/af-drive.html) · [연구 목표별 상태](analysis/hq-status.json)
 
 2026-11-08 재포장 후속: 무수정 파일의 완전 일치와 같은 크기 메뉴 글자 수정 후보를 검증했습니다. 주·보조 이미지의 서로 다른 체크섬과 원본 복호화 전체를 대조하고, 명령 7 송신기·수신기를 함께 실행해 덧셈 결과를 확인했습니다. 실기 설치·부팅·촬영은 미검증입니다. `python verify_repack.py <원본 경로> --compare analysis/repack.json`으로 재현할 수 있습니다.
@@ -51,6 +59,11 @@ python verify_mode_reachability.py .private/decoded/decoded.bin --compare analys
 python verify_superresolution_menu.py .private/decoded/decoded.bin --emulate --compare analysis/superresolution-menu.json
 python verify_buffer_history.py .private/decoded/decoded.bin --compare analysis/buffer-history.json
 python verify_scaler_gate.py .private/decoded/decoded.bin --compare analysis/scaler-gate.json
+python verify_repack.py <fwdc230b.bin 경로> --compare analysis/repack.json
+python verify_af_drive.py .private/decoded/decoded.bin --emulate --compare analysis/af-drive.json
+python verify_af_control.py .private/decoded/decoded.bin --emulate --compare analysis/af-control.json
+python verify_installation.py .private/decoded/decoded.bin --emulate --compare analysis/installation.json
+python verify_ui_resources.py .private/decoded/decoded.bin --compare analysis/ui-resources.json
 python -m unittest discover -s tests -v
 python verify_publication.py
 ```

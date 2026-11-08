@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ko">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="K-3 II RAW File Format 메뉴의 PEF·DNG 이벤트, 설정 0x97과 텍스트 리소스 ABI를 원본 ARM으로 검증.">
+<title>K-3 II — RAW 형식 메뉴와 텍스트 ABI</title><link rel="stylesheet" href="../assets/report.css"></head>
+<body><header><div class="eyebrow">PENTAX K-3 II · firmware 1.12 · 2026-11-08</div>
+<h1>PEF·DNG 선택을<br>설정 저장과 텍스트 준비까지 연결했다</h1>
+<p class="lead">RAW File Format 메뉴의 PEF는 값 0, DNG는 값 1이다. 원본 화면 디스패처를 실행하면 선택 시 임시값이 바뀌고, 적용 이벤트에서만 설정 0x97의 RAM 저장 뱅크가 갱신된다. 리소스 조회와 텍스트 객체 생성도 실행해 UI 이식에 필요한 K-3 II 쪽 계약을 구체화했다.</p>
+<nav aria-label="보고서 탐색"><a href="#mapping">기종 간 대응</a><a href="#events">선택·적용</a><a href="#text">리소스·텍스트</a><a href="#reproduce">재현·한계</a><a href="superresolution-lifecycle.html">Pixel Shift 메뉴</a><a href="hq-status.json">연구 상태</a></nav></header>
+<main><p class="note">주소는 해제 파일 오프셋, <code>screen+…</code>와 <code>renderer+…</code>는 객체 필드다. 위젯·이벤트 숫자는 K-3 II 내부 값이다. K-3 III의 같은 메뉴 이름이 같은 숫자나 바이너리 ABI를 뜻하지 않는다.</p>
+
+<section aria-labelledby="mapping"><h2 id="mapping">1. 공식 대응표의 공통 항목을 분석 대상으로 삼았다</h2>
+<p>Ricoh의 K-3 III·K-3 II 메뉴 대비표 첫 페이지는 K-3 II의 촬영 메뉴 1·정지화상 기록 설정에 있는 RAW 파일 형식을 K-3 III의 촬영 메뉴 5·RAW 파일 형식과 대응시킨다. 이는 기능 대응의 근거다. 이벤트 번호나 실행 코드 호환성의 근거로 사용하지 않았다. <a href="https://www.ricoh-imaging.co.jp/japan/support/pdf/k-3-3_09.pdf">제조사 메뉴 대비표</a> · <a href="https://www.ricoh-imaging.co.jp/japan/support/product_support_k-3-3_correlation_table.html">공식 안내</a></p>
+<div class="table-scroll"><table><thead><tr><th scope="col">K-3 II 리소스</th><th scope="col">위젯 ID</th><th scope="col">리소스 레코드 / 언어 표</th></tr></thead><tbody>
+<tr><td>RAW File Format</td><td><code>0x01500040</code></td><td><code>0x993834 / 0xE3FE34</code></td></tr>
+<tr><td>PEF</td><td><code>0x01500043</code></td><td><code>0x993870 / 0xE3FE88</code></td></tr>
+<tr><td>DNG</td><td><code>0x01500044</code></td><td><code>0x993884 / 0xE3FEDC</code></td></tr>
+</tbody></table></div>
+<p>이 세 레코드는 <code>0x993334</code> 표의 type 4 항목이다. 화면 생성 코드에서 해당 ID로 조회한 뒤 텍스트 객체에 실제 언어 표 포인터를 넣는 구간까지 실행했다. 메뉴 적용의 상위 항목 ID는 제목 위젯과 다른 <code>0x0150000A</code>다. <a href="ui-resources.json">리소스와 화면 디스패처 근거</a></p>
+</section>
+
+<section aria-labelledby="events"><h2 id="events">2. 선택과 적용은 서로 다른 단계다</h2>
+<figure><figcaption>도식 1. PEF·DNG 선택에서 설정 0x97까지</figcaption><div class="flow" role="group" aria-label="PEF 또는 DNG 위젯 선택은 임시값을 바꾸고 허용된 적용 이벤트가 저장값과 두 RAM 뱅크를 갱신">
+<div class="stage"><strong>위젯 선택</strong><span>PEF 0x01500043 → 0<br>DNG 0x01500044 → 1<br>가상 슬롯 +0xC0</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>화면의 임시값</strong><span>screen+0xF9에 선택 기록<br>screen+0xF4는 기존 값 유지<br>다른 항목을 떠나도 임시값 보존</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>적용 이벤트</strong><span>가상 슬롯 +0xD0<br>0x3E6148 → 설정 0x97<br>활성 RAM 뱅크와 미러에 기록</span></div></div>
+<p class="caption">취소로 처리되는 이벤트는 기존 값 +0xF4를 임시값 +0xF9로 되돌린다. 물리 버튼을 누른 시험은 아니며, 원본 가상 디스패처에 이벤트를 전달했다.</p></figure>
+<p>상위 항목 <code>0x0150000A</code>의 적용 이벤트 <code>0, 1, 6, 0x10, 0x11, 0x1D, 0x20</code>에서 임시값을 저장한다. 이벤트 3과 <code>0xF</code>는 저장하지 않고 임시값을 복원했다. 다른 상위 항목 ID를 주면 설정은 바뀌지 않고 임시 선택이 남았다. 이 번호를 물리 버튼 이름으로 해석하지 않았다. <a href="ui-resources.json">선택·이탈·적용 사례 12건</a></p>
+<p>설정 쓰기는 <code>0x6DA5E4 → 0x6F1A38 → 0x700E84 → 0x6FE52C</code>로 이어진다. 활성 인덱스 0…7의 저장 뱅크는 <code>[0, 0, 2, 3, 4, 5, 6, 7]</code>이다. 인덱스 0과 1은 뱅크 0을 공유한다. 검증에서는 선택된 뱅크와 미러의 변경을 확인하고 다른 뱅크의 표식값이 그대로 남는지도 대조했다. 영구 저장 매체 기록은 이 범위에 포함하지 않았다. <a href="../verify_ui_resources.py">원본 설정 getter·setter와 뱅크 검사</a></p>
+<p>역방향 함수 <code>0x3E53A4</code>는 저장값 0을 PEF 위젯, 1을 DNG 위젯으로 바꾼다. 대조값 2에서는 일치하는 위젯이 없다는 값 0을 반환했다. 이 결과는 <a href="superresolution-lifecycle.html">앞선 Pixel Shift 분석</a>처럼 문자열·화면 이벤트·설정값을 별도로 검증한 것이다.</p>
+</section>
+
+<section aria-labelledby="text"><h2 id="text">3. 텍스트 준비 ABI까지 확인했다</h2>
+<figure><figcaption>도식 2. 리소스 레코드가 글리프 배열로 바뀌는 경로</figcaption><div class="flow" role="group" aria-label="type 4 레코드 조회 뒤 텍스트 객체에 언어 표와 스타일을 기록하고 선택된 언어의 글리프를 16비트 배열로 준비">
+<div class="stage"><strong>0x70A1B8 · 조회</strong><span>실제 위젯 ID로 표 검색<br>0x70A390 → 0x70A0E8<br>0x709000에서 type 4 생성</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>0x873B08 · 객체 설정</strong><span>renderer+0x90: 언어 표<br>renderer+0x84: 16비트 스타일<br>이 세 레코드의 스타일은 4</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>0x873964 · 글리프 준비</strong><span>언어별 1바이트 / 2바이트 소스<br>16비트 출력과 길이 생성<br>길이에 종료 코드 0 포함</span></div></div>
+<p class="caption">리소스 조회→텍스트 객체 생성은 위젯 래퍼 할당 직전에 멈췄다. 텍스트 준비는 래스터화를 시작하기 전에 멈췄다. 두 구간의 실행 경계를 연결된 전체 LCD 렌더링으로 표현하지 않았다.</p></figure>
+<p>각 리소스에서 언어 인덱스 0, 비어 있는 1바이트 소스인 9, 16비트 소스인 10, 활성 인덱스 10에서 인덱스 0을 강제한 경우를 실행했다. 총 12건의 출력 바이트와 길이를 대조했다. 영문 라벨은 저장 글리프 코드에 <code>0x1E</code>를 더하면 읽을 수 있지만, 전체 글리프를 Unicode나 UTF-16 텍스트라고 단정하지 않았다. 폰트 아틀라스와 LCD 비트맵은 추출하지 않았다. <a href="ui-resources.json">텍스트 사례와 출력 해시</a></p>
+<p>래퍼는 상태에 따라 <code>+0x5C</code> 또는 <code>+0x60</code>의 언어 표를 고르고 <code>+0x64</code>의 스타일을 전달한다. 두 상태를 별도로 실행했으며 화면의 <code>0x3E4630 → 0x82DE2C</code>가 제목의 두 번째 언어 표를 설정하는 것도 확인했다. 따라서 이식에는 문자열 교체뿐 아니라 객체 상태·포인터·길이 규약을 맞추는 작업이 필요하다. <a href="../verify_ui_resources.py">래퍼 상태 대조</a></p>
+</section>
+
+<section aria-labelledby="reproduce"><h2 id="reproduce">4. 기능 대응은 확인했고, 기종 간 실행은 남아 있다</h2>
+<pre><code>python verify_ui_resources.py decoded.bin --compare analysis/ui-resources.json
+python -m unittest discover -s tests -v
+python verify_publication.py</code></pre>
+<p>검증은 Unicorn 2.1.4와 동일한 K-3 II v1.12 해제본을 사용한다. 힙 할당, 일부 화면 갱신, 위젯 조회·알림 콜백을 합성 경계로 제공했다. 리소스 검색, 텍스트 준비, 가상 디스패처, 설정 뱅크 계산과 RAM 쓰기는 원본 명령으로 실행했다. 코디네이터가 결과 스냅샷을 다시 실행해 일치를 확인했다. <a href="ui-resources.json">입력 해시·구간 해시·제한</a></p>
+<p>K-3 III·Q7의 수치 ID와 텍스트 ABI를 이 결과로 대신할 수 없다. 기능별 대응표를 바탕으로 각 기종의 선택·적용 계약을 비교하는 단계이며, 전송한 UI의 실행, 물리 입력, LCD 출력, 영구 저장은 미검증이다. 실제 이식이나 펌웨어 패치를 적용하지 않았다. <a href="hq-status.json">UI 연구 상태와 다음 작업</a></p>
+</section></main><footer>K-3 II v1.12 · <a href="installation.html">업데이트 전송·오류 처리</a> · <a href="../README.md">저장소 안내</a></footer></body></html>
