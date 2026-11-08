@@ -1,6 +1,6 @@
 {
   "analysis_date": "2026-11-08",
-  "scope": "Identity, CPU and RAW/tone analysis; conditional B2Y/scaler/JPEG/StoreImage/Exif/filesystem buffer chain and actual Custom Image GUI event binding",
+  "scope": "Identity, CPU and RAW/tone analysis; conditional B2Y/scaler/JPEG/Exif chain and menu events; filesystem backend A, SD commands/ADMA2, CPP alternate planes and JPEG layout/retry",
   "python": "3.12.3",
   "node": "24.15.0",
   "capstone": "5.0.7",
@@ -9,7 +9,7 @@
   "original_input_sha256": "a33485f351019960192891ef69ddc5d4904ef9e298671d9d9955679e4c901a9a",
   "independent_decoder_byte_comparison": true,
   "published_findings_reproduced": true,
-  "independent_review": "Initial hardware/RAW review and six snapshot replays retained below. For the pipeline update, workers independently checked the selector metadata dispatcher and reviewed ISP evidence. Coordinator accepted conditional matrix-product and tone-cache corrections, inspected completion/Exif/output instructions, and independently reproduced all four new snapshots. For the output/menu update, separate workers traced JPEG and GUI paths. A worker independently replayed and reviewed the Exif route; the coordinator independently replayed all three new snapshots and inspected event dispatch, JPEG alignment and capacity checks against disassembly.",
+  "independent_review": "Initial hardware/RAW review and six snapshot replays retained below. For the pipeline update, workers independently checked the selector metadata dispatcher and reviewed ISP evidence. Coordinator accepted conditional matrix-product and tone-cache corrections, inspected completion/Exif/output instructions, and independently reproduced all four new snapshots. For the output/menu update, separate workers traced JPEG and GUI paths. A worker independently replayed and reviewed the Exif route; the coordinator independently replayed all three new snapshots and inspected event dispatch, JPEG alignment and capacity checks against disassembly. For the storage update, workers traced SD and alternate buffers. The SD worker independently replayed and reviewed the filesystem verifier and reviewed the final storage HTML. The coordinator replayed all three new snapshots, inspected critical ADMA, address selection, retry and buffer instructions, and corrected the diagram owner of the block callback to the filesystem-library volume object.",
   "not_performed": [
     "Camera flashing or physical camera execution",
     "Whole firmware rebuild",
@@ -17,8 +17,9 @@
     "Manufacturing or cryptographic-signature validation",
     "Whole-frame hardware RAW-to-JPEG execution and physical ISP pixel transfer function",
     "Physical button/dial input, LCD raster rendering or persistent settings write",
-    "Selected filesystem backend to SD commands/block DMA and physical media writes",
-    "Every alternate CPP output, pixel format and buffer-alignment path"
+    "Backend B lower block route, whole-file allocation/cluster-chain execution, and every card-level recovery branch",
+    "Physical SD writes, actual DMA data movement, cache coherency and CPU-to-bus address mapping",
+    "Alternate CPP output to scaler/JPEG module 16 alias and every real-mode buffer alignment path"
   ],
   "reference_project_commit": "b51d680202336a5872a66f99ca2924a2cb7c75fa",
   "initial_analysis_date": "2026-11-07",
@@ -152,5 +153,68 @@
     "sentences_reviewed": 92,
     "numbers_dropped": 0,
     "runtime": "Native Codex worker; plugin metric and gate scripts"
+  },
+  "storage_dma_analysis": {
+    "reference_project_commit": "aa12e1578d723913453d11f3b3b9deb33ce79360",
+    "snapshots_reproduced": [
+      "filesystem-backend",
+      "sd-controller",
+      "alternate-buffers"
+    ],
+    "original_code_cases_total": 49,
+    "filesystem_cases": 15,
+    "sd_cases": 14,
+    "alternate_buffer_cases": 20,
+    "filesystem_branch_edges": 24,
+    "filesystem_word_anchors": 12,
+    "sd_branch_edges": 59,
+    "sd_word_anchors": 132,
+    "alternate_branch_edges": 84,
+    "alternate_instruction_anchors": 97,
+    "sector_bytes": 512,
+    "backend_threshold_sectors": 67371008,
+    "backend_threshold_bytes": 34493956096,
+    "filesystem_callback_max_blocks": 65535,
+    "card_command_max_blocks": 32768,
+    "adma_segment_max_bytes": 65536,
+    "adma_record_bytes": 8,
+    "sd_port_bases": [
+      "0xc6000000",
+      "0xc7000000"
+    ],
+    "card_command_numbers_checked": [
+      9,
+      17,
+      18,
+      23,
+      24,
+      25
+    ],
+    "whole_partial_sector_buffer_difference_verified": true,
+    "large_request_rechunk_verified": true,
+    "irq_status_post_and_mmio_writes_verified": true,
+    "whole_exif_to_media_execution": false,
+    "device_boundaries_stubbed": true,
+    "physical_hardware_executed": false,
+    "complete_jpeg_generated": false,
+    "offline_publication_check": {
+      "passed": true,
+      "html_documents_checked": 5,
+      "local_links_checked": 154,
+      "public_files_checked": 60,
+      "evidence_identity_consistent": true,
+      "svg_xml_valid": true
+    }
+  },
+  "storage_language_review": {
+    "scope": "Extracted prose, excluding CSD capacity, request/descriptor capacity, JPEG retry-capacity, and large-request residual paragraphs; final technical additions received coordinator and SD-worker review",
+    "route": "light",
+    "risk_score": 0,
+    "deterministic_gate": "OK \u2014 \uc218\ub834",
+    "change_rate_percent": 0.63,
+    "sentences_touched": 2,
+    "sentences_reviewed": 82,
+    "numbers_dropped": 0,
+    "runtime": "Native Codex worker proposals; coordinator accepted one, simplified one independently, and reran the plugin gate on accepted excerpt"
   }
 }

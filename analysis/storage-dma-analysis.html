@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="K-3 II 파일시스템의 전체·부분 섹터 버퍼 전달, 두 SD 포트의 명령·ADMA2, CPP와 JPEG 대체 버퍼를 원본 코드로 검증한 보고서.">
+<title>K-3 II — 파일시스템에서 SD·DMA까지</title>
+<link rel="stylesheet" href="../assets/report.css">
+</head>
+<body>
+<header>
+<div class="eyebrow">PENTAX K-3 II · firmware 1.12 · 2026-11-08 · 저장 경로 후속 분석</div>
+<h1>파일시스템에서 SD·DMA까지<br>버퍼가 유지되거나 바뀌는 지점</h1>
+<p class="lead">파일시스템 백엔드 하나를 블록 콜백, SD 카드 객체, CMD24·CMD25와 ADMA2 설정까지 연결했다. 전체 섹터는 원래 버퍼 주소를 전달하고, 부분 섹터는 캐시로 복사한 뒤 쓴다. CPP 대체 출력과 JPEG 목적지 공유·재시도 조건도 원본 명령으로 확인했다.</p>
+<nav aria-label="보고서 탐색"><a href="../index.html">초기 분석</a><a href="output-menu-analysis.html">앞선 버퍼·메뉴 분석</a><a href="#filesystem">파일시스템</a><a href="#sectors">섹터 버퍼</a><a href="#sd">SD·DMA</a><a href="#alternate">대체 버퍼</a><a href="#verification">검증·재현</a><a href="#limits">남은 범위</a></nav>
+</header>
+<main>
+<p class="note">코드 주소는 <strong>해제 이미지의 파일 오프셋</strong>이다. 코드 VA는 <code>오프셋 + 0x02000000</code>이며, SD 장치의 <code>0xC6000000 / 0xC7000000</code>은 절대 MMIO 주소다. 도식은 코드 연결과 합성 상태에서 관측한 전달 경로다. 카메라에서 파일을 기록하거나 DMA 전송을 관측한 결과는 아니다.</p>
+
+<section aria-labelledby="filesystem"><h2 id="filesystem">1. 백엔드 선택부터 카드 객체까지</h2>
+<p>앞선 <a href="output-menu-analysis.html#writer">Exif 출력 분석</a>은 파일시스템 어댑터 <code>0x6F012C</code>가 버퍼 주소와 길이를 선택된 백엔드로 넘기는 곳까지 추적했다. 후속 분석에서는 초기화 <code>0x76207C</code>가 두 구현을 만들고 파일시스템 객체의 <code>+0xC / +0x10</code>에 등록하는 것을 확인했다. 아래에서는 각각 백엔드 A와 B로 부른다. 이 이름은 분석용 구분이며 파일시스템 종류를 뜻하지 않는다. <a href="filesystem-backend.json">생성자·등록·가상 호출 근거</a></p>
+<figure><figcaption>도식 1. 선택되는 백엔드와 이번에 연결한 하위 경로</figcaption>
+<div class="flow" role="group" aria-label="Exif 파일시스템 어댑터에서 백엔드 선택, 카드 쓰기까지">
+<div class="stage"><strong>Exif → 파일시스템</strong><span><code>0x7EB150 → 0x6F01B8</code><br>내부 핸들·소스 포인터·길이<br>핸들 인덱스로 백엔드 조회</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>마운트 때 구현 선택</strong><span><code>0x6F0AD4</code><br>장치 <code>+0x14</code>와 <code>0x04040000</code> 비교<br>작으면 A, 같거나 크면 B</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>백엔드 A의 쓰기</strong><span><code>0x573044 → 0x572FCC</code><br>라이브러리 <code>0xE8A1D8</code><br>섹터 처리 → <code>0xEBB190</code></span></div>
+</div>
+<div class="flow" role="group" aria-label="등록된 블록 콜백에서 SD 카드의 쓰기 슬롯으로">
+<div class="stage"><strong>등록된 블록 콜백</strong><span>라이브러리 볼륨 객체<br><code>+0x440 = 0x02572970</code><br><code>0x572970 → 0x572840</code><br>볼륨 이름으로 카드 객체 조회</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>같은 카드 객체</strong><span>가상 함수표 VA <code>0x02A5D20C</code><br>쓰기 슬롯 <code>+0x18</code><br><code>0x7589E8</code></span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>SD 호스트</strong><span>단일·다중 블록 쓰기<br>명령 어댑터 → 호스트 함수표<br>CMD24·CMD25 / ADMA2</span></div>
+</div>
+<p class="caption">백엔드 B는 <code>0x5CB860 → 0x5CB814 → 0xE86818</code>의 파일 쓰기 진입점까지 확인했다. B의 하위 블록 경로는 이 도식에 연결하지 않았다. <a href="filesystem-backend.json">파일시스템 근거</a> · <a href="sd-controller.json">카드·호스트 근거</a></p>
+</figure>
+<p>마운트의 비교는 부호 없는 비교다. 경계 직전·일치·직후 세 값을 원본 명령으로 실행해 선택을 확인했다. 비교 대상 <code>card+0x14</code>는 CMD9로 읽은 CSD를 <code>0x5D2C48</code>에서 해석한 <strong>512바이트 논리 섹터 수</strong>다. <code>0x758D24 → 0x719768</code>이 이 필드에 결과를 저장한다. 따라서 임계값은 34,493,956,096바이트, 즉 32.125 GiB다. CSD 구조값 0과 1을 넣은 원본 실행으로 단위와 저장 위치를 확인했다. <a href="sd-controller.json">CSD 생산자·실행 근거</a> 두 백엔드의 쓰기 래퍼는 하위 함수가 0 이상의 값을 반환하면 참을 반환한다. 따라서 래퍼의 참 값만으로 요청한 바이트 전부가 기록됐다고 해석할 수 없다. <a href="filesystem-backend.json">선택 3건·래퍼 6건</a></p>
+<p>백엔드 A의 정적 호출열은 <code>0xE8A1D8 → 0xEB48A8 → 0xEB4530 → 0xEBEF2C → 0xEBFB30 → 0xEB78BC</code>다. 블록 콜백 <code>0x572970</code>은 초기화 <code>0x572BD4 → 0xE8B570</code>에서 등록된다. 카드 객체는 <code>0x740FA0</code>에서 포트별로 생성되어 <code>0x7413D8</code>로 조회되고, <code>0x7620E4 → 0x736A4C</code>에서 볼륨 이름과 연결된다. 생성·등록·조회·가상 호출을 따라 연결했다.</p>
+</section>
+
+<section aria-labelledby="sectors"><h2 id="sectors">2. 전체 섹터와 부분 섹터는 다른 버퍼를 넘긴다</h2>
+<p>섹터 처리 함수 <code>0xEB78BC</code>와 원본 블록 콜백을 함께 실행했다. 512바이트 섹터를 쓰는 합성 상태에서, 섹터 경계에 맞는 1,024바이트 요청은 소스 포인터를 그대로 카드 쓰기 진입점에 전달했다. 반면 섹터 내부 오프셋 7에 12바이트를 쓰는 요청은 기존 캐시의 해당 구간만 바꾸고 dirty 비트를 설정했다. 이후 원본 flush 함수 <code>0xEB69AC</code>가 캐시 주소로 1개 섹터를 전달했다. <a href="filesystem-backend.json">전체·부분 섹터 실행 기록</a></p>
+<figure><figcaption>도식 2. 바이트 쓰기에서 블록 쓰기로 바뀌는 두 경우</figcaption>
+<div class="flow" role="group" aria-label="전체 섹터에서는 원래 소스 주소가 카드 쓰기에 전달됨">
+<div class="stage"><strong>전체 섹터</strong><span>소스 <code>0x10004000</code><br>offset 0 / 1,024 bytes<br>합성 LBA <code>0x100</code></span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>직접 블록 콜백</strong><span><code>0xEB7ACC → 0xEBB190</code><br>2개 섹터 요청<br>소스 주소 보존</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>카드 쓰기 진입점</strong><span><code>0x7589E8</code> 경계에서 관측<br>LBA <code>0x100</code> / count 2<br>소스 <code>0x10004000</code></span></div>
+</div>
+<div class="flow" role="group" aria-label="부분 섹터에서는 캐시에 복사한 뒤 별도 flush가 캐시 주소를 전달함">
+<div class="stage"><strong>부분 섹터</strong><span>같은 소스 주소<br>offset 7 / 12 bytes<br>기존 캐시 상태를 주입</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>캐시 복사·보류</strong><span>캐시 <code>0x10003000 + 7</code><br>주변 바이트 보존 / dirty=1<br>이 시점 카드 호출 없음</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>별도 flush</strong><span><code>0xEB69AC → 0xEBB190</code><br>LBA <code>0x100</code> / count 1<br>소스 <code>0x10003000</code></span></div>
+</div>
+<p class="caption">주소와 데이터는 합성 입력이다. 부분 쓰기 사례는 캐시 유지 조건을 설정하고 유효한 캐시를 미리 준비했다. 캐시 할당·최초 읽기·전체 파일의 클러스터 구성까지 실행한 결과는 아니다.</p>
+</figure>
+<p><code>0xEBB190</code>은 콜백 한 번의 블록 수를 <code>0xFFFF</code> 이하로 나눈다. 65,536개 요청에서는 65,535개와 1개로 나뉘고, 두 번째 소스 주소는 <code>65,535 × 512</code>바이트만큼 증가했다. 파일시스템 검증은 카드 쓰기 진입점에서 멈췄다. 별도 SD 검증에서는 이 65,535개 요청을 원본 카드 루프가 32,768개와 32,767개로 다시 나누는 것을 확인했다. 호스트 생성자가 설정하는 상한 <code>host+0x404 = 0x8000</code>은 16 MiB이며, 64 KiB 설명자 256개와 맞는다. 두 DMA 표 전체, 두 번째 LBA·소스 증가와 명령 레지스터 쓰기를 대조했다. 데이터 자체의 DMA 전송은 수행하지 않았다. <a href="sd-controller.json">write-rechunk-65535 사례</a> 실패 사례에서는 오류 정책을 0으로 대체했으며, 원래 정책에 따른 재시도 전체는 실행하지 않았다.</p>
+</section>
+
+<section aria-labelledby="sd"><h2 id="sd">3. 두 SD 포트의 명령·ADMA2와 완료 통지</h2>
+<p>포트 설정표 <code>0x9DCFD4</code>의 두 행은 MMIO 기준 주소 <code>0xC6000000</code>과 <code>0xC7000000</code>을 가진다. 초기화는 이 값을 호스트의 컨트롤러 래퍼로 전달한다. 호스트 함수표 VA <code>0x02A656D0</code>의 쓰기 준비 슬롯 <code>+0x50</code>은 <code>0x56ECB0 → 0x56EBA4</code>, 쓰기 완료 대기 슬롯 <code>+0x54</code>는 <code>0x56ED10</code>이다. <code>0x56DC14 → 0x56F87C</code>는 <code>port+0x28</code>의 비트 [4:3]에 <code>0b10</code>을 설정하며, ADMA32 선택값과도 맞는다. 두 포트 주소만으로 칩 부품번호나 물리 슬롯의 표기 순서를 확정하지 않는다. <a href="sd-controller.json">설정표·생성자·함수표</a></p>
+<figure><figcaption>도식 3. 소스 포인터가 DMA 설명자로 들어가는 지점</figcaption>
+<div class="flow" role="group" aria-label="SD 카드 쓰기에서 ADMA 설명자와 명령 레지스터 설정으로">
+<div class="stage"><strong>카드 하위 쓰기</strong><span>단일 <code>0x758890</code><br>다중 <code>0x758744 / 0x758658</code><br>LBA·블록 수·소스 포인터</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>ADMA2 설명자</strong><span><code>0x56EBA4</code><br>연속 소스를 최대 64 KiB씩 분할<br>8바이트 레코드 배열 생성</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>포트 레지스터</strong><span><code>+0x58</code>: 설명자 표 주소<br><code>+0x04 / +0x08</code>: 크기·개수 / 인수<br><code>+0x0C</code>: 명령·전송 모드</span></div>
+</div>
+<div class="flow" role="group" aria-label="인터럽트 상태를 이벤트로 게시하고 명령 완료와 전송 완료를 각각 기다림">
+<div class="stage"><strong>상태·인터럽트</strong><span><code>port+0x30</code><br>처리기 <code>0x56F298</code><br>정상·오류 상태를 각각 읽음</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>RTOS 이벤트</strong><span>동일 객체 <code>host+0x41C</code><br>정상 플래그 / 오류 플래그&lt;&lt;16<br>원본 코드가 W1C 값을 기록</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>두 단계 완료 판단</strong><span>명령 완료: bit 0<br>전송 완료: bit 1<br>오류·제거·대기 실패 별도 처리</span></div>
+</div>
+<p class="caption">SDHCI·ADMA2 명칭은 레지스터 배치와 설명자 형식의 일치에 근거한다. K-3 II 주소는 펌웨어에서 확인했다. <a href="sd-controller.json">원본 코드·MMIO 전체 쓰기 기록</a> · <a href="https://github.com/torvalds/linux/blob/v6.18/drivers/mmc/host/sdhci.h">Linux v6.18의 SDHCI 정의</a></p>
+</figure>
+<div class="table-scroll"><table><thead><tr><th scope="col">원본 실행 사례</th><th scope="col">명령·전송 레지스터 값</th><th scope="col">확인한 동작</th></tr></thead><tbody>
+<tr><td>1블록 쓰기</td><td><code>CMD24: 0x183A0001</code></td><td>512바이트, 마지막 설명자 1개</td></tr>
+<tr><td>129블록 쓰기·자동 종료</td><td><code>CMD25: 0x193A0027</code></td><td>65,536 + 512바이트의 설명자 2개</td></tr>
+<tr><td>128블록 쓰기·개수 선행</td><td><code>CMD23: 0x171A0000</code><br><code>CMD25: 0x193A0023</code></td><td>개수 설정 명령 후 쓰기; 64 KiB 설명자 1개</td></tr>
+<tr><td>65,535블록 재분할</td><td><code>CMD25</code> 두 번</td><td>32,768 + 32,767블록; 각 DMA 표 256개 설명자</td></tr>
+<tr><td>1블록·129블록 읽기</td><td><code>CMD17: 0x113A0011</code><br><code>CMD18: 0x123A0037</code></td><td>읽기 방향 플래그와 동일 설명자 형식</td></tr>
+</tbody></table></div>
+<p>설명자는 little-endian <code>{uint16 속성, uint16 길이, uint32 버퍼 주소}</code>다. 일반 전송의 속성은 <code>0x21</code>, 마지막은 <code>0x23</code>이다. 길이 0은 65,536바이트를 나타낸다. 129블록 사례에서는 소스 주소가 두 번째 설명자에서 정확히 <code>+0x10000</code> 증가했다. 원본 함수는 표 포인터를 <code>port+0x58</code>에 기록한다. 이 단계에서 픽셀이나 JPEG 바이트를 다른 버퍼로 복사하는 동작은 없으며, 실제 DMA에 의한 데이터 이동은 실행하지 않았다. <a href="sd-controller.json">설명자 바이트 비교</a> · <a href="https://github.com/torvalds/linux/blob/v6.18/drivers/mmc/host/sdhci.c#L4465-L4475">64 KiB 길이 인코딩의 외부 대조</a></p>
+<p>주소 인수 함수 <code>0x758138</code>은 카드 <code>+0x37</code>이 2이면 LBA를 그대로, 그 외에는 <code>LBA &lt;&lt; 9</code>를 보낸다. 이는 블록 주소와 바이트 주소를 사용하는 SD 카드의 구분과 맞는다. 명령 번호의 의미는 <a href="https://github.com/torvalds/linux/blob/v6.18/include/linux/mmc/mmc.h#L47-L58">공개 MMC 명령 정의</a>와 대조했다. 여기서 카드 값 2의 전체 열거형이나 모든 카드 초기화 분기까지 확정한 것은 아니다.</p>
+<p>명령 대기 실패, 카드 응답 오류, ADMA 오류, 전송 대기 실패, 명령 금지 상태를 각각 주입한 5개 사례에서 원본 하위 함수는 실패를 반환했다. 별도 IRQ 사례에서는 상태 <code>0x02008003</code>으로부터 <code>0x8003</code>과 <code>0x02000000</code>을 같은 이벤트 객체에 게시하고 두 W1C 값을 기록했다. 합성 MMIO는 장치의 실제 타이밍이나 W1C 하드웨어 동작을 재현하지 않는다. 또한 수치 실행은 카드 상위 함수의 범위 검사·복구 분기를 지난 <strong>하위 명령 함수 또는 블록 분할 루프</strong>에서 시작했다. CMD9 두 사례는 카드 CSD 조회 함수에서 시작해 실제 응답 레지스터 읽기와 용량 저장까지 실행했다.</p>
+</section>
+
+<section aria-labelledby="alternate"><h2 id="alternate">4. CPP와 JPEG의 대체 버퍼 조건</h2>
+<p>CPP의 초기 주소 선택과 두 번째 패스는 서로 다른 제어값을 사용한다. <code>0x659790</code>의 <code>job+0x20B4 &amp; 0x44</code>가 0이면 직접 평면 <code>+0x160/+0x164/+0x168</code>을 쓴다. 0이 아니면 <code>job+0x2354</code>의 디스크립터를 읽는다. 이 디스크립터를 채우는 생성 조건 <code>job+0x20B2 == 1</code>도 별개다. 두 조건을 독립적으로 바꾼 합성 사례를 포함해 검증했다. <a href="alternate-buffers.json">생산자·소비자·실행 조건</a></p>
+<figure><figcaption>도식 4. 첫 주소 선택과 두 번째 패스의 주소 교체</figcaption>
+<div class="flow" role="group" aria-label="CPP 초기 주소 선택과 두 번째 패스에서 별도의 출력 주소로 바꾸는 구조">
+<div class="stage"><strong>첫 패스 주소 선택</strong><span><code>job+0x20B4 &amp; 0x44</code><br>0: 직접 평면 세 개<br>그 외: descriptor <code>+0x2354</code></span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>패스 수 선택</strong><span><code>job+0x59 → payload+0xA8</code><br>0: 1회 / 그 외: 2회<br>일반 생성자는 처리 gate <code>+0x84=1</code></span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>두 번째 패스</strong><span><code>payload+0xAC → job+0x2194</code><br><code>0x57BDF8…0x57BE5C</code><br>CPP 출력 평면 세 개 교체</span></div>
+</div>
+<p class="caption">처리가 허용된 두 주소 경로는 <code>0x57BF40 → 0x58C078 → 0x58B500</code>을 거쳐 B2Y 출력 레지스터 <code>0x20022440/50/60</code>에 도달한다. 레지스터에 기록할 때 하위 3비트가 제거된다. <a href="alternate-buffers.json">8개 CPP 사례</a></p>
+</figure>
+<p>두 번째 평면 디스크립터는 슬롯 13의 <code>0x654354</code>에서 계산된다. 주소를 32바이트 단위로 올리고, 가로·세로 곱과 그 절반, 패딩 값을 이용해 세 평면을 배치한다. 일반 스케일러 입력은 여전히 <code>0x659AC8…0x659AE8</code>에서 직접 평면 필드를 읽는다. 따라서 <strong>대체 CPP 출력이 JPEG 모듈 16의 입력과 같은 메모리를 가리키는지는 확인되지 않았다</strong>. 처리 gate를 0으로 넣은 사례는 방어 분기를 확인하기 위한 주입이며 일반 작업 생성자의 상태를 관측한 결과가 아니다.</p>
+<div class="table-scroll"><table><thead><tr><th scope="col">JPEG 조건</th><th scope="col">목적지·경계 동작</th><th scope="col">원본 코드</th></tr></thead><tbody>
+<tr><td><code>job+0x65 == 0</code></td><td><code>+0x6B</code>에 따라 두 목적지를 분리하거나 공유</td><td><code>0x660808…0x660844</code></td></tr>
+<tr><td><code>job+0x65 != 0</code></td><td>32바이트 정렬 기준 P 뒤의 <code>P+16</code>을 두 출력이 공유. 출력별 용량은 별도 필드에서 유지</td><td><code>0x660798…0x660804</code></td></tr>
+<tr><td>첫 압축 시도</td><td><code>0 &lt; 길이 ≤ 용량</code>이면 재시도 없이 종료</td><td><code>0x576C60…0x576C98</code></td></tr>
+<tr><td>재시도</td><td><code>0 &lt; 길이 &lt; 용량</code>이면 종료. 길이가 용량과 같아도 품질이 100보다 높으면 계속</td><td><code>0x576780…0x576824</code></td></tr>
+</tbody></table></div>
+<p>재시도는 같은 입력 평면 세 개, 목적지 포인터와 용량을 유지한다. 재시도 선택값 0·1·2의 품질 감소량은 각각 500·1,000·2,000이며 다른 값은 500이다. 이 선택값은 톤 selector와 별개다. 품질은 100 아래로 내려가지 않고, 하한에 도달하면 용량 조건을 만족하지 않아도 루프를 끝낸다. 이 종료를 유효한 JPEG의 성공 판정으로 일반화하지 않는다. 검증에서는 원본 디스크립터 조립 코드를 실행하고 장치가 보고할 길이를 주입했으며 JPEG 파일은 생성하지 않았다. <a href="alternate-buffers.json">레이아웃 4건·첫 시도 4건·재시도 4건</a></p>
+</section>
+
+<section aria-labelledby="verification"><h2 id="verification">5. 검증 범위와 재현</h2>
+<p>K-3 III의 <a href="https://github.com/yunhyok/pentax-k3iii-firmware-analysis/blob/aa12e1578d723913453d11f3b3b9deb33ce79360/analysis/startup-storage.html#controller">저장 장치 분석</a>처럼 설정표·호출·레지스터를 연결하고, 원본 명령에 합성 상태를 주입해 정상·오류 분기를 확인했다. K-3 III의 주소나 칩 정보를 가져오지 않았다. 입력은 기존 보고서와 같은 해제 이미지이며 SHA-256은 <code class="hash">1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc</code>다.</p>
+<div class="table-scroll"><table><thead><tr><th scope="col">검증 파일</th><th scope="col">원본 명령 실행</th><th scope="col">대체한 경계</th></tr></thead><tbody>
+<tr><td><a href="filesystem-backend.json">filesystem-backend.json</a></td><td>15건: 백엔드 선택 3, 쓰기 래퍼 6, 섹터 경로 2, 블록 분할 4</td><td>볼륨 조회·잠금·사전 검사·오류 정책·카드 실행 등. 초기 캐시 상태 주입</td></tr>
+<tr><td><a href="sd-controller.json">sd-controller.json</a></td><td>14건: 읽기·쓰기 5, 재분할 1, CSD 2, 오류 5, IRQ 1. MMIO 쓰기 순서와 설명자 표 비교</td><td>RTOS 이벤트·응답·MMIO 상태·CPU 캐시 관리·전송 후 카드 상태</td></tr>
+<tr><td><a href="alternate-buffers.json">alternate-buffers.json</a></td><td>20건: CPP 8, JPEG 배치 4, 첫 시도 4, 재시도 4</td><td>JPEG 장치 시작·이벤트·정리, 보고 길이. 작은 합성 배치 사용</td></tr>
+</tbody></table></div>
+<p>검증 스크립트는 원본 이미지의 해시를 먼저 확인한다. 정적 호출·명령·코드 구간 해시와 실행 결과를 공개 JSON에 기록했고, 담당 분석과 별도로 코디네이터가 세 결과를 다시 생성해 대조했다. 전체 Exif→파일 할당→SD 쓰기를 한 번에 실행한 검증은 아니다. 도구는 Python 3.12, Capstone 5.0.7, Unicorn 2.1.4를 사용했다. REA의 네이티브 분석 공급자가 준비되지 않은 Windows 환경에서 기존 Capstone·Unicorn 절차를 이어갔다.</p>
+<pre><code>python verify_filesystem_backend.py .private/decoded/decoded.bin --compare analysis/filesystem-backend.json
+python verify_sd_controller.py .private/decoded/decoded.bin --emulate --compare analysis/sd-controller.json
+python verify_alternate_buffers.py .private/decoded/decoded.bin --compare analysis/alternate-buffers.json
+python -m unittest discover -s tests -v
+python verify_publication.py</code></pre>
+<p><a href="../verify_filesystem_backend.py">파일시스템 검증 코드</a> · <a href="../verify_sd_controller.py">SD 검증 코드</a> · <a href="../verify_alternate_buffers.py">대체 버퍼 검증 코드</a> · <a href="validation.json">통합 검증 기록</a>. 공개 CI는 펌웨어 없이 단위 테스트와 문서·공개 범위 검사를 수행한다. 원본 명령 재실행은 별도로 준비한 해제본이 필요하다.</p>
+</section>
+
+<section aria-labelledby="limits"><h2 id="limits">6. 다음에 확인할 연결</h2>
+<p>백엔드 B의 파일 쓰기 이후 블록 콜백, 실제 파일 할당·클러스터 체인, 카드 상위 함수의 범위 검사·재시도·복구 경로 전체는 남아 있다. 대체 CPP 출력에서 스케일러·JPEG 입력으로 넘어가는 주소 관계와 실제 촬영 모드의 분기 선택도 추가 확인이 필요하다. CPU 주소와 DMA 버스 주소의 관계, 캐시 일관성, 전송 타이밍과 물리 SD 기록은 이번 합성 실행으로 입증할 수 없다.</p>
+<p>정확한 SoC·보조 MCU 부품번호, 전체 RAW→JPEG의 물리 픽셀 전달 함수, 실기 촬영·플래싱은 검증하지 않았다. 공개 저장소에는 직접 작성한 도구, 관찰값, 도식과 문서만 포함한다. 제조사 펌웨어와 전체 디스어셈블은 공개하지 않는다.</p>
+</section>
+</main>
+<footer>2026-11-08 · 원본 코드·합성 입력 검증 · <a href="https://github.com/yunhyok/pentax-k3ii-firmware-analysis">GitHub 저장소</a><br>분석용 도식과 실기 관측을 구분하며 후속 증거에 따라 갱신한다.</footer>
+</body>
+</html>

@@ -1,0 +1,925 @@
+{
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "candidate_load_base": 33554432,
+  "location_units": "decoded file offsets except absolute MMIO and synthetic addresses",
+  "static": {
+    "edges": {
+      "cpp_producers": [
+        [
+          6636148,
+          6636372
+        ],
+        [
+          6636396,
+          6635808
+        ],
+        [
+          6636536,
+          8507312
+        ],
+        [
+          6636548,
+          8507320
+        ],
+        [
+          6636560,
+          8507328
+        ],
+        [
+          6687488,
+          6688092
+        ],
+        [
+          6688120,
+          8507312
+        ],
+        [
+          6688132,
+          8507320
+        ],
+        [
+          6688144,
+          8507328
+        ],
+        [
+          6657360,
+          7451976
+        ],
+        [
+          6657372,
+          7452032
+        ],
+        [
+          6657336,
+          7886968
+        ],
+        [
+          6635256,
+          7886976
+        ],
+        [
+          6657944,
+          6658016
+        ],
+        [
+          6657952,
+          7351180
+        ],
+        [
+          6657972,
+          8073872
+        ],
+        [
+          6657992,
+          8073880
+        ],
+        [
+          6657964,
+          7685076
+        ],
+        [
+          6657984,
+          7685084
+        ],
+        [
+          6658004,
+          7685092
+        ],
+        [
+          6658024,
+          7685076
+        ],
+        [
+          6658036,
+          7685084
+        ],
+        [
+          6658048,
+          7685092
+        ]
+      ],
+      "cpp_consumer": [
+        [
+          5749604,
+          7456032
+        ],
+        [
+          5750820,
+          5749632
+        ],
+        [
+          5749660,
+          5749680
+        ],
+        [
+          5749668,
+          7686932
+        ],
+        [
+          5749676,
+          7444628
+        ],
+        [
+          5749992,
+          7456040
+        ],
+        [
+          5750000,
+          5750784
+        ],
+        [
+          5750268,
+          5750368
+        ],
+        [
+          5750276,
+          7452024
+        ],
+        [
+          5750280,
+          7351180
+        ],
+        [
+          5750300,
+          7685076
+        ],
+        [
+          5750308,
+          7452024
+        ],
+        [
+          5750312,
+          8073872
+        ],
+        [
+          5750332,
+          7685084
+        ],
+        [
+          5750340,
+          7452024
+        ],
+        [
+          5750344,
+          8073880
+        ],
+        [
+          5750364,
+          7685092
+        ],
+        [
+          5750592,
+          5816440
+        ],
+        [
+          5816468,
+          5813504
+        ],
+        [
+          5815724,
+          5572328
+        ],
+        [
+          5815736,
+          5572412
+        ],
+        [
+          5815748,
+          5572496
+        ],
+        [
+          6658768,
+          8507312
+        ],
+        [
+          6658780,
+          8507320
+        ],
+        [
+          6658792,
+          8507328
+        ]
+      ],
+      "jpeg_destinations": [
+        [
+          6686592,
+          6646460
+        ],
+        [
+          6686612,
+          6686728
+        ],
+        [
+          6686624,
+          6635808
+        ],
+        [
+          6686640,
+          7860692
+        ],
+        [
+          6686680,
+          6635808
+        ],
+        [
+          6686696,
+          7860684
+        ],
+        [
+          6686708,
+          6635808
+        ],
+        [
+          6686744,
+          6686776
+        ],
+        [
+          6686748,
+          6636044
+        ],
+        [
+          6686768,
+          6636044
+        ],
+        [
+          6686776,
+          6636044
+        ],
+        [
+          6686820,
+          8242712
+        ],
+        [
+          6686832,
+          7886212
+        ],
+        [
+          6686844,
+          7886196
+        ],
+        [
+          6686880,
+          7886204
+        ]
+      ],
+      "jpeg_retry": [
+        [
+          5729380,
+          7455352
+        ],
+        [
+          5729396,
+          5729408
+        ],
+        [
+          5729404,
+          5729440
+        ],
+        [
+          5729432,
+          5728128
+        ],
+        [
+          5728232,
+          5727704
+        ],
+        [
+          5728240,
+          7455352
+        ],
+        [
+          5728256,
+          5728268
+        ],
+        [
+          5728264,
+          5728276
+        ],
+        [
+          5728272,
+          5728196
+        ],
+        [
+          5727752,
+          7351180
+        ],
+        [
+          5727764,
+          7450328
+        ],
+        [
+          5727772,
+          8073872
+        ],
+        [
+          5727784,
+          7450336
+        ],
+        [
+          5727792,
+          8073880
+        ],
+        [
+          5727804,
+          7450344
+        ],
+        [
+          5727812,
+          7455376
+        ],
+        [
+          5727824,
+          7450432
+        ],
+        [
+          5727968,
+          7450400
+        ],
+        [
+          5728000,
+          7450360
+        ],
+        [
+          5728060,
+          5494528
+        ],
+        [
+          5728108,
+          7886204
+        ]
+      ]
+    },
+    "instruction_offsets": [
+      6634504,
+      6635120,
+      6635128,
+      6635240,
+      6635244,
+      6635248,
+      7886976,
+      6657320,
+      6657324,
+      7886968,
+      7686932,
+      7444628,
+      6636088,
+      6636372,
+      6636376,
+      6636380,
+      6636384,
+      6636392,
+      6636408,
+      6636512,
+      6635808,
+      6635812,
+      6687476,
+      6687480,
+      6687500,
+      6687508,
+      6687516,
+      6688096,
+      6656956,
+      6656968,
+      6657196,
+      6657216,
+      6657224,
+      6657352,
+      6657364,
+      6657936,
+      6657940,
+      6658060,
+      7451976,
+      7452024,
+      7452032,
+      7456032,
+      7456040,
+      5749616,
+      5749620,
+      5749640,
+      5749644,
+      5750264,
+      7351180,
+      8073872,
+      8073880,
+      7685076,
+      7685084,
+      7685092,
+      8507312,
+      8507320,
+      8507328,
+      5572332,
+      5572416,
+      5572500,
+      6658760,
+      6658772,
+      6658784,
+      6686596,
+      6686604,
+      6686632,
+      6686648,
+      6686652,
+      6686656,
+      6686664,
+      6686668,
+      6686688,
+      6686712,
+      6686728,
+      6686752,
+      6686756,
+      6686780,
+      6686784,
+      6686792,
+      6686804,
+      6686836,
+      7860692,
+      5729388,
+      5729392,
+      5729400,
+      5728180,
+      5728192,
+      5728200,
+      5728216,
+      5728252,
+      5728260,
+      5728268,
+      7455352,
+      7455376,
+      7450432,
+      7450360,
+      7886204
+    ],
+    "literal_reads": {
+      "5572336": 537011264,
+      "5572420": 537011280,
+      "5572504": 537011296,
+      "7860684": 900096
+    },
+    "ranges": {
+      "slot_13_layout": {
+        "start": 6636056,
+        "end_exclusive": 6636564,
+        "sha256": "bde582f01595c4b9687f6f23b92f5ac1276a35eeff4c0a1c1abada384c5b4c58"
+      },
+      "masked_layout_setup": {
+        "start": 6687148,
+        "end_exclusive": 6688148,
+        "sha256": "6f21a9c3572cc513b9b9d990f44b1315d72d55e453cc64d3ab165b81c33f791d"
+      },
+      "cpp_descriptor_setup": {
+        "start": 6656944,
+        "end_exclusive": 6658068,
+        "sha256": "16ed84932324ed9cb89c29db07e5ec0c0b3721bb9a2cd7618860467d7e526645"
+      },
+      "ordinary_scaler_source": {
+        "start": 6658760,
+        "end_exclusive": 6658796,
+        "sha256": "5639b9c9fb5a0247e02fc57af4c37d0a0f272ac757de63e7a7bc5c869743712c"
+      },
+      "cpp_second_pass_descriptor": {
+        "start": 6635120,
+        "end_exclusive": 6635260,
+        "sha256": "ffaa1bcd06c4554feb20e1043d4c14f08c1720ff94b92495a75d41c36bbcf699"
+      },
+      "cpp_pass_count_and_marker": {
+        "start": 5749600,
+        "end_exclusive": 5749680,
+        "sha256": "6072df1e3d702e0899bf67d2e899e2fc04bab8f198e2d8b9080e6638ece3f64f"
+      },
+      "cpp_replace_and_apply": {
+        "start": 5749988,
+        "end_exclusive": 5750596,
+        "sha256": "03f8de8b9c00c78a83f3bd20713061e3a1c0c27973790321a2ea426a7e963265"
+      },
+      "cpp_pass_loop": {
+        "start": 5750808,
+        "end_exclusive": 5750824,
+        "sha256": "37be3c5086080d85fe38b9fdc88e984b43b0de9ce7768eb9ded15249ae29ec6a"
+      },
+      "b2y_program_planes": {
+        "start": 5815428,
+        "end_exclusive": 5815752,
+        "sha256": "a6c9fa1d8a4a40494c8b986c6bfd250fc3869e33fb3576b871fc16a6b0fb10c3"
+      },
+      "jpeg_layout_and_init": {
+        "start": 6686584,
+        "end_exclusive": 6686896,
+        "sha256": "905d3dd1eed61c63e551c9f82e5012a3bbf190a3c9eb46a122c20a223c15edc6"
+      },
+      "jpeg_retry_attempt_and_loop": {
+        "start": 5727704,
+        "end_exclusive": 5728292,
+        "sha256": "b292d843d2247e4675f843b77d227ca6318ede044c64ec55d3c58a72915319e4"
+      },
+      "jpeg_initial_result_gate": {
+        "start": 5729376,
+        "end_exclusive": 5729436,
+        "sha256": "4fc47e8dc80dce7979fa3a39cc9e52ca4a2a71270f7bfb0b87af081a4c5d0b45"
+      }
+    }
+  },
+  "synthetic_a32": {
+    "engine": "Unicorn 2.1.4",
+    "cpp_cases": [
+      {
+        "mask_byte": 0,
+        "layout_builder_mode": 0,
+        "second_pass_flag": 0,
+        "process_gate": 1,
+        "second_pass_marker": 0,
+        "initial_address_source": "job+0x160",
+        "pass_count": 1,
+        "passes_entering_output_branch": [
+          {
+            "index": 0,
+            "planes": [
+              285213024,
+              285213248,
+              285213408
+            ],
+            "b2y_first_slot": [
+              285213024,
+              285213248,
+              285213408
+            ]
+          }
+        ]
+      },
+      {
+        "mask_byte": 4,
+        "layout_builder_mode": 1,
+        "second_pass_flag": 0,
+        "process_gate": 1,
+        "second_pass_marker": 0,
+        "initial_address_source": "job+0x2354",
+        "pass_count": 1,
+        "passes_entering_output_branch": [
+          {
+            "index": 0,
+            "planes": [
+              285213024,
+              285213248,
+              285213408
+            ],
+            "b2y_first_slot": [
+              285213024,
+              285213248,
+              285213408
+            ]
+          }
+        ]
+      },
+      {
+        "mask_byte": 64,
+        "layout_builder_mode": 1,
+        "second_pass_flag": 1,
+        "process_gate": 1,
+        "second_pass_marker": 1,
+        "initial_address_source": "job+0x2354",
+        "pass_count": 2,
+        "passes_entering_output_branch": [
+          {
+            "index": 0,
+            "planes": [
+              285213024,
+              285213248,
+              285213408
+            ],
+            "b2y_first_slot": [
+              285213024,
+              285213248,
+              285213408
+            ]
+          },
+          {
+            "index": 1,
+            "planes": [
+              286261856,
+              286262080,
+              286262240
+            ],
+            "b2y_first_slot": [
+              286261856,
+              286262080,
+              286262240
+            ]
+          }
+        ]
+      },
+      {
+        "mask_byte": 68,
+        "layout_builder_mode": 1,
+        "second_pass_flag": 1,
+        "process_gate": 1,
+        "second_pass_marker": 1,
+        "initial_address_source": "job+0x2354",
+        "pass_count": 2,
+        "passes_entering_output_branch": [
+          {
+            "index": 0,
+            "planes": [
+              285213024,
+              285213248,
+              285213408
+            ],
+            "b2y_first_slot": [
+              285213024,
+              285213248,
+              285213408
+            ]
+          },
+          {
+            "index": 1,
+            "planes": [
+              286261856,
+              286262080,
+              286262240
+            ],
+            "b2y_first_slot": [
+              286261856,
+              286262080,
+              286262240
+            ]
+          }
+        ]
+      },
+      {
+        "mask_byte": 128,
+        "layout_builder_mode": 0,
+        "second_pass_flag": 2,
+        "process_gate": 1,
+        "second_pass_marker": 1,
+        "initial_address_source": "job+0x160",
+        "pass_count": 2,
+        "passes_entering_output_branch": [
+          {
+            "index": 0,
+            "planes": [
+              285213024,
+              285213248,
+              285213408
+            ],
+            "b2y_first_slot": [
+              285213024,
+              285213248,
+              285213408
+            ]
+          },
+          {
+            "index": 1,
+            "planes": [
+              286261856,
+              286262080,
+              286262240
+            ],
+            "b2y_first_slot": [
+              286261856,
+              286262080,
+              286262240
+            ]
+          }
+        ]
+      },
+      {
+        "mask_byte": 4,
+        "layout_builder_mode": 1,
+        "second_pass_flag": 1,
+        "process_gate": 0,
+        "second_pass_marker": 1,
+        "initial_address_source": "job+0x2354",
+        "pass_count": 2,
+        "passes_entering_output_branch": []
+      },
+      {
+        "mask_byte": 0,
+        "layout_builder_mode": 1,
+        "second_pass_flag": 1,
+        "process_gate": 1,
+        "second_pass_marker": 1,
+        "initial_address_source": "job+0x160",
+        "pass_count": 2,
+        "passes_entering_output_branch": [
+          {
+            "index": 0,
+            "planes": [
+              287309827,
+              288358405,
+              289406983
+            ],
+            "b2y_first_slot": [
+              287309824,
+              288358400,
+              289406976
+            ]
+          },
+          {
+            "index": 1,
+            "planes": [
+              286261856,
+              286262080,
+              286262240
+            ],
+            "b2y_first_slot": [
+              286261856,
+              286262080,
+              286262240
+            ]
+          }
+        ]
+      },
+      {
+        "mask_byte": 68,
+        "layout_builder_mode": 0,
+        "second_pass_flag": 0,
+        "process_gate": 1,
+        "second_pass_marker": 0,
+        "initial_address_source": "job+0x2354",
+        "pass_count": 1,
+        "passes_entering_output_branch": [
+          {
+            "index": 0,
+            "planes": [
+              287309827,
+              288358405,
+              289406983
+            ],
+            "b2y_first_slot": [
+              287309824,
+              288358400,
+              289406976
+            ]
+          }
+        ]
+      }
+    ],
+    "jpeg_layouts": [
+      {
+        "reserved_prefix_flag": 0,
+        "separate_flag": 0,
+        "primary_span_flag": 0,
+        "add_job_offset_flag": 0,
+        "slot_addresses": [
+          301989920,
+          301989920
+        ],
+        "slot_capacities": [
+          273,
+          301
+        ],
+        "reserved_region_starts": null
+      },
+      {
+        "reserved_prefix_flag": 0,
+        "separate_flag": 1,
+        "primary_span_flag": 0,
+        "add_job_offset_flag": 1,
+        "slot_addresses": [
+          301989936,
+          301990224
+        ],
+        "slot_capacities": [
+          273,
+          301
+        ],
+        "reserved_region_starts": null
+      },
+      {
+        "reserved_prefix_flag": 1,
+        "separate_flag": 0,
+        "primary_span_flag": 0,
+        "add_job_offset_flag": 1,
+        "slot_addresses": [
+          301989968,
+          301989968
+        ],
+        "slot_capacities": [
+          273,
+          301
+        ],
+        "reserved_region_starts": [
+          301989952,
+          301990272,
+          302890368
+        ]
+      },
+      {
+        "reserved_prefix_flag": 1,
+        "separate_flag": 1,
+        "primary_span_flag": 1,
+        "add_job_offset_flag": 0,
+        "slot_addresses": [
+          301989936,
+          301989936
+        ],
+        "slot_capacities": [
+          273,
+          301
+        ],
+        "reserved_region_starts": [
+          301989920,
+          301990240,
+          302890336
+        ]
+      }
+    ],
+    "jpeg_initial_gates": [
+      {
+        "count": 0,
+        "capacity": 800,
+        "calls_retry_path": true
+      },
+      {
+        "count": 1,
+        "capacity": 800,
+        "calls_retry_path": false
+      },
+      {
+        "count": 800,
+        "capacity": 800,
+        "calls_retry_path": false
+      },
+      {
+        "count": 801,
+        "capacity": 800,
+        "calls_retry_path": true
+      }
+    ],
+    "jpeg_retry_cases": [
+      {
+        "selector": 0,
+        "initial_quality": 1300,
+        "attempts": [
+          {
+            "quality": 800,
+            "reported_count": 800
+          },
+          {
+            "quality": 300,
+            "reported_count": 260
+          }
+        ],
+        "returned_quality": 300,
+        "final_descriptor_count": 260
+      },
+      {
+        "selector": 1,
+        "initial_quality": 1850,
+        "attempts": [
+          {
+            "quality": 850,
+            "reported_count": 0
+          },
+          {
+            "quality": 100,
+            "reported_count": 801
+          }
+        ],
+        "returned_quality": 100,
+        "final_descriptor_count": 801
+      },
+      {
+        "selector": 2,
+        "initial_quality": 2100,
+        "attempts": [
+          {
+            "quality": 100,
+            "reported_count": 800
+          }
+        ],
+        "returned_quality": 100,
+        "final_descriptor_count": 800
+      },
+      {
+        "selector": 9,
+        "initial_quality": 1300,
+        "attempts": [
+          {
+            "quality": 800,
+            "reported_count": 1
+          }
+        ],
+        "returned_quality": 800,
+        "final_descriptor_count": 1
+      }
+    ],
+    "retry_shared_planes": [
+      303038720,
+      304087552,
+      305136384
+    ],
+    "retry_shared_destination": 306185216,
+    "retry_capacity": 800,
+    "hooked_retry_boundaries": [
+      5494528,
+      7390216,
+      7390184,
+      5495824
+    ]
+  },
+  "limits": [
+    "CPP initial address selection uses job+0x20b4 masked by 0x44. The layout builder uses job+0x20b2 equal to one. The probes also vary these predicates independently using a synthetic triplet for the layout the builder does not populate.",
+    "CPP payload+0xa8 comes from job+0x59. Its nonzero path schedules a second iteration. The payload+0x84 gate must also permit processing for its address replacement to run. The ordinary producer sets this gate to one. The bypass probe injects zero.",
+    "The ordinary scaler source builder uses job+0x160/+0x164/+0x168. A downstream alias from the alternate CPP planes to module 16 input is unresolved.",
+    "Address calculations use 32-bit A32 arithmetic. Probes use small synthetic layouts without overflow. They establish neither allocation bounds nor pixel or DMA behavior.",
+    "JPEG retries use the original descriptor assembly and count writeback. Device launch, event clear/wait and teardown are hooked; reported counts are supplied by the harness. No JPEG payload is generated."
+  ]
+}

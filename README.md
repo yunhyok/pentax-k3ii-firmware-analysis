@@ -1,6 +1,8 @@
 # PENTAX K-3 II v1.12 펌웨어 분석
 
-[최신 버퍼·메뉴 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/output-menu-analysis.html) · [톤·색 처리 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/pipeline-analysis.html) · [심층 분석 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/deep-analysis.html) · [초기 분석](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/) · [최신 보고서 소스](analysis/output-menu-analysis.html)
+[최신 SD·대체 버퍼 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/storage-dma-analysis.html) · [버퍼·메뉴 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/output-menu-analysis.html) · [톤·색 처리 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/pipeline-analysis.html) · [심층 분석 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/deep-analysis.html) · [초기 분석](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/) · [최신 보고서 소스](analysis/storage-dma-analysis.html)
+
+2026-11-08 저장 경로 후속: 백엔드 A의 전체·부분 섹터 버퍼를 카드 객체와 연결하고, 두 SD 포트의 CMD24·CMD25, ADMA2 표, 완료·오류 처리를 검증했습니다. CSD 용량 단위, 16 MiB 단위 재분할, CPP 대체 평면과 JPEG 공유·재시도 조건도 확인했습니다. 원본 명령 합성 사례 49건을 재현했으며 백엔드 B 하위 경로와 실제 SD 기록은 미검증입니다.
 
 2026-11-08 버퍼·메뉴 후속: B2Y→스케일러→JPEG 모듈 16→StoreImage의 조건부 버퍼 경로와 Exif 헤더·압축 데이터의 파일시스템 전달을 연결했습니다. 실제 화면 이벤트 `0x01205010`과 Reversal Film 문자열 리소스가 selector=6으로 이어집니다. 원본 명령으로 검증했으며 실기 JPEG 생성·SD 기록은 수행하지 않았습니다.
 
@@ -27,6 +29,9 @@ python verify_isp_numeric.py .private/decoded/decoded.bin --compare analysis/isp
 python verify_jpeg_buffers.py .private/decoded/decoded.bin --compare analysis/jpeg-buffers.json
 python verify_menu_events.py .private/decoded/decoded.bin --emulate --compare analysis/menu-events.json
 python verify_exif_output.py .private/decoded/decoded.bin --compare analysis/exif-output.json
+python verify_filesystem_backend.py .private/decoded/decoded.bin --compare analysis/filesystem-backend.json
+python verify_sd_controller.py .private/decoded/decoded.bin --emulate --compare analysis/sd-controller.json
+python verify_alternate_buffers.py .private/decoded/decoded.bin --compare analysis/alternate-buffers.json
 python -m unittest discover -s tests -v
 python verify_publication.py
 ```

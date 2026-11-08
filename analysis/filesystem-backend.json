@@ -1,0 +1,391 @@
+{
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "static": {
+    "edges": [
+      [
+        "0x762124",
+        "0x572b0c"
+      ],
+      [
+        "0x762198",
+        "0x5cb39c"
+      ],
+      [
+        "0x762220",
+        "0x59761c"
+      ],
+      [
+        "0x762238",
+        "0x597624"
+      ],
+      [
+        "0x573048",
+        "0x572fcc"
+      ],
+      [
+        "0x572ff0",
+        "0xe8a1d8"
+      ],
+      [
+        "0x5cb864",
+        "0x5cb814"
+      ],
+      [
+        "0x5cb82c",
+        "0xe86818"
+      ],
+      [
+        "0xe8a1f0",
+        "0xeb48a8"
+      ],
+      [
+        "0xeb4918",
+        "0xeb4530"
+      ],
+      [
+        "0xeb460c",
+        "0xebef2c"
+      ],
+      [
+        "0xebf478",
+        "0xebfb30"
+      ],
+      [
+        "0xebfc74",
+        "0xeb78bc"
+      ],
+      [
+        "0xeb7acc",
+        "0xebb190"
+      ],
+      [
+        "0xeb7d70",
+        "0xe88d34"
+      ],
+      [
+        "0xeb7d7c",
+        "0xeb7590"
+      ],
+      [
+        "0xeb6a10",
+        "0xebb190"
+      ],
+      [
+        "0x572c20",
+        "0xe8b570"
+      ],
+      [
+        "0x5729f4",
+        "0x572840"
+      ],
+      [
+        "0x5729cc",
+        "0x572900"
+      ],
+      [
+        "0x572860",
+        "0x736b78"
+      ],
+      [
+        "0x7620c4",
+        "0x7413d8"
+      ],
+      [
+        "0x7620e4",
+        "0x736a4c"
+      ],
+      [
+        "0x7410a8",
+        "0x757890"
+      ]
+    ],
+    "words": {
+      "0x572eb8": "0x2a68ac8",
+      "0x5cbf6c": "0x2a6cb90",
+      "0xa68b64": "0x2573044",
+      "0xa6cc2c": "0x25cb860",
+      "0x6f0c34": "0x4040000",
+      "0x6f0b80": "0xe7810107",
+      "0xe8b644": "0xe5848440",
+      "0xebb234": "0xe595c440",
+      "0xebb244": "0xe12fff3c",
+      "0x5728dc": "0xe590c018",
+      "0x5728e4": "0xe12fff3c",
+      "0xa5d224": "0x27589e8"
+    },
+    "ranges": {
+      "backend_constructors_and_registration": {
+        "start": "0x762118",
+        "end_exclusive": "0x762250",
+        "sha256": "d540796a59a3ad96cdb12943ec6bf3f72160f29f152f1e03d678b97c4846ce15"
+      },
+      "backend_choice": {
+        "start": "0x6f0b60",
+        "end_exclusive": "0x6f0bc0",
+        "sha256": "12d669dc676d8d99d5e044f5c611195b9fa137c1894f0fe8b377f928824d1d15"
+      },
+      "backend_a_write": {
+        "start": "0x572fcc",
+        "end_exclusive": "0x57304c",
+        "sha256": "23408bf16f874a798051b0835ed9bcec0e879ab8a6331756a720a8d7322b9811"
+      },
+      "backend_b_write": {
+        "start": "0x5cb814",
+        "end_exclusive": "0x5cb868",
+        "sha256": "9153420df24aa7dc2e8fac22fcf89852c95dc3946ec18410446aae2a48d6f275"
+      },
+      "library_write_entry": {
+        "start": "0xe8a1d8",
+        "end_exclusive": "0xe8a208",
+        "sha256": "e483b7c1c99a9bb8c8e339c82c766638addb73780ac4ff0b32ea7855778b14bf"
+      },
+      "library_write_dispatch": {
+        "start": "0xeb48a8",
+        "end_exclusive": "0xeb4948",
+        "sha256": "675f518dbd068e907c125609c6d50eb6c212ce610df32e0198414350b5438528"
+      },
+      "library_write_body": {
+        "start": "0xeb4530",
+        "end_exclusive": "0xeb4618",
+        "sha256": "008831d77eeb44ab8446e655856faf2069b45e3509c73765d7762aed203cfa0b"
+      },
+      "file_to_extents": {
+        "start": "0xebef2c",
+        "end_exclusive": "0xebf72c",
+        "sha256": "3f0244229ef211a2b5afa6d21a7b239d2f7aba3f2653b760eda80757529ca49f"
+      },
+      "extent_to_sector": {
+        "start": "0xebfb30",
+        "end_exclusive": "0xebfd2c",
+        "sha256": "57c24ab466118d9275646306a78b7cba30cd36b5d726fe3ef6bd12f731c0fc5c"
+      },
+      "whole_and_partial_sectors": {
+        "start": "0xeb78bc",
+        "end_exclusive": "0xeb7e20",
+        "sha256": "940d79b964c8ff3d405e12c88e5e81011c5fb913fe4b0cbd40e2ad1cac0b6308"
+      },
+      "dirty_cache_flush": {
+        "start": "0xeb69ac",
+        "end_exclusive": "0xeb6a98",
+        "sha256": "1c0e0d338e95d0aa5780c457e188a954f7d2df3aaf0d79375b7166c7cb88d14e"
+      },
+      "block_callback_loop": {
+        "start": "0xebb190",
+        "end_exclusive": "0xebb2a8",
+        "sha256": "c460160c512e10646202397847e1e12549001798100711ec872151a0d337d216"
+      },
+      "block_callback_registration": {
+        "start": "0xe8b630",
+        "end_exclusive": "0xe8b654",
+        "sha256": "441d4ce0879862966c9b2bfd203e0519decd8aef567cd7dfb6bf2a9cf9b6a45a"
+      },
+      "block_callback": {
+        "start": "0x572970",
+        "end_exclusive": "0x5729fc",
+        "sha256": "6ffb9fe3a6f6977374e503df9bb3b421de8b6ab905075ec3919807eb7828fa59"
+      },
+      "card_write_bridge": {
+        "start": "0x572840",
+        "end_exclusive": "0x572900",
+        "sha256": "d0539a760dea37de33057874485130b82a91f3bd4b064e58992d280f3a2758d6"
+      },
+      "volume_registration": {
+        "start": "0x7620b4",
+        "end_exclusive": "0x762118",
+        "sha256": "251b785b81674e5cc879f53467261242b506e512094f8209311889309c0b9434"
+      }
+    }
+  },
+  "numeric": {
+    "engine": "Unicorn 2.1.4",
+    "backend_choices": [
+      {
+        "device_word": 67371007,
+        "backend_field": "0xc"
+      },
+      {
+        "device_word": 67371008,
+        "backend_field": "0x10"
+      },
+      {
+        "device_word": 67371009,
+        "backend_field": "0x10"
+      }
+    ],
+    "backend_writes": [
+      {
+        "entry": "0x573044",
+        "library_return": 47,
+        "result": 1,
+        "calls": [
+          {
+            "entry": "0xe8a1d8",
+            "handle": 5,
+            "source": 268451840,
+            "bytes": 47
+          }
+        ]
+      },
+      {
+        "entry": "0x573044",
+        "library_return": 0,
+        "result": 1,
+        "calls": [
+          {
+            "entry": "0xe8a1d8",
+            "handle": 5,
+            "source": 268451840,
+            "bytes": 47
+          }
+        ]
+      },
+      {
+        "entry": "0x573044",
+        "library_return": -1,
+        "result": 0,
+        "calls": [
+          {
+            "entry": "0xe8a1d8",
+            "handle": 5,
+            "source": 268451840,
+            "bytes": 47
+          }
+        ]
+      },
+      {
+        "entry": "0x5cb860",
+        "library_return": 47,
+        "result": 1,
+        "calls": [
+          {
+            "entry": "0xe86818",
+            "handle": 5,
+            "source": 268451840,
+            "bytes": 47
+          }
+        ]
+      },
+      {
+        "entry": "0x5cb860",
+        "library_return": 0,
+        "result": 1,
+        "calls": [
+          {
+            "entry": "0xe86818",
+            "handle": 5,
+            "source": 268451840,
+            "bytes": 47
+          }
+        ]
+      },
+      {
+        "entry": "0x5cb860",
+        "library_return": -1,
+        "result": 0,
+        "calls": [
+          {
+            "entry": "0xe86818",
+            "handle": 5,
+            "source": 268451840,
+            "bytes": 47
+          }
+        ]
+      }
+    ],
+    "whole_sector": [
+      {
+        "lba": 256,
+        "blocks": 2,
+        "source": 268451840
+      }
+    ],
+    "partial_sector": {
+      "offset": 7,
+      "bytes": 12,
+      "cache_sha256": "1bfac4ded8873239ce5fe4e6880ff3ad99f246373e47382aea2cfd5b494e8121",
+      "calls": [
+        {
+          "lba": 256,
+          "blocks": 1,
+          "source": 268447744
+        }
+      ]
+    },
+    "block_chunks": [
+      {
+        "blocks": 0,
+        "failure_at": null,
+        "result": 1,
+        "calls": []
+      },
+      {
+        "blocks": 65535,
+        "failure_at": null,
+        "result": 1,
+        "calls": [
+          {
+            "lba": 256,
+            "blocks": 65535,
+            "source": 268451840
+          }
+        ]
+      },
+      {
+        "blocks": 65536,
+        "failure_at": null,
+        "result": 1,
+        "calls": [
+          {
+            "lba": 256,
+            "blocks": 65535,
+            "source": 268451840
+          },
+          {
+            "lba": 65791,
+            "blocks": 1,
+            "source": 302005760
+          }
+        ]
+      },
+      {
+        "blocks": 65536,
+        "failure_at": 0,
+        "result": 0,
+        "calls": [
+          {
+            "lba": 256,
+            "blocks": 65535,
+            "source": 268451840
+          }
+        ]
+      }
+    ],
+    "intercepted_entries": [
+      "0x572ec8",
+      "0x5cb748",
+      "0x736b78",
+      "0x7580a8",
+      "0x75810c",
+      "0x7589e8",
+      "0x78607c",
+      "0x78609c",
+      "0x97c550",
+      "0xe86818",
+      "0xe89324",
+      "0xe89c00",
+      "0xe89c30",
+      "0xe8a1d8",
+      "0xe8ba94",
+      "0xeb6854",
+      "0xebace8"
+    ],
+    "physical_media_executed": false
+  },
+  "limits": [
+    "Backend A is traced through its registered block callback; backend B is resolved only through its file-write entry.",
+    "File allocation, cluster-chain construction and complete Exif-to-media execution are not emulated.",
+    "Sector helper fixtures start with initialized volume/cache state; volume lookup, locking, preflight, error policy and card execution are intercepted. Error policy returns zero, so the failure case does not retry.",
+    "Whole sectors preserve the source pointer; partial sectors copy into a distinct cache buffer before a separate original flush.",
+    "The 0x04040000 backend threshold is an unsigned device-word comparison. The separate verify_sd_controller.py trace establishes card+0x14 as a CSD-derived count of 512-byte logical sectors."
+  ]
+}
