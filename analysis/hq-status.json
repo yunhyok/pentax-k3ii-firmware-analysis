@@ -536,7 +536,7 @@
       "independent_HQ_review": "Accepted: independent native edges/words, clamp/shift and rejection controls plus HQ full public replay. Physical writes/power recovery/upstream index reachability remain unverified."
     },
     "preserved-config": {
-      "commit": "e4ebc71e1c2862ec63d29a946c5688265ed34eb4",
+      "commit": "6a4f885b28328b739a81202bbf07c1c350206c7a",
       "path": "analysis/preserved-config.json",
       "html_path": "analysis/preserved-config.html",
       "verifier_path": "verify_preserved_config.py",
@@ -559,11 +559,63 @@
         "mobile_viewport_checked": false
       },
       "sha256": "0a9e21c25e40846710732fa15ba7f252cf04a6a6d69ab94d02ef0c8899cafa9b",
-      "html_sha256": "b93a75e15b6dfaf38a8bfad0292ef726d6c62f5134078803be35c2a8ccf0ddbe",
-      "verifier_sha256": "16024df64a6af3c914c634303838a51d8bda202ee548bf1523cb92cbcc39f6db"
+      "html_sha256": "390fa7494ece095f3abc78b9e74b23d96c360cb5ccc63e0380bc92961d2efad3",
+      "verifier_sha256": "16024df64a6af3c914c634303838a51d8bda202ee548bf1523cb92cbcc39f6db",
+      "previous_commit": "e4ebc71e1c2862ec63d29a946c5688265ed34eb4",
+      "HQ_documentation_corrections": {
+        "commit": "6a4f885b28328b739a81202bbf07c1c350206c7a",
+        "native_verifier_and_JSON_unchanged": true,
+        "live_RAM_marker_recheck_explicit": true,
+        "original_words_include_literals_and_pointers": true,
+        "changed_diagram_visually_checked": true,
+        "publication": {
+          "commit": "6a4f885b28328b739a81202bbf07c1c350206c7a",
+          "ci": "success",
+          "pages": "success",
+          "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42471881717",
+          "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42471880881",
+          "http_files_byte_exact": 9,
+          "fresh_clone_optimized_snapshot": "PASS",
+          "unit_tests": 24,
+          "html_documents": 26,
+          "local_links": 634,
+          "public_files": 137,
+          "three_diagrams_visually_checked": true,
+          "inner_width": 1897,
+          "document_scroll_width": 1882,
+          "mobile_viewport_checked": false
+        }
+      }
+    },
+    "preserved-dispatch": {
+      "commit": "6a4f885b28328b739a81202bbf07c1c350206c7a",
+      "path": "analysis/preserved-dispatch.json",
+      "html_path": "analysis/preserved-dispatch.html",
+      "verifier_path": "verify_preserved_dispatch.py",
+      "replay": "python verify_preserved_dispatch.py decoded.bin --compare analysis/preserved-dispatch.json",
+      "publication": {
+        "commit": "6a4f885b28328b739a81202bbf07c1c350206c7a",
+        "ci": "success",
+        "pages": "success",
+        "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42471881717",
+        "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42471880881",
+        "http_files_byte_exact": 9,
+        "fresh_clone_optimized_snapshot": "PASS",
+        "unit_tests": 24,
+        "html_documents": 26,
+        "local_links": 634,
+        "public_files": 137,
+        "three_diagrams_visually_checked": true,
+        "inner_width": 1897,
+        "document_scroll_width": 1882,
+        "mobile_viewport_checked": false
+      },
+      "sha256": "1be34d2137f2275bb0b616099a8dfde661789917809048a883b74431da77e90f",
+      "html_sha256": "bc4ddc3409c28e43abfd5b222a6326071751c4571e553ef9f6b9cb4bc65f6775",
+      "verifier_sha256": "3034abb1c76328fd9314a004dcac6a3f95b3129ea0f705cc16740e37ad7b63a0"
     }
   },
-  "offline_work_in_progress": "Publishing preserved-dispatch after independent two-probe review. Remaining: actual command producer/transport, lock/state gates, worker computation63495C, wait completion and physical record meaning. Prepared input and omitted execution boundaries are documented. Latest advisory usage13 percent; user continuation threshold5 percent.",
+  "offline_work_in_progress": "Preserved-dispatch published and verified: fresh clone optimized replay,24 tests,CI/Pages,9 HTTP files,3 diagrams. HQ config live-marker/33-word corrections included in6a4f885 with original config verifier/JSON unchanged. One worker tracing original result producer and tail copy into caller; manager checking omitted packet state predicate separately. Latest usage11 percent; user stop threshold5 percent.",
   "snapshot_comparison_type_fix": {
     "commit": "bcacf0fd9aa4f77d35ca664bbb6e71cbdf830ea3",
     "shared_helper": "verify_findings.require_snapshot",

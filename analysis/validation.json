@@ -1041,6 +1041,23 @@
     "normal_and_optimized_snapshot": "PASS",
     "promotion_AST": "Both probe function bodies unchanged except public function names",
     "independent_review": "No P0-P2. Accepted P3 packet outer status R4 wording. Native flag OR control preserves existing bit; zero input rejected; missing ID63 registration fails native vtable read.",
-    "language_gate": "light;0.1 percent;3 sentences touched;deterministic gates PASS;modality restored0"
+    "language_gate": "light;0.1 percent;3 sentences touched;deterministic gates PASS;modality restored0",
+    "publication": {
+      "commit": "6a4f885b28328b739a81202bbf07c1c350206c7a",
+      "ci": "success",
+      "pages": "success",
+      "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42471881717",
+      "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42471880881",
+      "http_files_byte_exact": 9,
+      "fresh_clone_optimized_snapshot": "PASS",
+      "unit_tests": 24,
+      "html_documents": 26,
+      "local_links": 634,
+      "public_files": 137,
+      "three_diagrams_visually_checked": true,
+      "inner_width": 1897,
+      "document_scroll_width": 1882,
+      "mobile_viewport_checked": false
+    }
   }
 }
