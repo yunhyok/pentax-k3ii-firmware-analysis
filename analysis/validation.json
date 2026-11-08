@@ -570,7 +570,20 @@
     "task_wake_values": "injected",
     "physical_input_scheduler_rendering": false,
     "independent_review": "No P0-P2. Accepted P3 same-state cache-zero parent rejection, exact zero-wake condition, and separate direct/virtual cutoff descriptions.",
-    "publication": "pending",
+    "publication": {
+      "commit": "bc2cb06d43de0b1f5729bb6e05f2bf8c91c2c595",
+      "ci": "success",
+      "pages": "success",
+      "http_files_byte_exact": 10,
+      "fresh_clone_snapshot": "PASS",
+      "unit_tests": 20,
+      "html_documents": 18,
+      "local_links": 446,
+      "public_files": 111,
+      "two_diagrams_visually_checked": true,
+      "inner_width": 1897,
+      "document_scroll_width": 1882
+    },
     "connected_cache_zero_control": true,
     "language_review": {
       "route": "standard",

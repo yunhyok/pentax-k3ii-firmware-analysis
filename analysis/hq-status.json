@@ -2,7 +2,7 @@
   "model": "PENTAX K-3 II",
   "firmware_version": "1.12",
   "baseline_commit": "66c85ea53f52b6e9489d742b5bd63e50e543055e",
-  "updated_at": "2026-11-08T16:52:26+09:00",
+  "updated_at": "2026-11-08T17:01:17+09:00",
   "goals": [
     {
       "id": "firmware_rebuild",
@@ -192,7 +192,8 @@
       "PASS: coordinator replayed AF input snapshot:3 getters,14 additive cases,12 calculators,2 prepare-entry handoffs. Independent review accepted no P0-P2; modulo expectation fixed and four boundary cases added.",
       "PASS: f4f0fa9 CI and Pages;10 served files byte-identical. Fresh clone reproduces AF-input snapshot and publication checks (17 HTML,422 local links,108 public files). Two diagrams visually checked; scroll width1882 < inner width1897. Prose light gate0%,0/49 sentences,modality loss0.",
       "PASS: coordinator independently replayed UI dispatch snapshot:52 branch anchors,22 range hashes,9 filters,5 runtime gates,2 parent notifications,5 occupied-queue cases and task copy/accept/reject/priority controls. Independent review found no P0-P2; added same-state native cache-zero rejection and clarified task boundaries.",
-      "PASS: UI standard prose gate0.4%,6/56 sentences,modality loss0. HQ AF P3 corrected:54344 is the BL callsite; actual pulse+BA STRH is B97FC; coordinator disassembly confirmed."
+      "PASS: UI standard prose gate0.4%,6/56 sentences,modality loss0. HQ AF P3 corrected:54344 is the BL callsite; actual pulse+BA STRH is B97FC; coordinator disassembly confirmed.",
+      "PASS: bc2cb06 CI and Pages;10 served files byte-identical. Fresh clone reproduces UI dispatch snapshot,20 unit tests and publication checks (18 HTML,446 local links,111 public files). Two diagrams visually checked at1882px, no horizontal overflow."
     ],
     "limits": [
       "Unicorn 2.1.4 synthetic memory; no physical device I/O.",
@@ -246,20 +247,20 @@
   ],
   "scope_clarification": "AF changes are future work. Current scope is sufficiently deep foundational research; exact target lens information is not a blocker.",
   "publication": {
-    "analysis_commit": "f4f0fa9e4185f81f474acd50501c0e9c715e6f9f",
-    "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42458872596",
-    "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42458872012",
+    "analysis_commit": "bc2cb06d43de0b1f5729bb6e05f2bf8c91c2c595",
+    "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42460996747",
+    "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42460996368",
     "ci": "success",
     "pages": "success",
     "http_files_byte_exact": 10,
     "fresh_clone_repack_and_af_snapshots": "PASS",
     "fresh_clone_unit_tests": 20,
-    "fresh_clone_html_documents": 17,
-    "fresh_clone_local_links": 422,
+    "fresh_clone_html_documents": 18,
+    "fresh_clone_local_links": 446,
     "browser": {
       "surface": "published HTTPS in Chrome",
       "reports": [
-        "af-input.html"
+        "ui-dispatch.html"
       ],
       "figures_per_report": 2,
       "inner_width": 1897,
@@ -267,12 +268,7 @@
       "mobile_layout": "not checked"
     },
     "local_preview": "Unavailable under tool policy; published HTTPS preview verified instead.",
-    "pending_local_artifacts": [
-      "analysis/ui-dispatch.html",
-      "analysis/ui-dispatch.json",
-      "verify_ui_dispatch.py",
-      "analysis/af-input.html"
-    ],
+    "pending_local_artifacts": [],
     "checksum_sentinel_fix": {
       "commit": "9521f6881b356429ed0b8b58123c6483e23eddd5",
       "ci": "success",
@@ -281,12 +277,13 @@
       "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42453856476",
       "served_files_byte_exact": 5
     },
-    "previous_analysis_commit": "f7c9aa4adcb0a74739fd3fc8033f1f97163789f5",
+    "previous_analysis_commit": "f4f0fa9e4185f81f474acd50501c0e9c715e6f9f",
     "fresh_clone_installation_ui_af_snapshots": "PASS",
-    "fresh_clone_public_files": 108,
+    "fresh_clone_public_files": 111,
     "fresh_clone_color_and_settings_snapshots": "PASS",
     "fresh_clone_tone_C_snapshot": "PASS",
-    "fresh_clone_af_input_snapshot": "PASS"
+    "fresh_clone_af_input_snapshot": "PASS",
+    "fresh_clone_ui_dispatch_snapshot": "PASS"
   },
   "frozen_evidence": {
     "color-ui": {
@@ -331,7 +328,19 @@
       "html_sha256": "8abd3a451b12f78d9e0f441f30550a1e8271446f9c56ebdad63f8b66f12d2f49",
       "verifier_path": "verify_af_input.py",
       "verifier_sha256": "624c0aac27e405433808792691286c6f0adde3d785c826113eedcd0a869dd94c",
-      "replay": "python verify_af_input.py decoded.bin --compare analysis/af-input.json"
+      "replay": "python verify_af_input.py decoded.bin --compare analysis/af-input.json",
+      "html_callsite_clarification_commit": "bc2cb06d43de0b1f5729bb6e05f2bf8c91c2c595",
+      "clarified_html_sha256": "07c1dc7ece7ea296d2f519a33fe63a92f35b8a8cf980a98dd3e24fbb1d552777"
+    },
+    "ui-dispatch": {
+      "commit": "bc2cb06d43de0b1f5729bb6e05f2bf8c91c2c595",
+      "path": "analysis/ui-dispatch.json",
+      "sha256": "d737ba8ce53f3d127e76cc1633c4e76d805026803bd149b6873265049e9e9547",
+      "html_path": "analysis/ui-dispatch.html",
+      "html_sha256": "b5ca8cb6b319cc473670fdae6467ba63bafb3b20e540ba7f3d30cdf9342444b1",
+      "verifier_path": "verify_ui_dispatch.py",
+      "verifier_sha256": "8ecbbae816aeaba3df69afc105e250311190a0629a882b560c10e7db10c0aeb8",
+      "replay": "python verify_ui_dispatch.py decoded.bin --compare analysis/ui-dispatch.json"
     }
   }
 }
