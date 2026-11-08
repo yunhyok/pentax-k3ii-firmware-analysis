@@ -370,6 +370,16 @@
       20,
       20
     ],
+    "allocation_fill_bytes": [
+      165,
+      166,
+      167
+    ],
+    "separate_bank_copy_control": {
+      "source": "11233547596ba37d8f91adbecf",
+      "destination": "11233547596ba77d8f91adbecf",
+      "source_unchanged": true
+    },
     "filter_cases": [
       {
         "case": "constructor_state",
@@ -637,6 +647,125 @@
         "other_active_records_cleared": true,
         "record_vtable_and_padding_preserved": true
       },
+      "nonzero_typed_copy_controls": [
+        {
+          "wake": 2048,
+          "active": {
+            "target": 180,
+            "source": 66,
+            "kind": 1,
+            "action": 11,
+            "arg_byte": 51,
+            "arg0": 287454020,
+            "arg1": 1432778632
+          },
+          "secondary": {
+            "target": 0,
+            "source": 0,
+            "kind": 23,
+            "action": 0,
+            "arg_byte": 0,
+            "arg0": 0,
+            "arg1": 0
+          },
+          "pending": {
+            "target": 0,
+            "source": 0,
+            "kind": 23,
+            "action": 0,
+            "arg_byte": 0,
+            "arg0": 0,
+            "arg1": 0
+          },
+          "high_pending": {
+            "target": 119,
+            "source": 66,
+            "kind": 2,
+            "action": 11,
+            "arg_byte": 51,
+            "arg0": 2578103244,
+            "arg1": 1432778632
+          }
+        },
+        {
+          "wake": 2147483648,
+          "active": {
+            "target": 0,
+            "source": 0,
+            "kind": 23,
+            "action": 0,
+            "arg_byte": 0,
+            "arg0": 0,
+            "arg1": 0
+          },
+          "secondary": {
+            "target": 119,
+            "source": 66,
+            "kind": 2,
+            "action": 11,
+            "arg_byte": 51,
+            "arg0": 2578103244,
+            "arg1": 1432778632
+          },
+          "pending": {
+            "target": 180,
+            "source": 66,
+            "kind": 1,
+            "action": 11,
+            "arg_byte": 51,
+            "arg0": 287454020,
+            "arg1": 1432778632
+          },
+          "high_pending": {
+            "target": 0,
+            "source": 0,
+            "kind": 23,
+            "action": 0,
+            "arg_byte": 0,
+            "arg0": 0,
+            "arg1": 0
+          }
+        },
+        {
+          "wake": 2147485696,
+          "active": {
+            "target": 180,
+            "source": 66,
+            "kind": 1,
+            "action": 11,
+            "arg_byte": 51,
+            "arg0": 287454020,
+            "arg1": 1432778632
+          },
+          "secondary": {
+            "target": 0,
+            "source": 0,
+            "kind": 23,
+            "action": 0,
+            "arg_byte": 0,
+            "arg0": 0,
+            "arg1": 0
+          },
+          "pending": {
+            "target": 0,
+            "source": 0,
+            "kind": 23,
+            "action": 0,
+            "arg_byte": 0,
+            "arg0": 0,
+            "arg1": 0
+          },
+          "high_pending": {
+            "target": 119,
+            "source": 66,
+            "kind": 2,
+            "action": 11,
+            "arg_byte": 51,
+            "arg0": 2578103244,
+            "arg1": 1432778632
+          }
+        }
+      ],
       "task_slices": {
         "constants": [
           3187624,

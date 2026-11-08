@@ -595,6 +595,13 @@
       "deterministic_gate": "PASS",
       "modality_loss": 0,
       "coordinator_reverted": "two states phrasing narrowed the original simultaneous reachability scope"
+    },
+    "additional_controls": {
+      "poisoned_allocations": 3,
+      "full_payload_copy_bytes": 13,
+      "nonzero_typed_copy_cases": 3,
+      "prior_replay_values_unchanged": true,
+      "independent_basis": "Cross-model coordinator original-ARM canary review; re-executed locally after integration."
     }
   },
   "preserved_record": {

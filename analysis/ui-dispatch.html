@@ -38,6 +38,7 @@
 
 <section aria-labelledby="limits"><h2 id="limits">4. 메뉴 의미의 이식에 쓸 수 있는 범위</h2>
 <pre><code>python verify_ui_dispatch.py decoded.bin --compare analysis/ui-dispatch.json</code></pre>
+<p>추가 대조에서는 할당 영역을 비제로 값으로 채운 뒤 원본 초기화를 검사했다. 별도 13바이트 복사 대조는 서로 다른 입력값 중 키 0x1D의 bit 2만 바뀌는지 확인했다. 비제로 인수 세 개를 넣은 작업 레코드는 깨움 0x800·0x80000000·두 비트 조합에서 각각 복사·초기화되며, 두 비트가 함께 있으면 0x800 분기가 우선했다. 이 대조의 준비 상태와 앞선 연결 실험은 구분했다. <a href="ui-dispatch.json">초기화·복사 대조값</a></p>
 <p>공개 검증기는 원본 해시·분기·가상 함수 표·키 표를 확인한 뒤 Unicorn에서 실행한다. 상태 제공자의 초기 할당, 상태 변경 뒤 알림, 깨움 요청과 레지스트리 잠금은 명시한 대체 경계다. 필터의 생산자와 메뉴 요청·처리 중 레코드는 같은 객체에서 연결해 검사하며 실행 중 설정의 별도 조건 실험은 구분해 기록했다. <a href="../verify_ui_dispatch.py">검증기</a> · <a href="ui-dispatch.json">실행 결과와 대체 함수 목록</a></p>
 <p>다른 모델과 비교할 때는 메뉴 항목의 의미, 적용·취소 동작, 대기 레코드 정책, 상태를 복사하는 시점을 비교할 수 있다. K-3 III·Q7의 숫자 ID와 객체 배치는 각 펌웨어에서 다시 확인해야 한다. 이번 결과는 물리 입력, 전체 작업 루프, 생성자 이후 UI 초기화, LCD 렌더링과 실제 카메라에서의 동시 도달 조건을 검증한 이식 결과가 아니다. <a href="hq-status.json">목표별 진행 상태</a></p>
 </section></main><footer>K-3 II v1.12 · <a href="color-ui.html">색공간 선택·적용·취소</a> · <a href="../README.md">저장소 안내</a></footer></body></html>

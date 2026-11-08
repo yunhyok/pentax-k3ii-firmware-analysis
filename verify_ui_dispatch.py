@@ -234,6 +234,7 @@ def emulate(data):
             index = len(allocations)
             size, destination = ((0x28, provider), (0x14, bank0), (0x14, bank1))[index]
             require(reg("r0"), size, "native allocation argument")
+            vm.mem_write(destination, bytes([0xA5 + index]) * size)
             allocations.append(size)
             reg("r0", destination)
         else:
@@ -330,8 +331,20 @@ def emulate(data):
     cases.append(filter_case("constructor_state", target, 0, reject))
 
     # A fixture with other bits set tests isolation of the native bit writer.
-    write(bank0 + 0xA, 0xA3, 1)
+    source_payload = bytes.fromhex("11233547596ba37d8f91adbecf")
+    expected_payload = source_payload[:6] + bytes([0xA7]) + source_payload[7:]
+    vm.mem_write(bank0 + 4, source_payload)
+    vm.mem_write(bank1 + 4, bytes([0xF1]) * 13)
     run(0x523D34, 0x523D40, r4=owner)
+    require(bytes(vm.mem_read(bank0 + 4, 13)), source_payload, "source bank unchanged")
+    require(
+        bytes(vm.mem_read(bank1 + 4, 13)),
+        expected_payload,
+        "entire bank copy and isolated bit",
+    )
+    # The distinct-bit copy control is separate from the connected filter fixture.
+    vm.mem_write(bank0 + 4, bytes(6) + bytes([0xA3]) + bytes(6))
+    vm.mem_write(bank1 + 4, bytes(6) + bytes([0xA7]) + bytes(6))
     require(active_byte(), 0xA7, "literal-one native setter and adjacent bits")
     require(publications, [1], "native bank flip before publication boundary")
     require(read(app + 0x14B4, 1), 0, "setter does not itself update app cache")
@@ -424,6 +437,12 @@ def emulate(data):
         "app_filter_object_offset": 0x14B4,
         "publications_seen_after_bank_flip": publications,
         "initial_allocation_sizes": allocations,
+        "allocation_fill_bytes": [0xA5, 0xA6, 0xA7],
+        "separate_bank_copy_control": {
+            "source": source_payload.hex(),
+            "destination": expected_payload.hex(),
+            "source_unchanged": True,
+        },
         "filter_cases": cases,
         "runtime_virtual_dispatch_slice": [0x3097B4, 0x3097EC],
         "runtime_setter_cases": runtime_cases,
@@ -734,6 +753,63 @@ def replay_dispatch(vm, uc, app, registry, context, stack, write, read, reg, run
     write(alternate + 4, 0x55, 1)
     run(0x30AA38, 0x3099A0, r4=app, r0=0x800)
     require((reg("r0"), reg("r1")), (app, alternate), "alternate record priority")
+    selected_record = reg("r1")
+
+    rich = expected_fields | {
+        "action": 0xB,
+        "arg_byte": 0x33,
+        "arg0": 0x11223344,
+        "arg1": 0x55667788,
+    }
+    high = app + 0xC8
+    high_fields = rich | {"target": 0x77, "kind": 2, "arg0": 0x99AABBCC}
+    copy_controls = []
+    for flags in (0x800, 0x80000000, 0x80000800):
+        fill_record(pending, 0xA5, 0x55)
+        for off, arg in ((0, 0x33), (4, 0x11223344), (8, 0x55667788)):
+            write(stack + off, arg)
+        run(0x30B904, r0=app, r1=DETAIL_ID, r2=1, r3=0xB)
+        require(fields(pending), rich, "native nonzero argument producer")
+        for destination, byte in (
+            (active, 0x5A),
+            (secondary, 0x3C),
+            (alternate, 0xC3),
+            (high, 0x96),
+        ):
+            fill_record(destination, byte, 0x55)
+        for key, (off, width) in RECORD_FIELDS.items():
+            write(high + off, high_fields[key], width)
+        guarded = (pending, active, secondary, alternate, high)
+        padding = [canaries(record) for record in guarded]
+        write(stack + 0xC, flags)
+        run(0x30A4F8, 0x30A550, r4=app)
+        regular = bool(flags & 0x800)
+        require(fields(active), rich if regular else CLEARED_RECORD, "regular copy")
+        require(
+            fields(secondary),
+            CLEARED_RECORD if regular else high_fields,
+            "high-bit copy",
+        )
+        require(
+            fields(pending),
+            CLEARED_RECORD if regular else rich,
+            "regular pending reset",
+        )
+        require(
+            fields(high),
+            high_fields if regular else CLEARED_RECORD,
+            "high pending reset",
+        )
+        require([canaries(record) for record in guarded], padding, "typed copy padding")
+        copy_controls.append(
+            {
+                "wake": flags,
+                "active": fields(active),
+                "secondary": fields(secondary),
+                "pending": fields(pending),
+                "high_pending": fields(high),
+            }
+        )
 
     return {
         "record_fields": RECORD_FIELDS,
@@ -741,6 +817,7 @@ def replay_dispatch(vm, uc, app, registry, context, stack, write, read, reg, run
         "parent_notification_cases": notification_cases,
         "connected_cache_zero_rejection": cache_rejection,
         "task_copy_reset": task_copy,
+        "nonzero_typed_copy_controls": copy_controls,
         "task_slices": {
             "constants": [0x30A3A8, 0x30A3B0],
             "copy_reset": [0x30A4F8, 0x30A550],
@@ -760,7 +837,7 @@ def replay_dispatch(vm, uc, app, registry, context, stack, write, read, reg, run
         },
         "alternate_priority": {
             "injected_flags": 0x800,
-            "selected_record_offset": reg("r1") - app,
+            "selected_record_offset": selected_record - app,
         },
     }
 
