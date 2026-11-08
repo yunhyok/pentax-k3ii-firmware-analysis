@@ -1059,6 +1059,17 @@
       "document_scroll_width": 1882,
       "mobile_viewport_checked": false
     },
-    "pre_release_terminology_correction": "Native state snapshot/copy/query/cleanup replaces unsupported packet lock-wait label; code behavior and evidence excluding limits unchanged; normal/-O PASS"
+    "pre_release_terminology_correction": "Native state snapshot/copy/query/cleanup replaces unsupported packet lock-wait label; code behavior and evidence excluding limits unchanged; normal/-O PASS",
+    "terminology_correction_publication": {
+      "commit": "49165e298946e4c23e230670c52b83d30576262b",
+      "ci": "success",
+      "pages": "success",
+      "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42472208458",
+      "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42472207892",
+      "http_files_byte_exact": 7,
+      "normal_and_optimized_snapshot": "PASS",
+      "behavioral_evidence_unchanged_except_limits": true,
+      "changed_diagram_visually_checked": true
+    }
   }
 }

@@ -589,7 +589,7 @@
       }
     },
     "preserved-dispatch": {
-      "commit": "6a4f885b28328b739a81202bbf07c1c350206c7a",
+      "commit": "49165e298946e4c23e230670c52b83d30576262b",
       "path": "analysis/preserved-dispatch.json",
       "html_path": "analysis/preserved-dispatch.html",
       "verifier_path": "verify_preserved_dispatch.py",
@@ -611,12 +611,24 @@
         "document_scroll_width": 1882,
         "mobile_viewport_checked": false
       },
-      "sha256": "1be34d2137f2275bb0b616099a8dfde661789917809048a883b74431da77e90f",
-      "html_sha256": "bc4ddc3409c28e43abfd5b222a6326071751c4571e553ef9f6b9cb4bc65f6775",
-      "verifier_sha256": "3034abb1c76328fd9314a004dcac6a3f95b3129ea0f705cc16740e37ad7b63a0"
+      "sha256": "0245d4d1e073f1d9fbf2ddb41c2f1c26474f15998ad486248f00fe732eb8a1f0",
+      "html_sha256": "359b315579a198dc5469bb9db079d54ef7cc81cc9f74dcceca0affa223c13d11",
+      "verifier_sha256": "32212078281acc135a96f7ee92d4c70c20b1c1b867d5d3d857bd45062ea1bcce",
+      "previous_commit": "6a4f885b28328b739a81202bbf07c1c350206c7a",
+      "terminology_correction": {
+        "commit": "49165e298946e4c23e230670c52b83d30576262b",
+        "ci": "success",
+        "pages": "success",
+        "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42472208458",
+        "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42472207892",
+        "http_files_byte_exact": 7,
+        "normal_and_optimized_snapshot": "PASS",
+        "behavioral_evidence_unchanged_except_limits": true,
+        "changed_diagram_visually_checked": true
+      }
     }
   },
-  "offline_work_in_progress": "Finishing pre-release terminology correction and publication verification, then freezing public files for HQ-owned initial GitHub Release. New result-producer research stays private. Prior config P3 corrections are in6a4f885. No additional Release/tag/assets will be created by this manager.",
+  "offline_work_in_progress": "Public files frozen for HQ-owned initial GitHub Release. This checkpoint pins49165e2 content,6a4f885 config P3 corrections and all completed publication checks. New result producer and state-snapshot followups remain private and are excluded from this release candidate. Latest usage9 percent; standing stop threshold5 percent.",
   "snapshot_comparison_type_fix": {
     "commit": "bcacf0fd9aa4f77d35ca664bbb6e71cbdf830ea3",
     "shared_helper": "verify_findings.require_snapshot",
@@ -658,5 +670,52 @@
     "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42467700072",
     "http_files_byte_exact": 38,
     "independent_HQ_review": "Approved: fixed Git blob AST scope audit, actual optimized pixel-records/preserved-record/ui-dispatch snapshots byte-identical, bool-to-int mutations rejected, focused tests normal and optimized."
+  },
+  "release_candidate": {
+    "content_commit": "49165e298946e4c23e230670c52b83d30576262b",
+    "status": "PUBLIC FILES FROZEN after this status-only checkpoint; HQ owns release/tag/assets",
+    "latest_manager_metadata": "This status-only commit on top of the pinned content commit",
+    "checks": {
+      "fresh_clone_base": "6a4f885b28328b739a81202bbf07c1c350206c7a",
+      "fresh_clone_optimized_snapshot": "PASS",
+      "unit_tests": 24,
+      "html_documents": 26,
+      "local_links": 634,
+      "public_files": 137,
+      "final_correction": {
+        "commit": "49165e298946e4c23e230670c52b83d30576262b",
+        "ci": "success",
+        "pages": "success",
+        "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42472208458",
+        "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42472207892",
+        "http_files_byte_exact": 7,
+        "normal_and_optimized_snapshot": "PASS",
+        "behavioral_evidence_unchanged_except_limits": true,
+        "changed_diagram_visually_checked": true
+      }
+    },
+    "review_scope": {
+      "HQ_accepted": [
+        "StoreImage cb3b1dd native proof with51380f63 diagram correction",
+        "preserved sectors20/21 220b4c4",
+        "prior snapshot comparison and capture-prepare proofs recorded above"
+      ],
+      "HQ_native_replay_passed_with_documentation_corrections": [
+        "preserved-config e4ebc71; requested live-marker and original-word wording corrected in6a4f885"
+      ],
+      "manager_independently_reviewed_but_HQ_not_yet_accepted": [
+        "preserved-dispatch 6a4f885 with49165e2 terminology correction"
+      ]
+    },
+    "excluded_private_work": [
+      "New result producer and original tail-copy proof in .private/research/preserved_result_*",
+      "Further original packet state-snapshot/check execution in .private/research only"
+    ],
+    "remaining": [
+      "Real command/transport/menu producer and reachability",
+      "Worker computation/scheduling/wait completion",
+      "Physical Flash/DMA/camera validation",
+      "Whole-firmware relocation or full rebuild and exact SoC part identification"
+    ]
   }
 }
