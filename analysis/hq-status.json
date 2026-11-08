@@ -266,22 +266,23 @@
   ],
   "scope_clarification": "AF changes are future work. Current scope is sufficiently deep foundational research; exact target lens information is not a blocker.",
   "publication": {
-    "analysis_commit": "496800b991d5d702fcab96ef65173a41f7511bed",
-    "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42464042294",
-    "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42464041913",
+    "analysis_commit": "f551e8878ade29813979a5d1e1827ecb0341dc1c",
+    "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42464837255",
+    "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42464836746",
     "ci": "success",
     "pages": "success",
-    "http_files_byte_exact": 9,
+    "http_files_byte_exact": 7,
     "fresh_clone_repack_and_af_snapshots": "PASS",
     "fresh_clone_unit_tests": 20,
     "fresh_clone_html_documents": 21,
-    "fresh_clone_local_links": 516,
+    "fresh_clone_local_links": 519,
     "browser": {
       "surface": "published HTTPS in Chrome",
       "reports": [
-        "pixel-policy.html"
+        "pixel-records.html#coordinate-boundary"
       ],
-      "figures_per_report": 2,
+      "new_figures_checked": 1,
+      "total_figures": 4,
       "inner_width": 1897,
       "document_scroll_width": 1882,
       "mobile_layout": "not checked"
@@ -296,7 +297,7 @@
       "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42453856476",
       "served_files_byte_exact": 5
     },
-    "previous_analysis_commit": "f36497c045a77e88b16268774620ab4c30f7e476",
+    "previous_analysis_commit": "496800b991d5d702fcab96ef65173a41f7511bed",
     "fresh_clone_installation_ui_af_snapshots": "PASS",
     "fresh_clone_public_files": 120,
     "fresh_clone_color_and_settings_snapshots": "PASS",
@@ -387,14 +388,23 @@
       "replay": "python verify_preserved_record.py decoded.bin --compare analysis/preserved-record.json"
     },
     "pixel-records": {
-      "commit": "f36497c045a77e88b16268774620ab4c30f7e476",
+      "commit": "f551e8878ade29813979a5d1e1827ecb0341dc1c",
       "path": "analysis/pixel-records.json",
       "html_path": "analysis/pixel-records.html",
       "verifier_path": "verify_pixel_records.py",
       "replay": "python verify_pixel_records.py decoded.bin --compare analysis/pixel-records.json",
-      "sha256": "c0b489f96207e61ef30b0d9e47234abb0621274b5548fcbeb6d6867eeab540dc",
-      "html_sha256": "f57a9a6172da14c41ea8021fbd7dbb89d415b3a20e76d30988076c0a0e371685",
-      "verifier_sha256": "33a6d61ec4465f4ce541332d92a8eaf81824ddcea932818682b0574292ab4ac2"
+      "sha256": "408a19e7e972de88db9355003a323086cf7ceb9e016ee380cc95152a635acee9",
+      "html_sha256": "1eedc26b1330abe8979e6b93b0ae843764d78ede4ab1f4bc0edf308e48a699f3",
+      "verifier_sha256": "417af95b581d64e289a2f0f5cf64ebd2bb43a2c60298700e5c6304950a9a1c89",
+      "previous_commit": "f36497c045a77e88b16268774620ab4c30f7e476",
+      "boundary_publication": {
+        "ci": "success",
+        "pages": "success",
+        "http_files_byte_exact": 7,
+        "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42464837255",
+        "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42464836746",
+        "fresh_clone_snapshot": "PASS"
+      }
     },
     "pixel-policy": {
       "commit": "496800b991d5d702fcab96ef65173a41f7511bed",
@@ -407,5 +417,5 @@
       "verifier_sha256": "873aa7ad152ea43a93f751e52912a08cbafd695197eb932ae835d481d71f21e0"
     }
   },
-  "offline_work_in_progress": "Continuous capture preparation before pixel policy, native nine-call chain privately replayed; publishing isolated coordinate-boundary controls separately."
+  "offline_work_in_progress": "Continuous capture preparation before pixel policy; native nine-call chain privately replayed, independent review in progress. Separate coordinate-boundary controls published and verified."
 }
