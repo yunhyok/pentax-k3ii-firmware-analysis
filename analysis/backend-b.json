@@ -1,0 +1,691 @@
+{
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "engine": "Unicorn 2.1.4",
+  "static": {
+    "edges": [
+      [
+        "0x5cb864",
+        "0x5cb814"
+      ],
+      [
+        "0x5cb82c",
+        "0xe86818"
+      ],
+      [
+        "0xeaffec",
+        "0xeb1a94"
+      ],
+      [
+        "0xeb23cc",
+        "0xeade54"
+      ],
+      [
+        "0xeb2404",
+        "0xeae0f4"
+      ],
+      [
+        "0xeb2364",
+        "0xeae0f4"
+      ],
+      [
+        "0xeadf54",
+        "0xe8623c"
+      ],
+      [
+        "0xeadfdc",
+        "0xe8623c"
+      ],
+      [
+        "0xeae090",
+        "0xe8623c"
+      ],
+      [
+        "0xeae1ec",
+        "0xe8623c"
+      ],
+      [
+        "0xeae270",
+        "0xe8623c"
+      ],
+      [
+        "0xeae314",
+        "0xe8623c"
+      ],
+      [
+        "0xe862b8",
+        "0x5cb380"
+      ],
+      [
+        "0x5cb38c",
+        "0x5cb30c"
+      ],
+      [
+        "0x5cb32c",
+        "0x71c2a0"
+      ],
+      [
+        "0x5cb338",
+        "0x736b78"
+      ],
+      [
+        "0x758a48",
+        "0x758914"
+      ],
+      [
+        "0x758974",
+        "0x7587fc"
+      ],
+      [
+        "0x7589c4",
+        "0x758890"
+      ],
+      [
+        "0xeadf20",
+        "0xe86180"
+      ],
+      [
+        "0xeae05c",
+        "0xe86180"
+      ],
+      [
+        "0xeae1b8",
+        "0xe86180"
+      ],
+      [
+        "0xeade88",
+        "0xebd250"
+      ],
+      [
+        "0xeae128",
+        "0xebd250"
+      ]
+    ],
+    "words": {
+      "0xf1396c": "0x2eaffac",
+      "0xf139f0": "0x0",
+      "0xe86854": "0xe7900104",
+      "0xe86884": "0xe5900020",
+      "0xe86888": "0xe0800280",
+      "0xe8688c": "0xe0810100",
+      "0xe86894": "0xe5903020",
+      "0xe8689c": "0xe12fff33",
+      "0xe862b4": "0xe5d00002",
+      "0x5cb358": "0xe590c018",
+      "0x5cb360": "0xe12fff3c",
+      "0xa5d224": "0x27589e8",
+      "0xeb23f4": "0xe7c8101f",
+      "0x5cb36c": "0x13a04000",
+      "0x5cbf68": "0xffffd8e7"
+    },
+    "ranges": {
+      "backend_write": {
+        "start": "0x5cb814",
+        "end_exclusive": "0x5cb868",
+        "sha256": "9153420df24aa7dc2e8fac22fcf89852c95dc3946ec18410446aae2a48d6f275"
+      },
+      "table_dispatch": {
+        "start": "0xe86818",
+        "end_exclusive": "0xe868ac",
+        "sha256": "b9c6bbd8f3e9431accfb96d0d3d06b0addc33d4acebe391616e1cc6584eae1d5"
+      },
+      "library_write_wrapper": {
+        "start": "0xeaffac",
+        "end_exclusive": "0xeb0048",
+        "sha256": "17b3ec12d9e08bf3ba6efdef67ef4eaf8b75409c2e656bbb80fd47e056bd4fb1"
+      },
+      "file_write": {
+        "start": "0xeb1a94",
+        "end_exclusive": "0xeb2638",
+        "sha256": "4da48b2a5c676a5aa7c53c254050c038cb2f6b220226d3f62168b32bd6f65eb2"
+      },
+      "preserve_tail": {
+        "start": "0xeade54",
+        "end_exclusive": "0xeae0f4",
+        "sha256": "72e210c69b47288e624cd17a8a94dc223ee456b7af91cb9d201a4a8df87b9e8b"
+      },
+      "zero_tail": {
+        "start": "0xeae0f4",
+        "end_exclusive": "0xeae378",
+        "sha256": "94f0e5cc6590da9af70419b57ba53a2a961cebc50a39ac76e889ccd05d6053f4"
+      },
+      "device_write": {
+        "start": "0xe8623c",
+        "end_exclusive": "0xe862f8",
+        "sha256": "6bf7d9ca4c9d3a3f3365b7049c18b3e8c0a49d7d6fd7dd50029368286c52837d"
+      },
+      "card_bridge": {
+        "start": "0x5cb30c",
+        "end_exclusive": "0x5cb394",
+        "sha256": "cfde41d857f063f0e2f2f733e7117d4f653669835df1bf17f25f8bbf158b1079"
+      },
+      "cluster_lba": {
+        "start": "0xebd250",
+        "end_exclusive": "0xebd2a8",
+        "sha256": "25376732875a4ab4aae9a78b2883af733dec6963191f99cb52868e665d5f0a2d"
+      }
+    }
+  },
+  "cases": [
+    {
+      "entry": "0x5cb860",
+      "offset": 0,
+      "count": 1024,
+      "result": 1,
+      "errno": 1024,
+      "entered": [
+        "0xe86818",
+        "0xeaffac",
+        "0xeb1a94",
+        "0xeade54",
+        "0xe8623c",
+        "0x5cb380",
+        "0x5cb30c"
+      ],
+      "writes": [
+        {
+          "lba": 288,
+          "blocks": 2,
+          "source": 268500992,
+          "buffer_sha256": "e9183d9a79aad8a047b8e67981210d50b01fc75b1edba5bc32ba3d3ec4d5056d"
+        }
+      ],
+      "reads": [],
+      "mmio": [
+        {
+          "adma_table_sha256": "77975bf75ea9fc2ae42a1f14a366134edf9fa6af8d6f3e4d2be6c50f1f85e73d",
+          "first_descriptor": [
+            35,
+            1024,
+            268500992
+          ]
+        },
+        [
+          "0xc6000004",
+          "0x200"
+        ],
+        [
+          "0xc6000004",
+          "0x20200"
+        ],
+        [
+          "0xc6000008",
+          "0x120"
+        ],
+        [
+          "0xc600000c",
+          "0x193a0027"
+        ]
+      ],
+      "stubs": [
+        "0x5cb148",
+        "0x5cb204",
+        "0x5cb220",
+        "0x5cb748",
+        "0x6ef248",
+        "0x6ef268",
+        "0x6feb30",
+        "0x6febac",
+        "0x70c390",
+        "0x70c3e8",
+        "0x70c408",
+        "0x736b78",
+        "0x757dd8",
+        "0x757ef8",
+        "0x758468",
+        "0x78607c",
+        "0x78609c",
+        "0xea5344",
+        "0xea6e74",
+        "0xea870c",
+        "0xeaaf78",
+        "0xeab1a0",
+        "0xeacb14",
+        "0xebda20"
+      ]
+    },
+    {
+      "entry": "0x5cb860",
+      "offset": 7,
+      "count": 12,
+      "result": 1,
+      "errno": 12,
+      "entered": [
+        "0xe86818",
+        "0xeaffac",
+        "0xeb1a94",
+        "0xeade54",
+        "0xe8623c",
+        "0x5cb380",
+        "0x5cb30c"
+      ],
+      "writes": [
+        {
+          "lba": 288,
+          "blocks": 1,
+          "source": 268566528,
+          "buffer_sha256": "02c0318d5ebfa4d2b77d22aa24532b771b878938bd008f772d45d7eed6cd477c"
+        }
+      ],
+      "reads": [
+        {
+          "lba": 288,
+          "blocks": 1,
+          "source": 268566528
+        }
+      ],
+      "mmio": [
+        {
+          "adma_table_sha256": "9cb09139028540c8a16e5ab833f5548d951524c8088e15eca352cadeabf6b150",
+          "first_descriptor": [
+            35,
+            512,
+            268566528
+          ]
+        },
+        [
+          "0xc6000004",
+          "0x200"
+        ],
+        [
+          "0xc6000004",
+          "0x10200"
+        ],
+        [
+          "0xc6000008",
+          "0x120"
+        ],
+        [
+          "0xc600000c",
+          "0x183a0001"
+        ]
+      ],
+      "stubs": [
+        "0x5cb148",
+        "0x5cb204",
+        "0x5cb220",
+        "0x5cb748",
+        "0x6ef248",
+        "0x6ef268",
+        "0x6feb30",
+        "0x6febac",
+        "0x70c390",
+        "0x70c3e8",
+        "0x70c408",
+        "0x736b78",
+        "0x757dd8",
+        "0x758468",
+        "0x7585c4",
+        "0x78607c",
+        "0x78609c",
+        "0xea5344",
+        "0xea6e74",
+        "0xea870c",
+        "0xeaaf78",
+        "0xeab1a0",
+        "0xeacb14",
+        "0xebda20"
+      ]
+    },
+    {
+      "entry": "0x5cb860",
+      "offset": 7,
+      "count": 1030,
+      "result": 1,
+      "errno": 1030,
+      "entered": [
+        "0xe86818",
+        "0xeaffac",
+        "0xeb1a94",
+        "0xeade54",
+        "0xe8623c",
+        "0x5cb380",
+        "0x5cb30c",
+        "0xe8623c",
+        "0x5cb380",
+        "0x5cb30c",
+        "0xe8623c",
+        "0x5cb380",
+        "0x5cb30c"
+      ],
+      "writes": [
+        {
+          "lba": 288,
+          "blocks": 1,
+          "source": 268566528,
+          "buffer_sha256": "cfc4c00d0ef7541c2e49af0da1a8fd0284a761f5f894e9f3941caedbdc08ec35"
+        },
+        {
+          "lba": 289,
+          "blocks": 1,
+          "source": 268501497,
+          "buffer_sha256": "b9990a860e45da3a1b59649e562f92edd5addfdd7e76493e8e5f750d3a9fc543"
+        },
+        {
+          "lba": 290,
+          "blocks": 1,
+          "source": 268566528,
+          "buffer_sha256": "7359a85b00622bc8b2570431197dca867ba877f65ec878b600fe9db70dd94611"
+        }
+      ],
+      "reads": [
+        {
+          "lba": 288,
+          "blocks": 1,
+          "source": 268566528
+        },
+        {
+          "lba": 290,
+          "blocks": 1,
+          "source": 268566528
+        }
+      ],
+      "mmio": [
+        {
+          "adma_table_sha256": "9cb09139028540c8a16e5ab833f5548d951524c8088e15eca352cadeabf6b150",
+          "first_descriptor": [
+            35,
+            512,
+            268566528
+          ]
+        },
+        [
+          "0xc6000004",
+          "0x200"
+        ],
+        [
+          "0xc6000004",
+          "0x10200"
+        ],
+        [
+          "0xc6000008",
+          "0x120"
+        ],
+        [
+          "0xc600000c",
+          "0x183a0001"
+        ],
+        {
+          "adma_table_sha256": "415280e6216f04f0b2b68777885cc36175cebd0a5161ce6fb32f8827f08373d3",
+          "first_descriptor": [
+            35,
+            512,
+            268501497
+          ]
+        },
+        [
+          "0xc6000004",
+          "0x10200"
+        ],
+        [
+          "0xc6000004",
+          "0x10200"
+        ],
+        [
+          "0xc6000008",
+          "0x121"
+        ],
+        [
+          "0xc600000c",
+          "0x183a0001"
+        ],
+        {
+          "adma_table_sha256": "9cb09139028540c8a16e5ab833f5548d951524c8088e15eca352cadeabf6b150",
+          "first_descriptor": [
+            35,
+            512,
+            268566528
+          ]
+        },
+        [
+          "0xc6000004",
+          "0x10200"
+        ],
+        [
+          "0xc6000004",
+          "0x10200"
+        ],
+        [
+          "0xc6000008",
+          "0x122"
+        ],
+        [
+          "0xc600000c",
+          "0x183a0001"
+        ]
+      ],
+      "stubs": [
+        "0x5cb148",
+        "0x5cb204",
+        "0x5cb220",
+        "0x5cb748",
+        "0x6ef248",
+        "0x6ef268",
+        "0x6feb30",
+        "0x6febac",
+        "0x70c390",
+        "0x70c3e8",
+        "0x70c408",
+        "0x736b78",
+        "0x757dd8",
+        "0x758468",
+        "0x7585c4",
+        "0x78607c",
+        "0x78609c",
+        "0xea5344",
+        "0xea6e74",
+        "0xea870c",
+        "0xeaaf78",
+        "0xeab1a0",
+        "0xeacb14",
+        "0xebda20"
+      ]
+    },
+    {
+      "entry": "0xeade54",
+      "offset": 0,
+      "count": 12,
+      "result": 12,
+      "errno": 0,
+      "entered": [
+        "0xeade54",
+        "0xe8623c",
+        "0x5cb380",
+        "0x5cb30c"
+      ],
+      "writes": [
+        {
+          "lba": 288,
+          "blocks": 1,
+          "source": 268566528,
+          "buffer_sha256": "da6888fca93d06d90e6efb5fc95fe482e6bd3a86fba9fe9c34a0032dd9a113bd"
+        }
+      ],
+      "reads": [
+        {
+          "lba": 288,
+          "blocks": 1,
+          "source": 268566528
+        }
+      ],
+      "mmio": [
+        {
+          "adma_table_sha256": "9cb09139028540c8a16e5ab833f5548d951524c8088e15eca352cadeabf6b150",
+          "first_descriptor": [
+            35,
+            512,
+            268566528
+          ]
+        },
+        [
+          "0xc6000004",
+          "0x200"
+        ],
+        [
+          "0xc6000004",
+          "0x10200"
+        ],
+        [
+          "0xc6000008",
+          "0x120"
+        ],
+        [
+          "0xc600000c",
+          "0x183a0001"
+        ]
+      ],
+      "stubs": [
+        "0x5cb204",
+        "0x5cb220",
+        "0x6ef248",
+        "0x6ef268",
+        "0x6feb30",
+        "0x6febac",
+        "0x70c390",
+        "0x70c3e8",
+        "0x70c408",
+        "0x736b78",
+        "0x757dd8",
+        "0x758468",
+        "0x7585c4",
+        "0x78607c",
+        "0x78609c",
+        "0xeacb14"
+      ]
+    },
+    {
+      "entry": "0xeae0f4",
+      "offset": 0,
+      "count": 12,
+      "result": 12,
+      "errno": 0,
+      "entered": [
+        "0xeae0f4",
+        "0xe8623c",
+        "0x5cb380",
+        "0x5cb30c"
+      ],
+      "writes": [
+        {
+          "lba": 288,
+          "blocks": 1,
+          "source": 268566528,
+          "buffer_sha256": "3112d6fb0e412b1a25c94ff77a9b82cadc4a6e50a0d8944ae13502dcc986e183"
+        }
+      ],
+      "reads": [],
+      "mmio": [
+        {
+          "adma_table_sha256": "9cb09139028540c8a16e5ab833f5548d951524c8088e15eca352cadeabf6b150",
+          "first_descriptor": [
+            35,
+            512,
+            268566528
+          ]
+        },
+        [
+          "0xc6000004",
+          "0x200"
+        ],
+        [
+          "0xc6000004",
+          "0x10200"
+        ],
+        [
+          "0xc6000008",
+          "0x120"
+        ],
+        [
+          "0xc600000c",
+          "0x183a0001"
+        ]
+      ],
+      "stubs": [
+        "0x5cb204",
+        "0x5cb220",
+        "0x6ef248",
+        "0x6ef268",
+        "0x6feb30",
+        "0x6febac",
+        "0x70c390",
+        "0x70c3e8",
+        "0x70c408",
+        "0x736b78",
+        "0x757dd8",
+        "0x758468",
+        "0x78607c",
+        "0x78609c",
+        "0xeacb14"
+      ]
+    },
+    {
+      "entry": "0x5cb860",
+      "offset": 0,
+      "count": 1024,
+      "result": 0,
+      "errno": 4294957287,
+      "entered": [
+        "0xe86818",
+        "0xeaffac",
+        "0xeb1a94",
+        "0xeade54",
+        "0xe8623c",
+        "0x5cb380",
+        "0x5cb30c"
+      ],
+      "writes": [
+        {
+          "lba": 288,
+          "blocks": 2,
+          "source": 268500992,
+          "buffer_sha256": "e9183d9a79aad8a047b8e67981210d50b01fc75b1edba5bc32ba3d3ec4d5056d"
+        }
+      ],
+      "reads": [],
+      "mmio": [],
+      "stubs": [
+        "0x5cb148",
+        "0x5cb204",
+        "0x5cb220",
+        "0x5cb748",
+        "0x736b78",
+        "0x7589e8",
+        "0x78607c",
+        "0x78609c",
+        "0xea5344",
+        "0xea6e74",
+        "0xea870c",
+        "0xeaaf78",
+        "0xeab1a0",
+        "0xeacb14",
+        "0xebda20"
+      ]
+    },
+    {
+      "entry": "0x5cb860",
+      "offset": 0,
+      "count": 0,
+      "result": 0,
+      "errno": 4294967285,
+      "entered": [
+        "0xe86818",
+        "0xeaffac"
+      ],
+      "writes": [],
+      "reads": [],
+      "mmio": [],
+      "stubs": [
+        "0x5cb748",
+        "0xea5344",
+        "0xeacb14"
+      ]
+    }
+  ],
+  "limits": [
+    "The write-table index is seeded to zero and an existing file/extent is supplied. Mount, allocation, cluster-chain lookup, timestamps, locks, card preflight and CPU cache operations are not emulated.",
+    "The EA6E74 metadata lookup returns a 4096-byte file size; EAB1A0 supplies one prepared extent. The wrapper, library file-write body, sector routines, block bridge, card write and SD/ADMA programming execute original code.",
+    "Partial-sector reads are intercepted at the card read entry and filled with 0xCC. Write data is inspected at the actual card write entry and remains connected to original ADMA programming. There is no physical DMA or media execution.",
+    "Failure is injected at the card write boundary; the original lower SD path is executed only in success cases. Zero-length file write is separately rejected before I/O.",
+    "The tail-zeroing helper is tested directly. Its original file-write caller can round the byte count before calling it; these fixtures do not establish padding validity for all append modes.",
+    "Mixed writes forward an unaligned middle pointer unchanged. This proves address arithmetic, not hardware acceptance of every address or CPU-to-bus coherence."
+  ]
+}

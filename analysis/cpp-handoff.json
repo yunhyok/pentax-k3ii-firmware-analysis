@@ -1,0 +1,634 @@
+{
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "candidate_load_base": 33554432,
+  "location_units": "decoded file offsets except absolute MMIO and synthetic addresses",
+  "static": {
+    "edges": {
+      "second_cpp_pass": [
+        [
+          6657372,
+          7452032
+        ],
+        [
+          6657944,
+          6658016
+        ],
+        [
+          5750268,
+          5750368
+        ],
+        [
+          5750276,
+          7452024
+        ],
+        [
+          5750300,
+          7685076
+        ],
+        [
+          5750332,
+          7685084
+        ],
+        [
+          5750364,
+          7685092
+        ],
+        [
+          5750592,
+          5816440
+        ],
+        [
+          5816468,
+          5813504
+        ],
+        [
+          5815724,
+          5572328
+        ],
+        [
+          5815736,
+          5572412
+        ],
+        [
+          5815748,
+          5572496
+        ]
+      ],
+      "module_17": [
+        [
+          7193332,
+          6656944
+        ],
+        [
+          7193396,
+          6646148
+        ],
+        [
+          7190400,
+          8508300
+        ],
+        [
+          6657304,
+          6673764
+        ],
+        [
+          6646264,
+          6646404
+        ],
+        [
+          6673792,
+          7448364
+        ],
+        [
+          6673804,
+          7448372
+        ],
+        [
+          6673816,
+          7448380
+        ],
+        [
+          6673828,
+          7448356
+        ],
+        [
+          6673912,
+          6673940
+        ],
+        [
+          6673924,
+          7448372
+        ],
+        [
+          6673936,
+          7448356
+        ],
+        [
+          5806344,
+          5806216
+        ],
+        [
+          5806264,
+          7448348
+        ],
+        [
+          5806272,
+          5806292
+        ],
+        [
+          5806288,
+          5806092
+        ],
+        [
+          5806204,
+          5944080
+        ],
+        [
+          5945176,
+          7525708
+        ],
+        [
+          5945188,
+          7525716
+        ],
+        [
+          5945200,
+          7525700
+        ],
+        [
+          5961376,
+          8073880
+        ],
+        [
+          5961388,
+          8073872
+        ],
+        [
+          5961484,
+          5941248
+        ],
+        [
+          5961504,
+          5961628
+        ],
+        [
+          5961540,
+          7351180
+        ],
+        [
+          5961624,
+          5941164
+        ],
+        [
+          5941296,
+          5941164
+        ],
+        [
+          5941320,
+          5941164
+        ],
+        [
+          5941236,
+          5940448
+        ],
+        [
+          5940804,
+          7683492
+        ],
+        [
+          5940840,
+          7683500
+        ],
+        [
+          5940888,
+          7683508
+        ],
+        [
+          5941108,
+          7334456
+        ],
+        [
+          5941132,
+          7390216
+        ],
+        [
+          5794612,
+          5794440
+        ],
+        [
+          5794480,
+          5505964
+        ],
+        [
+          5506060,
+          5504684
+        ],
+        [
+          5506076,
+          5504008
+        ],
+        [
+          5505320,
+          7212216
+        ],
+        [
+          5504616,
+          7212216
+        ],
+        [
+          5503924,
+          7212216
+        ],
+        [
+          7191564,
+          7192316
+        ],
+        [
+          7192324,
+          7191820
+        ]
+      ],
+      "scaler_and_jpeg": [
+        [
+          6658768,
+          8507312
+        ],
+        [
+          6658780,
+          8507320
+        ],
+        [
+          6658792,
+          8507328
+        ],
+        [
+          6659824,
+          7450656
+        ],
+        [
+          6660000,
+          7450608
+        ],
+        [
+          6660012,
+          7450768
+        ],
+        [
+          6660468,
+          7450640
+        ],
+        [
+          6660480,
+          7450704
+        ],
+        [
+          6660492,
+          7450712
+        ],
+        [
+          6660516,
+          6660684
+        ],
+        [
+          6660684,
+          7686880
+        ],
+        [
+          6660552,
+          7686888
+        ],
+        [
+          5767236,
+          7450632
+        ],
+        [
+          5767284,
+          7450648
+        ],
+        [
+          5768356,
+          7455808
+        ],
+        [
+          5768364,
+          5769384
+        ],
+        [
+          5768404,
+          5765380
+        ],
+        [
+          5769580,
+          5766148
+        ],
+        [
+          5769620,
+          5766148
+        ],
+        [
+          5766420,
+          5765380
+        ],
+        [
+          5766472,
+          5765380
+        ],
+        [
+          6673644,
+          7452320
+        ],
+        [
+          6673656,
+          7452328
+        ],
+        [
+          5729648,
+          7452296
+        ]
+      ]
+    },
+    "instruction_offsets": [
+      6656956,
+      6657196,
+      6657352,
+      6657940,
+      6658060,
+      7452024,
+      7452032,
+      6673764,
+      6673772,
+      6673776,
+      6673780,
+      6673784,
+      6673796,
+      6673808,
+      6673820,
+      6673904,
+      6673908,
+      6673956,
+      7448364,
+      7448372,
+      7448380,
+      7448356,
+      7190036,
+      7190412,
+      7190420,
+      5806240,
+      5806268,
+      5806336,
+      7525700,
+      7525708,
+      7525716,
+      5945180,
+      5945192,
+      5945204,
+      5961488,
+      5961492,
+      5961496,
+      5961500,
+      5941216,
+      5941228,
+      7683492,
+      7683500,
+      7683508,
+      5121700,
+      5121708,
+      5121772,
+      7212220,
+      7212228,
+      6658760,
+      6658772,
+      6658784,
+      6659956,
+      6660004,
+      7450768,
+      7455808,
+      5768396,
+      5768400,
+      5769568,
+      5769608,
+      6660496,
+      7686880,
+      7686888,
+      7450608,
+      7450640,
+      7450704,
+      7450712,
+      7452320,
+      7452328
+    ],
+    "literal_reads": {
+      "5805756": 44499168,
+      "5806320": 84025345,
+      "5941032": 17694721,
+      "5794584": 17694721
+    },
+    "module17_receive_slots": {
+      "10944760": 5806216,
+      "10944804": 5806340
+    },
+    "ranges": {
+      "module17_setup": {
+        "start": 6673764,
+        "end_exclusive": 6673964,
+        "sha256": "f8aef27009ea583e76222056a386f71fe512690029bab2789abb9ab0c79a7ea3"
+      },
+      "module17_gate_and_completion": {
+        "start": 5806216,
+        "end_exclusive": 5806348,
+        "sha256": "9d1ea0183a3436c6b04db09d71bc090536bbe6d74be17b5a8981f00dcbb747b2"
+      },
+      "blend_descriptor_reads": {
+        "start": 5945172,
+        "end_exclusive": 5945208,
+        "sha256": "d3476854fcff544edfeb5fc5a5d790508a6bf22ceeb2165ade5259471079e6b4"
+      },
+      "blend_plane_submission": {
+        "start": 5961348,
+        "end_exclusive": 5961628,
+        "sha256": "bf90257232352f5c55c9d4dd2a8bb8b5436987a494f0d7e2297608319dc06485"
+      },
+      "blend_request_build_and_wait": {
+        "start": 5940448,
+        "end_exclusive": 5941336,
+        "sha256": "6cd91682e12a601acb4b1d4daa2f7da10edd9297ec2b9540ba716fcf53582847"
+      },
+      "ordinary_scaler_bindings": {
+        "start": 6660460,
+        "end_exclusive": 6660556,
+        "sha256": "05d9d1c3c9fb5956050cc0e0c0770722aa6fd9d092cb66e4c9f6ffbb66e4a600"
+      },
+      "ordinary_scaler_gate_setup": {
+        "start": 6660684,
+        "end_exclusive": 6660696,
+        "sha256": "80cb7d72fdaf2a966f9177be450f57d43e4cd37ee3843f46ac52ae18ff2c5390"
+      },
+      "alternate_scaler_bindings": {
+        "start": 6659784,
+        "end_exclusive": 6660016,
+        "sha256": "a6a9cc0a17122f737758bb02787897065002530579a3673effd0797130acf9c6"
+      },
+      "scaler_alternate_gate": {
+        "start": 5768352,
+        "end_exclusive": 5768408,
+        "sha256": "c67efc5463d05d5ec9edb0f5a99ef18c1e2003dfd3a6bf9db03cdd7b3957eec0"
+      },
+      "scaler_main_gate": {
+        "start": 5769500,
+        "end_exclusive": 5769628,
+        "sha256": "0aa8f6d6aab430328ef6d91edaf8afef66654e3b7a9e4955944702bbb46e2a62"
+      }
+    }
+  },
+  "synthetic_a32": {
+    "engine": "Unicorn 2.1.4",
+    "recipe_order": [
+      "CPP",
+      "module 17",
+      "scaler",
+      "module 16 JPEG"
+    ],
+    "zero_based_recipe_rows": {
+      "0xc": [
+        6,
+        8,
+        30,
+        32
+      ],
+      "0x10": [
+        15,
+        17,
+        36,
+        38
+      ],
+      "0x13": [
+        10,
+        12,
+        38,
+        40
+      ],
+      "0x15": [
+        41,
+        48,
+        72,
+        74
+      ]
+    },
+    "handoff_cases": [
+      {
+        "mask_byte": 0,
+        "second_cpp_pass": 0,
+        "injected_blend_mode": 0,
+        "module17_completion": 84025345,
+        "blend_requests_source1_source2_destination": [],
+        "blend_destination_is_ordinary_scaler_source": null,
+        "ordinary_scaler_source_planes": [
+          285212928,
+          285213184,
+          285213440
+        ],
+        "jpeg_input_planes": [
+          335544576,
+          335544832,
+          335545088
+        ]
+      },
+      {
+        "mask_byte": 0,
+        "second_cpp_pass": 1,
+        "injected_blend_mode": 0,
+        "module17_completion": 84025345,
+        "blend_requests_source1_source2_destination": [
+          [
+            318767616,
+            285213184,
+            285213184
+          ],
+          [
+            318767872,
+            285213440,
+            285213440
+          ]
+        ],
+        "blend_destination_is_ordinary_scaler_source": true,
+        "ordinary_scaler_source_planes": [
+          285212928,
+          285213184,
+          285213440
+        ],
+        "jpeg_input_planes": [
+          335544576,
+          335544832,
+          335545088
+        ]
+      },
+      {
+        "mask_byte": 0,
+        "second_cpp_pass": 1,
+        "injected_blend_mode": 2,
+        "module17_completion": 84025345,
+        "blend_requests_source1_source2_destination": [
+          [
+            318767616,
+            285213184,
+            285213184
+          ],
+          [
+            318767872,
+            285213440,
+            285213440
+          ],
+          [
+            318767360,
+            285212928,
+            285212928
+          ]
+        ],
+        "blend_destination_is_ordinary_scaler_source": true,
+        "ordinary_scaler_source_planes": [
+          285212928,
+          285213184,
+          285213440
+        ],
+        "jpeg_input_planes": [
+          335544576,
+          335544832,
+          335545088
+        ]
+      },
+      {
+        "mask_byte": 68,
+        "second_cpp_pass": 1,
+        "injected_blend_mode": 4,
+        "module17_completion": 84025345,
+        "blend_requests_source1_source2_destination": [
+          [
+            318767616,
+            301990400,
+            301990400
+          ],
+          [
+            318767872,
+            301990656,
+            301990656
+          ],
+          [
+            318767360,
+            301990144,
+            301990144
+          ]
+        ],
+        "blend_destination_is_ordinary_scaler_source": false,
+        "ordinary_scaler_source_planes": [
+          285212928,
+          285213184,
+          285213440
+        ],
+        "jpeg_input_planes": [
+          335544576,
+          335544832,
+          335545088
+        ]
+      }
+    ],
+    "injected_alternate_scaler_gate_launch_job_offsets": [
+      9044,
+      9100
+    ],
+    "hooked_code_offsets": [
+      7415848,
+      5944080,
+      7334456,
+      7390184,
+      7390216,
+      5765380
+    ],
+    "synthetic_completion_callback": 268578848
+  },
+  "limits": [
+    "Module 17 receives the CPP second-pass planes as a separate blend input. With job+0x7f clear, its blend destination descriptor aliases the ordinary scaler source. With job+0x7f equal to one, it instead aliases job+0x2354.",
+    "The receiver's gate is replayed separately from the blend builder. The builder probes enter after feature and allocation checks and inject the blend mode. The zero mode issues two chroma requests. The tested modes 2 and 4 also issue a luma request.",
+    "The scaler payload binds job+0x2354 as an auxiliary source and initializes its enable byte to zero. The verifier sets the byte to one only in a counterfactual probe. The auxiliary scaler destination job+0x238c is distinct from the tested JPEG input.",
+    "The probes execute A32 address selection, dispatch and request assembly on aligned synthetic planes. Service calls and scaler launches are intercepted. The recipe rows establish relative order. Intervening stages and the resulting pixel contents, physical camera mode eligibility and JPEG bytes are untested."
+  ]
+}

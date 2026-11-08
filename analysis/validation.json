@@ -1,6 +1,6 @@
 {
   "analysis_date": "2026-11-08",
-  "scope": "Identity, CPU and RAW/tone analysis; conditional B2Y/scaler/JPEG/Exif chain and menu events; filesystem backend A, SD commands/ADMA2, CPP alternate planes and JPEG layout/retry",
+  "scope": "Identity, CPU and RAW/tone analysis; conditional B2Y/scaler/JPEG/Exif chain and menu events; filesystem backend A, SD commands/ADMA2, CPP alternate planes and JPEG layout/retry; backend B file-write to SD/ADMA and conditional CPP/module17/scaler/JPEG descriptor handoff",
   "python": "3.12.3",
   "node": "24.15.0",
   "capstone": "5.0.7",
@@ -9,7 +9,7 @@
   "original_input_sha256": "a33485f351019960192891ef69ddc5d4904ef9e298671d9d9955679e4c901a9a",
   "independent_decoder_byte_comparison": true,
   "published_findings_reproduced": true,
-  "independent_review": "Initial hardware/RAW review and six snapshot replays retained below. For the pipeline update, workers independently checked the selector metadata dispatcher and reviewed ISP evidence. Coordinator accepted conditional matrix-product and tone-cache corrections, inspected completion/Exif/output instructions, and independently reproduced all four new snapshots. For the output/menu update, separate workers traced JPEG and GUI paths. A worker independently replayed and reviewed the Exif route; the coordinator independently replayed all three new snapshots and inspected event dispatch, JPEG alignment and capacity checks against disassembly. For the storage update, workers traced SD and alternate buffers. The SD worker independently replayed and reviewed the filesystem verifier and reviewed the final storage HTML. The coordinator replayed all three new snapshots, inspected critical ADMA, address selection, retry and buffer instructions, and corrected the diagram owner of the block callback to the filesystem-library volume object.",
+  "independent_review": "Initial hardware/RAW review and six snapshot replays retained below. For the pipeline update, workers independently checked the selector metadata dispatcher and reviewed ISP evidence. Coordinator accepted conditional matrix-product and tone-cache corrections, inspected completion/Exif/output instructions, and independently reproduced all four new snapshots. For the output/menu update, separate workers traced JPEG and GUI paths. A worker independently replayed and reviewed the Exif route; the coordinator independently replayed all three new snapshots and inspected event dispatch, JPEG alignment and capacity checks against disassembly. For the storage update, workers traced SD and alternate buffers. The SD worker independently replayed and reviewed the filesystem verifier and reviewed the final storage HTML. The coordinator replayed all three new snapshots, inspected critical ADMA, address selection, retry and buffer instructions, and corrected the diagram owner of the block callback to the filesystem-library volume object. For the backend B/CPP update, a worker traced CPP handoff while the coordinator traced backend B. Another worker independently reviewed and replayed both verifiers. The coordinator replayed both snapshots, checked the critical producer/consumer instructions and retained the masked-path and hardware-execution limits. The backend cache was poisoned with 0xA5 before the zero-tail assertion to prove the original clear actually executes.",
   "not_performed": [
     "Camera flashing or physical camera execution",
     "Whole firmware rebuild",
@@ -17,9 +17,9 @@
     "Manufacturing or cryptographic-signature validation",
     "Whole-frame hardware RAW-to-JPEG execution and physical ISP pixel transfer function",
     "Physical button/dial input, LCD raster rendering or persistent settings write",
-    "Backend B lower block route, whole-file allocation/cluster-chain execution, and every card-level recovery branch",
+    "Whole-file allocation/cluster-chain execution, complete backend B mounting, and every card-level recovery branch",
     "Physical SD writes, actual DMA data movement, cache coherency and CPU-to-bus address mapping",
-    "Alternate CPP output to scaler/JPEG module 16 alias and every real-mode buffer alignment path"
+    "Masked CPP descriptor to JPEG input continuation, module 17 physical camera-mode eligibility, intervening recipe stages, and every real-mode buffer alignment path"
   ],
   "reference_project_commit": "b51d680202336a5872a66f99ca2924a2cb7c75fa",
   "initial_analysis_date": "2026-11-07",
@@ -210,11 +210,51 @@
     "scope": "Extracted prose, excluding CSD capacity, request/descriptor capacity, JPEG retry-capacity, and large-request residual paragraphs; final technical additions received coordinator and SD-worker review",
     "route": "light",
     "risk_score": 0,
-    "deterministic_gate": "OK \u2014 \uc218\ub834",
+    "deterministic_gate": "OK — 수렴",
     "change_rate_percent": 0.63,
     "sentences_touched": 2,
     "sentences_reviewed": 82,
     "numbers_dropped": 0,
     "runtime": "Native Codex worker proposals; coordinator accepted one, simplified one independently, and reran the plugin gate on accepted excerpt"
+  },
+  "backend_b_cpp_analysis": {
+    "reference_project_storage_commit": "c1db6f27f0f72b30f09c30ae55cf8525640016e4",
+    "reference_project_pipeline_commit": "a6b84f4e2e81213e54f1fe4d19beea9e93a6bbd9",
+    "snapshots_reproduced": [
+      "backend-b",
+      "cpp-handoff"
+    ],
+    "backend_b_cases": 7,
+    "cpp_handoff_cases": 4,
+    "cpp_recipe_cases": 4,
+    "auxiliary_scaler_gate_values": [
+      0,
+      1
+    ],
+    "backend_b_branch_edges": 24,
+    "backend_b_exact_words": 15,
+    "backend_b_range_hashes": 9,
+    "cpp_branch_edges": 79,
+    "cpp_exact_words": 68,
+    "cpp_range_hashes": 10,
+    "backend_b_sd_port": "0xc6000000",
+    "original_b_wrapper_through_adma_executed": true,
+    "whole_dma_table_compared": true,
+    "backend_table_index_seeded": 0,
+    "existing_file_extent_supplied": true,
+    "normal_blend_destination_aliases_scaler_source": true,
+    "normal_scaler_destination_aliases_jpeg_input": true,
+    "masked_continuation_confirmed": false,
+    "cpp_stage_boundaries_intercepted": true,
+    "physical_hardware_executed": false,
+    "complete_jpeg_generated": false,
+    "offline_publication_check": {
+      "passed": true,
+      "html_documents_checked": 6,
+      "local_links_checked": 182,
+      "public_files_checked": 65,
+      "evidence_identity_consistent": true,
+      "svg_xml_valid": true
+    }
   }
 }
