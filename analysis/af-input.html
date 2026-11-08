@@ -25,7 +25,7 @@
 <tr><td>VA 0x00103120 ≠ 0, VA 0x0010311A ≠ 2</td><td>(방향, 목표) = (0, 40), (1, 80)</td><td>초기 카운터 − 40</td></tr>
 <tr><td>VA 0x00103120 = 0 또는 VA 0x0010311A = 2</td><td>(0, 0xFFFF), (1, 0)</td><td>초기 카운터</td></tr>
 </tbody></table></div>
-<p><code>0x54344</code>는 <code>pulse+0xBA</code>에서 이 보정값을 빼고 하위 16비트를 저장한다. 이어 <code>0x54358</code>이 ITCM setter <code>VA 0x397C</code>를 호출한다. 실제 <code>STRH</code> 명령 <code>VA 0x3980</code>이 공유 반워드 <code>VA 0x0010316E</code>에 보정값을 쓴다. 초기화 호출 <code>VA 0x19F4</code>도 같은 setter에 0을 전달했다. <a href="af-input.json">native_reset_writes·native_additive_writes</a></p>
+<p><code>0x54330…0x54340</code>은 <code>pulse+0xBA</code>에서 이 보정값을 뺀 하위 16비트를 준비한다. 호출 위치 <code>0x54344</code>가 넘긴 값은 <code>0xB97FC</code>의 실제 <code>STRH</code> 명령이 저장한다. 이어 <code>0x54358</code>이 ITCM setter <code>VA 0x397C</code>를 호출한다. 실제 <code>STRH</code> 명령 <code>VA 0x3980</code>이 공유 반워드 <code>VA 0x0010316E</code>에 보정값을 쓴다. 초기화 호출 <code>VA 0x19F4</code>도 같은 setter에 0을 전달했다. <a href="af-input.json">native_reset_writes·native_additive_writes</a></p>
 <p>경계값 40에서는 저장하지 않아 이전 보정값 12가 남았고, 41에서는 새 보정값 1을 기록했다. 상태 판정 실패·모터 플래그 설정·모드 플래그 설정·렌즈 능력 비트 6 설정 사례에서도 새 보정값을 쓰지 않았다. 호출을 생략하는 분기와 값을 지우는 동작을 구분해야 한다. 추가 대조에서는 잔량의 16비트 순환, 요청 32767 유지와 32768의 signed 해석에 따른 0 처리를 확인했다. <a href="af-input.json">threshold_40·threshold_41 및 나머지 조건 사례</a></p>
 </section>
 

@@ -210,7 +210,7 @@
     "scope": "Extracted prose, excluding CSD capacity, request/descriptor capacity, JPEG retry-capacity, and large-request residual paragraphs; final technical additions received coordinator and SD-worker review",
     "route": "light",
     "risk_score": 0,
-    "deterministic_gate": "OK \u2014 \uc218\ub834",
+    "deterministic_gate": "OK — 수렴",
     "change_rate_percent": 0.63,
     "sentences_touched": 2,
     "sentences_reviewed": 82,
@@ -554,6 +554,34 @@
       "two_diagrams_visually_checked": true,
       "inner_width": 1897,
       "document_scroll_width": 1882
+    }
+  },
+  "ui_dispatch": {
+    "original_ARM_replay": true,
+    "static_branch_targets": 52,
+    "code_ranges": 22,
+    "filter_cases": 9,
+    "runtime_gate_cases": 5,
+    "parent_notification_cases": 2,
+    "direct_occupied_queue_cases": 5,
+    "coordinator_replayed_snapshot": true,
+    "connected_endpoint": "B4 factory -> 0x712828 entry, requested E8 bytes, return file offset6D9E84",
+    "native_accept_flag_producers": true,
+    "task_wake_values": "injected",
+    "physical_input_scheduler_rendering": false,
+    "independent_review": "No P0-P2. Accepted P3 same-state cache-zero parent rejection, exact zero-wake condition, and separate direct/virtual cutoff descriptions.",
+    "publication": "pending",
+    "connected_cache_zero_control": true,
+    "language_review": {
+      "route": "standard",
+      "paragraphs": 11,
+      "change_rate_percent": 0.4,
+      "sentences_touched": 6,
+      "sentences_total": 56,
+      "self_check": "6/6",
+      "deterministic_gate": "PASS",
+      "modality_loss": 0,
+      "coordinator_reverted": "two states phrasing narrowed the original simultaneous reachability scope"
     }
   }
 }

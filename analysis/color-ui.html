@@ -45,6 +45,7 @@
 <p>선택 그림과 글자 래퍼는 가상 슬롯 <code>+0x48 → 0x707A54 → 0x70ACB8</code>을 공유한다. 실제 선택·이탈 실행에서 상태 바이트와 하위 객체의 두 16비트 값이 바뀌었다. 도움말은 슬롯 <code>+0xC → 0x70AA6C</code>가 해당 객체 <code>+0xC</code>를 설정했다. 이 관찰만으로 나머지 도움말이 반드시 숨겨진다고 단정하지 않았다. <a href="color-ui.json">focus·text_cases</a></p>
 </section>
 
+<p class="note">후속 검증: <a href="ui-dispatch.html">알림 필터의 생산자와 대기·활성 레코드를 연결해 화면 할당 요청까지 실행했다.</a> 아래의 알림 수신자 대체 경계는 이 문서의 기존 검증 범위다.</p>
 <section aria-labelledby="limits"><h2 id="limits">4. 원본 논리 동작을 검증했고, 실물 출력은 남아 있다</h2>
 <pre><code>python verify_color_ui.py decoded.bin --compare analysis/color-ui.json
 python verify_settings_storage.py decoded.bin --compare analysis/settings-storage.json

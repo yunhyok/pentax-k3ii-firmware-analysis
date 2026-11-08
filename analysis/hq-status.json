@@ -2,7 +2,7 @@
   "model": "PENTAX K-3 II",
   "firmware_version": "1.12",
   "baseline_commit": "66c85ea53f52b6e9489d742b5bd63e50e543055e",
-  "updated_at": "2026-11-08T16:29:27+09:00",
+  "updated_at": "2026-11-08T16:52:26+09:00",
   "goals": [
     {
       "id": "firmware_rebuild",
@@ -84,7 +84,7 @@
     },
     {
       "id": "k3iii_ui_port",
-      "status": "k3ii_color_space_parent_route_pending_confirm_cancel_reopen_text_focus_and_exact_RAM_write_counts_verified; persistent_sector_request_separately_traced; cross_model_port_unimplemented",
+      "status": "k3ii_color_space_source_filter_notification_typed_task_copy_and_native_transition_to_allocation_entry_verified; physical_event_scheduler_and_cross_model_port_unverified",
       "evidence": [
         "analysis/superresolution-menu.json",
         "analysis/menu-events.json",
@@ -97,16 +97,20 @@
         "verify_color_ui.py",
         "analysis/settings-storage.html",
         "analysis/settings-storage.json",
-        "verify_settings_storage.py"
+        "verify_settings_storage.py",
+        "analysis/ui-dispatch.html",
+        "analysis/ui-dispatch.json",
+        "verify_ui_dispatch.py"
       ],
       "gaps": [
         "Resource lookup/text preparation and UI state are bounded replays; LCD rasterization and physical input are untested.",
         "RAM live/mirror writes and their staged sector-write requests are verified in separate bounded runs; menu-to-save scheduling and physical persistence remain untested.",
-        "K-3 III and Q7 numeric IDs and rendering ABI need independent evidence; no UI transfer has run."
+        "K-3 III and Q7 numeric IDs and rendering ABI need independent evidence; no UI transfer has run.",
+        "Native task slices use injected wake values and skip intervening scheduling; the B4 detail stops at allocation entry, before screen construction."
       ],
       "next_actions": [
         "Provide frozen color-space evidence, hashes and replay commands for cross-model semantic comparison.",
-        "Trace the notification consumer or physical input mapping if required by the cross-model contract.",
+        "Trace physical-event and task-wake producers where offline evidence permits; preserve separately prepared runtime gate states.",
         "Preserve actual same-value RAM writes; do not impose a no-write optimization."
       ]
     }
@@ -141,7 +145,10 @@
     "Return-time r3/r12 poison controls fault in original caller memory accesses, proving these registers must be preserved for the observed callers despite generic AAPCS scratch allowances.",
     "Original timer/UDC constructors and registry entries connect CAfMotor through CAfDriver to timerD1/MMIO30011024 for selector0 and UDC117/MMIO30014060 for nonzero; three getter cases reproduce.",
     "AF producer54284 writes additive halfword0010316E through ITCM STRH3980. Fourteen gate/boundary cases distinguish count>40, alternate subtraction0, no-write retention and modulo16 behavior.",
-    "Twelve subsequent calculations read the same counter driver and additive state. Two full producer tails retain native resulting direction/state and pass requests367/40 to52E38 entry with argument8; counters are independently injected between slices."
+    "Twelve subsequent calculations read the same counter driver and additive state. Two full producer tails retain native resulting direction/state and pass requests367/40 to52E38 entry with argument8; counters are independently injected between slices.",
+    "UI shared key1D native bank writer and app14B4 snapshot are distinct; reset event0112005E clears the app cache only. Nine filter and five runtime-setting cases reproduce.",
+    "Original parent42 action1D passes the actual filter/interface into the pending record; occupied ordinary requests remain unchanged despite wake800. Typed task copy preserves padding, and the connected transition reaches B4 allocation entry for E8 bytes.",
+    "Native wake8 slice writes app56=1 and allows original prehook/accept/registry traversal; wake10 clears it and rejects. Task wake values are injected and scheduler/rendering are unverified."
   ],
   "validation": {
     "commands": [
@@ -156,7 +163,8 @@
       "python verify_color_ui.py decoded.bin --compare analysis/color-ui.json",
       "python verify_settings_storage.py decoded.bin --compare analysis/settings-storage.json",
       "python verify_tone_rebuild.py decoded.bin --zig <Zig0.17.1> --compare analysis/tone-rebuild.json",
-      "python verify_af_input.py decoded.bin --compare analysis/af-input.json"
+      "python verify_af_input.py decoded.bin --compare analysis/af-input.json",
+      "python verify_ui_dispatch.py decoded.bin --compare analysis/ui-dispatch.json"
     ],
     "results": [
       "PASS: unchanged, one-byte menu edit and secondary corruption fixture decode and pass the bounded original validation.",
@@ -182,7 +190,9 @@
       "PASS: independent review recompiled and replayed original and rebuilt snapshots, LF/CRLF normalization, invalid image and short ELF rejection; no P0-P2 findings. Additional per-return NZCV inversion now reproduces in the public verifier for both images.",
       "PASS: f7c9aa4 CI and Pages;12 served files byte-identical. Fresh clone recompiles and reproduces tone C snapshot,20 unit tests and publication checks (16 HTML,400 local links,105 public files). Two diagrams visually inspected at1882px without horizontal overflow. Light prose gate0.2%,7/55 sentences,modality0; hook-scope technical wording corrected afterwards.",
       "PASS: coordinator replayed AF input snapshot:3 getters,14 additive cases,12 calculators,2 prepare-entry handoffs. Independent review accepted no P0-P2; modulo expectation fixed and four boundary cases added.",
-      "PASS: f4f0fa9 CI and Pages;10 served files byte-identical. Fresh clone reproduces AF-input snapshot and publication checks (17 HTML,422 local links,108 public files). Two diagrams visually checked; scroll width1882 < inner width1897. Prose light gate0%,0/49 sentences,modality loss0."
+      "PASS: f4f0fa9 CI and Pages;10 served files byte-identical. Fresh clone reproduces AF-input snapshot and publication checks (17 HTML,422 local links,108 public files). Two diagrams visually checked; scroll width1882 < inner width1897. Prose light gate0%,0/49 sentences,modality loss0.",
+      "PASS: coordinator independently replayed UI dispatch snapshot:52 branch anchors,22 range hashes,9 filters,5 runtime gates,2 parent notifications,5 occupied-queue cases and task copy/accept/reject/priority controls. Independent review found no P0-P2; added same-state native cache-zero rejection and clarified task boundaries.",
+      "PASS: UI standard prose gate0.4%,6/56 sentences,modality loss0. HQ AF P3 corrected:54344 is the BL callsite; actual pulse+BA STRH is B97FC; coordinator disassembly confirmed."
     ],
     "limits": [
       "Unicorn 2.1.4 synthetic memory; no physical device I/O.",
@@ -219,7 +229,10 @@
     "rebuild/tone_interpolate.c",
     "analysis/af-input.html",
     "analysis/af-input.json",
-    "verify_af_input.py"
+    "verify_af_input.py",
+    "analysis/ui-dispatch.html",
+    "analysis/ui-dispatch.json",
+    "verify_ui_dispatch.py"
   ],
   "blockers": [
     {
@@ -254,7 +267,12 @@
       "mobile_layout": "not checked"
     },
     "local_preview": "Unavailable under tool policy; published HTTPS preview verified instead.",
-    "pending_local_artifacts": [],
+    "pending_local_artifacts": [
+      "analysis/ui-dispatch.html",
+      "analysis/ui-dispatch.json",
+      "verify_ui_dispatch.py",
+      "analysis/af-input.html"
+    ],
     "checksum_sentinel_fix": {
       "commit": "9521f6881b356429ed0b8b58123c6483e23eddd5",
       "ci": "success",

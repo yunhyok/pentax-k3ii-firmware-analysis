@@ -1,0 +1,752 @@
+{
+  "firmware_version": "1.12",
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "image_base": 33554432,
+  "static": {
+    "branch_checks": [
+      [
+        3111096,
+        3181504
+      ],
+      [
+        3182800,
+        7280392
+      ],
+      [
+        7394392,
+        7255028
+      ],
+      [
+        7280564,
+        7594124
+      ],
+      [
+        7280600,
+        8245468
+      ],
+      [
+        6917420,
+        8245468
+      ],
+      [
+        5388044,
+        7594124
+      ],
+      [
+        5389628,
+        6927900
+      ],
+      [
+        6927952,
+        7255796
+      ],
+      [
+        6927968,
+        7255268
+      ],
+      [
+        3187652,
+        7308128
+      ],
+      [
+        7308168,
+        7255652
+      ],
+      [
+        7308156,
+        7255116
+      ],
+      [
+        7255172,
+        5305680
+      ],
+      [
+        3126348,
+        3126564
+      ],
+      [
+        3191380,
+        3192748
+      ],
+      [
+        3122156,
+        7308196
+      ],
+      [
+        7308200,
+        6927900
+      ],
+      [
+        3138312,
+        7308128
+      ],
+      [
+        3138580,
+        7307968
+      ],
+      [
+        3138588,
+        3138716
+      ],
+      [
+        3138596,
+        3138716
+      ],
+      [
+        3184576,
+        3184600
+      ],
+      [
+        7394388,
+        7415848
+      ],
+      [
+        4873256,
+        7167984
+      ],
+      [
+        7181672,
+        7415848
+      ],
+      [
+        7181676,
+        4864148
+      ],
+      [
+        7184800,
+        4903200
+      ],
+      [
+        3194516,
+        3193092
+      ],
+      [
+        3194532,
+        7390156
+      ],
+      [
+        3193132,
+        3193156
+      ],
+      [
+        3193160,
+        3323608
+      ],
+      [
+        3187212,
+        3323608
+      ],
+      [
+        3187224,
+        3185040
+      ],
+      [
+        3187240,
+        3323664
+      ],
+      [
+        3187976,
+        3187216
+      ],
+      [
+        3187984,
+        3187208
+      ],
+      [
+        3189352,
+        3185056
+      ],
+      [
+        3185140,
+        3185836
+      ],
+      [
+        3185152,
+        7184952
+      ],
+      [
+        3185168,
+        7184952
+      ],
+      [
+        3115736,
+        7302428
+      ],
+      [
+        3117472,
+        3117620
+      ],
+      [
+        3117480,
+        7315536
+      ],
+      [
+        7308648,
+        5884976
+      ],
+      [
+        7308672,
+        5270208
+      ],
+      [
+        7184992,
+        7180032
+      ],
+      [
+        7180056,
+        7356472
+      ],
+      [
+        7184948,
+        7356484
+      ],
+      [
+        7180832,
+        7183996
+      ],
+      [
+        7184000,
+        7415848
+      ],
+      [
+        7184004,
+        4421536
+      ]
+    ],
+    "config_map": {
+      "0x1d": {
+        "file_offset": 10353304,
+        "payload_offset": 6,
+        "mask": 4,
+        "shift": 2
+      },
+      "0x2a": {
+        "file_offset": 10353408,
+        "payload_offset": 10,
+        "mask": 8,
+        "shift": 3
+      },
+      "0x52": {
+        "file_offset": 10349192,
+        "payload_offset": 29
+      }
+    },
+    "ui_mapping": {
+      "parent_widget_word_offset": 10176732,
+      "parent_widget": 21016643,
+      "category_row_offset": 10182388,
+      "category": 13,
+      "detail_id": 180,
+      "parent_vtable_file_offset": 10871252,
+      "derived_app_vtable_file_offset": 10894100,
+      "derived_secondary_vtable_file_offset": 10894788
+    },
+    "range_sha256": [
+      {
+        "start": 3181952,
+        "end_exclusive": 3181992,
+        "sha256": "4eae90834a84078fa4c01304df331d4a3161ee57ab7569ce184da14013384a91"
+      },
+      {
+        "start": 3111100,
+        "end_exclusive": 3111188,
+        "sha256": "3a1e6565dee34c067bfd21ff693ab2820a2f20d6ce5dd60214a79d00a5d10320"
+      },
+      {
+        "start": 7394384,
+        "end_exclusive": 7394416,
+        "sha256": "ce730f5ecc6f3a7ffc8b5d59701c27ba9fa19f101365c2257203b25d0e9f4b5b"
+      },
+      {
+        "start": 7255028,
+        "end_exclusive": 7255116,
+        "sha256": "1eb6d1847d80cdcbe41fac821c8e5723b36b622eecd436cd267743275fca7d8f"
+      },
+      {
+        "start": 7280556,
+        "end_exclusive": 7280608,
+        "sha256": "edab756dee9a34a2777008f19452604e8ead2e68b712b611d7840702e234cbee"
+      },
+      {
+        "start": 5389620,
+        "end_exclusive": 5389632,
+        "sha256": "6ae6e1b715aef15448ece5133855c48655d4f11aa43bca5823ac344e74f8a48f"
+      },
+      {
+        "start": 6927900,
+        "end_exclusive": 6927980,
+        "sha256": "0d155e4612ea74a29b6648f00d7e6886f6426ffe268c6b17ca2dd28a43423e8a"
+      },
+      {
+        "start": 3187624,
+        "end_exclusive": 3187664,
+        "sha256": "8c75c5927a555b2e5ec596df34cb4817481279f4fdeb79457d41b4d8adc3aeac"
+      },
+      {
+        "start": 3126280,
+        "end_exclusive": 3126572,
+        "sha256": "64537bd7dc870a0d591528f0e594a021ae4286e5b433db052da95a934330908c"
+      },
+      {
+        "start": 3138296,
+        "end_exclusive": 3138728,
+        "sha256": "4c85d923a867f828b424ac99ccbbe4fe44d50d03f3a487ebfa8098f73f4f4d19"
+      },
+      {
+        "start": 7167800,
+        "end_exclusive": 7168036,
+        "sha256": "73b4fcb20cde2bb03a5b77e55a901a328e1b495de1528d55b39361977b50e6e1"
+      },
+      {
+        "start": 3194432,
+        "end_exclusive": 3194548,
+        "sha256": "9f98ce9071072c51449912627d6befa8ff4addb51fc2f23fef76444e231096fd"
+      },
+      {
+        "start": 3193092,
+        "end_exclusive": 3193268,
+        "sha256": "b1e67ad0369912954fa39ab4de534c0c0052d16ec9320505712945afc3434c15"
+      },
+      {
+        "start": 3187960,
+        "end_exclusive": 3188048,
+        "sha256": "a9714ef11af6095994e4919492a429f0e5aa8177288369af828d75b7334e78c1"
+      },
+      {
+        "start": 3323608,
+        "end_exclusive": 3323724,
+        "sha256": "a79faa71c6541c3677827e7f33991df4539f508e4737d1a744c89017be7d53b1"
+      },
+      {
+        "start": 3188500,
+        "end_exclusive": 3188568,
+        "sha256": "68126608e0edf2b0041ec737da913a7df8e8a2cb5e45544d0edf1c208f712eb1"
+      },
+      {
+        "start": 3189304,
+        "end_exclusive": 3189360,
+        "sha256": "e13c08761380d2284e239e80ba43aa8f6ce03704f5845e3c506d4d762b8d4928"
+      },
+      {
+        "start": 3185056,
+        "end_exclusive": 3185840,
+        "sha256": "78cbdf68ab8a6ce0595461525d9e310e8e1f071ad9d58771899acd03f104d682"
+      },
+      {
+        "start": 7183996,
+        "end_exclusive": 7184016,
+        "sha256": "e8d3ec6d3d7955d18443a40055f0100becac802b564ae952a4aabd875e1f3cd3"
+      },
+      {
+        "start": 3115652,
+        "end_exclusive": 3117404,
+        "sha256": "504d8e454b65097efe5c38e9e0c81bb041fb2709ee294c910feae68d26d9ecbb"
+      },
+      {
+        "start": 3117404,
+        "end_exclusive": 3117628,
+        "sha256": "d7b797f9d78fc841c22929c615fac79fb24c704044a503e24a4be2e79cd012de"
+      },
+      {
+        "start": 7184952,
+        "end_exclusive": 7185004,
+        "sha256": "42cff0ca1b01697144f7ddc5cc798820c4fc4644d284a1382d2b190f8aa4bb11"
+      }
+    ]
+  },
+  "replay": {
+    "unicorn_version": "2.1.4",
+    "config_key": 29,
+    "payload_object_offset": 10,
+    "mask": 4,
+    "app_filter_object_offset": 5300,
+    "publications_seen_after_bank_flip": [
+      1,
+      0,
+      1
+    ],
+    "initial_allocation_sizes": [
+      40,
+      20,
+      20
+    ],
+    "filter_cases": [
+      {
+        "case": "constructor_state",
+        "active_byte": 0,
+        "cached": 0,
+        "target": 180,
+        "result": 0,
+        "filter_path": [
+          3126336,
+          3126352,
+          3126560,
+          3126564
+        ]
+      },
+      {
+        "case": "setter_before_app_snapshot",
+        "active_byte": 167,
+        "cached": 0,
+        "target": 180,
+        "result": 0,
+        "filter_path": [
+          3126336,
+          3126352,
+          3126560,
+          3126564
+        ]
+      },
+      {
+        "case": "app_snapshot_set",
+        "active_byte": 167,
+        "cached": 1,
+        "target": 180,
+        "result": 180,
+        "filter_path": [
+          3126336,
+          3126564
+        ]
+      },
+      {
+        "case": "higher_priority_be_reject",
+        "active_byte": 167,
+        "cached": 1,
+        "target": 190,
+        "result": 0,
+        "filter_path": [
+          3126560,
+          3126564
+        ]
+      },
+      {
+        "case": "app_cache_reset_event",
+        "active_byte": 167,
+        "cached": 0,
+        "target": 180,
+        "result": 0,
+        "filter_path": [
+          3126336,
+          3126352,
+          3126560,
+          3126564
+        ]
+      },
+      {
+        "case": "app_resnapshot",
+        "active_byte": 167,
+        "cached": 1,
+        "target": 180,
+        "result": 180,
+        "filter_path": [
+          3126336,
+          3126564
+        ]
+      },
+      {
+        "case": "provider_clear_before_app_snapshot",
+        "active_byte": 163,
+        "cached": 1,
+        "target": 180,
+        "result": 180,
+        "filter_path": [
+          3126336,
+          3126564
+        ]
+      },
+      {
+        "case": "app_resnapshot_clear",
+        "active_byte": 163,
+        "cached": 0,
+        "target": 180,
+        "result": 0,
+        "filter_path": [
+          3126336,
+          3126352,
+          3126560,
+          3126564
+        ]
+      },
+      {
+        "case": "runtime_set_then_prepared_registry_42",
+        "active_byte": 167,
+        "cached": 1,
+        "target": 180,
+        "result": 180,
+        "filter_path": [
+          3126336,
+          3126564
+        ]
+      }
+    ],
+    "runtime_virtual_dispatch_slice": [
+      3184564,
+      3184620
+    ],
+    "runtime_setter_cases": [
+      {
+        "active_key_1d": 0,
+        "key_52_word": 0,
+        "cached": 0,
+        "writer_file_offsets": []
+      },
+      {
+        "active_key_1d": 0,
+        "key_52_word": 1,
+        "cached": 0,
+        "writer_file_offsets": []
+      },
+      {
+        "active_key_1d": 1,
+        "key_52_word": 0,
+        "cached": 0,
+        "writer_file_offsets": []
+      },
+      {
+        "active_key_1d": 1,
+        "key_52_word": 4294967295,
+        "cached": 0,
+        "writer_file_offsets": []
+      },
+      {
+        "active_key_1d": 1,
+        "key_52_word": 1,
+        "cached": 1,
+        "writer_file_offsets": [
+          3138712
+        ]
+      }
+    ],
+    "connected_source": {
+      "snapshot": [
+        3187624,
+        3187664
+      ],
+      "key_0x1d": 1,
+      "key_0x2a": 0,
+      "source_payload_size": 13,
+      "byte_6_with_neighbor_canaries": 167
+    },
+    "dispatch": {
+      "record_fields": {
+        "target": [
+          4,
+          1
+        ],
+        "source": [
+          5,
+          1
+        ],
+        "kind": [
+          6,
+          1
+        ],
+        "action": [
+          8,
+          4
+        ],
+        "arg_byte": [
+          12,
+          1
+        ],
+        "arg0": [
+          16,
+          4
+        ],
+        "arg1": [
+          20,
+          4
+        ]
+      },
+      "notification_path": [
+        4872328,
+        7167984,
+        3194432,
+        3126280,
+        3193092
+      ],
+      "parent_notification_cases": [
+        {
+          "initial_target": 85,
+          "pending_unchanged": true,
+          "pending": {
+            "target": 85,
+            "source": 165,
+            "kind": 165,
+            "action": 2779096485,
+            "arg_byte": 165,
+            "arg0": 2779096485,
+            "arg1": 2779096485
+          },
+          "wake_flags": [
+            2,
+            2048
+          ]
+        },
+        {
+          "initial_target": 0,
+          "pending_unchanged": false,
+          "pending": {
+            "target": 180,
+            "source": 66,
+            "kind": 1,
+            "action": 29,
+            "arg_byte": 0,
+            "arg0": 0,
+            "arg1": 0
+          },
+          "wake_flags": [
+            2,
+            2048
+          ]
+        }
+      ],
+      "connected_cache_zero_rejection": {
+        "cached": 0,
+        "path": [
+          4872328,
+          7167984,
+          3194432,
+          3126280
+        ],
+        "wake_flags": [
+          2
+        ],
+        "pending_unchanged": true
+      },
+      "task_copy_reset": {
+        "injected_wake": 2048,
+        "active": {
+          "target": 180,
+          "source": 66,
+          "kind": 1,
+          "action": 29,
+          "arg_byte": 0,
+          "arg0": 0,
+          "arg1": 0
+        },
+        "pending_after": {
+          "target": 0,
+          "source": 0,
+          "kind": 23,
+          "action": 0,
+          "arg_byte": 0,
+          "arg0": 0,
+          "arg1": 0
+        },
+        "other_active_records_cleared": true,
+        "record_vtable_and_padding_preserved": true
+      },
+      "task_slices": {
+        "constants": [
+          3187624,
+          3187632
+        ],
+        "copy_reset": [
+          3187960,
+          3188048
+        ],
+        "wake_8": [
+          3188548,
+          3188568
+        ],
+        "wake_0x10": [
+          3188500,
+          3188528
+        ],
+        "dispatch_entry": 3189304
+      },
+      "wake_8_acceptance": {
+        "injected_wake": 8,
+        "app_0x56": 1
+      },
+      "allocation_boundary": {
+        "entry": 7415848,
+        "requested_bytes": 232,
+        "return_file_offset": 7184004,
+        "path": [
+          3185056,
+          3115652,
+          3117404,
+          7184952,
+          7184952,
+          7183996
+        ],
+        "registry_ids": [
+          66,
+          180
+        ],
+        "acceptance_return": 1,
+        "global_key_0x17_return": 0,
+        "lock_boundaries": [
+          7356472,
+          7356484,
+          7356472
+        ],
+        "injected_task_flags": 2048
+      },
+      "wake_0x10_rejection": {
+        "injected_wake": 16,
+        "app_0x56": 0,
+        "app_0x58": 0,
+        "end_exclusive": 3185836,
+        "acceptance_return": 0,
+        "path": [
+          3185056,
+          3115652,
+          3117404
+        ]
+      },
+      "direct_occupied_queue_cases": [
+        {
+          "kind": 1,
+          "action": 29,
+          "changed": false
+        },
+        {
+          "kind": 1,
+          "action": 11,
+          "changed": true
+        },
+        {
+          "kind": 1,
+          "action": 46,
+          "changed": true
+        },
+        {
+          "kind": 2,
+          "action": 11,
+          "changed": false
+        },
+        {
+          "kind": 2,
+          "action": 46,
+          "changed": false
+        }
+      ],
+      "no_wake": {
+        "injected_wake": 0,
+        "pending_preserved": true,
+        "active_records_cleared": true,
+        "transition_entered": false
+      },
+      "alternate_priority": {
+        "injected_flags": 2048,
+        "selected_record_offset": 152
+      }
+    },
+    "execution_replacements": {
+      "0x712828": "Returns scratch storage for three initial provider/bank allocations. Hook removed before stopping at the later detail allocator entry.",
+      "0x698f28": "Returns zero from post-bank-flip publication callback.",
+      "0x70c3cc": "Records original wake recipient and flag; returns zero.",
+      "0x704038": "Returns zero at registry lock acquisition.",
+      "0x704044": "Returns zero at registry lock release."
+    },
+    "scope": [
+      "Prepared memory supplies service bootstrap guards, app/screen registry and panel state, context +0x33a/+0x33c zero, and the separate global provider's zeroed 13-byte payload for key 0x17.",
+      "Filter/runtime fixtures prepare app +0x18c = 6 and +0x198 = 0. The runtime cases supply key 0x52 words through the separate context provider and current screen ID zero. The ninth filter case separately prepares current screen ID 0x42.",
+      "The connected fixture retains app +0x18c = 6 and the provider/context installed by the original slices. The active payload has key 0x1d set, neighboring byte canaries, and key 0x2a clear.",
+      "Task replay enters bounded slices with injected wake values and registers. It skips intervening task code. A logical parent action is supplied at function entry. Live input, RTOS delivery, lock behavior, screen allocation/constructor and rendering are outside the replay."
+    ]
+  }
+}

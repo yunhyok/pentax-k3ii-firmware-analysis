@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ko">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="K-3 II 색공간 메뉴 알림 필터의 생산자, 대기 레코드와 작업 루프, 실제 전환 함수의 화면 할당 요청을 원본 코드로 검증.">
+<title>K-3 II — 메뉴 알림과 화면 전환</title><link rel="stylesheet" href="../assets/report.css"></head>
+<body><header><div class="eyebrow">PENTAX K-3 II · firmware 1.12 · 2026-11-08</div>
+<h1>색공간 메뉴 요청이<br>화면 할당에 도달하는 조건</h1>
+<p class="lead">앞선 색공간 메뉴 검증에서 남아 있던 알림 소비자를 연결했다. 원본 상태가 메뉴 필터에 복사되는 과정과 대기 레코드의 갱신 조건을 확인하고, 작업 루프의 일부 구간을 이어 실제 전환 함수가 화면 할당을 요청하는 지점까지 실행했다. 물리 버튼·RTOS 전달·화면 생성 완료는 이번 검증에 포함하지 않았다.</p>
+<nav aria-label="보고서 탐색"><a href="color-ui.html">앞선 색공간 메뉴</a><a href="#filter">필터 값 생산</a><a href="#pending">알림 수신</a><a href="#dispatch">작업과 전환</a><a href="#limits">재현 범위</a><a href="hq-status.json">연구 상태</a></nav></header>
+<main><p class="note">주소는 해제 파일 오프셋이다. 객체 필드는 <code>app+0x14B4</code>처럼 표기했다. 키·이벤트·화면 ID는 K-3 II 펌웨어 내부 값이며 다른 모델에 그대로 적용하는 이식 규약이 아니다.</p>
+
+<section aria-labelledby="filter"><h2 id="filter">1. 공유 상태와 메뉴 필터 값은 서로 다른 시점에 바뀐다</h2>
+<figure><figcaption>도식 1. 키 0x1D의 원본 저장과 애플리케이션 복사</figcaption><div class="flow" role="group" aria-label="상태 쓰기 함수가 반대 뱅크에 키를 기록한 뒤 애플리케이션 초기화가 이를 복사하여 메뉴 필터에 사용">
+<div class="stage"><strong>0x523D3C → 0x69B61C</strong><span>원본 호출 인수 1<br>키 0x1D, 바이트+0xA의 bit 2<br>상태를 반대 뱅크에 기록</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>0x30A3C4 → 0x6F8360</strong><span>활성 뱅크의 키 0x1D 읽기<br>0x30A3CC → app+0x14B4<br>쓰기 직후 자동 갱신은 아님</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>0x2FB408 · 메뉴 필터</strong><span>앞선 우선 조건을 지난 뒤<br>app+0x14B4 = 1이면 조기 반환<br>준비한 B4 요청을 그대로 전달</span></div></div></figure>
+<p>상태 제공자의 원본 초기화는 두 뱅크의 13바이트 데이터 영역을 0으로 만든다. 서비스의 <code>+0x54</code>에서 가져온 같은 객체가 읽기 문맥의 <code>+0x28</code>과 쓰기 객체의 <code>+0x18</code>에 연결된다. 키 <code>0x1D</code>의 표 항목은 데이터 오프셋 6·마스크 <code>0x04</code>·시프트 2이며 4바이트 헤더를 포함한 객체 위치는 <code>+0xA</code>다. <a href="ui-dispatch.json">상태 제공자 연결과 키 표</a></p>
+<p>인수 1을 주는 원본 호출은 활성 데이터의 <code>0xA3</code>을 반대 뱅크의 <code>0xA7</code>로 바꿨다. 이웃 비트는 유지됐지만 <code>app+0x14B4</code>는 그대로였다. 초기화 구간 <code>0x30A3A8…0x30A3D0</code>을 실행한 뒤에야 필터 값이 1이 됐다. 반대로 상태를 0으로 지운 뒤에도 애플리케이션이 다시 복사하기 전까지 필터 값 1이 남았다. <a href="../verify_ui_dispatch.py">원본 쓰기·뱅크 전환·필터 대조</a></p>
+<p>이벤트 <code>0x0112005E</code>는 <code>0x30AF2C</code>를 거쳐 필터 값을 0으로 지우지만 공유 상태의 키는 바꾸지 않았다. 또한 <code>app+0x59 = 1</code>이고 요청 대상이 <code>0xBE</code>이면 필터 값 1보다 앞선 조건에서 거부했다. 따라서 이 바이트를 모든 메뉴의 허용 여부로 해석하지 않았다. 값이 0인 B4 거부 사례도 후속 상태 조건을 따로 준비한 경우의 결과다. <a href="ui-dispatch.json">필터 경로별 실행 결과</a></p>
+<p>실행 중 갱신 경로도 있다. 원본 가상 호출 <code>0x3097E8</code>은 <code>0x2FE2F8</code>로 이어지며 검사한 조건에서 키 <code>0x1D = 1</code>이고 별도 키 <code>0x52</code>를 signed 32비트로 읽은 값이 양수일 때 <code>0x2FE498</code>이 필터 값 1을 기록했다. 0·양수·<code>0xFFFFFFFF</code>를 포함한 다섯 조합을 대조했다. 이 경로는 현재 화면 ID 0에서 실행했고 이후 ID <code>0x42</code>를 별도로 준비했으므로, 두 상태가 실기에서 함께 성립한다고 주장하지 않는다. <a href="ui-dispatch.json">실행 중 설정 분기</a></p>
+</section>
+
+<section aria-labelledby="pending"><h2 id="pending">2. 원본 알림 수신자는 app+0xB0에 요청을 보관한다</h2>
+<p>상위 화면 ID <code>0x42</code>의 색공간 항목 <code>0x0140B043</code>은 논리 동작 <code>0x1D</code>에서 대상 <code>0xB4</code>를 요청한다. 화면의 <code>+0xC4</code>는 레지스트리의 원본 연결 코드가 <code>app+0x4C</code>로 설정한다. 이 보조 인터페이스의 실제 가상 함수 <code>0x30BE40</code>은 원래 app 포인터를 복원하고 <code>0x2FB408</code> 필터를 호출한 뒤 <code>0x30B904</code>로 넘겼다. <a href="color-ui.html">기존 메뉴 의미·위젯 검증</a> · <a href="ui-dispatch.json">실제 가상 함수·연결 코드</a></p>
+<figure><figcaption>도식 2. 대기 요청에서 원본 전환 함수까지</figcaption><div class="flow" role="group" aria-label="색공간 메뉴가 대기 레코드에 대상 B4를 쓰고 깨움 요청 후 작업 루프가 처리 중 레코드로 복사하여 전환 함수를 호출">
+<div class="stage"><strong>app+0xB0 · 대기</strong><span>대상 B4 / 출발 화면 42<br>종류 1 / 동작 1D<br>70C3CC에 깨움 0x800 요청</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>0x30A4F8 · 작업 구간</strong><span>주입한 깨움 비트 0x800 확인<br>정의된 필드만 app+0x68에 복사<br>대기 대상 0·종류 0x17로 초기화</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>0x30AA68 → 0x3099A0</strong><span>처리 중 레코드 포인터 전달<br>사전 처리·허용 판정 실행<br>B4 화면의 E8바이트 할당 요청</span></div></div>
+<p class="caption">깨움 요청 함수는 대체했으며 수신 비트는 직접 주입했다. 두 작업 구간 사이의 스케줄링은 실행하지 않았다. 화면 할당 함수 입구에서 멈췄다.</p></figure>
+<p>같은 앱 상태에서 원본 이벤트로 필터 캐시만 지우면 상위 메뉴 동작은 큐 기록 전에 거부되고 깨움 <code>0x2</code>만 요청했다. 원본 스냅샷으로 캐시를 다시 채운 뒤에는 아래 경로가 실행됐다. 대기 레코드가 비어 있으면 대상·출발 화면·종류·동작과 부가 인수를 기록한다. 이미 요청이 있으면 종류 1이면서 동작 <code>0x0B</code> 또는 <code>0x2E</code>인 경우에만 바꾼다. 실제 색공간 동작 <code>0x1D</code>는 기존 요청을 덮어쓰지 않았다. 이 경우에도 수신자는 깨움 <code>0x800</code>을 요청했다. 가상 함수 앞에서 추가로 관찰한 깨움 비트는 <code>0x2</code>다. <a href="ui-dispatch.json">빈 슬롯·점유 슬롯과 직접 갱신 조건 대조</a></p>
+</section>
+
+<section aria-labelledby="dispatch"><h2 id="dispatch">3. 복사할 필드와 전환을 허용하는 조건이 따로 있다</h2>
+<p><code>0x32B710</code>은 대상·출발 화면·종류·동작·1바이트 인수·두 워드 인수만 복사한다. 레코드 전체 24바이트를 복사하지 않으며 첫 4바이트와 패딩은 유지한다. 깨움 비트맵에 0을 주입한 대조에서는 대기 요청이 남고 처리 중 레코드가 초기화됐다. 뒤의 분기에서는 별도 레코드 <code>app+0x98</code>에 대상이 있으면 <code>app+0x68</code>보다 우선했다. <a href="../verify_ui_dispatch.py">패딩 대조값·비트 분기·우선순위 검증</a></p>
+<p>전환 함수 <code>0x3099A0</code>은 원본 사전 처리 <code>0x2F8A84</code>와 허용 판정 <code>0x2F915C</code>를 호출한다. 검사한 상태에서는 대상 B4와 출발 화면 42가 유지됐고 레지스트리 조회가 <code>0x6D9E7C</code>로 이어졌다. 할당 함수 <code>0x712828</code> 입구에서 크기 <code>0xE8</code>과 복귀 위치 <code>0x6D9E84</code>를 관찰했다. 이 복귀 위치의 다음 호출이 색공간 화면 생성자 <code>0x4377A0</code>다. 이번 실행은 생성자까지 완료하지 않았다. <a href="ui-dispatch.json">같은 요청 레코드의 전환·할당 경계</a></p>
+<p>허용 판정에는 <code>app+0x56</code>도 관여한다. 작업 루프의 원본 명령은 주입한 깨움 비트 <code>0x8</code>에서 이 바이트를 1로 쓰고 <code>0x10</code>에서는 0으로 썼다. 0인 대조는 전환 함수에서 거부됐다. <code>0x8</code> 구간은 뒤의 가상 호출 전에, <code>0x10</code> 구간은 직접 알림 호출 <code>0x309E18</code> 전에 각각 멈췄으며 해당 깨움 비트를 실제 장치 이벤트와 연결한 결과는 아니다. 사전 처리에 사용한 별도 상태 제공자·가드·0값 입력도 검증기에 명시했다. <a href="ui-dispatch.json">허용 바이트의 원본 저장과 실행 한계</a></p>
+</section>
+
+<section aria-labelledby="limits"><h2 id="limits">4. 메뉴 의미의 이식에 쓸 수 있는 범위</h2>
+<pre><code>python verify_ui_dispatch.py decoded.bin --compare analysis/ui-dispatch.json</code></pre>
+<p>공개 검증기는 원본 해시·분기·가상 함수 표·키 표를 확인한 뒤 Unicorn에서 실행한다. 상태 제공자의 초기 할당, 상태 변경 뒤 알림, 깨움 요청과 레지스트리 잠금은 명시한 대체 경계다. 필터의 생산자와 메뉴 요청·처리 중 레코드는 같은 객체에서 연결해 검사하며 실행 중 설정의 별도 조건 실험은 구분해 기록했다. <a href="../verify_ui_dispatch.py">검증기</a> · <a href="ui-dispatch.json">실행 결과와 대체 함수 목록</a></p>
+<p>다른 모델과 비교할 때는 메뉴 항목의 의미, 적용·취소 동작, 대기 레코드 정책, 상태를 복사하는 시점을 비교할 수 있다. K-3 III·Q7의 숫자 ID와 객체 배치는 각 펌웨어에서 다시 확인해야 한다. 이번 결과는 물리 입력, 전체 작업 루프, 생성자 이후 UI 초기화, LCD 렌더링과 실제 카메라에서의 동시 도달 조건을 검증한 이식 결과가 아니다. <a href="hq-status.json">목표별 진행 상태</a></p>
+</section></main><footer>K-3 II v1.12 · <a href="color-ui.html">색공간 선택·적용·취소</a> · <a href="../README.md">저장소 안내</a></footer></body></html>
