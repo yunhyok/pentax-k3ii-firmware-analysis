@@ -40,7 +40,10 @@
         "verify_store_image_records.py",
         "analysis/preserved-sector20.html",
         "analysis/preserved-sector20.json",
-        "verify_preserved_sector20.py"
+        "verify_preserved_sector20.py",
+        "analysis/preserved-config.html",
+        "analysis/preserved-config.json",
+        "verify_preserved_config.py"
       ],
       "gaps": [
         "Only same-size edits; insertion/deletion and relocation are unsupported.",
@@ -51,7 +54,7 @@
       ],
       "next_actions": [
         "Continue offline caller/state-dependency analysis; the proven C tone leaf is a pinned64-byte A32 build, not a whole-firmware rebuild.",
-        "Continue offline auxiliary remote receiver, sector14 app-copy writeback, preserved-record packet validation/config-byte producers, and capture-constructor/allocation paths.",
+        "Continue offline auxiliary remote receiver, sector14 app-copy writeback, preserved-record upstream packet validation and count-setter event reachability, and capture-constructor/allocation paths. Native config+C/+D producers now have a connected bounded replay.",
         "Keep physical update outside the current offline scope."
       ]
     },
@@ -134,6 +137,7 @@
     }
   ],
   "new_findings": [
+    "Native config flag producers: service owner4047D108+3C is bound by original5660B4 after ctor74E598. Native later virtual init56670C→74ED54 binds ID63/64 and validates same native-loaded RAM in independent groups C=0..5,D=6..17/24/25. Five init and three same-RAM indexed-count updates produce independent C/D and initial CAP4A/neighbor values. Native capture prefix65EA68 resolves same owner/config itself. Supplied allocator result, guards, call frames, synthetic records and version-zero ID62 route remain explicit; upstream events and hardware are unproven.",
     "Unchanged K-3 II decoded bytes repack byte-identically to the original distribution package.",
     "Primary 16 MiB checksum is little-endian at 0x1f0; secondary 0xf000-byte checksum is big-endian at 0x100007c.",
     "Original decoder 0x8476cc agrees with the Python transform over the complete two-image package.",
@@ -270,7 +274,10 @@
     "verify_store_image_records.py",
     "analysis/preserved-sector20.html",
     "analysis/preserved-sector20.json",
-    "verify_preserved_sector20.py"
+    "verify_preserved_sector20.py",
+    "analysis/preserved-config.html",
+    "analysis/preserved-config.json",
+    "verify_preserved_config.py"
   ],
   "blockers": [
     {
@@ -519,7 +526,7 @@
       "verifier_sha256": "ecf0c72d1729d9dabb74f9c3f0cba96a073ca88a830ef1e4b404284663c81338"
     }
   },
-  "offline_work_in_progress": "Preserved sectors20/21 publication verified through fresh clone, optimized replay, CI, Pages and all 9 changed HTTP files. One native worker is freezing connected config+C/+D producers; manager will independently replay and compare before publication. Upstream ID63 packet dispatch is a separate pending lead.",
+  "offline_work_in_progress": "Publishing preserved-config native producer/consumer proof after independent replay/review. Next lead: ID63 packet virtual slots+2C/+30 and upstream bounds; config count setter callers635568 and writer635F80/7B5130 event reachability. No physical operation authorized or performed.",
   "snapshot_comparison_type_fix": {
     "commit": "bcacf0fd9aa4f77d35ca664bbb6e71cbdf830ea3",
     "shared_helper": "verify_findings.require_snapshot",

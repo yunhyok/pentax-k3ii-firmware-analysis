@@ -1,0 +1,531 @@
+{
+  "schema_version": 1,
+  "firmware_version": "1.12",
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "replay": {
+    "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+    "code_va_base": 33554432,
+    "unicorn_version": "2.1.4",
+    "static_checks": {
+      "branches": 37,
+      "words": 33
+    },
+    "execution_replacements": [],
+    "native_owners": {
+      "service": 1078448392,
+      "provider_manager": 1077981420
+    },
+    "prepared_initialization_guards": [
+      1077983140,
+      1077980772,
+      1078057340
+    ],
+    "validated_groups": [
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        24,
+        25
+      ]
+    ],
+    "synthetic_descriptor": {
+      "used_bytes": 4,
+      "terminator": 45056,
+      "matching_count": 1
+    },
+    "boundaries": {
+      "service_ctor": 5659592,
+      "allocation_result_to_bind": [
+        5660848,
+        5660872
+      ],
+      "provider_registration": [
+        7780560,
+        7780608
+      ],
+      "manager_load_entry": 7241392,
+      "config_virtual_init": [
+        5662460,
+        5662480
+      ],
+      "config_indexed_count_setter": 7666036,
+      "config_alternate_writer": 7663000,
+      "capture_policy_prefix": [
+        6679144,
+        6679204
+      ],
+      "neighbor_caller": [
+        5846848,
+        5846860
+      ],
+      "leaf_return_va": 269422592
+    },
+    "init_cases": [
+      {
+        "case": "first_group_bad_count",
+        "backup_marker_valid": [
+          1,
+          1
+        ],
+        "bad_descriptor_index": 0,
+        "validated_indices": [
+          0,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          24,
+          25
+        ],
+        "config_bytes": [
+          0,
+          1
+        ],
+        "native_config_writes": [
+          [
+            7662556,
+            12,
+            1,
+            0
+          ],
+          [
+            7662568,
+            13,
+            1,
+            1
+          ]
+        ],
+        "capture_flag_4a": 0,
+        "neighbor_result": 1,
+        "consumer_entries": [
+          [
+            7887196,
+            1078448392
+          ],
+          [
+            7666108,
+            268566528
+          ],
+          [
+            7887196,
+            1078448392
+          ],
+          [
+            7666168,
+            268566528
+          ]
+        ],
+        "capture_store": [
+          6679200,
+          1,
+          0
+        ]
+      },
+      {
+        "case": "second_group_bad_count",
+        "backup_marker_valid": [
+          1,
+          1
+        ],
+        "bad_descriptor_index": 7,
+        "validated_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "config_bytes": [
+          1,
+          0
+        ],
+        "native_config_writes": [
+          [
+            7662556,
+            12,
+            1,
+            1
+          ],
+          [
+            7662568,
+            13,
+            1,
+            0
+          ]
+        ],
+        "capture_flag_4a": 1,
+        "neighbor_result": 0,
+        "consumer_entries": [
+          [
+            7887196,
+            1078448392
+          ],
+          [
+            7666108,
+            268566528
+          ],
+          [
+            7887196,
+            1078448392
+          ],
+          [
+            7666168,
+            268566528
+          ]
+        ],
+        "capture_store": [
+          6679200,
+          1,
+          1
+        ]
+      },
+      {
+        "case": "first_ram_marker_invalid",
+        "backup_marker_valid": [
+          0,
+          1
+        ],
+        "bad_descriptor_index": null,
+        "validated_indices": [],
+        "config_bytes": [
+          0,
+          0
+        ],
+        "native_config_writes": [],
+        "capture_flag_4a": 0,
+        "neighbor_result": 0,
+        "consumer_entries": [
+          [
+            7887196,
+            1078448392
+          ],
+          [
+            7666108,
+            268566528
+          ],
+          [
+            7887196,
+            1078448392
+          ],
+          [
+            7666168,
+            268566528
+          ]
+        ],
+        "capture_store": [
+          6679200,
+          1,
+          0
+        ]
+      },
+      {
+        "case": "second_ram_marker_invalid",
+        "backup_marker_valid": [
+          1,
+          0
+        ],
+        "bad_descriptor_index": null,
+        "validated_indices": [],
+        "config_bytes": [
+          0,
+          0
+        ],
+        "native_config_writes": [],
+        "capture_flag_4a": 0,
+        "neighbor_result": 0,
+        "consumer_entries": [
+          [
+            7887196,
+            1078448392
+          ],
+          [
+            7666108,
+            268566528
+          ],
+          [
+            7887196,
+            1078448392
+          ],
+          [
+            7666168,
+            268566528
+          ]
+        ],
+        "capture_store": [
+          6679200,
+          1,
+          0
+        ]
+      },
+      {
+        "case": "both_groups_valid",
+        "backup_marker_valid": [
+          1,
+          1
+        ],
+        "bad_descriptor_index": null,
+        "validated_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          24,
+          25
+        ],
+        "config_bytes": [
+          1,
+          1
+        ],
+        "native_config_writes": [
+          [
+            7662556,
+            12,
+            1,
+            1
+          ],
+          [
+            7662568,
+            13,
+            1,
+            1
+          ]
+        ],
+        "capture_flag_4a": 1,
+        "neighbor_result": 1,
+        "consumer_entries": [
+          [
+            7887196,
+            1078448392
+          ],
+          [
+            7666108,
+            268566528
+          ],
+          [
+            7887196,
+            1078448392
+          ],
+          [
+            7666168,
+            268566528
+          ]
+        ],
+        "capture_store": [
+          6679200,
+          1,
+          1
+        ]
+      }
+    ],
+    "update_cases": [
+      {
+        "prepared_setter_arguments": [
+          [
+            0,
+            2
+          ]
+        ],
+        "config_bytes": [
+          0,
+          1
+        ],
+        "native_config_writes": [
+          [
+            7663164,
+            12,
+            1,
+            0
+          ],
+          [
+            7663176,
+            13,
+            1,
+            1
+          ]
+        ],
+        "capture_flag_4a": 0,
+        "neighbor_result": 1,
+        "consumer_entries": [
+          [
+            7887196,
+            1078448392
+          ],
+          [
+            7666108,
+            268566528
+          ],
+          [
+            7887196,
+            1078448392
+          ],
+          [
+            7666168,
+            268566528
+          ]
+        ],
+        "capture_store": [
+          6679200,
+          1,
+          0
+        ]
+      },
+      {
+        "prepared_setter_arguments": [
+          [
+            0,
+            1
+          ],
+          [
+            7,
+            2
+          ]
+        ],
+        "config_bytes": [
+          1,
+          0
+        ],
+        "native_config_writes": [
+          [
+            7663164,
+            12,
+            1,
+            1
+          ],
+          [
+            7663176,
+            13,
+            1,
+            0
+          ]
+        ],
+        "capture_flag_4a": 1,
+        "neighbor_result": 0,
+        "consumer_entries": [
+          [
+            7887196,
+            1078448392
+          ],
+          [
+            7666108,
+            268566528
+          ],
+          [
+            7887196,
+            1078448392
+          ],
+          [
+            7666168,
+            268566528
+          ]
+        ],
+        "capture_store": [
+          6679200,
+          1,
+          1
+        ]
+      },
+      {
+        "prepared_setter_arguments": [
+          [
+            7,
+            1
+          ]
+        ],
+        "config_bytes": [
+          1,
+          1
+        ],
+        "native_config_writes": [
+          [
+            7663164,
+            12,
+            1,
+            1
+          ],
+          [
+            7663176,
+            13,
+            1,
+            1
+          ]
+        ],
+        "capture_flag_4a": 1,
+        "neighbor_result": 1,
+        "consumer_entries": [
+          [
+            7887196,
+            1078448392
+          ],
+          [
+            7666108,
+            268566528
+          ],
+          [
+            7887196,
+            1078448392
+          ],
+          [
+            7666168,
+            268566528
+          ]
+        ],
+        "capture_store": [
+          6679200,
+          1,
+          1
+        ]
+      }
+    ]
+  },
+  "limits": [
+    "Synthetic Flash records, allocator result, manager link and singleton guards; no full boot, allocator or synchronization execution.",
+    "Original constructor, native owner binding, provider load and virtual initialization execute in separately prepared call frames without instruction replacement.",
+    "Only the original ID62 default version-zero route and a four-byte synthetic descriptor representation are tested.",
+    "Capture prefix stops after the initial CAP+4A store; later policy overrides and the neighbor caller continuation are not executed.",
+    "Count setter arguments are prepared. Its upstream event/transport reachability and physical record meaning remain unresolved.",
+    "No camera, physical Flash, DMA, image capture or menu activation is exercised."
+  ]
+}

@@ -996,5 +996,17 @@
       "document_scroll_width": 1882,
       "mobile_viewport_checked": false
     }
+  },
+  "preserved_config": {
+    "source_branches": 37,
+    "source_words": 33,
+    "initializer_cases": 5,
+    "same_ram_update_cases": 3,
+    "execution_replacements": 0,
+    "normal_and_optimized_snapshot": "PASS",
+    "coordinator_private_replay": "byte-identical",
+    "independent_review": "No P0-P3 findings; source disassembly, normal/-O byte-exact replay, full backing poison controls and suppressed 74ED98 rejected by whole RAM comparison",
+    "physical_capture": false,
+    "language_gate": "light; unchanged; deterministic gates PASS; modality restored 0"
   }
 }
