@@ -35,9 +35,12 @@ def repair_checksums(decoded):
         raise ValueError("same-size decoded image required; relocation is unsupported")
     for start, end, field, fmt in SECTIONS:
         struct.pack_into(fmt, result, field, 0)
-        struct.pack_into(
-            fmt, result, field, -checksum(result, start, end, fmt) & 0xFFFFFFFF
-        )
+        value = -checksum(result, start, end, fmt) & 0xFFFFFFFF
+        if value == 0xFFFFFFFF:
+            raise ValueError(
+                f"checksum at {field:#x} would select the firmware bypass sentinel"
+            )
+        struct.pack_into(fmt, result, field, value)
     return result
 
 

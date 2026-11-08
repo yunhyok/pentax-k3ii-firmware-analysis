@@ -196,6 +196,8 @@
     }
   ],
   "rejected_edits": [
+    "computed_sentinel_kind_0",
+    "computed_sentinel_kind_1",
     "primary_iv",
     "model",
     "secondary_iv",
@@ -370,6 +372,80 @@
         "kind": 1,
         "offset": 16838404,
         "result": 0
+      }
+    ],
+    "sentinel_cases": [
+      {
+        "kind": 0,
+        "stored": 0,
+        "sum": 1683823724,
+        "accepted": 0
+      },
+      {
+        "kind": 0,
+        "stored": 1,
+        "sum": 1683823725,
+        "accepted": 0
+      },
+      {
+        "kind": 0,
+        "stored": 2147483647,
+        "sum": 3831307371,
+        "accepted": 0
+      },
+      {
+        "kind": 0,
+        "stored": 2147483648,
+        "sum": 3831307372,
+        "accepted": 0
+      },
+      {
+        "kind": 0,
+        "stored": 4294967294,
+        "sum": 1683823722,
+        "accepted": 0
+      },
+      {
+        "kind": 0,
+        "stored": 4294967295,
+        "sum": 1683823723,
+        "accepted": 1
+      },
+      {
+        "kind": 1,
+        "stored": 0,
+        "sum": 1974235045,
+        "accepted": 0
+      },
+      {
+        "kind": 1,
+        "stored": 1,
+        "sum": 1974235046,
+        "accepted": 0
+      },
+      {
+        "kind": 1,
+        "stored": 2147483647,
+        "sum": 4121718692,
+        "accepted": 0
+      },
+      {
+        "kind": 1,
+        "stored": 2147483648,
+        "sum": 4121718693,
+        "accepted": 0
+      },
+      {
+        "kind": 1,
+        "stored": 4294967294,
+        "sum": 1974235043,
+        "accepted": 0
+      },
+      {
+        "kind": 1,
+        "stored": 4294967295,
+        "sum": 1974235044,
+        "accepted": 1
       }
     ],
     "instruction_hooks": [],

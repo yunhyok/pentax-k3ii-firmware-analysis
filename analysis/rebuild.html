@@ -30,7 +30,8 @@
 <div class="stage"><strong>수신기 0xDA078</strong><span><code>0xDA188: 명령 7 선택</code><br><code>0xDA248: LDR·ADD 반복</code><br><code>1FEC: 합 mod 2³²</code></span></div><div class="arrow" aria-hidden="true">→</div>
 <div class="stage"><strong>검사로 복귀</strong><span><code>1FE8/1FF0: 완료값 7</code><br>합 0이면 검사 진행<br>송신기는 요청 슬롯을 0으로 지움</span></div></div>
 <p class="caption">슬롯 주소의 공통 상위 부분은 <code>0xC0000000</code>이다. Unicorn의 CPU 문맥 두 개를 순서대로 실행하고 같은 메모리를 공유했다. 완료값·결과값을 후크로 대신하지 않았다. 실제 코어의 정체·동시 실행·캐시 일관성을 재현한 것은 아니다.</p></figure>
-<p>별도의 검사 함수 <code>0x84765C</code>도 합이 0인지 확인한다. kind 1에서는 워드를 바이트 반전해 더한다. 저장된 체크섬이 <code>0xFFFFFFFF</code>일 때 이 검사만 건너뛰는 조건도 있으나, 재포장 도구는 이 조건을 이용하지 않고 실제 합을 계산한다. 이 조건만으로 전체 검사 우회를 주장하지 않는다. <a href="../verify_repack.py">원본 명령 고정값과 실행 경계</a></p>
+<p>별도의 검사 함수 <code>0x84765C</code>도 합이 0인지 확인한다. kind 1에서는 워드를 바이트 반전해 더한다. 저장된 체크섬이 <code>0xFFFFFFFF</code>이면 이 검사를 건너뛴다. 재포장 도구는 두 이미지 모두 계산 결과가 이 값이 되는 입력을 출력 전에 거부한다. 이 조건만으로 전체 검사 우회를 주장하지 않는다. <a href="../verify_repack.py">원본 명령 고정값과 실행 경계</a></p>
+<p>독립 검토에서 초기 도구가 우연히 <code>0xFFFFFFFF</code>를 계산할 수 있는 경계 문제가 발견됐다. 체크섬 합이 0인 후보라도 이 값은 원본 검사 생략을 선택하므로 명시적 거부를 추가했다. 양쪽 바이트 순서의 회귀 검사와 실제 펌웨어 수정 입력으로 거부를 확인했다. 원본 검사기에 값 6종을 각각 넣은 12건에서는 <code>0xFFFFFFFF</code>만 잘못된 합을 수용했다. 해당 함수의 전체 명령 구간에는 이 외의 상수 생략 분기가 없으며, 전체 업데이트의 모든 검사를 조사했다는 의미는 아니다. <a href="repack.json">sentinel_cases와 거부 사례</a></p>
 </section>
 
 <section aria-labelledby="cases"><h2 id="cases">3. 검사 통과와 정상 실행은 다르다</h2>

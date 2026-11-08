@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import patch
 
 from inspect_firmware import FIRMWARE_SIZE
-from repack_firmware import repair_checksums, repack, write_outputs
+from repack_firmware import SECTIONS, repair_checksums, repack, write_outputs
 
 
 class RepackTests(unittest.TestCase):
@@ -29,6 +29,17 @@ class RepackTests(unittest.TestCase):
             repack(b"wrong model", b"")
         with self.assertRaises(ValueError):
             repair_checksums(bytes(128))
+
+    def test_computed_bypass_sentinel_is_rejected_in_both_byte_orders(self):
+        for start, _, field, fmt in SECTIONS:
+            with self.subTest(checksum_field=hex(field)):
+                data = bytearray(FIRMWARE_SIZE)
+                offset = start + (0x200 if start == 0 else 0x80)
+                struct.pack_into(fmt, data, offset, 1)
+                before = bytes(data)
+                with self.assertRaisesRegex(ValueError, "bypass sentinel"):
+                    repair_checksums(data)
+                self.assertEqual(data, before)
 
     def test_existing_output_and_partial_write_cleanup(self):
         with tempfile.TemporaryDirectory() as directory:

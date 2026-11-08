@@ -11,7 +11,7 @@ import struct
 import tempfile
 
 from inspect_firmware import decode
-from repack_firmware import repack, write_outputs, SECTIONS, MARKER_OFFSETS
+from repack_firmware import checksum, repack, write_outputs, SECTIONS, MARKER_OFFSETS
 from verify_findings import INPUT_SHA256, DECODED_SHA256, require, sha256, u32
 from verify_tone_path import BASE, check_words
 from verify_raw_path import branch_target
@@ -178,10 +178,29 @@ def original_checks(data, packages):
             require(result, 0, "marker corruption rejected")
             marker_cases.append({"kind": kind, "offset": offset + 4, "result": result})
             vm.mem_write(image + offset + 4, saved)
+    sentinel_cases = []
+    for kind, (start, end, field, fmt) in enumerate(SECTIONS):
+        for stored in (0, 1, 0x7FFFFFFF, 0x80000000, 0xFFFFFFFE, 0xFFFFFFFF):
+            candidate = bytearray(data)
+            candidate[start + (0x204 if kind == 0 else 0x84)] ^= 1
+            struct.pack_into(fmt, candidate, field, stored)
+            total = checksum(candidate, start, end, fmt)
+            require(total != 0, True, "sentinel fixture has invalid actual checksum")
+            vm.mem_write(image, bytes(candidate))
+            accepted = run(0x84765C, r1=kind, r2=image)
+            require(
+                accepted,
+                int(stored == 0xFFFFFFFF),
+                "only FFFFFFFF sentinel bypasses this checksum function",
+            )
+            sentinel_cases.append(
+                {"kind": kind, "stored": stored, "sum": total, "accepted": accepted}
+            )
     return {
         "engine": unicorn.__version__,
         "cases": results,
         "marker_cases": marker_cases,
+        "sentinel_cases": sentinel_cases,
         "instruction_hooks": [],
         "mailbox_model": "Original sender and receiver execute in sequential saved CPU contexts over shared mapped bytes. No supplied result or ready-status hooks.",
         "receiver_core_identity": "not established by this replay",
@@ -221,6 +240,25 @@ def verify(original):
         reports.append({"label": label, **report})
         packages.append((label, package, bytes(decode(package))))
     rejected = []
+    for kind, (start, end, field, fmt) in enumerate(SECTIONS):
+        edited = bytearray(data)
+        offset = start + (0x200 if kind == 0 else 0x80)
+        old_word = struct.unpack_from(fmt, edited, offset)[0]
+        old_checksum = struct.unpack_from(fmt, edited, field)[0]
+        struct.pack_into(
+            fmt, edited, offset, (old_word + old_checksum + 1) & 0xFFFFFFFF
+        )
+        try:
+            repack(original, edited)
+        except ValueError as exc:
+            require(
+                "bypass sentinel" in str(exc),
+                True,
+                "same-size sentinel rejection reason",
+            )
+            rejected.append(f"computed_sentinel_kind_{kind}")
+        else:
+            raise ValueError("computed checksum sentinel was exported")
     for label, offset in [
         ("primary_iv", 0x100),
         ("model", 0x110),
