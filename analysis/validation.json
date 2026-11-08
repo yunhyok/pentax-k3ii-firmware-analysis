@@ -465,6 +465,16 @@
     "metadata_selection_cases": 10,
     "connected_settings_save_cases": 11,
     "independent_review": "P2 separate metadata/main selector scope and P3 indistinguishable copy fixtures accepted; canaries plus mixed selection, reverse and same AdobeRGB cases added and replayed.",
-    "physical_hardware_executed": false
+    "physical_hardware_executed": false,
+    "language_review": {
+      "route": "light",
+      "paragraphs": 18,
+      "change_rate_percent": 0.0,
+      "touched_sentences": 0,
+      "sentences": 81,
+      "self_check": "6/6",
+      "deterministic_gate": "PASS",
+      "modality_lost": 0
+    }
   }
 }

@@ -2,7 +2,7 @@
   "model": "PENTAX K-3 II",
   "firmware_version": "1.12",
   "baseline_commit": "66c85ea53f52b6e9489d742b5bd63e50e543055e",
-  "updated_at": "2026-11-08T15:39:47+09:00",
+  "updated_at": "2026-11-08T15:43:01+09:00",
   "goals": [
     {
       "id": "firmware_rebuild",
@@ -158,7 +158,8 @@
       "PASS: light Korean review, installation/UI 22 and AF 10 prose paragraphs, 0% changes; deterministic gates passed. Subsequent installation precision corrections received technical review.",
       "PASS: f9577d5 CI and Pages; 16 served files byte-identical; fresh clone reproduces installation/UI/AF snapshots, 20 unit tests and publication validation (13 HTML documents, 341 local links, 95 public files). Six published diagrams visually checked in Chrome.",
       "PASS: coordinator independently replayed color UI: eight lifecycle cases, five text preparations, two sprite leaves and parent/registry segments; inspected critical apply/cancel ARM branches.",
-      "PASS: independent review replayed settings storage and found separate metadata/main selectors. Coordinator accepted P2 scope correction and P3 source-distinguishing canaries, added reverse/same AdobeRGB and mixed-selector tests; final29 cases reproduce."
+      "PASS: independent review replayed settings storage and found separate metadata/main selectors. Coordinator accepted P2 scope correction and P3 source-distinguishing canaries, added reverse/same AdobeRGB and mixed-selector tests; final29 cases reproduce.",
+      "PASS: 8940312 CI and Pages;13 served files byte-identical; fresh clone reproduces color UI/settings storage snapshots and20 unit tests. Four diagrams visually checked at1882px with no horizontal overflow. Prose light gate:18 paragraphs,0% edits,0/81 sentences touched,no numeric/modality loss."
     ],
     "limits": [
       "Unicorn 2.1.4 synthetic memory; no physical device I/O.",
@@ -202,33 +203,29 @@
   ],
   "scope_clarification": "AF changes are future work. Current scope is sufficiently deep foundational research; exact target lens information is not a blocker.",
   "publication": {
-    "analysis_commit": "f9577d502dc84778114d2df83de7a91143259a29",
-    "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42454444948",
-    "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42454444717",
+    "analysis_commit": "89403125b108aea9070f0b91d5c4aca6b1ae0a39",
+    "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42455733617",
+    "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42455733447",
     "ci": "success",
     "pages": "success",
-    "http_files_byte_exact": 16,
+    "http_files_byte_exact": 13,
     "fresh_clone_repack_and_af_snapshots": "PASS",
     "fresh_clone_unit_tests": 20,
-    "fresh_clone_html_documents": 13,
-    "fresh_clone_local_links": 341,
+    "fresh_clone_html_documents": 15,
+    "fresh_clone_local_links": 378,
     "browser": {
       "surface": "published HTTPS in Chrome",
       "reports": [
-        "installation.html",
-        "ui-resources.html",
-        "af-control.html"
+        "color-ui.html",
+        "settings-storage.html"
       ],
       "figures_per_report": 2,
       "viewport_width": 1882,
-      "all_three_document_scroll_widths": 1882,
+      "both_document_scroll_widths": 1882,
       "mobile_layout": "not checked"
     },
     "local_preview": "Unavailable under tool policy; published HTTPS preview verified instead.",
-    "pending_local_artifacts": [
-      "color-ui",
-      "settings-storage"
-    ],
+    "pending_local_artifacts": [],
     "checksum_sentinel_fix": {
       "commit": "9521f6881b356429ed0b8b58123c6483e23eddd5",
       "ci": "success",
@@ -237,22 +234,31 @@
       "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42453856476",
       "served_files_byte_exact": 5
     },
-    "previous_analysis_commit": "7f91b0b7d6c6786193be964b5c56ef7924f13687",
+    "previous_analysis_commit": "f9577d502dc84778114d2df83de7a91143259a29",
     "fresh_clone_installation_ui_af_snapshots": "PASS",
-    "fresh_clone_public_files": 95,
-    "subsequent_status_commit": "bc41d977b36ff9d5d0337cb650dae84993212822",
-    "subsequent_status_checks": "success"
+    "fresh_clone_public_files": 101,
+    "fresh_clone_color_and_settings_snapshots": "PASS"
   },
   "frozen_evidence": {
     "color-ui": {
       "path": "analysis/color-ui.json",
-      "sha256": "dac85f29f19948f639c30966d3403edaff948aaa58171e19daf439b8b79abb7e",
-      "replay": "python verify_color_ui.py decoded.bin --compare analysis/color-ui.json"
+      "sha256": "058d42aa85c4a87c394432a7fd34bf102352e33f57638b25e0b228a108d12f97",
+      "replay": "python verify_color_ui.py decoded.bin --compare analysis/color-ui.json",
+      "commit": "89403125b108aea9070f0b91d5c4aca6b1ae0a39",
+      "html_path": "analysis/color-ui.html",
+      "verifier_path": "verify_color_ui.py",
+      "html_sha256": "67c2fd38901306785481c96c8d04287967848b7b6229ed0ee2d3438817804cab",
+      "verifier_sha256": "17e520fb3783dad557fee474af93a6b03381eb6178de188821d731810766f557"
     },
     "settings-storage": {
       "path": "analysis/settings-storage.json",
-      "sha256": "6b0cdf22738cd023782aef93fdd3e3da27fd2a362b538e51400151685abb0a2a",
-      "replay": "python verify_settings_storage.py decoded.bin --compare analysis/settings-storage.json"
+      "sha256": "79269728cc4ef054ccc38155955222527cbbbaf677d1c23ce70527bf4131e30d",
+      "replay": "python verify_settings_storage.py decoded.bin --compare analysis/settings-storage.json",
+      "commit": "89403125b108aea9070f0b91d5c4aca6b1ae0a39",
+      "html_path": "analysis/settings-storage.html",
+      "verifier_path": "verify_settings_storage.py",
+      "html_sha256": "50901bb9ba32963ede2ac6965d666f0318394033de45f6ad0d7ed60e847657d8",
+      "verifier_sha256": "ef4de15ad437d2300ac838b4547a5793cac160ffecb1dd3d98d65cf16562bd3c"
     }
   }
 }
