@@ -210,7 +210,7 @@
     "scope": "Extracted prose, excluding CSD capacity, request/descriptor capacity, JPEG retry-capacity, and large-request residual paragraphs; final technical additions received coordinator and SD-worker review",
     "route": "light",
     "risk_score": 0,
-    "deterministic_gate": "OK \u2014 \uc218\ub834",
+    "deterministic_gate": "OK — 수렴",
     "change_rate_percent": 0.63,
     "sentences_touched": 2,
     "sentences_reviewed": 82,
@@ -783,7 +783,7 @@
     "execution_replacements": 0,
     "full_prepare_return_executed": true,
     "coordinator_replayed_snapshot": true,
-    "independent_review": "No P0-P2 on private22/18 baseline. Accepted P3 remove repeated neutral case, distinguish ID62-associated fixed mirror from registered provider, name stop6553E0 accurately. Coordinator added three original branch controls: mirror flag, zero threshold cell, flag short-circuit. Tail private3-case review no P0-P2: actual BX LR/SP/R0, image canary, six exact metadata ranges. Accepted P3 kind11 nonzero A1/B2/C3/D4 retention and 12 original halfword writes. Final public review: original embedded constructor-prefix and pointer stores matched; all writes intersecting six full record extents independently equal12 halfword resets, selected allocator entries absent; integer1\u21921.0/true rejected. Accepted P3 diagram says embedded records.",
+    "independent_review": "No P0-P2 on private22/18 baseline. Accepted P3 remove repeated neutral case, distinguish ID62-associated fixed mirror from registered provider, name stop6553E0 accurately. Coordinator added three original branch controls: mirror flag, zero threshold cell, flag short-circuit. Tail private3-case review no P0-P2: actual BX LR/SP/R0, image canary, six exact metadata ranges. Accepted P3 kind11 nonzero A1/B2/C3/D4 retention and 12 original halfword writes. Final public review: original embedded constructor-prefix and pointer stores matched; all writes intersecting six full record extents independently equal12 halfword resets, selected allocator entries absent; integer1→1.0/true rejected. Accepted P3 diagram says embedded records.",
     "physical_capture": false,
     "full_prepare_return_cases": 3,
     "virtual_call_counts": [
@@ -838,5 +838,46 @@
       "inner_width": 1897,
       "document_scroll_width": 1882
     }
+  },
+  "snapshot_comparison_type_fix": {
+    "commit": "bcacf0fd9aa4f77d35ca664bbb6e71cbdf830ea3",
+    "shared_helper": "verify_findings.require_snapshot",
+    "snapshot_entry_points": 37,
+    "published_evidence_changed": false,
+    "native_optimized_snapshots_passed": 37,
+    "unit_tests_normal": 24,
+    "unit_tests_optimized": 24,
+    "independent_AST_scope_check": "37 source files unchanged outside comparison imports/helper/calls",
+    "native_optimized_bool_to_int_negatives": [
+      {
+        "snapshot": "pixel-records",
+        "mutation_path": ".replay.packet_bridge_cases[0].payload_pointers_match_inputs",
+        "bool_to_int_rejected": true,
+        "exit_code": 1
+      },
+      {
+        "snapshot": "preserved-record",
+        "mutation_path": ".replay.application.provider_mirror_preserved",
+        "bool_to_int_rejected": true,
+        "exit_code": 1
+      },
+      {
+        "snapshot": "ui-dispatch",
+        "mutation_path": ".replay.separate_bank_copy_control.source_unchanged",
+        "bool_to_int_rejected": true,
+        "exit_code": 1
+      }
+    ],
+    "fresh_clone_native_snapshots": [
+      "pixel-records",
+      "preserved-record",
+      "ui-dispatch"
+    ],
+    "fresh_clone_unit_tests": 24,
+    "ci": "success",
+    "pages": "success",
+    "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42467700624",
+    "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42467700072",
+    "http_files_byte_exact": 38
   }
 }

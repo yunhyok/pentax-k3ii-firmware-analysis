@@ -2,7 +2,7 @@
   "model": "PENTAX K-3 II",
   "firmware_version": "1.12",
   "baseline_commit": "66c85ea53f52b6e9489d742b5bd63e50e543055e",
-  "updated_at": "2026-11-08T18:20:35+09:00",
+  "updated_at": "2026-11-08T18:34:56+09:00",
   "goals": [
     {
       "id": "firmware_rebuild",
@@ -440,5 +440,46 @@
       "verifier_sha256": "974357fe130b631a7f701276c59ba7218f29ee1fb45c1f506f285afdecadcd84"
     }
   },
-  "offline_work_in_progress": "Native StoreImage module9 sender and consumer linkage for the embedded record container; whole constructor/RTOS allocation and real capture history remain unverified."
+  "offline_work_in_progress": "Native StoreImage module9 event and request aliases replayed in seven synthetic fixtures; next connect original JPEG completion length production before publication. Queue scheduling and physical capture remain outside replay.",
+  "snapshot_comparison_type_fix": {
+    "commit": "bcacf0fd9aa4f77d35ca664bbb6e71cbdf830ea3",
+    "shared_helper": "verify_findings.require_snapshot",
+    "snapshot_entry_points": 37,
+    "published_evidence_changed": false,
+    "native_optimized_snapshots_passed": 37,
+    "unit_tests_normal": 24,
+    "unit_tests_optimized": 24,
+    "independent_AST_scope_check": "37 source files unchanged outside comparison imports/helper/calls",
+    "native_optimized_bool_to_int_negatives": [
+      {
+        "snapshot": "pixel-records",
+        "mutation_path": ".replay.packet_bridge_cases[0].payload_pointers_match_inputs",
+        "bool_to_int_rejected": true,
+        "exit_code": 1
+      },
+      {
+        "snapshot": "preserved-record",
+        "mutation_path": ".replay.application.provider_mirror_preserved",
+        "bool_to_int_rejected": true,
+        "exit_code": 1
+      },
+      {
+        "snapshot": "ui-dispatch",
+        "mutation_path": ".replay.separate_bank_copy_control.source_unchanged",
+        "bool_to_int_rejected": true,
+        "exit_code": 1
+      }
+    ],
+    "fresh_clone_native_snapshots": [
+      "pixel-records",
+      "preserved-record",
+      "ui-dispatch"
+    ],
+    "fresh_clone_unit_tests": 24,
+    "ci": "success",
+    "pages": "success",
+    "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42467700624",
+    "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42467700072",
+    "http_files_byte_exact": 38
+  }
 }
