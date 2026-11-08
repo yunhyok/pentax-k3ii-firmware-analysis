@@ -2,7 +2,7 @@
   "model": "PENTAX K-3 II",
   "firmware_version": "1.12",
   "baseline_commit": "66c85ea53f52b6e9489d742b5bd63e50e543055e",
-  "updated_at": "2026-11-08T19:05:45+09:00",
+  "updated_at": "2026-11-08T19:10:22+09:00",
   "goals": [
     {
       "id": "firmware_rebuild",
@@ -37,18 +37,21 @@
         "verify_capture_prepare.py",
         "analysis/store-image-records.html",
         "analysis/store-image-records.json",
-        "verify_store_image_records.py"
+        "verify_store_image_records.py",
+        "analysis/preserved-sector20.html",
+        "analysis/preserved-sector20.json",
+        "verify_preserved_sector20.py"
       ],
       "gaps": [
         "Only same-size edits; insertion/deletion and relocation are unsupported.",
         "Whole updater, internal ROM authentication, physical flash, reboot and capture have not been executed.",
-        "Auxiliary remote receiver/flash destination and preserved sectors20..21 remain unresolved. Sector14 ID0 and sectors15..19 pixel-record providers/load/correction/save requests are verified; physical writes, calibration and normal capture reachability remain unverified.",
+        "Auxiliary remote receiver/flash destination, physical preserved-sector writes, record calibration semantics and normal capture reachability remain unresolved. Native sector14 ID0, sectors15..19 pixel records and sectors20..21 provider load/staging have bounded replay evidence.",
         "Native NOR status polling is stubbed; recorded memory writes are not physical flash acceptance.",
         "C tone leaf changes APSR flags and r1/r2 scratch values. Three observed caller loops reset flags; unknown indirect callers and runtime timing remain unverified."
       ],
       "next_actions": [
         "Continue offline caller/state-dependency analysis; the proven C tone leaf is a pinned64-byte A32 build, not a whole-firmware rebuild.",
-        "Continue offline investigation of auxiliary remote receiver, preserved sectors20..21, sector14 app-copy writeback and remaining capture-constructor/allocation paths.",
+        "Continue offline auxiliary remote receiver, sector14 app-copy writeback, preserved-record packet validation/config-byte producers, and capture-constructor/allocation paths.",
         "Keep physical update outside the current offline scope."
       ]
     },
@@ -169,7 +172,8 @@
     "Sector14 save with onlyID0 registered traverses79 IDs, overlays16 halfwords and reaches599914 with65536 halfwords. Same-content case also calls the backend; statuses0..3 are injected and preserved. Other provider regions and physical writes are unverified.",
     "Separate pixel boundary controls: native center validation rejects x=width/y=height but neighbor UXTH can cross a row or address beyond the logical image. Six native address/value controls use synthetic RAM; real sensor table constraints and padding are unknown.",
     "Native capture prepare6552B0 follows all nine virtual calls through pixel policy return to stop6553E0 with no execution replacements in21 controls. Another21 prefix controls include original skip kinds5/7/8/11; original early producers create5F/4F/52 and A240/3C consumed by policy. Another3 prepared-state cases return through original BX LR with25/25/16 virtual calls, preserving native slot1 image alias and resetting only two halfwords in six native embedded3FC-byte records. The partial container ctor stops before5AA434, and native653D74..653DC8 publishes their interior pointers. Kind11 retains nonzero pixel flag canaries. Actual capture remains unexecuted.",
-    "Original StoreImage module9 reuses all six embedded capture records in7 synthetic conditions. Four request slots alias record+9C/+50/+4/+E8. Two same-VM JPEG completion cases connect original destination setup, RAM-backed count/status, synchronous6FE97C callback through native receiver vslot, descriptor count and controller completion stores to module9/request slots; split lengths1234/1000 remain distinct, shared first1579 is copied by65E1A0 into2F0. Original post-wait binder suffix attaches receiver+4. Constructor, scheduling, wake/wait/cleanup, StoreImage queue body, write service and physical encoding/storage remain unexecuted."
+    "Original StoreImage module9 reuses all six embedded capture records in7 synthetic conditions. Four request slots alias record+9C/+50/+4/+E8. Two same-VM JPEG completion cases connect original destination setup, RAM-backed count/status, synchronous6FE97C callback through native receiver vslot, descriptor count and controller completion stores to module9/request slots; split lengths1234/1000 remain distinct, shared first1579 is copied by65E1A0 into2F0. Original post-wait binder suffix attaches receiver+4. Constructor, scheduling, wake/wait/cleanup, StoreImage queue body, write service and physical encoding/storage remain unexecuted.",
+    "Preserved sectors20/21 native IDs63/64/65 partition128KiB as64/56/8KiB. Six original manager-load cases including distinct both-valid banks verify per-provider backup-marker preference; same loaded markers feed initial65EAA04A store in12 controls with suppliedconfigC. Eight full128KiB staging cases stop before599914, including two after nativeID63packet0 modifies headerhalfword and512datawords on same loadedRAM. Thirty-two direct blocks,three packet read/write cases and index32 first-store prefix distinguish last508word clamp and unverified upstream bounds. No substitutions or physical writes."
   ],
   "validation": {
     "commands": [
@@ -263,7 +267,10 @@
     "verify_preserved_record.py",
     "analysis/store-image-records.html",
     "analysis/store-image-records.json",
-    "verify_store_image_records.py"
+    "verify_store_image_records.py",
+    "analysis/preserved-sector20.html",
+    "analysis/preserved-sector20.json",
+    "verify_preserved_sector20.py"
   ],
   "blockers": [
     {
@@ -485,7 +492,7 @@
       }
     }
   },
-  "offline_work_in_progress": "Preserved sectors20/21 providers63/64/65 and original load/staging producers. Corrected static lead: provider64 is0xE000 bytes (slot size0x7000 halfwords), adjacent to provider65 at8001E000; the earlier overlapping-span note was incorrect. Native full-byte replay and policy-input linkage pending.",
+  "offline_work_in_progress": "Publishing preserved sectors20/21 provider load, initial4A input and packet/staging proof. Next bounded research: native config+C producer/owner binding and upstream ID63 packet dispatch or validation. StoreImage behavior approval and diagram-only correction remain separately pinned.",
   "snapshot_comparison_type_fix": {
     "commit": "bcacf0fd9aa4f77d35ca664bbb6e71cbdf830ea3",
     "shared_helper": "verify_findings.require_snapshot",

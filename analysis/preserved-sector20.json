@@ -1,0 +1,1153 @@
+{
+  "schema_version": 1,
+  "firmware_version": "1.12",
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "storage": {
+    "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+    "code_va_base": 33554432,
+    "unicorn_version": "2.1.4",
+    "static_checks": {
+      "branches": 39,
+      "words": 63
+    },
+    "execution_replacements": [],
+    "providers": [
+      {
+        "id": 99,
+        "object_va": 1077981020,
+        "vtable_offset": 10951812,
+        "ram_va": 2147483648,
+        "primary_flash_va": 36175872,
+        "backup_flash_va": 36306944,
+        "bytes": 65536,
+        "constructor_slice": [
+          7784196,
+          7784204
+        ]
+      },
+      {
+        "id": 100,
+        "object_va": 1077981024,
+        "vtable_offset": 10957308,
+        "ram_va": 2147549184,
+        "primary_flash_va": 36241408,
+        "backup_flash_va": 36372480,
+        "bytes": 57344,
+        "constructor_slice": [
+          7784216,
+          7784224
+        ]
+      },
+      {
+        "id": 101,
+        "object_va": 1077981028,
+        "vtable_offset": 10958888,
+        "ram_va": 2147606528,
+        "primary_flash_va": 36298752,
+        "backup_flash_va": 36429824,
+        "bytes": 8192,
+        "constructor_slice": [
+          7784236,
+          7784244
+        ]
+      }
+    ],
+    "boundaries": {
+      "native_registry": [
+        7780576,
+        7780624
+      ],
+      "manager_load_entry": 7241392,
+      "policy_marker_slice": [
+        6679184,
+        6679204
+      ],
+      "staging_end_exclusive": 5871892,
+      "synthetic_leaf_return_va": 269422592
+    },
+    "load_cases": [
+      {
+        "case": "all_primary",
+        "injected_marker_valid": [
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "flash_sha256": [
+          "5d1275280e3e783474be3d620ff08461b023abb384c2d01033092b59e6d57227",
+          "914c7cf509a406f1f86cf00f4eeaef848bce9ec8daf240271515d77f88c0fbd6"
+        ],
+        "copy_calls": [
+          [
+            7415960,
+            2147483648,
+            36175872,
+            65536
+          ],
+          [
+            7415960,
+            2147549184,
+            36241408,
+            57344
+          ],
+          [
+            7415960,
+            2147606528,
+            36298752,
+            8192
+          ]
+        ],
+        "mirror_sha256": "5d1275280e3e783474be3d620ff08461b023abb384c2d01033092b59e6d57227",
+        "policy_cases": [
+          {
+            "configuration_byte": 0,
+            "flag_4a": 0,
+            "marker_reads": [
+              [
+                7528452,
+                2147483648,
+                4,
+                2774162085
+              ],
+              [
+                7527916,
+                2147549184,
+                4,
+                2774162085
+              ]
+            ]
+          },
+          {
+            "configuration_byte": 7,
+            "flag_4a": 1,
+            "marker_reads": [
+              [
+                7528452,
+                2147483648,
+                4,
+                2774162085
+              ],
+              [
+                7527916,
+                2147549184,
+                4,
+                2774162085
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "case": "all_backup",
+        "injected_marker_valid": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "flash_sha256": [
+          "5b3fa047efca4f6fc2022051dfb8fedcd6b193fafdfa385ff32978701d0eda31",
+          "0ac3168302be8b7a633953d4b1d749488327b2bea80bee91801500dbeb2651c3"
+        ],
+        "copy_calls": [
+          [
+            7415960,
+            2147483648,
+            36306944,
+            65536
+          ],
+          [
+            7415960,
+            2147549184,
+            36372480,
+            57344
+          ],
+          [
+            7415960,
+            2147606528,
+            36429824,
+            8192
+          ]
+        ],
+        "mirror_sha256": "0ac3168302be8b7a633953d4b1d749488327b2bea80bee91801500dbeb2651c3",
+        "policy_cases": [
+          {
+            "configuration_byte": 0,
+            "flag_4a": 0,
+            "marker_reads": [
+              [
+                7528452,
+                2147483648,
+                4,
+                2774162085
+              ],
+              [
+                7527916,
+                2147549184,
+                4,
+                2774162085
+              ]
+            ]
+          },
+          {
+            "configuration_byte": 7,
+            "flag_4a": 1,
+            "marker_reads": [
+              [
+                7528452,
+                2147483648,
+                4,
+                2774162085
+              ],
+              [
+                7527916,
+                2147549184,
+                4,
+                2774162085
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "case": "mixed_first_and_third_backup",
+        "injected_marker_valid": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1
+          ]
+        ],
+        "flash_sha256": [
+          "fcb27663d177b80d9f9b3e79f8145e731942670ef3c37b190285ba43922aa1b4",
+          "d512fe7523646fc3df02722ee82867bcdc401fea11d65d91b0803893fd257238"
+        ],
+        "copy_calls": [
+          [
+            7415960,
+            2147483648,
+            36306944,
+            65536
+          ],
+          [
+            7415960,
+            2147549184,
+            36241408,
+            57344
+          ],
+          [
+            7415960,
+            2147606528,
+            36429824,
+            8192
+          ]
+        ],
+        "mirror_sha256": "9986c8c42e0e8399644d18e8dd6d6f709b4ff817cd54a9dbfb003f8baada5fa6",
+        "policy_cases": [
+          {
+            "configuration_byte": 0,
+            "flag_4a": 0,
+            "marker_reads": [
+              [
+                7528452,
+                2147483648,
+                4,
+                2774162085
+              ],
+              [
+                7527916,
+                2147549184,
+                4,
+                0
+              ]
+            ]
+          },
+          {
+            "configuration_byte": 7,
+            "flag_4a": 0,
+            "marker_reads": [
+              [
+                7528452,
+                2147483648,
+                4,
+                2774162085
+              ],
+              [
+                7527916,
+                2147549184,
+                4,
+                0
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "case": "mixed_only_second_backup",
+        "injected_marker_valid": [
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            1,
+            0
+          ]
+        ],
+        "flash_sha256": [
+          "38402e9c75040e47a53d57119644476626891a978c0c8a1178d0bc1c477fb2b1",
+          "02d071da8a8e227ce5aa1f53302ec978484d5fb0e907c1a42edf876fe2780eea"
+        ],
+        "copy_calls": [
+          [
+            7415960,
+            2147483648,
+            36175872,
+            65536
+          ],
+          [
+            7415960,
+            2147549184,
+            36372480,
+            57344
+          ],
+          [
+            7415960,
+            2147606528,
+            36298752,
+            8192
+          ]
+        ],
+        "mirror_sha256": "a06c1bb8758f3c10dbd68b494b9d028577c733a959fe44643ec1b382fa1a1561",
+        "policy_cases": [
+          {
+            "configuration_byte": 0,
+            "flag_4a": 0,
+            "marker_reads": [
+              [
+                7528452,
+                2147483648,
+                4,
+                0
+              ],
+              [
+                7527916,
+                2147549184,
+                4,
+                2774162085
+              ]
+            ]
+          },
+          {
+            "configuration_byte": 7,
+            "flag_4a": 0,
+            "marker_reads": [
+              [
+                7528452,
+                2147483648,
+                4,
+                0
+              ],
+              [
+                7527916,
+                2147549184,
+                4,
+                2774162085
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "case": "all_both_valid",
+        "injected_marker_valid": [
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            1,
+            1,
+            1
+          ]
+        ],
+        "flash_sha256": [
+          "39a4dbc28f97f9eaf673f992418d4abcc97e58956f49d60ef2848be05a9c35cc",
+          "dff05a91424525f66c4317710f8af43a4316fd2296719c0b70e902244fe4c985"
+        ],
+        "copy_calls": [
+          [
+            7415960,
+            2147483648,
+            36306944,
+            65536
+          ],
+          [
+            7415960,
+            2147549184,
+            36372480,
+            57344
+          ],
+          [
+            7415960,
+            2147606528,
+            36429824,
+            8192
+          ]
+        ],
+        "mirror_sha256": "dff05a91424525f66c4317710f8af43a4316fd2296719c0b70e902244fe4c985",
+        "policy_cases": [
+          {
+            "configuration_byte": 0,
+            "flag_4a": 0,
+            "marker_reads": [
+              [
+                7528452,
+                2147483648,
+                4,
+                2774162085
+              ],
+              [
+                7527916,
+                2147549184,
+                4,
+                2774162085
+              ]
+            ]
+          },
+          {
+            "configuration_byte": 7,
+            "flag_4a": 1,
+            "marker_reads": [
+              [
+                7528452,
+                2147483648,
+                4,
+                2774162085
+              ],
+              [
+                7527916,
+                2147549184,
+                4,
+                2774162085
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "case": "all_invalid",
+        "injected_marker_valid": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "flash_sha256": [
+          "902dbb81c911b79e06ca25e91f5b470d6fc44268b41c42a2cf524526a0904fb7",
+          "1abb2c16cd2aaa6adbf68712677d091a4eac54a5b93db7aeaee25e12b0c5e9e1"
+        ],
+        "copy_calls": [
+          [
+            7415960,
+            2147483648,
+            36175872,
+            65536
+          ],
+          [
+            7415960,
+            2147549184,
+            36241408,
+            57344
+          ],
+          [
+            7415960,
+            2147606528,
+            36298752,
+            8192
+          ]
+        ],
+        "mirror_sha256": "902dbb81c911b79e06ca25e91f5b470d6fc44268b41c42a2cf524526a0904fb7",
+        "policy_cases": [
+          {
+            "configuration_byte": 0,
+            "flag_4a": 0,
+            "marker_reads": [
+              [
+                7528452,
+                2147483648,
+                4,
+                0
+              ],
+              [
+                7527916,
+                2147549184,
+                4,
+                0
+              ]
+            ]
+          },
+          {
+            "configuration_byte": 7,
+            "flag_4a": 0,
+            "marker_reads": [
+              [
+                7528452,
+                2147483648,
+                4,
+                0
+              ],
+              [
+                7527916,
+                2147549184,
+                4,
+                0
+              ]
+            ]
+          }
+        ]
+      }
+    ],
+    "staging_cases": [
+      {
+        "case": "all_providers",
+        "entry": 7244836,
+        "sector_index": 20,
+        "destination": 36175872,
+        "request_halfwords": 65536,
+        "overlay_args": [
+          [
+            268632064,
+            36306944,
+            2147483648,
+            32768
+          ],
+          [
+            268632064,
+            36372480,
+            2147549184,
+            28672
+          ],
+          [
+            268632064,
+            36429824,
+            2147606528,
+            4096
+          ]
+        ],
+        "write_spans_pc_offset_halfwords": [
+          [
+            5872096,
+            0,
+            65536
+          ],
+          [
+            5873396,
+            0,
+            32768
+          ],
+          [
+            5873396,
+            65536,
+            28672
+          ],
+          [
+            5873396,
+            122880,
+            4096
+          ]
+        ],
+        "base_copy_sha256": "d22f844b87f44a86d65627ffb7d64d1a42aa70590dd5589f2d41bc4812d0c3f3",
+        "staged_sha256": "902dbb81c911b79e06ca25e91f5b470d6fc44268b41c42a2cf524526a0904fb7"
+      },
+      {
+        "case": "all_providers",
+        "entry": 7245208,
+        "sector_index": 21,
+        "destination": 36306944,
+        "request_halfwords": 65536,
+        "overlay_args": [
+          [
+            268632064,
+            36306944,
+            2147483648,
+            32768
+          ],
+          [
+            268632064,
+            36372480,
+            2147549184,
+            28672
+          ],
+          [
+            268632064,
+            36429824,
+            2147606528,
+            4096
+          ]
+        ],
+        "write_spans_pc_offset_halfwords": [
+          [
+            5872096,
+            0,
+            65536
+          ],
+          [
+            5873396,
+            0,
+            32768
+          ],
+          [
+            5873396,
+            65536,
+            28672
+          ],
+          [
+            5873396,
+            122880,
+            4096
+          ]
+        ],
+        "base_copy_sha256": "9f5573592af4dbcd2b0d9bcd3a01d2a75fbe37d3e7575c628197b8a48d67c497",
+        "staged_sha256": "902dbb81c911b79e06ca25e91f5b470d6fc44268b41c42a2cf524526a0904fb7"
+      },
+      {
+        "case": "no_id_64",
+        "entry": 7244836,
+        "sector_index": 20,
+        "destination": 36175872,
+        "request_halfwords": 65536,
+        "overlay_args": [
+          [
+            268632064,
+            36306944,
+            2147483648,
+            32768
+          ],
+          [
+            268632064,
+            36429824,
+            2147606528,
+            4096
+          ]
+        ],
+        "write_spans_pc_offset_halfwords": [
+          [
+            5872096,
+            0,
+            65536
+          ],
+          [
+            5873396,
+            0,
+            32768
+          ],
+          [
+            5873396,
+            122880,
+            4096
+          ]
+        ],
+        "base_copy_sha256": "d22f844b87f44a86d65627ffb7d64d1a42aa70590dd5589f2d41bc4812d0c3f3",
+        "staged_sha256": "fbbb88416816fa34bfb1b427dca648f340503b651f32b321e9f0718ebb685098"
+      },
+      {
+        "case": "no_id_64",
+        "entry": 7245208,
+        "sector_index": 21,
+        "destination": 36306944,
+        "request_halfwords": 65536,
+        "overlay_args": [
+          [
+            268632064,
+            36306944,
+            2147483648,
+            32768
+          ],
+          [
+            268632064,
+            36429824,
+            2147606528,
+            4096
+          ]
+        ],
+        "write_spans_pc_offset_halfwords": [
+          [
+            5872096,
+            0,
+            65536
+          ],
+          [
+            5873396,
+            0,
+            32768
+          ],
+          [
+            5873396,
+            122880,
+            4096
+          ]
+        ],
+        "base_copy_sha256": "9f5573592af4dbcd2b0d9bcd3a01d2a75fbe37d3e7575c628197b8a48d67c497",
+        "staged_sha256": "046a328420e125ad5d1b26dbb2a35217b6fa1589a4602fc216521cd820dfb4f5"
+      },
+      {
+        "case": "no_id_65",
+        "entry": 7244836,
+        "sector_index": 20,
+        "destination": 36175872,
+        "request_halfwords": 65536,
+        "overlay_args": [
+          [
+            268632064,
+            36306944,
+            2147483648,
+            32768
+          ],
+          [
+            268632064,
+            36372480,
+            2147549184,
+            28672
+          ]
+        ],
+        "write_spans_pc_offset_halfwords": [
+          [
+            5872096,
+            0,
+            65536
+          ],
+          [
+            5873396,
+            0,
+            32768
+          ],
+          [
+            5873396,
+            65536,
+            28672
+          ]
+        ],
+        "base_copy_sha256": "d22f844b87f44a86d65627ffb7d64d1a42aa70590dd5589f2d41bc4812d0c3f3",
+        "staged_sha256": "9049a5596c5c2452f4d898bf713228b3d2dd154cdc93e657b0a1df2765408cb0"
+      },
+      {
+        "case": "no_id_65",
+        "entry": 7245208,
+        "sector_index": 21,
+        "destination": 36306944,
+        "request_halfwords": 65536,
+        "overlay_args": [
+          [
+            268632064,
+            36306944,
+            2147483648,
+            32768
+          ],
+          [
+            268632064,
+            36372480,
+            2147549184,
+            28672
+          ]
+        ],
+        "write_spans_pc_offset_halfwords": [
+          [
+            5872096,
+            0,
+            65536
+          ],
+          [
+            5873396,
+            0,
+            32768
+          ],
+          [
+            5873396,
+            65536,
+            28672
+          ]
+        ],
+        "base_copy_sha256": "9f5573592af4dbcd2b0d9bcd3a01d2a75fbe37d3e7575c628197b8a48d67c497",
+        "staged_sha256": "336f57e9482afd64f070bb0557e063e6c1752d138cf805e8d065ac85fb51fb61"
+      },
+      {
+        "case": "native_id63_packet0_update",
+        "entry": 7244836,
+        "sector_index": 20,
+        "destination": 36175872,
+        "request_halfwords": 65536,
+        "overlay_args": [
+          [
+            268632064,
+            36306944,
+            2147483648,
+            32768
+          ],
+          [
+            268632064,
+            36372480,
+            2147549184,
+            28672
+          ],
+          [
+            268632064,
+            36429824,
+            2147606528,
+            4096
+          ]
+        ],
+        "write_spans_pc_offset_halfwords": [
+          [
+            5872096,
+            0,
+            65536
+          ],
+          [
+            5873396,
+            0,
+            32768
+          ],
+          [
+            5873396,
+            65536,
+            28672
+          ],
+          [
+            5873396,
+            122880,
+            4096
+          ]
+        ],
+        "base_copy_sha256": "d22f844b87f44a86d65627ffb7d64d1a42aa70590dd5589f2d41bc4812d0c3f3",
+        "staged_sha256": "4631d8fbeed053664cc451083a936fcc74dc81179fad13aad6cb9f5094a74bb3"
+      },
+      {
+        "case": "native_id63_packet0_update",
+        "entry": 7245208,
+        "sector_index": 21,
+        "destination": 36306944,
+        "request_halfwords": 65536,
+        "overlay_args": [
+          [
+            268632064,
+            36306944,
+            2147483648,
+            32768
+          ],
+          [
+            268632064,
+            36372480,
+            2147549184,
+            28672
+          ],
+          [
+            268632064,
+            36429824,
+            2147606528,
+            4096
+          ]
+        ],
+        "write_spans_pc_offset_halfwords": [
+          [
+            5872096,
+            0,
+            65536
+          ],
+          [
+            5873396,
+            0,
+            32768
+          ],
+          [
+            5873396,
+            65536,
+            28672
+          ],
+          [
+            5873396,
+            122880,
+            4096
+          ]
+        ],
+        "base_copy_sha256": "9f5573592af4dbcd2b0d9bcd3a01d2a75fbe37d3e7575c628197b8a48d67c497",
+        "staged_sha256": "4631d8fbeed053664cc451083a936fcc74dc81179fad13aad6cb9f5094a74bb3"
+      }
+    ],
+    "native_packet_update_before_last_two_stages": {
+      "entry": 7528684,
+      "packet_index": 0,
+      "input_header_word": 305419896,
+      "stored_halfword": 22136,
+      "payload_words": 512,
+      "before_mirror_sha256": "902dbb81c911b79e06ca25e91f5b470d6fc44268b41c42a2cf524526a0904fb7",
+      "after_mirror_sha256": "4631d8fbeed053664cc451083a936fcc74dc81179fad13aad6cb9f5094a74bb3",
+      "execution_replacements": []
+    }
+  },
+  "id63_chunks": {
+    "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+    "direct_chunk_cases": [
+      {
+        "index": 0,
+        "words": 512,
+        "record_offset": 16,
+        "payload_sha256": "a1702387712b3ae3d261bb9d8df32d398421d86e507bd6578bcb527b7056c13c"
+      },
+      {
+        "index": 1,
+        "words": 512,
+        "record_offset": 2064,
+        "payload_sha256": "6d7deea82478b57a951d961b977890ddb24057089705f3c0cfd64351d7916846"
+      },
+      {
+        "index": 2,
+        "words": 512,
+        "record_offset": 4112,
+        "payload_sha256": "1aaf084652b81edd90367aaa9fda467c3baf9f8df235c0f2352b1720a2e2e5d6"
+      },
+      {
+        "index": 3,
+        "words": 512,
+        "record_offset": 6160,
+        "payload_sha256": "0992c46270daf9795f29d1bb1ec5e9bf4511be0799e64a71ff43ac34265eb8a2"
+      },
+      {
+        "index": 4,
+        "words": 512,
+        "record_offset": 8208,
+        "payload_sha256": "030af20e8d4524b943f692628c940da79640ef76341ee36914a2d8e317db2784"
+      },
+      {
+        "index": 5,
+        "words": 512,
+        "record_offset": 10256,
+        "payload_sha256": "34140712884698cdc9d86ae6b34820685121f986e6d182ad2f68acb76b25b670"
+      },
+      {
+        "index": 6,
+        "words": 512,
+        "record_offset": 12304,
+        "payload_sha256": "fe0e8acad111aeafb0733916beeb3a07f2986337d1bc00188568e8feae4b2f2e"
+      },
+      {
+        "index": 7,
+        "words": 512,
+        "record_offset": 14352,
+        "payload_sha256": "e045a83a5b23a497ff85e45d0dfcb79e20cf38906e6892c9359b40426825e66e"
+      },
+      {
+        "index": 8,
+        "words": 512,
+        "record_offset": 16400,
+        "payload_sha256": "3d9294e3d08678d147276abdedd63110bfc8dea3c744526b3b678780d5275766"
+      },
+      {
+        "index": 9,
+        "words": 512,
+        "record_offset": 18448,
+        "payload_sha256": "f0dbeca12b84cca76bff6ecf857c1c8e3cb9e17a60a4905e8055721dccf37303"
+      },
+      {
+        "index": 10,
+        "words": 512,
+        "record_offset": 20496,
+        "payload_sha256": "8b74b890b1848156335381fa226809ce26d9419e74dd0feb3b68d4f0fd84325e"
+      },
+      {
+        "index": 11,
+        "words": 512,
+        "record_offset": 22544,
+        "payload_sha256": "45001959ab4a4cbca5069db6f35009741b229a45d7777156bf90c43454ddcecd"
+      },
+      {
+        "index": 12,
+        "words": 512,
+        "record_offset": 24592,
+        "payload_sha256": "5449718d2070799f79869323a29678697763a97b4d2c0b28c9abb88477432eb2"
+      },
+      {
+        "index": 13,
+        "words": 512,
+        "record_offset": 26640,
+        "payload_sha256": "682ff71fa0146db8e51cd107195357c84eb6d02a55ee43102351304eb2cbeb8a"
+      },
+      {
+        "index": 14,
+        "words": 512,
+        "record_offset": 28688,
+        "payload_sha256": "9bebd523b7c722cf8caf495f482350e164b1d96a668e945a58c640b9621321bc"
+      },
+      {
+        "index": 15,
+        "words": 512,
+        "record_offset": 30736,
+        "payload_sha256": "6a3716c9185df7b379bddfb0a93c78b18360654e899f6ef4eb32c15ef0650ac1"
+      },
+      {
+        "index": 16,
+        "words": 512,
+        "record_offset": 32784,
+        "payload_sha256": "c539060827391bafb1fe65c9cf832cb423e9cf65c5ec2aaf643984a8d8c36bae"
+      },
+      {
+        "index": 17,
+        "words": 512,
+        "record_offset": 34832,
+        "payload_sha256": "0372c159d16ee9ee40964ec5520d728206378881c43c19680b2c51472c228ea3"
+      },
+      {
+        "index": 18,
+        "words": 512,
+        "record_offset": 36880,
+        "payload_sha256": "3986111f8c9a534a5fd11b8f7122c733ebe085e9a7b396f96cc826646e788517"
+      },
+      {
+        "index": 19,
+        "words": 512,
+        "record_offset": 38928,
+        "payload_sha256": "bff365a2f5c1a74402dff969a511117c25ee14ce5e1fb1dd5ce764d457337078"
+      },
+      {
+        "index": 20,
+        "words": 512,
+        "record_offset": 40976,
+        "payload_sha256": "96a86cd32f45f1a1ac8eb73def691fbf3f920f0c298d8208bed1773a5f9dde39"
+      },
+      {
+        "index": 21,
+        "words": 512,
+        "record_offset": 43024,
+        "payload_sha256": "9ce398d6f816f4a77f7b99d0a96810facf4eba24bff63368a5d37cd436c65b5a"
+      },
+      {
+        "index": 22,
+        "words": 512,
+        "record_offset": 45072,
+        "payload_sha256": "e87e852651efde595f0ed81e0350b0c4c0a6c718d54484e427e3ed3c043df491"
+      },
+      {
+        "index": 23,
+        "words": 512,
+        "record_offset": 47120,
+        "payload_sha256": "b0f5628dd4991d239d6d9ec449f960706ae42223bc874b0c369bf67792b5e927"
+      },
+      {
+        "index": 24,
+        "words": 512,
+        "record_offset": 49168,
+        "payload_sha256": "6deeb9dce29d8eb83d2e9cc81b268f28037317c74fa2dd28799bb9ec2a815629"
+      },
+      {
+        "index": 25,
+        "words": 512,
+        "record_offset": 51216,
+        "payload_sha256": "ec11aefa37229333fd17a40c2b06862d8e7ec74c6336f4aac5873b366e12c696"
+      },
+      {
+        "index": 26,
+        "words": 512,
+        "record_offset": 53264,
+        "payload_sha256": "00a0ecce45e6e40f83bfa91456fcd3fc7584d9e5d6c62d10d96e761813bf08ac"
+      },
+      {
+        "index": 27,
+        "words": 512,
+        "record_offset": 55312,
+        "payload_sha256": "873fc166f730192951e429a43b570599c472ba5f7a4da375aa1d2629f7a87516"
+      },
+      {
+        "index": 28,
+        "words": 512,
+        "record_offset": 57360,
+        "payload_sha256": "ac5a09159a609bf18010fd296ca0c45efd93bb60364ea4eb9636a482200f8564"
+      },
+      {
+        "index": 29,
+        "words": 512,
+        "record_offset": 59408,
+        "payload_sha256": "03b2a8a66d847ad0e285f4ed901dba56058f3e9ad5cc273dcce266f71fbd1d83"
+      },
+      {
+        "index": 30,
+        "words": 512,
+        "record_offset": 61456,
+        "payload_sha256": "a53b610bbf24a7b091eb9b36aa28a5d95c02b272fd16b2fbcb62c5d3bcae4869"
+      },
+      {
+        "index": 31,
+        "words": 508,
+        "record_offset": 63504,
+        "payload_sha256": "a3952b249b318980a4a359c069dfc4e1ce928ee5b00de9b3b79e360b2f90e660"
+      }
+    ],
+    "packet_cases": [
+      {
+        "index": 0,
+        "count_words": 513,
+        "header_halfword": 22136,
+        "readback_sha256": "dcdb19bfa4c8c5e1741ded4ffd5efc4b78a17557027d5d48392980dca2b78126"
+      },
+      {
+        "index": 1,
+        "count_words": 512,
+        "header_halfword": null,
+        "readback_sha256": "8ab56598d7a722552910311f09ddeae410648831a6b5f5cd3fc8d87492eaff78"
+      },
+      {
+        "index": 31,
+        "count_words": 508,
+        "header_halfword": null,
+        "readback_sha256": "67e84faddcc24a8768627facb494ad75fb5e9534d3c8544a3cf7aeb403fa29b0"
+      }
+    ],
+    "execution_replacements": [],
+    "index32_prefix": {
+      "start": 7528536,
+      "stop_before": 7528588,
+      "first_store_va": 2147549200,
+      "loop_limit_words": 4294967292,
+      "store_executed": false
+    },
+    "limits": [
+      "Synthetic RAM only; no physical calibration or provider save.",
+      "Index32 stops before its first store, not a complete function run. Upstream packet validation is outside this probe.",
+      "Only ID63 64KiB methods are tested; no claim that ID64 uses these same size constants."
+    ]
+  },
+  "limits": [
+    "Flash sectors, RAM, owner/manager storage links, capture and config are synthetic. Native constructor and registry slices omit startup/destructor/synchronization work.",
+    "Policy slice65EA90..65EAA4 checks the original initial4A store on loaded mirrors, not later policy overrides or live capture.",
+    "Save slices start after mailbox/CPU prelude and stop before599914; backend write, save return and physical flash are not executed.",
+    "The packet0 update modifies the same native-loaded mirror before two staging replays. It does not validate packet provenance or mark a record valid.",
+    "ID63 chunk and packet boundary controls use a separate synthetic object. Index32 stops before its first out-of-span store; upstream validation/reachability remains unverified.",
+    "No physical units or calibration interpretation are assigned to the record contents."
+  ]
+}

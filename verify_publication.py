@@ -67,7 +67,7 @@ def main():
     assert findings["midr_check"]["part_number"] == 0xC09
     for value in (inventory["input"]["sha256"], findings["decoded_sha256"], "0x02000000", "0xC090", "30,254"):
         assert value in text, value
-    for name in ("hardware", "raw-path", "raw-numeric", "tone-path", "tone-numeric", "selector-path", "isp-paths", "isp-numeric", "pipeline-flow", "jpeg-buffers", "menu-events", "exif-output", "filesystem-backend", "sd-controller", "alternate-buffers", "backend-b", "cpp-handoff", "masked-scaler", "mode-reachability", "superresolution-menu", "buffer-history", "scaler-gate", "repack", "af-drive", "installation", "ui-resources", "af-control", "af-input", "ui-dispatch", "preserved-record", "pixel-records", "pixel-policy", "capture-prepare", "store-image-records", "color-ui", "settings-storage"):
+    for name in ("hardware", "raw-path", "raw-numeric", "tone-path", "tone-numeric", "selector-path", "isp-paths", "isp-numeric", "pipeline-flow", "jpeg-buffers", "menu-events", "exif-output", "filesystem-backend", "sd-controller", "alternate-buffers", "backend-b", "cpp-handoff", "masked-scaler", "mode-reachability", "superresolution-menu", "buffer-history", "scaler-gate", "repack", "af-drive", "installation", "ui-resources", "af-control", "af-input", "ui-dispatch", "preserved-record", "pixel-records", "pixel-policy", "capture-prepare", "store-image-records", "preserved-sector20", "color-ui", "settings-storage"):
         evidence = json.loads((root / f"analysis/{name}.json").read_text(encoding="utf-8"))
         assert evidence["decoded_sha256"] == findings["decoded_sha256"], name
     rebuilt = json.loads((root / "analysis/tone-rebuild.json").read_text(encoding="utf-8"))

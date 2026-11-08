@@ -1,5 +1,7 @@
 # PENTAX K-3 II v1.12 펌웨어 분석
 
+[보존 섹터 20·21과 픽셀 정책 입력](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/preserved-sector20.html): 원본 공급자 적재 6건, 같은 RAM 마커를 읽는 초기 플래그 대조 12건, 전체 섹터 저장 준비 8건을 검증했습니다. ID 0x63의 패킷 수정이 두 저장 준비 버퍼에 반영되며, 별도 블록 경계와 저장 전 정지 조건도 구분했습니다. 물리 기록과 상위 패킷 검증은 미확정입니다.
+
 [JPEG 완료값과 저장 레코드](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/store-image-records.html): 내장 레코드 여섯 개의 재사용과 StoreImage 요청 별칭을 7개 조건으로 검증했습니다. 별도 두 사례는 원본 JPEG 완료 길이를 같은 객체의 저장 요청까지 연결했습니다. 합성 장치 입력과 준비한 호출자 상태를 사용했으며 실제 압축·SD 쓰기는 미검증입니다.
 
 [촬영 준비의 연속 호출](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/capture-prepare.html): 원본 아홉 호출을 거쳐 정책 입력을 생산하는 21건과 앞부분 분기 21건을 실행 대체 없이 검증했습니다. 별도 세 사례는 준비 함수의 실제 반환까지 실행해 이미지 포인터 보존과 원본 생산자가 연결한 내장 레코드 여섯 개의 메타데이터 초기화를 대조했습니다. 실제 촬영 작업은 미검증입니다.
@@ -94,6 +96,7 @@ python verify_pixel_records.py .private/decoded/decoded.bin --compare analysis/p
 python verify_pixel_policy.py .private/decoded/decoded.bin --compare analysis/pixel-policy.json
 python verify_capture_prepare.py .private/decoded/decoded.bin --compare analysis/capture-prepare.json
 python verify_store_image_records.py .private/decoded/decoded.bin --compare analysis/store-image-records.json
+python verify_preserved_sector20.py .private/decoded/decoded.bin --compare analysis/preserved-sector20.json
 python verify_tone_rebuild.py .private/decoded/decoded.bin --zig <Zig-0.17.1-실행파일> --compare analysis/tone-rebuild.json
 python -m unittest discover -s tests -v
 python verify_publication.py

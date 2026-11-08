@@ -948,5 +948,36 @@
       "http_files_byte_exact": 1,
       "two_changed_diagrams_visually_checked": true
     }
+  },
+  "preserved_sector20": {
+    "original_ARM_replay": true,
+    "provider_count": 3,
+    "provider_bytes": [
+      65536,
+      57344,
+      8192
+    ],
+    "native_marker_load_cases": 6,
+    "same_loaded_RAM_initial_policy_cases": 12,
+    "complete_staging_cases": 8,
+    "native_packet_update_to_staging_cases": 2,
+    "direct_chunk_cases": 32,
+    "packet_method_cases": 3,
+    "invalid_index_prefix_cases": 1,
+    "execution_replacements": 0,
+    "physical_flash_write": false,
+    "coordinator_replayed_original_private_evidence": true,
+    "normal_and_optimized_snapshot": "PASS: final6loads/12policy/8stages",
+    "independent_review": "No P0-P2. Native loader, initial4A boundary, exact staging spans and same-mirror packet update reviewed. Accepted P3 added both-valid distinct banks; original five load results and all staging bytes unchanged. Reader backing preservation and writer pointer return checks added. Index32 remains before-store only; upstream reachability unverified.",
+    "language_review": {
+      "route": "light",
+      "paragraphs": 9,
+      "change_rate_percent": 0.1,
+      "sentences_touched": 3,
+      "sentences_total": 48,
+      "self_check": "6/6",
+      "deterministic_gate": "PASS",
+      "modality_loss": 0
+    }
   }
 }

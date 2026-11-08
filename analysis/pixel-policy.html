@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="K-3 II 픽셀 보정 활성값의 원본 생산 함수, 조회표, 해제 우선순위와 촬영 작업 준비 분기를 검증."><title>K-3 II — 픽셀 보정 활성값 생산과 작업 분기</title><link rel="stylesheet" href="../assets/report.css"></head>
 <body><header><div class="eyebrow">PENTAX K-3 II · firmware 1.12 · 2026-11-08</div><h1>픽셀 보정 활성값의 생산과<br>작업 준비 함수의 호출 생략 조건</h1><p class="lead">앞서 주입했던 활성 바이트를 원본 정책 함수가 만드는 경로까지 연결했다. 표 조회와 강제 설정 뒤에 다시 해제하는 조건을 확인했으며, 작업 종류 11의 준비 분기는 이 정책 호출 블록을 건너뛴다는 점도 구분했다.</p><nav aria-label="보고서 탐색"><a href="pixel-records.html">픽셀 레코드·버퍼</a><a href="#lookup">활성값 생산</a><a href="#priority">후속 덮어쓰기</a><a href="#prepare">작업 준비 분기</a><a href="#connected">버퍼까지 연결</a></nav></header><main>
+<p class="note">후속: <a href="preserved-sector20.html">두 마커를 원본 공급자가 적재한 RAM에서 읽어 +0x4A 초기값으로 연결</a>했다. 뒤쪽 정책 덮어쓰기와 설정 바이트의 상위 생산자는 이 대조에 포함하지 않았다.</p>
 <p class="note">함수 주소는 해제 파일 오프셋이다. 컨텍스트는 같은 촬영 작업 객체를 뜻한다. 여기의 +0x49는 픽셀 레코드 보정 활성 바이트이며 보조 스케일러 활성값과 같다고 가정하지 않았다.</p>
 <section aria-labelledby="lookup"><h2 id="lookup">1. 원본 정책 함수는 세 입력으로 표를 고르고 결과 4에서 보정을 켠다</h2>
 <figure><figcaption>도식 1. 활성값 생산 뒤에도 해제 조건이 남아 있다</figcaption><div class="flow" role="group" aria-label="세 입력의 표조회 또는 강제결과4 이후활성바이트를설정하고후속조건으로다시해제할수있음">
