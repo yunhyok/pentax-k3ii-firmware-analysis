@@ -490,9 +490,36 @@
         "http_files_byte_exact": 1,
         "two_changed_diagrams_visually_checked": true
       }
+    },
+    "preserved-sector20": {
+      "commit": "220b4c4d0fe72655eaa2d3b53adb20e8e4207606",
+      "path": "analysis/preserved-sector20.json",
+      "html_path": "analysis/preserved-sector20.html",
+      "verifier_path": "verify_preserved_sector20.py",
+      "replay": "python verify_preserved_sector20.py decoded.bin --compare analysis/preserved-sector20.json",
+      "publication": {
+        "commit": "220b4c4d0fe72655eaa2d3b53adb20e8e4207606",
+        "ci": "success",
+        "pages": "success",
+        "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42470280083",
+        "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42470279887",
+        "http_files_byte_exact": 9,
+        "fresh_clone_optimized_snapshot": "PASS",
+        "unit_tests": 24,
+        "html_documents": 24,
+        "local_links": 593,
+        "public_files": 131,
+        "two_diagrams_visually_checked": true,
+        "inner_width": 1897,
+        "document_scroll_width": 1882,
+        "mobile_viewport_checked": false
+      },
+      "sha256": "a070b76296b328e29d07638d895430f2646c18caebfc72ddac53fb5c91c84575",
+      "html_sha256": "cae5aa5b99c9f268d0062bc548bb2a7783d1ce25d1e0f8bb7f6852d23510f6e8",
+      "verifier_sha256": "ecf0c72d1729d9dabb74f9c3f0cba96a073ca88a830ef1e4b404284663c81338"
     }
   },
-  "offline_work_in_progress": "Publishing preserved sectors20/21 provider load, initial4A input and packet/staging proof. Next bounded research: native config+C producer/owner binding and upstream ID63 packet dispatch or validation. StoreImage behavior approval and diagram-only correction remain separately pinned.",
+  "offline_work_in_progress": "Preserved sectors20/21 publication verified through fresh clone, optimized replay, CI, Pages and all 9 changed HTTP files. One native worker is freezing connected config+C/+D producers; manager will independently replay and compare before publication. Upstream ID63 packet dispatch is a separate pending lead.",
   "snapshot_comparison_type_fix": {
     "commit": "bcacf0fd9aa4f77d35ca664bbb6e71cbdf830ea3",
     "shared_helper": "verify_findings.require_snapshot",
