@@ -1,0 +1,281 @@
+{
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "offset_space": "Decoded file offsets unless explicitly an event, widget ID, object offset or address.",
+  "screen": {
+    "constructor": 3421300,
+    "vtable": 10870624,
+    "dispatch": 7167696,
+    "event_slot_offset": 192,
+    "event_handler": 3434568,
+    "widget_table": 9969620,
+    "choice_widget_id": 18894854,
+    "choice_table": 9969524,
+    "english_encoding": "Locale pointer slot 0. Zero-terminated glyph codes plus 0x1e."
+  },
+  "configuration": {
+    "event_base": 18894856,
+    "choice_entry": 3434220,
+    "parameter_id": 57,
+    "parameter_object_offset": 1493,
+    "active_profile_writer": 7344960,
+    "active_profile_getter": 7345204,
+    "active_profile_object_offset": 820,
+    "bank_stride": 1048,
+    "profile_row_object_offset": 828,
+    "profile_row_stride": 10,
+    "parameter_zero_copy": 7350712,
+    "recipe_byte_offset": 156,
+    "processing_word_setter": 7593076,
+    "processing_word_offset": 68,
+    "tone_selector_entry": 5102264,
+    "tone_recipe_pointer_offset": 100888,
+    "selector_6_branch": 5102636,
+    "selector_6_producer_call": 5102708
+  },
+  "rows": [
+    {
+      "index": 0,
+      "event": 18894856,
+      "selector": 1,
+      "name": "Bright",
+      "event_branch": 3434688,
+      "child_widget_record": 9969780,
+      "choice_row": 9969524,
+      "locale_record": 14933348,
+      "english_glyph_offset": 14992080,
+      "glyph_sha256": "60cdda42c34ca0cb202c34e8af2e28167e4039158f5412eb2182a64b85d504f7"
+    },
+    {
+      "index": 1,
+      "event": 18894857,
+      "selector": 0,
+      "name": "Natural",
+      "event_branch": 3434700,
+      "child_widget_record": 9969800,
+      "choice_row": 9969532,
+      "locale_record": 14933432,
+      "english_glyph_offset": 14992087,
+      "glyph_sha256": "8c70b4ea1a299ed10d41f4553b9d8f376b23eee16d7858557ce3f3ff75bf3d1a"
+    },
+    {
+      "index": 2,
+      "event": 18894858,
+      "selector": 2,
+      "name": "Portrait",
+      "event_branch": 3434852,
+      "child_widget_record": 9969820,
+      "choice_row": 9969540,
+      "locale_record": 14933516,
+      "english_glyph_offset": 14992095,
+      "glyph_sha256": "21693104a0d688382ae5a0b812e45a15f096e53417db26eedca02d7478276c2c"
+    },
+    {
+      "index": 3,
+      "event": 18894859,
+      "selector": 3,
+      "name": "Landscape",
+      "event_branch": 3434864,
+      "child_widget_record": 9969840,
+      "choice_row": 9969548,
+      "locale_record": 14933600,
+      "english_glyph_offset": 14992104,
+      "glyph_sha256": "7f246ef028e233abcc3059b8025367687c827f435b9c91695c4f9de25073363a"
+    },
+    {
+      "index": 4,
+      "event": 18894860,
+      "selector": 4,
+      "name": "Vibrant",
+      "event_branch": 3434876,
+      "child_widget_record": 9969860,
+      "choice_row": 9969556,
+      "locale_record": 14933684,
+      "english_glyph_offset": 14992114,
+      "glyph_sha256": "f85969efdc5a14b4e44eaf4d5c2a4907b9e56d3af7a5f43e3232567c4b5c6af4"
+    },
+    {
+      "index": 5,
+      "event": 18894861,
+      "selector": 8,
+      "name": "Radiant",
+      "event_branch": 3434888,
+      "child_widget_record": 9969880,
+      "choice_row": 9969564,
+      "locale_record": 14933768,
+      "english_glyph_offset": 14992122,
+      "glyph_sha256": "9da88d3c53b45d18da4c8cd2ad4f157ad91705b654010ab514da95d78d1510e1"
+    },
+    {
+      "index": 6,
+      "event": 18894862,
+      "selector": 5,
+      "name": "Muted",
+      "event_branch": 3434900,
+      "child_widget_record": 9969900,
+      "choice_row": 9969572,
+      "locale_record": 14933852,
+      "english_glyph_offset": 14992130,
+      "glyph_sha256": "43e21eb020afebde65e28944436bc2fba21a39a9b98b82fc4b3576df385d418a"
+    },
+    {
+      "index": 7,
+      "event": 18894863,
+      "selector": 7,
+      "name": "Bleach Bypass",
+      "event_branch": 3434912,
+      "child_widget_record": 9969920,
+      "choice_row": 9969580,
+      "locale_record": 14933936,
+      "english_glyph_offset": 14992136,
+      "glyph_sha256": "d25a000c6c42e3679a13f940867fe59fe6509aef39ea6beb42bd168ff273871d"
+    },
+    {
+      "index": 8,
+      "event": 18894864,
+      "selector": 6,
+      "name": "Reversal Film",
+      "event_branch": 3434924,
+      "child_widget_record": 9969940,
+      "choice_row": 9969588,
+      "locale_record": 14934020,
+      "english_glyph_offset": 14992150,
+      "glyph_sha256": "4501a693fe1cb085914a4a58584dfb9f57dcca54c8b70d61452326e3b53774f6"
+    },
+    {
+      "index": 9,
+      "event": 18894865,
+      "selector": 10,
+      "name": "Monochrome",
+      "event_branch": 3434936,
+      "child_widget_record": 9969960,
+      "choice_row": 9969596,
+      "locale_record": 14934104,
+      "english_glyph_offset": 14992164,
+      "glyph_sha256": "2076844360a2407ea1e52ab712134740339e4d73a4c4d2114001c19bbd9eaf3b"
+    },
+    {
+      "index": 10,
+      "event": 18894866,
+      "selector": 9,
+      "name": "Cross Processing",
+      "event_branch": 3434948,
+      "child_widget_record": 9969980,
+      "choice_row": 9969604,
+      "locale_record": 14934188,
+      "english_glyph_offset": 14992175,
+      "glyph_sha256": "c578c4dc713eda2ce55934c15d0da6f404ac6ec64a605d7ef7ca929b454c97e9"
+    }
+  ],
+  "code_range_sha256": {
+    "0x3466ec..0x3469d0": "43d9e8451316e3b3573fc5332b6dd8c03a7a3137aec2a9e5aa703a4418f0f58c",
+    "0x34617c..0x346238": "568746c2c8c9409ce44496760ab777ecd44c031436e0a8cc4e60f7e445db29dd",
+    "0x4ed518..0x4ed598": "4529337d322a898b35f7473f159e6e8f4a993a0ee6688bfb951cff0853039ee8",
+    "0x6f2728..0x6f2768": "df8212408be47699713fa7d2eb53781fdde45fbc3ae5ccbc638242b164075cb4",
+    "0x701340..0x70137c": "620ddf197b83afa2e1161f4dab37659d437395576303f083023cd95f82cf9609",
+    "0x70293c..0x7029cc": "b593f1922d7aee48a97ba3975127a8c200905ba4834b847a0ca5a9439b6d3c39",
+    "0x658be4..0x658c08": "030e8183c4efc8039f74575a4f1607340abba925755b3e4f8902a7228289b8e5",
+    "0x4ddab8..0x4ddb2c": "ec37f610415019212446a3aeb65a8959a1cbbbbb420ae98a2a8dcf6db180216d",
+    "0x981f74..0x981fd4": "5c83cb09be38bef9ce0fdf4217adcd2465a9f3cec7e29318dbf034dca3646d76",
+    "0x981fd4..0x982150": "026ba1e4240081d16231a73bb46d72093c5c2210b0d4b1f44a015aa308d8804e"
+  },
+  "limits": [
+    "The event ID is the screen handler input and the corresponding child widget ID.",
+    "Physical button/dial input and actual LCD drawing were not executed.",
+    "The configuration flow is tested with an initialized default bank in RAM. Persistent storage I/O is outside this check."
+  ],
+  "numeric": {
+    "unicorn_version": "2.1.4",
+    "bank": 2,
+    "mode_events": [
+      {
+        "event": 18894856,
+        "name": "Bright",
+        "selector": 1,
+        "selected_locale_record": 14933348,
+        "tone_branch": 5102380
+      },
+      {
+        "event": 18894857,
+        "name": "Natural",
+        "selector": 0,
+        "selected_locale_record": 14933432,
+        "tone_branch": 5102380
+      },
+      {
+        "event": 18894858,
+        "name": "Portrait",
+        "selector": 2,
+        "selected_locale_record": 14933516,
+        "tone_branch": 5102380
+      },
+      {
+        "event": 18894859,
+        "name": "Landscape",
+        "selector": 3,
+        "selected_locale_record": 14933600,
+        "tone_branch": 5102380
+      },
+      {
+        "event": 18894860,
+        "name": "Vibrant",
+        "selector": 4,
+        "selected_locale_record": 14933684,
+        "tone_branch": 5102380
+      },
+      {
+        "event": 18894861,
+        "name": "Radiant",
+        "selector": 8,
+        "selected_locale_record": 14933768,
+        "tone_branch": 5102380
+      },
+      {
+        "event": 18894862,
+        "name": "Muted",
+        "selector": 5,
+        "selected_locale_record": 14933852,
+        "tone_branch": 5102380
+      },
+      {
+        "event": 18894863,
+        "name": "Bleach Bypass",
+        "selector": 7,
+        "selected_locale_record": 14933936,
+        "tone_branch": 5102380
+      },
+      {
+        "event": 18894864,
+        "name": "Reversal Film",
+        "selector": 6,
+        "selected_locale_record": 14934020,
+        "tone_branch": 5102636
+      },
+      {
+        "event": 18894865,
+        "name": "Monochrome",
+        "selector": 10,
+        "selected_locale_record": 14934104,
+        "tone_branch": 5102380
+      },
+      {
+        "event": 18894866,
+        "name": "Cross Processing",
+        "selector": 9,
+        "selected_locale_record": 14934188,
+        "tone_branch": 5102380
+      }
+    ],
+    "unmapped_events": [
+      18894855,
+      18894867
+    ],
+    "blocked_event": 18894864,
+    "boundaries": [
+      "Fixture callback for the screen notification and widget activation.",
+      "Fixture widget lookup verifies the requested ID and returns a RAM widget.",
+      "Screen-layout refresh 0x346238 skipped at entry. Outer handler stops at 0x3468dc.",
+      "Recipe copy checks start at internal entry points with explicit register preconditions.",
+      "Tone selector runs from its entry to the chosen branch. Curve generation is outside this check."
+    ]
+  }
+}

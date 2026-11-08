@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="K-3 II의 색 처리·스케일러·JPEG·Exif 버퍼 전달과 Reversal Film 메뉴 이벤트를 원본 명령으로 검증한 후속 보고서.">
+<title>K-3 II — JPEG 버퍼 전달과 실제 메뉴 이벤트</title>
+<link rel="stylesheet" href="../assets/report.css">
+</head>
+<body>
+<header>
+<div class="eyebrow">PENTAX K-3 II · firmware 1.12 · 2026-11-08 · 버퍼·메뉴 연결 후속 분석</div>
+<h1>JPEG 출력 버퍼와<br>Reversal Film 메뉴의 연결</h1>
+<p class="lead">색 처리 출력과 스케일러, JPEG 압축기, Exif 작성기가 같은 작업의 포인터와 길이를 전달하는 조건부 경로를 연결했다. selector=6은 실제 메뉴 이벤트와 문자열 리소스에서도 Reversal Film에 대응한다. 출력은 파일시스템 어댑터까지 추적했으며, SD 명령·DMA와 실기 기록은 별도 검증 범위다.</p>
+<nav aria-label="보고서 탐색"><a href="../index.html">초기 분석</a><a href="pipeline-analysis.html">앞선 톤·색 처리 분석</a><a href="#buffers">버퍼 전달</a><a href="#writer">Exif·파일 출력</a><a href="#menu">메뉴 이벤트</a><a href="#verification">검증·재현</a><a href="#limits">남은 범위</a></nav>
+</header>
+<main>
+<p class="note">코드 주소는 <strong>해제 이미지의 파일 오프셋</strong>이다. 분석용 VA는 <code>파일 오프셋 + 0x02000000</code>이다. 장치 주소 <code>0x2002… / 0x200E…</code>와 구분한다. 도식은 코드와 디스크립터의 연결이며 실제 촬영을 관측한 기록은 아니다.</p>
+
+<section aria-labelledby="buffers"><h2 id="buffers">1. RAW 작업이 사용하는 JPEG 모듈은 별도로 있었다</h2>
+<p>앞선 분석은 모듈 8의 명령 <code>0x00C00003</code>과 코덱 <code>0x53C42C</code>를 찾았다. 그러나 검사한 RAW 작업 명령열에는 그 모듈을 직접 호출하는 항목이 없었다. 후속 분석에서 <strong>모듈 16, 명령 <code>0x00C00002</code></strong>를 확인했다. 이 모듈은 <code>0x575EB8</code>에서 생성되고 <code>0x57711C → 0x576CFC</code>로 메시지를 받으며, 하위 코덱 <code>0x53D700</code>을 사용한다. 두 JPEG 경로를 하나로 취급해서는 안 된다. <a href="jpeg-buffers.json">생성자·가상 함수표·명령·호출 근거</a></p>
+<figure><figcaption>도식 1. 같은 작업에서 연결한 이미지·압축 버퍼</figcaption>
+<div class="flow" role="group" aria-label="색 처리 출력, 스케일러 입력과 JPEG 입력의 연결">
+<div class="stage"><strong>톤·색 처리 모듈 0</strong><span>작업 <code>+0x160/+0x164/+0x168</code><br>B2Y 출력 주소 설정<br><code>0x20022440/50/60</code></span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>스케일러 모듈 2</strong><span>입력: 작업 <code>+0x2140</code> 디스크립터<br>출력: <code>+0x21B0 / +0x21CC</code><br>동일한 세 입력 주소를 복사</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>JPEG 모듈 16</strong><span>입력: 같은 <code>+0x21B0 / +0x21CC</code><br><code>0x576AC4 → 0x576C24</code><br>압축기 <code>0x53D700</code></span></div>
+</div>
+<div class="flow" role="group" aria-label="압축 출력 주소와 유효 길이의 저장 경로">
+<div class="stage"><strong>압축 결과</strong><span>주소: 작업 <code>+0x190 + 4×stream</code><br>출력 디스크립터 <code>+0</code><br>유효 길이는 디스크립터 <code>+0xC</code></span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>완료 처리</strong><span>메시지 <code>0x03000002</code><br>모듈 16 완료 상태 갱신<br>길이 → 작업 <code>+0x2EC + 4×stream</code></span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>StoreImage</strong><span>주 이미지 디스크립터<br><code>+0x34 = 같은 압축 주소</code><br><code>+0x28 = 같은 유효 길이</code></span></div>
+</div>
+<p class="caption"><code>stream</code>은 코드의 출력 인덱스다. 두 출력 인덱스가 어느 저장 슬롯·해상도와 대응하는지는 모든 분기에 걸쳐 확정하지 않았다. <a href="jpeg-buffers.json">주소 별칭·완료 값 추적</a></p>
+</figure>
+<p>색 처리의 직접 주소 경로에서는 <code>0x6597E0/7EC/7F8</code>이 작업의 세 주소를 읽어 CPP 설정 <code>+0x2C/+0x30/+0x34</code>에 넣는다. <code>0x58BDAC/B8/C4</code>의 장치 설정과 스케일러 입력 디스크립터 <code>0x659AC8…0x659AE8</code>가 이 주소들을 소비한다. 다만 CPP 반복 처리 중에는 payload <code>+0xAC</code>의 다른 주소로 바꾸는 분기도 있다. 이 도식은 <strong>직접 주소 분기에서 성립하는 연결</strong>이며, 모든 프레임·모드를 하나의 버퍼 배치로 일반화하지 않는다. <a href="jpeg-buffers.json">분기 조건과 레지스터 설정</a></p>
+<p>스케일러 출력 디스크립터 두 개는 JPEG 입력 payload <code>+0/+4</code>에도 같은 포인터로 들어간다. 압축 출력 주소는 <code>0x660854</code>에서 작업의 포인터 배열을 읽어 출력 디스크립터에 넣고, StoreImage의 <code>0x657984 → 0x65798C</code>에서도 같은 배열을 읽는다. 길이는 장치 주소 <code>0x200E0020</code>의 완료 결과에서 시작해 콜백, 출력 디스크립터, 작업의 길이 배열을 거친다. 포인터뿐 아니라 <strong>압축된 유효 바이트 수가 전달되는 경로</strong>도 연결했다. <a href="jpeg-buffers.json">주소·길이 생산자와 소비자</a></p>
+<p class="note">주소 정렬 조건도 확인했다. B2Y 장치는 하위 3비트, JPEG 장치는 하위 4비트를 지운 주소를 사용한다. 따라서 디스크립터 주소와 장치 주소의 일치에는 각각 8바이트·16바이트 정렬이 필요하다. 일반 목적지 배치 분기 <code>0x660808…0x660844 → 0x65420C</code>는 두 압축 목적지 주소를 16바이트 단위로 올림한다. 이 분기는 원본 명령으로 검증했다. 별도로 넣은 비정렬 합성 주소는 장치 주소와 저장 주소가 달라졌으며, 모든 입력·대체 배치 분기의 정렬까지 검증한 것은 아니다.</p>
+<p>원본 레시피 생성 함수 <code>0x76E7AC</code>도 다시 실행했다. 표는 operation 5의 모듈 호출 위치이며 0부터 센다. <strong>레시피 ID는 톤 selector와 별개</strong>다. 첫 JPEG 결과는 길이가 0보다 크고 출력 디스크립터의 용량 이내일 때 받아들이며, 그렇지 않으면 <code>0x576C98</code>의 재시도 분기로 간다. 재시도 이후의 모든 경로는 이번 실행 범위에 넣지 않았다.</p>
+<div class="table-scroll"><table><thead><tr><th scope="col">레시피</th><th scope="col">톤·색 모듈 0</th><th scope="col">스케일러 2</th><th scope="col">JPEG 16</th><th scope="col">StoreImage 9</th></tr></thead><tbody>
+<tr><td><code>0x0C</code></td><td>6</td><td>30</td><td>32</td><td>34</td></tr>
+<tr><td><code>0x10</code></td><td>15</td><td>36</td><td>38</td><td>없음</td></tr>
+<tr><td><code>0x13</code></td><td>10</td><td>38</td><td>40</td><td>42</td></tr>
+<tr><td><code>0x15</code></td><td>41</td><td>72</td><td>74</td><td>77</td></tr>
+</tbody></table></div>
+</section>
+
+<section aria-labelledby="writer"><h2 id="writer">2. Exif 작성기는 헤더와 압축 데이터를 나눠 쓴다</h2>
+<p><code>StoreImage+0x420</code>의 쓰기 요청은 <code>0x5A7D5C</code>에서 <code>+0x844</code>의 서비스로 전달된다. 서비스의 실제 구현 <code>0x7625F8</code>은 같은 요청을 큐 명령 0으로 보낸다. 수신부 <code>0x7C6704 → 0x7C6658</code>는 파일 형식에 따라 작성기를 선택하며, 확인한 JPEG 분기는 <code>0x7CD4B4 → 0x7CD3F0</code>이다. 여기서 <code>0x82D8B8(index=2)</code>가 앞 절의 주 이미지 디스크립터를 반환한다. <a href="exif-output.json">쓰기 서비스·작성기 선택 근거</a> · <a href="jpeg-buffers.json">요청에 주 이미지 디스크립터를 넣는 경로</a></p>
+<figure><figcaption>도식 2. 두 조각을 같은 파일에 이어 쓰는 구조</figcaption>
+<div class="flow" role="group" aria-label="압축 디스크립터에서 Exif 작성기의 두 출력 조각과 파일시스템으로">
+<div class="stage"><strong>주 이미지 디스크립터</strong><span><code>+0x34</code>: 압축 데이터 주소<br><code>+0x28</code>: 유효 바이트 수<br>원본 준비 함수 <code>0x7CD1E0</code></span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>출력 조각 2개</strong><span>① 파일 위치 0: 헤더 버퍼<br>② 헤더 길이 뒤: 압축 버퍼<br><code>위치 · 주소 · 길이</code>의 12바이트 레코드</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>공통 출력 루프</strong><span><code>0x7EB150</code><br>각 조각마다 seek → write<br>실패하면 다음 호출 중단</span></div>
+</div>
+<p class="caption">헤더와 압축 데이터를 합친 큰 버퍼를 이 단계에서 새로 만들지 않는다. 압축 버퍼의 원래 포인터와 길이를 출력 인터페이스에 전달한다. <a href="exif-output.json">원본 코드 10개 실행 사례</a></p>
+</figure>
+<div class="table-scroll"><table><thead><tr><th scope="col">레코드</th><th scope="col">파일 위치</th><th scope="col">소스 주소</th><th scope="col">바이트 수</th></tr></thead><tbody>
+<tr><td>writer <code>+0x54</code></td><td>0</td><td>writer <code>+0x18</code></td><td>writer <code>+0x50</code></td></tr>
+<tr><td>writer <code>+0x60</code></td><td>writer <code>+0x50</code></td><td>주 이미지 descriptor <code>+0x34</code></td><td>주 이미지 descriptor <code>+0x28</code></td></tr>
+</tbody></table></div>
+<p>일반 저장 경로의 <code>0x74566C</code>는 부모 객체 <code>+0x18</code>에 파일시스템 객체의 보조 인터페이스를 넣는다. 작성기의 seek/write는 가상 함수표 <code>0x02A6208C</code>를 통해 <code>0x6F024C / 0x6F01B8</code>로 이어진다. 어댑터는 파일 핸들의 <code>+4</code>로 백엔드를 선택하고, <code>+0</code>의 내부 핸들과 버퍼 주소·길이를 넘긴다. 이 어댑터까지 포함한 원본 명령 실행에서도 두 조각의 주소·길이가 보존됐다. <a href="exif-output.json">파일시스템 연결과 실행 기록</a></p>
+<p class="note">앞선 보고서의 <code>0x5A6BE8 → 0x82B3C0</code> 경로는 일반 슬롯에서 <code>0x744784</code>의 저장 준비 명령 <code>0x20000</code>으로 이어진다. 이를 JPEG 데이터 쓰기로 해석하면 안 된다. 실제 이미지 쓰기 서비스와 준비 명령은 서로 다른 경로다.</p>
+<p>파일시스템 어댑터 이후에는 선택된 백엔드의 가상 함수 호출이 남는다. 이번 분석은 그 백엔드의 SD 명령·블록 DMA까지 연결하거나 카메라에서 기록 성공을 확인한 결과가 아니다.</p>
+</section>
+
+<section aria-labelledby="menu"><h2 id="menu">3. selector=6의 실제 메뉴 이벤트와 문자열</h2>
+<p>앞선 결론은 <code>selector 6 → ImageTone 7</code>의 메타데이터 변환에 근거했다. 이제 화면 객체의 가상 함수표, 이벤트 ID, 목록 리소스, 설정 쓰기까지 별도로 연결했다. 화면 이벤트 <code>0x01205010</code>은 <code>0x346848</code>의 11개 분기 중 아홉 번째이며, <code>0x3469AC</code>에서 선택값 6을 <code>0x3466EC</code>에 전달한다. <a href="menu-events.json">이벤트 분기·원본 실행 결과</a></p>
+<p>화면 생성자 <code>0x343474</code>는 가상 함수표 VA <code>0x02A5DF60</code>을 설치한다. 공통 이벤트 진입점 <code>0x6D5ED0</code>이 그 표의 <code>+0xC0</code>를 호출한다. 반대 방향인 현재 선택값→이벤트 ID도 <code>+0xBC</code>의 <code>0x34617C</code>로 검증했으며, 선택값 6에서 <code>0x01205010</code>을 반환했다.</p>
+<figure><figcaption>도식 3. 화면 선택에서 톤 selector까지</figcaption>
+<div class="flow" role="group" aria-label="Reversal Film 메뉴 이벤트가 저장 설정과 톤 처리 선택값으로 이어지는 경로">
+<div class="stage"><strong>메뉴 이벤트</strong><span><code>0x01205010</code><br>화면 vtable <code>+0xC0</code><br><code>0x346848 → 0x3469AC</code></span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>설정값 6 기록</strong><span><code>0x3466EC → 0x6F5148</code><br>설정 매개변수 <code>0x39 = 6</code><br>활성 프로필 → 저장 레코드</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>톤 경로</strong><span>저장 레코드 <code>+0x9C = 6</code><br>처리 설정 <code>+0x44 = 6</code><br>특수 분기 <code>0x4DDC2C</code></span></div>
+</div>
+<p class="caption">실제 버튼을 누른 관측은 아니다. 펌웨어의 이벤트 진입점을 합성 상태로 실행했고, GUI 경계에서 대체한 함수는 검증 JSON에 명시했다. 저장 설정·변환·톤 분기 코드는 원본 명령을 사용했다.</p>
+</figure>
+<p>화면 목록 <code>0x01205006</code>의 리소스는 <code>0x981F74</code>의 선택 키 배열 <code>[1,0,2,3,4,8,5,7,6,10,9]</code>를 가리킨다. 키 6의 레코드 <code>0x981FB4</code>는 다국어 포인터 레코드 <code>0xE3E004</code>로 연결되고, 첫 언어 슬롯의 문자열은 <code>0xE4C316</code>에 있다. 0이 아닌 글리프 코드에 <code>0x1E</code>를 더하면 정확히 <strong>Reversal Film</strong>이 된다. 인접한 10개 이름도 같은 규칙으로 대조했다. 따라서 메뉴 표시 순서를 EXIF 값으로 가정하지 않고 펌웨어 자체에서 이름을 확인했다. <a href="menu-events.json">11개 이벤트·키·문자열 대응</a></p>
+<p>앞선 기본 프로필 조회에서 ID 41도 selector 6을 반환했지만, 이 메뉴의 키 6과 ID 41을 같은 화면 항목으로 간주하지 않는다. 이번에 직접 연결한 것은 메뉴 이벤트 <code>0x01205010</code>과 공통 선택값 6이다.</p>
+</section>
+
+<section aria-labelledby="verification"><h2 id="verification">4. 검증과 재현</h2>
+<p>동일한 v1.12 해제 이미지의 SHA-256 <code class="hash">1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc</code>를 확인한 뒤 분석했다. 공개 JSON에는 호출·가상 함수표·구간 해시와 실행 범위가 들어 있다. 원본 펌웨어나 전체 디스어셈블은 공개하지 않는다.</p>
+<div class="table-scroll"><table><thead><tr><th scope="col">검증</th><th scope="col">직접 확인한 내용</th><th scope="col">근거</th></tr></thead><tbody>
+<tr><td>이미지·JPEG 버퍼</td><td>레시피 4종, B2Y 3개 평면, JPEG 합성 스트림 2개, 목적지 정렬과 완료 디스패치. 정적 분기 103개·명령 81개·리터럴 13개 확인</td><td><a href="jpeg-buffers.json">jpeg-buffers.json</a></td></tr>
+<tr><td>메뉴 이벤트</td><td>11개 이벤트의 선택값·리소스·설정·톤 분기와 역방향 ID 조회. 범위 밖 이벤트 2개·입력 차단 상태 1개에서 설정 유지</td><td><a href="menu-events.json">menu-events.json</a></td></tr>
+<tr><td>Exif·출력 어댑터</td><td>원본 준비·출력 루프 10건: 성공과 각 seek/write 실패, 두 경로의 주소·길이 보존</td><td><a href="exif-output.json">exif-output.json</a></td></tr>
+<tr><td>통합·공개 범위</td><td>단위 테스트, 문서 링크·해시·공개 파일 검사</td><td><a href="validation.json">validation.json</a></td></tr>
+</tbody></table></div>
+<pre><code>python verify_jpeg_buffers.py .private/decoded/decoded.bin --compare analysis/jpeg-buffers.json
+python verify_menu_events.py .private/decoded/decoded.bin --emulate --compare analysis/menu-events.json
+python verify_exif_output.py .private/decoded/decoded.bin --compare analysis/exif-output.json
+python -m unittest discover -s tests -v
+python verify_publication.py</code></pre>
+<p>원본 명령 실행 환경은 Python 3.12와 Unicorn 2.1.4다. 원본 CPU 명령은 실행하고 장치·GUI·파일 출력 경계는 합성 메모리나 훅으로 대체했다. CI는 펌웨어 없이 실행되는 단위 테스트와 공개 문서 검사를 수행하므로, 로컬 원본 명령 실행과 검증 범위가 다르다.</p>
+</section>
+
+<section aria-labelledby="limits"><h2 id="limits">5. K-3 III와 같은 방법으로 확인한 범위</h2>
+<p>K-3 III의 <a href="https://github.com/yunhyok/pentax-k3iii-firmware-analysis/blob/b51d680202336a5872a66f99ca2924a2cb7c75fa/analysis/color-lightroom.html">모드·리소스 분석</a>과 <a href="https://github.com/yunhyok/pentax-k3iii-firmware-analysis/blob/b51d680202336a5872a66f99ca2924a2cb7c75fa/analysis/pipeline-report.html">JPEG·ISP 분석</a>에서 사용한 방식처럼 생성자·수신부·디스크립터·완료 콜백을 연결하고 가능한 작은 함수는 원본 명령으로 실행했다. K-3 III의 enum, 모듈 번호, MMIO 주소는 가져오지 않았다.</p>
+<p>이번에 해소한 것은 조건부 소프트웨어 버퍼 경로와 실제 메뉴 이벤트의 연결이다. 남은 항목은 전체 모드의 픽셀 형식·크로마 배치, CPP의 대체 출력 분기, 파일시스템 백엔드 이후 SD 명령·DMA, 실기 JPEG 픽셀 비교다. 정확한 SoC·보조 MCU 부품 번호도 <a href="deep-analysis.html#hardware">기존 미확정 상태</a>를 유지한다. 카메라 플래시나 실기 실행은 하지 않았다.</p>
+</section>
+</main>
+<footer><a href="https://github.com/yunhyok/pentax-k3ii-firmware-analysis">GitHub 연구 저장소</a> · 확정된 호출·값 전달과 아직 관측하지 않은 하드웨어 동작을 구분한다.</footer>
+</body>
+</html>

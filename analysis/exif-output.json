@@ -1,0 +1,741 @@
+{
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "offset_convention": "file offsets; add 0x02000000 for code VA",
+  "edges": [
+    {
+      "call": "0x5662fc",
+      "target": "0x7dbb9c"
+    },
+    {
+      "call": "0x566308",
+      "target": "0x59779c"
+    },
+    {
+      "call": "0x513f2c",
+      "target": "0x7b2cc0"
+    },
+    {
+      "call": "0x7885e4",
+      "target": "0x76252c"
+    },
+    {
+      "call": "0x5a7d80",
+      "target": "0x833f3c"
+    },
+    {
+      "call": "0x762608",
+      "target": "0x7625d4"
+    },
+    {
+      "call": "0x76261c",
+      "target": "0x7c643c"
+    },
+    {
+      "call": "0x7625e8",
+      "target": "0x7c6810"
+    },
+    {
+      "call": "0x7625ec",
+      "target": "0x7c727c"
+    },
+    {
+      "call": "0x7c6480",
+      "target": "0x78497c"
+    },
+    {
+      "call": "0x7c6494",
+      "target": "0x6fea38"
+    },
+    {
+      "call": "0x7c674c",
+      "target": "0x7c6658"
+    },
+    {
+      "call": "0x7c6678",
+      "target": "0x7c65d0"
+    },
+    {
+      "call": "0x7c692c",
+      "target": "0x7c6428"
+    },
+    {
+      "call": "0x7c6b90",
+      "target": "0x7cd064"
+    },
+    {
+      "call": "0x7cd4c8",
+      "target": "0x81d26c"
+    },
+    {
+      "call": "0x7cd4d0",
+      "target": "0x7dbb7c"
+    },
+    {
+      "call": "0x7cd4dc",
+      "target": "0x7cd3f0"
+    },
+    {
+      "call": "0x7cd498",
+      "target": "0x82d8b8"
+    },
+    {
+      "call": "0x7cd4a4",
+      "target": "0x7cd1e0"
+    },
+    {
+      "call": "0x7cd220",
+      "target": "0x81c110"
+    },
+    {
+      "call": "0x7cd234",
+      "target": "0x834340"
+    },
+    {
+      "call": "0x7eb15c",
+      "target": "0x7b2e98"
+    },
+    {
+      "call": "0x7eb1a4",
+      "target": "0x81c67c"
+    },
+    {
+      "call": "0x7eb1d8",
+      "target": "0x81c66c"
+    },
+    {
+      "call": "0x7eb1e4",
+      "target": "0x81c684"
+    },
+    {
+      "call": "0x74353c",
+      "target": "0x82ad28"
+    },
+    {
+      "call": "0x743568",
+      "target": "0x833d38"
+    },
+    {
+      "call": "0x82b928",
+      "target": "0x7437d8"
+    },
+    {
+      "call": "0x82b3d4",
+      "target": "0x82adc8"
+    },
+    {
+      "call": "0x744850",
+      "target": "0x78497c"
+    },
+    {
+      "call": "0x744860",
+      "target": "0x6fea38"
+    },
+    {
+      "call": "0x74399c",
+      "target": "0x75472c"
+    },
+    {
+      "call": "0x7621fc",
+      "target": "0x6efe24"
+    },
+    {
+      "call": "0x74577c",
+      "target": "0x745508"
+    },
+    {
+      "call": "0x745654",
+      "target": "0x833358"
+    },
+    {
+      "call": "0x74566c",
+      "target": "0x833378"
+    },
+    {
+      "call": "0x6f01bc",
+      "target": "0x6f012c"
+    },
+    {
+      "call": "0x6f0250",
+      "target": "0x6f01c0"
+    },
+    {
+      "call": "0x6f014c",
+      "target": "0x597c2c"
+    },
+    {
+      "call": "0x6f0158",
+      "target": "0x6eff30"
+    },
+    {
+      "call": "0x6f0170",
+      "target": "0x597c34"
+    }
+  ],
+  "words": {
+    "0x59779c": "0xe3002844",
+    "0x5977a0": "0xe7801002",
+    "0x7dbb9c": "0xe5900008",
+    "0x7b2cc0": "0xe5900004",
+    "0x762538": "0xe5801000",
+    "0x7626d0": "0x2a68d4c",
+    "0xa68d60": "0x27625f8",
+    "0x5a7da4": "0xe3000844",
+    "0x5a7db0": "0xe5913014",
+    "0x5a7db8": "0xe12fff33",
+    "0x7c6474": "0xe1a02007",
+    "0x7c6478": "0xe3a01000",
+    "0x7c6488": "0xe2850008",
+    "0xa715d8": "0x27c678c",
+    "0x7c678c": "0xe2400008",
+    "0x7c66a8": "0xe5902014",
+    "0x7c66b0": "0xe12fff32",
+    "0x7c6924": "0xe3a01002",
+    "0x7c6928": "0xe5942014",
+    "0x7c6c2c": "0xe5a46014",
+    "0x7cd654": "0x2a5c274",
+    "0xa5c288": "0x27cd4b4",
+    "0xa5c294": "0x27eb150",
+    "0xa5c298": "0x27cd63c",
+    "0xa5c29c": "0x27cd64c",
+    "0x81c110": "0xe5900034",
+    "0x834340": "0xe5900028",
+    "0x7dbb7c": "0xe5900018",
+    "0x7b2e98": "0xe5900004",
+    "0x81c674": "0xe5801008",
+    "0x81c68c": "0xe5801000",
+    "0x81c694": "0xe5801004",
+    "0x7cd64c": "0xe3a00002",
+    "0x7eb1b8": "0xe5907018",
+    "0x7eb1c0": "0xe12fff37",
+    "0x7eb1f8": "0xe590c014",
+    "0x7eb200": "0xe12fff3c",
+    "0xa74904": "0x2744784",
+    "0x744838": "0xe3a01802",
+    "0x7885e8": "0xe5840004",
+    "0x513f30": "0xe5840008",
+    "0x75472c": "0xe5900010",
+    "0x762200": "0xe5840010",
+    "0x7439a0": "0xe5840050",
+    "0x745660": "0x12801004",
+    "0x833378": "0xe5801018",
+    "0x833358": "0xe5801004",
+    "0x6f0c30": "0x2a62054",
+    "0x6efe40": "0xe2811038",
+    "0xa620a0": "0x26f01b8",
+    "0xa620a4": "0x26f024c",
+    "0x6f01b8": "0xe2400004",
+    "0x6f024c": "0xe2400004",
+    "0x6f0184": "0xe590601c",
+    "0x6f018c": "0xe12fff36",
+    "0x6f0218": "0xe5906020",
+    "0x6f0220": "0xe12fff36"
+  },
+  "ranges": {
+    "store_write_request": {
+      "start": "0x5a7d5c",
+      "end_exclusive": "0x5a7e08",
+      "sha256": "c1507ff9579b95ca22a90dc2f62e8e4e6f63693bab77394079fa4947db80cedb"
+    },
+    "writer_service_submit": {
+      "start": "0x7c643c",
+      "end_exclusive": "0x7c6498",
+      "sha256": "a5351a079165a308c71db3edd8e351e073f66e8761b8e85c4079149bb5cb9130"
+    },
+    "writer_selection": {
+      "start": "0x7c65d0",
+      "end_exclusive": "0x7c6658",
+      "sha256": "7bde067b6f2475b00be30784596eb8b511781277a3943b7071e84cfda82086e7"
+    },
+    "writer_service_receive": {
+      "start": "0x7c6658",
+      "end_exclusive": "0x7c678c",
+      "sha256": "06ea29fad32210866fbd75809d9ef9d4fe0793455a80f3065e33c723db68caae"
+    },
+    "request_descriptor_get": {
+      "start": "0x82d8b8",
+      "end_exclusive": "0x82d8ec",
+      "sha256": "db01ae93c1257cd3fdb792e3795dbf0726242a641b3e67d717609427de61e274"
+    },
+    "exif_scatter_prepare": {
+      "start": "0x7cd1e0",
+      "end_exclusive": "0x7cd248",
+      "sha256": "3a5fcd5c36d9cea81b8c5b2d596ce5ea48f72f6a595b19c1ee750de6ad15ccfb"
+    },
+    "scatter_emitter": {
+      "start": "0x7eb150",
+      "end_exclusive": "0x7eb234",
+      "sha256": "ee013375fd3cd3ae77519b5ed701ecd8e169e8a326e03bef7161fbc1926c647c"
+    },
+    "storage_setup_request": {
+      "start": "0x744784",
+      "end_exclusive": "0x744868",
+      "sha256": "1475e855ea8f5b3617c7b91c029c047a43c6ae10ef65fc0f4e6a356ea71ffe14"
+    },
+    "filesystem_adapter": {
+      "start": "0x6f012c",
+      "end_exclusive": "0x6f0254",
+      "sha256": "ffe6f6b2d28f5e2256c5daddf3e8a96664190be9d0d39335bf2479b70dc0bb55"
+    },
+    "filesystem_output_binding": {
+      "start": "0x745634",
+      "end_exclusive": "0x745670",
+      "sha256": "3f28c8ce3e0a7ae6b6f0407b991dc9969273ea66a694a6915148dfe1062e2a7b"
+    }
+  },
+  "scatter_records": {
+    "header": {
+      "writer_offset": "0x54",
+      "file_offset": 0,
+      "source": "writer+0x18",
+      "length": "writer+0x50"
+    },
+    "compressed_image": {
+      "writer_offset": "0x60",
+      "file_offset": "writer+0x50",
+      "source": "input descriptor+0x34",
+      "length": "input descriptor+0x28"
+    },
+    "record_layout": [
+      "file_offset",
+      "source_pointer",
+      "byte_count"
+    ]
+  },
+  "request": "StoreImage+0x420 -> service command 0 -> writer entry 0x7cd4b4; descriptor bank getter 0x82d8b8(index 2)",
+  "storage_setup_correction": "0x5a6be8 -> router 0x82b3c0 -> ordinary slot target 0x744784 submits storage setup command 0x20000; this is not the JPEG payload write.",
+  "filesystem_route": "Normal storage open path 0x745508 binds parent+0x18 to filesystem object+4. Vtable 0x02a6208c routes write/seek through 0x6f01b8/0x6f024c, selecting backend by handle+4 and forwarding handle+0, pointer and count.",
+  "limits": [
+    "Original descriptor builder and emitter execute with synthetic RAM and an intercepted seek/write interface.",
+    "The ordinary filesystem adapter is resolved; the selected backend implementation, SD command/data DMA and physical writes are not resolved or executed here.",
+    "Writer selection depends on request and parent format fields; not every request selects Exif JPEG."
+  ],
+  "numeric": {
+    "engine": "Unicorn 2.1.4",
+    "cases": [
+      {
+        "route": "interface",
+        "failure_at_call": null,
+        "return_value": 1,
+        "scatter": [
+          0,
+          268455936,
+          32,
+          32,
+          268460032,
+          47
+        ],
+        "calls": [
+          {
+            "operation": "seek",
+            "args": [
+              9320,
+              0,
+              0
+            ],
+            "success": true
+          },
+          {
+            "operation": "write",
+            "args": [
+              9320,
+              268455936,
+              32
+            ],
+            "success": true,
+            "source_sha256": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd"
+          },
+          {
+            "operation": "seek",
+            "args": [
+              9320,
+              32,
+              0
+            ],
+            "success": true
+          },
+          {
+            "operation": "write",
+            "args": [
+              9320,
+              268460032,
+              47
+            ],
+            "success": true,
+            "source_sha256": "1f997e5f0971a23047ffb591147ad709e8d9e8f59745ce44641db1056dea6a82"
+          }
+        ]
+      },
+      {
+        "route": "interface",
+        "failure_at_call": 0,
+        "return_value": 0,
+        "scatter": [
+          0,
+          268455936,
+          32,
+          32,
+          268460032,
+          47
+        ],
+        "calls": [
+          {
+            "operation": "seek",
+            "args": [
+              9320,
+              0,
+              0
+            ],
+            "success": false
+          }
+        ]
+      },
+      {
+        "route": "interface",
+        "failure_at_call": 1,
+        "return_value": 0,
+        "scatter": [
+          0,
+          268455936,
+          32,
+          32,
+          268460032,
+          47
+        ],
+        "calls": [
+          {
+            "operation": "seek",
+            "args": [
+              9320,
+              0,
+              0
+            ],
+            "success": true
+          },
+          {
+            "operation": "write",
+            "args": [
+              9320,
+              268455936,
+              32
+            ],
+            "success": false,
+            "source_sha256": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd"
+          }
+        ]
+      },
+      {
+        "route": "interface",
+        "failure_at_call": 2,
+        "return_value": 0,
+        "scatter": [
+          0,
+          268455936,
+          32,
+          32,
+          268460032,
+          47
+        ],
+        "calls": [
+          {
+            "operation": "seek",
+            "args": [
+              9320,
+              0,
+              0
+            ],
+            "success": true
+          },
+          {
+            "operation": "write",
+            "args": [
+              9320,
+              268455936,
+              32
+            ],
+            "success": true,
+            "source_sha256": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd"
+          },
+          {
+            "operation": "seek",
+            "args": [
+              9320,
+              32,
+              0
+            ],
+            "success": false
+          }
+        ]
+      },
+      {
+        "route": "interface",
+        "failure_at_call": 3,
+        "return_value": 0,
+        "scatter": [
+          0,
+          268455936,
+          32,
+          32,
+          268460032,
+          47
+        ],
+        "calls": [
+          {
+            "operation": "seek",
+            "args": [
+              9320,
+              0,
+              0
+            ],
+            "success": true
+          },
+          {
+            "operation": "write",
+            "args": [
+              9320,
+              268455936,
+              32
+            ],
+            "success": true,
+            "source_sha256": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd"
+          },
+          {
+            "operation": "seek",
+            "args": [
+              9320,
+              32,
+              0
+            ],
+            "success": true
+          },
+          {
+            "operation": "write",
+            "args": [
+              9320,
+              268460032,
+              47
+            ],
+            "success": false,
+            "source_sha256": "1f997e5f0971a23047ffb591147ad709e8d9e8f59745ce44641db1056dea6a82"
+          }
+        ]
+      },
+      {
+        "route": "filesystem_adapter",
+        "failure_at_call": null,
+        "return_value": 1,
+        "scatter": [
+          0,
+          268455936,
+          32,
+          32,
+          268460032,
+          47
+        ],
+        "calls": [
+          {
+            "operation": "seek",
+            "args": [
+              9320,
+              0,
+              0
+            ],
+            "success": true
+          },
+          {
+            "operation": "write",
+            "args": [
+              9320,
+              268455936,
+              32
+            ],
+            "success": true,
+            "source_sha256": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd"
+          },
+          {
+            "operation": "seek",
+            "args": [
+              9320,
+              32,
+              0
+            ],
+            "success": true
+          },
+          {
+            "operation": "write",
+            "args": [
+              9320,
+              268460032,
+              47
+            ],
+            "success": true,
+            "source_sha256": "1f997e5f0971a23047ffb591147ad709e8d9e8f59745ce44641db1056dea6a82"
+          }
+        ]
+      },
+      {
+        "route": "filesystem_adapter",
+        "failure_at_call": 0,
+        "return_value": 0,
+        "scatter": [
+          0,
+          268455936,
+          32,
+          32,
+          268460032,
+          47
+        ],
+        "calls": [
+          {
+            "operation": "seek",
+            "args": [
+              9320,
+              0,
+              0
+            ],
+            "success": false
+          }
+        ]
+      },
+      {
+        "route": "filesystem_adapter",
+        "failure_at_call": 1,
+        "return_value": 0,
+        "scatter": [
+          0,
+          268455936,
+          32,
+          32,
+          268460032,
+          47
+        ],
+        "calls": [
+          {
+            "operation": "seek",
+            "args": [
+              9320,
+              0,
+              0
+            ],
+            "success": true
+          },
+          {
+            "operation": "write",
+            "args": [
+              9320,
+              268455936,
+              32
+            ],
+            "success": false,
+            "source_sha256": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd"
+          }
+        ]
+      },
+      {
+        "route": "filesystem_adapter",
+        "failure_at_call": 2,
+        "return_value": 0,
+        "scatter": [
+          0,
+          268455936,
+          32,
+          32,
+          268460032,
+          47
+        ],
+        "calls": [
+          {
+            "operation": "seek",
+            "args": [
+              9320,
+              0,
+              0
+            ],
+            "success": true
+          },
+          {
+            "operation": "write",
+            "args": [
+              9320,
+              268455936,
+              32
+            ],
+            "success": true,
+            "source_sha256": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd"
+          },
+          {
+            "operation": "seek",
+            "args": [
+              9320,
+              32,
+              0
+            ],
+            "success": false
+          }
+        ]
+      },
+      {
+        "route": "filesystem_adapter",
+        "failure_at_call": 3,
+        "return_value": 0,
+        "scatter": [
+          0,
+          268455936,
+          32,
+          32,
+          268460032,
+          47
+        ],
+        "calls": [
+          {
+            "operation": "seek",
+            "args": [
+              9320,
+              0,
+              0
+            ],
+            "success": true
+          },
+          {
+            "operation": "write",
+            "args": [
+              9320,
+              268455936,
+              32
+            ],
+            "success": true,
+            "source_sha256": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd"
+          },
+          {
+            "operation": "seek",
+            "args": [
+              9320,
+              32,
+              0
+            ],
+            "success": true
+          },
+          {
+            "operation": "write",
+            "args": [
+              9320,
+              268460032,
+              47
+            ],
+            "success": false,
+            "source_sha256": "1f997e5f0971a23047ffb591147ad709e8d9e8f59745ce44641db1056dea6a82"
+          }
+        ]
+      }
+    ],
+    "original_entries": [
+      "0x7cd1e0",
+      "0x7eb150"
+    ],
+    "stubs": [
+      "seek/write at output interface or backend interface",
+      "filesystem mutex lock/unlock",
+      "backend status"
+    ],
+    "physical_file_output": false
+  }
+}

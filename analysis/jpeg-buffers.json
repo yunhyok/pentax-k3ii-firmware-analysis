@@ -1,0 +1,787 @@
+{
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "base": 33554432,
+  "offset_convention": "Code and vtable locations are file offsets. MMIO addresses are absolute.",
+  "static": {
+    "edges": {
+      "b2y_to_scaler": [
+        [
+          6657236,
+          6657320
+        ],
+        [
+          6657944,
+          6658016
+        ],
+        [
+          6658024,
+          7685076
+        ],
+        [
+          6658036,
+          7685084
+        ],
+        [
+          6658048,
+          7685092
+        ],
+        [
+          5750576,
+          7686928
+        ],
+        [
+          5750592,
+          5816440
+        ],
+        [
+          5816468,
+          5813504
+        ],
+        [
+          5815432,
+          5124228
+        ],
+        [
+          5815480,
+          5124244
+        ],
+        [
+          5815528,
+          5124252
+        ],
+        [
+          5815724,
+          5572328
+        ],
+        [
+          5815736,
+          5572412
+        ],
+        [
+          5815748,
+          5572496
+        ],
+        [
+          6658768,
+          8507312
+        ],
+        [
+          6658780,
+          8507320
+        ],
+        [
+          6658792,
+          8507328
+        ],
+        [
+          6657244,
+          6659704
+        ],
+        [
+          6660468,
+          7450640
+        ],
+        [
+          5767236,
+          7450632
+        ],
+        [
+          5769736,
+          5767220
+        ]
+      ],
+      "scaler_to_jpeg": [
+        [
+          7193332,
+          6656944
+        ],
+        [
+          7193396,
+          6646148
+        ],
+        [
+          6660480,
+          7450704
+        ],
+        [
+          6660492,
+          7450712
+        ],
+        [
+          5769564,
+          7450680
+        ],
+        [
+          5769580,
+          5766148
+        ],
+        [
+          5769604,
+          7450688
+        ],
+        [
+          5769620,
+          5766148
+        ],
+        [
+          5766420,
+          5765380
+        ],
+        [
+          5766472,
+          5765380
+        ],
+        [
+          5765776,
+          7351180
+        ],
+        [
+          5765796,
+          8073872
+        ],
+        [
+          5765816,
+          8073880
+        ],
+        [
+          5765788,
+          7686036
+        ],
+        [
+          5765808,
+          7593848
+        ],
+        [
+          5765828,
+          7593856
+        ],
+        [
+          5766076,
+          7507680
+        ],
+        [
+          6646260,
+          6646396
+        ],
+        [
+          6646400,
+          6646420
+        ],
+        [
+          6657300,
+          6673488
+        ],
+        [
+          6673644,
+          7452320
+        ],
+        [
+          6673656,
+          7452328
+        ],
+        [
+          6673704,
+          7452392
+        ],
+        [
+          6673720,
+          7452400
+        ]
+      ],
+      "jpeg_input_output": [
+        [
+          7190372,
+          8508348
+        ],
+        [
+          5661832,
+          5725880
+        ],
+        [
+          5730592,
+          5729532
+        ],
+        [
+          5729640,
+          7526604
+        ],
+        [
+          5729648,
+          7452296
+        ],
+        [
+          5729696,
+          7452368
+        ],
+        [
+          5729876,
+          5728964
+        ],
+        [
+          5729936,
+          7452304
+        ],
+        [
+          5729948,
+          7452376
+        ],
+        [
+          5730044,
+          5728964
+        ],
+        [
+          5729028,
+          7351180
+        ],
+        [
+          5729040,
+          7450328
+        ],
+        [
+          5729048,
+          8073872
+        ],
+        [
+          5729060,
+          7450336
+        ],
+        [
+          5729068,
+          8073880
+        ],
+        [
+          5729080,
+          7450344
+        ],
+        [
+          5729088,
+          7455376
+        ],
+        [
+          5729100,
+          7450432
+        ],
+        [
+          5729316,
+          5494528
+        ],
+        [
+          5494916,
+          5119920
+        ],
+        [
+          5494936,
+          4947156
+        ],
+        [
+          5494944,
+          5119928
+        ],
+        [
+          5494964,
+          4947172
+        ],
+        [
+          5494972,
+          5119936
+        ],
+        [
+          5494992,
+          4947188
+        ],
+        [
+          5495000,
+          5119984
+        ],
+        [
+          5495020,
+          4947596
+        ],
+        [
+          6686748,
+          6636044
+        ],
+        [
+          6686768,
+          6636044
+        ],
+        [
+          6686776,
+          6636044
+        ],
+        [
+          6686820,
+          8242712
+        ],
+        [
+          6686880,
+          7886204
+        ],
+        [
+          5729396,
+          5729408
+        ],
+        [
+          5729432,
+          5728128
+        ]
+      ],
+      "jpeg_length_to_store": [
+        [
+          5494068,
+          5493672
+        ],
+        [
+          5493688,
+          4948532
+        ],
+        [
+          5494132,
+          7334268
+        ],
+        [
+          5726280,
+          5726216
+        ],
+        [
+          5726264,
+          7390156
+        ],
+        [
+          5729364,
+          7886204
+        ],
+        [
+          5728108,
+          7886204
+        ],
+        [
+          7191464,
+          7191988
+        ],
+        [
+          7191992,
+          6675508
+        ],
+        [
+          6675640,
+          6676820
+        ],
+        [
+          6676840,
+          8247168
+        ],
+        [
+          6657272,
+          6668660
+        ],
+        [
+          6669036,
+          6649932
+        ],
+        [
+          6650080,
+          7525564
+        ],
+        [
+          6650176,
+          8597424
+        ],
+        [
+          6650252,
+          8755424
+        ],
+        [
+          5937128,
+          5932944
+        ],
+        [
+          5933236,
+          7526408
+        ],
+        [
+          5933276,
+          5931532
+        ],
+        [
+          5931640,
+          7525564
+        ],
+        [
+          5931656,
+          8575096
+        ],
+        [
+          5933808,
+          8575080
+        ],
+        [
+          5933820,
+          5930332
+        ],
+        [
+          5930368,
+          8601404
+        ]
+      ]
+    },
+    "literal_reads": {
+      "5572336": 537011264,
+      "5572420": 537011280,
+      "5572504": 537011296,
+      "7190388": 12582914,
+      "5725912": 44522440,
+      "4947160": 537796608,
+      "4947176": 537796608,
+      "4947192": 537796608,
+      "4947600": 537796608,
+      "4948532": 537788416,
+      "5494120": 33947649,
+      "5726216": 33947649,
+      "5730432": 50331650
+    },
+    "instruction_offsets": [
+      6657940,
+      6658016,
+      6658028,
+      6658040,
+      7685076,
+      7685084,
+      7685092,
+      5124228,
+      5124244,
+      5124252,
+      5572332,
+      5572344,
+      5572428,
+      5572512,
+      6658760,
+      6658772,
+      6658784,
+      8507312,
+      8507320,
+      8507328,
+      6657108,
+      6657112,
+      6657104,
+      6660460,
+      7450640,
+      7450704,
+      7450712,
+      7450680,
+      7450688,
+      5769572,
+      5769612,
+      8508348,
+      5661836,
+      5725940,
+      7190384,
+      7190392,
+      5730588,
+      5729584,
+      5729592,
+      6646396,
+      6673492,
+      7452320,
+      7452328,
+      7452392,
+      7452400,
+      7450328,
+      7450336,
+      7450344,
+      7450432,
+      6686804,
+      8242712,
+      4947156,
+      4947164,
+      4947180,
+      4947196,
+      4947596,
+      4947604,
+      4948536,
+      5494124,
+      5726228,
+      5729356,
+      7886204,
+      5730444,
+      7191460,
+      6676856,
+      6650168,
+      6650244,
+      8597424,
+      8755424,
+      8575136,
+      8575200,
+      8503568,
+      8602432,
+      5930396,
+      5930424,
+      6636044,
+      6636048,
+      6686752,
+      6686784,
+      5729392,
+      5729400
+    ],
+    "vtable_slots": {
+      "10968080": 5730588,
+      "10968056": 5726276
+    },
+    "ranges": {
+      "b2y_job_output_planes": {
+        "start": 6658016,
+        "end_exclusive": 6658052,
+        "sha256": "6e78dd7017d4094aadb7b933d8726596d65ac6fb60d37662d679e8dcea785104"
+      },
+      "b2y_output_programming": {
+        "start": 5815428,
+        "end_exclusive": 5815752,
+        "sha256": "a6c9fa1d8a4a40494c8b986c6bfd250fc3869e33fb3576b871fc16a6b0fb10c3"
+      },
+      "b2y_scaler_source_descriptor": {
+        "start": 6658760,
+        "end_exclusive": 6658796,
+        "sha256": "5639b9c9fb5a0247e02fc57af4c37d0a0f272ac757de63e7a7bc5c869743712c"
+      },
+      "scaler_buffer_binding": {
+        "start": 6660460,
+        "end_exclusive": 6660496,
+        "sha256": "573601f21b49a741098351334f1d842ba7266ca5e5bf7bd7cef94b6fed652db1"
+      },
+      "scaler_buffer_use": {
+        "start": 5769500,
+        "end_exclusive": 5769624,
+        "sha256": "821834a28f90978ba8a0800f2aa0591b79b2e7022f16be8264cfd4fb63877c65"
+      },
+      "jpeg_recipe_dispatch": {
+        "start": 7190372,
+        "end_exclusive": 7190396,
+        "sha256": "29c8070be879e1c6999f720ecc5fb7fb298a3aa7bdbf2b9ec15c99fd7fdce352"
+      },
+      "jpeg_job_binding": {
+        "start": 6673488,
+        "end_exclusive": 6673760,
+        "sha256": "fc3e0056a3a23a63a76ba45b8239b1f0802ae4b423852bb3b71cb56a76fcd882"
+      },
+      "jpeg_first_descriptor_construction": {
+        "start": 5729016,
+        "end_exclusive": 5729104,
+        "sha256": "efda50a05325497059af8e95e603ce412d2d6524749122bbfc06de3dc67f42ed"
+      },
+      "jpeg_mmio": {
+        "start": 5494912,
+        "end_exclusive": 5495024,
+        "sha256": "21c27865326eedece7d847e6cfa6f46a859bad6008f3efd61d1e916db0c84edb"
+      },
+      "jpeg_completion_counter": {
+        "start": 5494044,
+        "end_exclusive": 5494136,
+        "sha256": "e3cdfd59b1dd71b9354f988f7ed33f7b37151d165965106f889412baca2a73c3"
+      },
+      "jpeg_completion_job_update": {
+        "start": 6676820,
+        "end_exclusive": 6676864,
+        "sha256": "9d40bfd54811d3634fb14c77d562f623d57e0b4832eb28d1bc8a11506d626819"
+      },
+      "jpeg_destination_alignment": {
+        "start": 6686728,
+        "end_exclusive": 6686788,
+        "sha256": "5ba7141fe1b910db416c1cdfd07c0159ff93df305b7ac11578c231e0c7cb4417"
+      },
+      "jpeg_output_descriptor_init": {
+        "start": 6686788,
+        "end_exclusive": 6686896,
+        "sha256": "659b12f1d70c981f7a4d825efd5bab3bf63875f840ffd131208f8111817d2247"
+      },
+      "store_descriptor_init": {
+        "start": 6650076,
+        "end_exclusive": 6650256,
+        "sha256": "823ae402ef40d2b423f8b44e70cf9be04ace389a992779e69010dd1bf6bf4639"
+      },
+      "store_request_descriptor": {
+        "start": 5931636,
+        "end_exclusive": 5931660,
+        "sha256": "b2922cba38ee2870d17e7c2d46409aaff5089698bd7f1d82c3cf740c4021321c"
+      },
+      "store_write_image_send": {
+        "start": 5930332,
+        "end_exclusive": 5930428,
+        "sha256": "9e9bcf7b464dacf8c3db9c36c9e57cffaf727965284792f2df0b485911d4e69e"
+      }
+    }
+  },
+  "buffer_layout": {
+    "b2y_job_output_planes": [
+      352,
+      356,
+      360
+    ],
+    "b2y_mmio_first_slot_by_plane": [
+      537011264,
+      537011280,
+      537011296
+    ],
+    "scaler_payload": 42932,
+    "scaler_source": 8512,
+    "scaler_destinations_and_jpeg_inputs": [
+      8624,
+      8652
+    ],
+    "image_plane_fields": [
+      4,
+      8,
+      12
+    ],
+    "jpeg_payload": 43036,
+    "jpeg_output_descriptors": [
+      9156,
+      9180
+    ],
+    "jpeg_codec": 5494528,
+    "jpeg_plane_and_destination_mmio": [
+      537796648,
+      537796652,
+      537796656,
+      537796688
+    ],
+    "jpeg_count_mmio": 537788448,
+    "jpeg_destination_fields": [
+      400,
+      404
+    ],
+    "jpeg_completed_length_fields": [
+      748,
+      752
+    ],
+    "store_payload": 43088,
+    "store_main_record_base": 16,
+    "store_main_record_stride": 1020,
+    "store_record_descriptor_offset": 4,
+    "store_descriptor_length": 40,
+    "store_descriptor_address": 52,
+    "store_request": 1056,
+    "store_request_main_index": 2
+  },
+  "replay": {
+    "engine": "Unicorn 2.1.4",
+    "allocator_stub": 7415848,
+    "step_limit_per_probe": 100000,
+    "b2y_to_scaler_planes": [
+      2164273152,
+      2181054464,
+      2197835776
+    ],
+    "aligned_destination_layout": [
+      2248159248,
+      2248163360
+    ],
+    "completion_message": {
+      "command": 50331650,
+      "module": 16
+    },
+    "recipes": {
+      "0xc": {
+        "b2y_tone": [
+          6
+        ],
+        "scaler": [
+          30
+        ],
+        "jpeg": [
+          32
+        ],
+        "store_image": [
+          34
+        ]
+      },
+      "0x10": {
+        "b2y_tone": [
+          15
+        ],
+        "scaler": [
+          36
+        ],
+        "jpeg": [
+          38
+        ],
+        "store_image": []
+      },
+      "0x13": {
+        "b2y_tone": [
+          10
+        ],
+        "scaler": [
+          38
+        ],
+        "jpeg": [
+          40
+        ],
+        "store_image": [
+          42
+        ]
+      },
+      "0x15": {
+        "b2y_tone": [
+          41
+        ],
+        "scaler": [
+          72
+        ],
+        "jpeg": [
+          74
+        ],
+        "store_image": [
+          77
+        ]
+      }
+    },
+    "synthetic_streams": [
+      {
+        "stream": 0,
+        "planes": [
+          2264932359,
+          2281713664,
+          2298494991
+        ],
+        "destination": 2248151055,
+        "programmed_mmio": [
+          2264932352,
+          2281713664,
+          2298494976,
+          2248151040
+        ],
+        "completed_size": 1193046,
+        "store_source": 2248151055,
+        "store_size": 1193046,
+        "store_pointer_matches_programmed_dma": false
+      },
+      {
+        "stream": 1,
+        "planes": [
+          2264965127,
+          2281713664,
+          2298494991
+        ],
+        "destination": 2248155136,
+        "programmed_mmio": [
+          2264965120,
+          2281713664,
+          2298494976,
+          2248155136
+        ],
+        "completed_size": 493995,
+        "store_source": 2248155136,
+        "store_size": 493995,
+        "store_pointer_matches_programmed_dma": true
+      }
+    ]
+  },
+  "limits": [
+    "Observed chain is conditional on the direct B2Y output branch, scaler and encoder stream flags, and the main-JPEG StoreImage branch.",
+    "B2Y hardware clears three address bits and the JPEG codec clears four. Equality of descriptor and programmed address therefore requires alignment.",
+    "The checked two-destination layout rounds each destination up to 16 bytes. The deliberately unaligned replay uses a synthetic pointer outside that layout.",
+    "The initial JPEG result is accepted when its count is nonzero and within the descriptor capacity. The original retry branch is identified statically.",
+    "Synthetic replay exercises original descriptor and register slices, with mapped MMIO and supplied completion values. No hardware pixels or JPEG bytes were generated.",
+    "The earlier module 8 encoder uses a different register block and is distinct from the module 16 path in the tested RAW recipes."
+  ]
+}

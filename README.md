@@ -1,8 +1,10 @@
 # PENTAX K-3 II v1.12 펌웨어 분석
 
-[후속 분석 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/pipeline-analysis.html) · [심층 분석 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/deep-analysis.html) · [초기 분석](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/) · [보고서 소스](analysis/pipeline-analysis.html)
+[최신 버퍼·메뉴 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/output-menu-analysis.html) · [톤·색 처리 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/pipeline-analysis.html) · [심층 분석 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/deep-analysis.html) · [초기 분석](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/) · [최신 보고서 소스](analysis/output-menu-analysis.html)
 
-2026-11-08 후속: RAW 작업 전달과 톤·저장 분기, selector=6 → ImageTone=7(Reversal Film), WB·색 행렬·클리핑을 추가 분석했습니다. 실제 화면 메뉴 연결과 물리 ISP 동작은 별도 검증이 필요합니다.
+2026-11-08 버퍼·메뉴 후속: B2Y→스케일러→JPEG 모듈 16→StoreImage의 조건부 버퍼 경로와 Exif 헤더·압축 데이터의 파일시스템 전달을 연결했습니다. 실제 화면 이벤트 `0x01205010`과 Reversal Film 문자열 리소스가 selector=6으로 이어집니다. 원본 명령으로 검증했으며 실기 JPEG 생성·SD 기록은 수행하지 않았습니다.
+
+2026-11-08 톤·색 처리: RAW 작업 전달과 톤·저장 분기, selector=6 → ImageTone=7(Reversal Film), WB·색 행렬·클리핑을 추가 분석했습니다. 이 단계에서 남았던 화면 이벤트와 버퍼 연결은 최신 보고서에서 후속 검증했습니다. 물리 ISP 동작은 미검증입니다.
 
 2026-11-08 1차: F²MC-8L 호환 보조 코드, 추가 ARM 시작 경로, RAW 현상 함수와 톤 곡선 생성·B2Y 설정을 추적했습니다. 원본 명령 실행으로 곡선 출력 268,288개와 적용 함수의 두 합성 사례를 대조했습니다. 정확한 SoC·MCU 부품 번호와 전체 픽셀 처리 순서는 미확정입니다.
 
@@ -22,7 +24,11 @@ python verify_pipeline_flow.py .private/decoded/decoded.bin --compare analysis/p
 python verify_selector_path.py .private/decoded/decoded.bin --emulate --compare analysis/selector-path.json
 python verify_isp_paths.py .private/decoded/decoded.bin --compare analysis/isp-paths.json
 python verify_isp_numeric.py .private/decoded/decoded.bin --compare analysis/isp-numeric.json
+python verify_jpeg_buffers.py .private/decoded/decoded.bin --compare analysis/jpeg-buffers.json
+python verify_menu_events.py .private/decoded/decoded.bin --emulate --compare analysis/menu-events.json
+python verify_exif_output.py .private/decoded/decoded.bin --compare analysis/exif-output.json
 python -m unittest discover -s tests -v
+python verify_publication.py
 ```
 
 분석 도구는 GPL-2.0으로 배포합니다. 난독화 알고리즘 출처와 공개 범위는 [HTML 보고서](index.html#sources)에 정리했습니다. 제조사 펌웨어에는 이 저장소의 라이선스가 적용되지 않습니다.

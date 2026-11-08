@@ -1,6 +1,6 @@
 {
   "analysis_date": "2026-11-08",
-  "scope": "Initial identity/decoder and CPU analysis, plus RAW-to-tone job dispatch, JPEG boundaries, selector metadata mapping, WB, matrix and clip paths",
+  "scope": "Identity, CPU and RAW/tone analysis; conditional B2Y/scaler/JPEG/StoreImage/Exif/filesystem buffer chain and actual Custom Image GUI event binding",
   "python": "3.12.3",
   "node": "24.15.0",
   "capstone": "5.0.7",
@@ -9,14 +9,16 @@
   "original_input_sha256": "a33485f351019960192891ef69ddc5d4904ef9e298671d9d9955679e4c901a9a",
   "independent_decoder_byte_comparison": true,
   "published_findings_reproduced": true,
-  "independent_review": "Initial hardware/RAW review and six snapshot replays retained below. For the pipeline update, workers independently checked the selector metadata dispatcher and reviewed ISP evidence. Coordinator accepted conditional matrix-product and tone-cache corrections, inspected completion/Exif/output instructions, and independently reproduced all four new snapshots.",
+  "independent_review": "Initial hardware/RAW review and six snapshot replays retained below. For the pipeline update, workers independently checked the selector metadata dispatcher and reviewed ISP evidence. Coordinator accepted conditional matrix-product and tone-cache corrections, inspected completion/Exif/output instructions, and independently reproduced all four new snapshots. For the output/menu update, separate workers traced JPEG and GUI paths. A worker independently replayed and reviewed the Exif route; the coordinator independently replayed all three new snapshots and inspected event dispatch, JPEG alignment and capacity checks against disassembly.",
   "not_performed": [
     "Camera flashing or physical camera execution",
     "Whole firmware rebuild",
     "Exact SoC or auxiliary MCU package identification",
-    "Complete RAW-to-JPEG flow or physical ISP pixel transfer function",
-    "Actual UI selection event to tone selector binding",
-    "Manufacturing or cryptographic-signature validation"
+    "Manufacturing or cryptographic-signature validation",
+    "Whole-frame hardware RAW-to-JPEG execution and physical ISP pixel transfer function",
+    "Physical button/dial input, LCD raster rendering or persistent settings write",
+    "Selected filesystem backend to SD commands/block DMA and physical media writes",
+    "Every alternate CPP output, pixel format and buffer-alignment path"
   ],
   "reference_project_commit": "b51d680202336a5872a66f99ca2924a2cb7c75fa",
   "initial_analysis_date": "2026-11-07",
@@ -58,7 +60,12 @@
     "numbers_dropped": 0
   },
   "pipeline_analysis": {
-    "snapshots_reproduced": ["pipeline-flow", "selector-path", "isp-paths", "isp-numeric"],
+    "snapshots_reproduced": [
+      "pipeline-flow",
+      "selector-path",
+      "isp-paths",
+      "isp-numeric"
+    ],
     "recipe_factory_cases": 11,
     "recipe_arrays_entries_each": 128,
     "recipe_heap_allocator_stubbed": true,
@@ -89,6 +96,60 @@
     "change_rate_percent": 0.62,
     "sentences_touched": 3,
     "sentences_reviewed": 82,
+    "numbers_dropped": 0,
+    "runtime": "Native Codex worker; plugin metric and gate scripts"
+  },
+  "output_menu_analysis": {
+    "snapshots_reproduced": [
+      "jpeg-buffers",
+      "menu-events",
+      "exif-output"
+    ],
+    "jpeg_recipe_cases": 4,
+    "jpeg_static_branch_edges": 103,
+    "jpeg_instruction_anchors": 81,
+    "jpeg_literal_reads": 13,
+    "jpeg_code_range_hashes": 16,
+    "b2y_plane_addresses_compared": 3,
+    "jpeg_synthetic_streams": 2,
+    "jpeg_aligned_destination_layout_cases": 1,
+    "jpeg_completion_dispatch_cases": 1,
+    "menu_events": 11,
+    "reverse_menu_event_lookups": 11,
+    "unmapped_menu_events": 2,
+    "blocked_menu_events": 1,
+    "firmware_english_menu_labels": 11,
+    "exif_output_cases": 10,
+    "exif_routes": [
+      "writer_interface",
+      "ordinary_filesystem_adapter"
+    ],
+    "exif_failures_per_route": [
+      "first_seek",
+      "first_write",
+      "second_seek",
+      "second_write"
+    ],
+    "original_a32_replay": true,
+    "gui_and_device_boundaries_stubbed": true,
+    "physical_hardware_executed": false,
+    "complete_jpeg_generated": false,
+    "offline_publication_check": {
+      "passed": true,
+      "html_documents_checked": 4,
+      "local_links_checked": 122,
+      "public_files_checked": 53,
+      "evidence_identity_consistent": true,
+      "svg_xml_valid": true
+    }
+  },
+  "output_menu_language_review": {
+    "scope": "Introduction and prose paragraphs in final output-menu-analysis.html; tables, diagrams, addresses and links preserved",
+    "route": "light",
+    "deterministic_gate": "OK",
+    "change_rate_percent": 0.41,
+    "sentences_touched": 3,
+    "sentences_reviewed": 92,
     "numbers_dropped": 0,
     "runtime": "Native Codex worker; plugin metric and gate scripts"
   }
