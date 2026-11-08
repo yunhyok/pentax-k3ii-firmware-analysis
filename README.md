@@ -1,5 +1,7 @@
 # PENTAX K-3 II v1.12 펌웨어 분석
 
+[JPEG 완료값과 저장 레코드](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/store-image-records.html): 내장 레코드 여섯 개의 재사용과 StoreImage 요청 별칭을 7개 조건으로 검증했습니다. 별도 두 사례는 원본 JPEG 완료 길이를 같은 객체의 저장 요청까지 연결했습니다. 합성 장치 입력과 준비한 호출자 상태를 사용했으며 실제 압축·SD 쓰기는 미검증입니다.
+
 [촬영 준비의 연속 호출](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/capture-prepare.html): 원본 아홉 호출을 거쳐 정책 입력을 생산하는 21건과 앞부분 분기 21건을 실행 대체 없이 검증했습니다. 별도 세 사례는 준비 함수의 실제 반환까지 실행해 이미지 포인터 보존과 원본 생산자가 연결한 내장 레코드 여섯 개의 메타데이터 초기화를 대조했습니다. 실제 촬영 작업은 미검증입니다.
 
 [픽셀 보정 활성값과 작업 준비 분기](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/pixel-policy.html): 원본 정책 53건, 조회표 364개 셀과 경계 21건, 준비 분기 12건을 검증했습니다. 정책→패킷→같은 버퍼의 보정을 연결했으며, 종류 11의 준비 분기가 정책 호출 블록을 건너뛰는 조건을 구분했습니다.
@@ -91,6 +93,7 @@ python verify_preserved_record.py .private/decoded/decoded.bin --compare analysi
 python verify_pixel_records.py .private/decoded/decoded.bin --compare analysis/pixel-records.json
 python verify_pixel_policy.py .private/decoded/decoded.bin --compare analysis/pixel-policy.json
 python verify_capture_prepare.py .private/decoded/decoded.bin --compare analysis/capture-prepare.json
+python verify_store_image_records.py .private/decoded/decoded.bin --compare analysis/store-image-records.json
 python verify_tone_rebuild.py .private/decoded/decoded.bin --zig <Zig-0.17.1-실행파일> --compare analysis/tone-rebuild.json
 python -m unittest discover -s tests -v
 python verify_publication.py

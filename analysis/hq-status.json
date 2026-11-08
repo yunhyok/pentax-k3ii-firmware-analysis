@@ -2,7 +2,7 @@
   "model": "PENTAX K-3 II",
   "firmware_version": "1.12",
   "baseline_commit": "66c85ea53f52b6e9489d742b5bd63e50e543055e",
-  "updated_at": "2026-11-08T18:34:56+09:00",
+  "updated_at": "2026-11-08T18:43:45+09:00",
   "goals": [
     {
       "id": "firmware_rebuild",
@@ -34,7 +34,10 @@
         "verify_pixel_policy.py",
         "analysis/capture-prepare.html",
         "analysis/capture-prepare.json",
-        "verify_capture_prepare.py"
+        "verify_capture_prepare.py",
+        "analysis/store-image-records.html",
+        "analysis/store-image-records.json",
+        "verify_store_image_records.py"
       ],
       "gaps": [
         "Only same-size edits; insertion/deletion and relocation are unsupported.",
@@ -165,7 +168,8 @@
     "Diagnostic code exports the fifth word as the first SerialNo(UID) CSV argument; two format branches are replayed only up to formatter entry. Physical UID identity and file I/O are unverified.",
     "Sector14 save with onlyID0 registered traverses79 IDs, overlays16 halfwords and reaches599914 with65536 halfwords. Same-content case also calls the backend; statuses0..3 are injected and preserved. Other provider regions and physical writes are unverified.",
     "Separate pixel boundary controls: native center validation rejects x=width/y=height but neighbor UXTH can cross a row or address beyond the logical image. Six native address/value controls use synthetic RAM; real sensor table constraints and padding are unknown.",
-    "Native capture prepare6552B0 follows all nine virtual calls through pixel policy return to stop6553E0 with no execution replacements in21 controls. Another21 prefix controls include original skip kinds5/7/8/11; original early producers create5F/4F/52 and A240/3C consumed by policy. Another3 prepared-state cases return through original BX LR with25/25/16 virtual calls, preserving native slot1 image alias and resetting only two halfwords in six native embedded3FC-byte records. The partial container ctor stops before5AA434, and native653D74..653DC8 publishes their interior pointers. Kind11 retains nonzero pixel flag canaries. Actual capture remains unexecuted."
+    "Native capture prepare6552B0 follows all nine virtual calls through pixel policy return to stop6553E0 with no execution replacements in21 controls. Another21 prefix controls include original skip kinds5/7/8/11; original early producers create5F/4F/52 and A240/3C consumed by policy. Another3 prepared-state cases return through original BX LR with25/25/16 virtual calls, preserving native slot1 image alias and resetting only two halfwords in six native embedded3FC-byte records. The partial container ctor stops before5AA434, and native653D74..653DC8 publishes their interior pointers. Kind11 retains nonzero pixel flag canaries. Actual capture remains unexecuted.",
+    "Original StoreImage module9 reuses all six embedded capture records in7 synthetic conditions. Four request slots alias record+9C/+50/+4/+E8. Two same-VM JPEG completion cases connect original destination setup, RAM-backed count/status, synchronous6FE97C callback through native receiver vslot, descriptor count and controller completion stores to module9/request slots; split lengths1234/1000 remain distinct, shared first1579 is copied by65E1A0 into2F0. Original post-wait binder suffix attaches receiver+4. Constructor, scheduling, wake/wait/cleanup, StoreImage queue body, write service and physical encoding/storage remain unexecuted."
   ],
   "validation": {
     "commands": [
@@ -256,7 +260,10 @@
     "verify_ui_dispatch.py",
     "analysis/preserved-record.html",
     "analysis/preserved-record.json",
-    "verify_preserved_record.py"
+    "verify_preserved_record.py",
+    "analysis/store-image-records.html",
+    "analysis/store-image-records.json",
+    "verify_store_image_records.py"
   ],
   "blockers": [
     {
@@ -440,7 +447,7 @@
       "verifier_sha256": "974357fe130b631a7f701276c59ba7218f29ee1fb45c1f506f285afdecadcd84"
     }
   },
-  "offline_work_in_progress": "Native StoreImage module9 event and request aliases replayed in seven synthetic fixtures; next connect original JPEG completion length production before publication. Queue scheduling and physical capture remain outside replay.",
+  "offline_work_in_progress": "StoreImage native producer/consumer report prepared; finishing independent review, language gate and publication. Next offline lead: preserved sectors20/21 providers63/64/65 and their overlapping RAM records.",
   "snapshot_comparison_type_fix": {
     "commit": "bcacf0fd9aa4f77d35ca664bbb6e71cbdf830ea3",
     "shared_helper": "verify_findings.require_snapshot",
@@ -480,6 +487,7 @@
     "pages": "success",
     "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42467700624",
     "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42467700072",
-    "http_files_byte_exact": 38
+    "http_files_byte_exact": 38,
+    "independent_HQ_review": "Approved: fixed Git blob AST scope audit, actual optimized pixel-records/preserved-record/ui-dispatch snapshots byte-identical, bool-to-int mutations rejected, focused tests normal and optimized."
   }
 }

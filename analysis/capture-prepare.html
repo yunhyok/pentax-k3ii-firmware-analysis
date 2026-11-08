@@ -2,6 +2,7 @@
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="K-3 II 원본 촬영 준비 함수의 아홉 가상 호출과 픽셀 정책 입력 생산을 연속 실행으로 검증."><title>K-3 II — 촬영 준비의 입력 생산과 버퍼 보존</title><link rel="stylesheet" href="../assets/report.css"></head>
 <body><header><div class="eyebrow">PENTAX K-3 II · firmware 1.12 · 2026-11-08</div><h1>촬영 준비의 입력 생산과<br>원본 함수 반환까지의 버퍼 보존</h1><p class="lead">앞선 분할 실험에서 생략했던 중간 호출을 원본 코드로 실행했다. 같은 작업 객체에서 정책 입력을 생산하고, 별도 대조에서는 준비 함수가 호출자에게 반환할 때까지 포인터와 메모리의 변화를 확인했다. 실제 촬영 작업의 실행 이력은 검증 범위에 포함하지 않았다.</p><nav aria-label="보고서 탐색"><a href="pixel-policy.html">정책 본문</a><a href="#chain">연속 호출</a><a href="#inputs">입력 생산</a><a href="#threshold">활성 조건</a><a href="#return">반환·버퍼 보존</a><a href="#scope">실행 범위</a></nav></header><main>
 <p class="note">코드 주소는 해제 파일 오프셋이다. 컨텍스트는 같은 촬영 작업 객체이며 A·B·C는 앞선 정책 보고서의 입력 이름이다. 이 값의 물리 단위나 메뉴 이름은 아직 확정하지 않았다.</p>
+<p class="note">후속: <a href="store-image-records.html">같은 내장 레코드를 저장 이벤트와 요청에 다시 사용하는 경로</a>를 별도 원본 실행으로 검증했다.</p>
 <section aria-labelledby="chain"><h2 id="chain">1. 첫 세 호출 뒤 분기하고, 통과하면 정책까지 여섯 호출이 이어진다</h2>
 <figure><figcaption>도식 1. 중간 실행을 생략하지 않은 준비 경로</figcaption><div class="flow" role="group" aria-label="준비함수가 세 호출로 입력을 만든 후 작업종류에 따라 건너뛰거나 나머지 다섯 생산자와 정책을 호출">
 <div class="stage"><strong>0x6552B0 · 종류와 초기 입력</strong><span>+0x2084에 내부 작업 종류 기록<br>슬롯 0x1C → 0x70 → 0x30<br>+0x5F · +0x4F · +0x52 생산</span></div><div class="arrow" aria-hidden="true">→</div>

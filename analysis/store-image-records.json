@@ -1,0 +1,1577 @@
+{
+  "schema_version": 1,
+  "firmware_version": "1.12",
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "engine": "Unicorn 2.1.4",
+  "record_handoff": {
+    "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+    "record_offsets": [
+      43104,
+      44124,
+      45144,
+      46164,
+      47184,
+      48204
+    ],
+    "descriptor_offsets_in_record": [
+      4,
+      80,
+      156,
+      232
+    ],
+    "descriptor_pointer_offset": 52,
+    "descriptor_length_offset": 40,
+    "execution_replacements": [],
+    "execution_boundaries": {
+      "constructor_prefix": [
+        6634412,
+        5940276
+      ],
+      "pointer_publication": [
+        6634868,
+        6634952
+      ],
+      "prepare_reset": [
+        6640884,
+        6640980
+      ],
+      "queue_entry": [
+        7193296,
+        7334456
+      ],
+      "receiver_selection": [
+        5937104,
+        5933128
+      ],
+      "request_end_exclusive": 5931840
+    },
+    "cases": [
+      {
+        "enabled_record_groups": [
+          0,
+          1,
+          2
+        ],
+        "available_index": 0,
+        "queue_event_id": 8388609,
+        "payload_capture_offset": 43088,
+        "availability_bytes": [
+          1,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        "selected_record_offset": 43104,
+        "store_type_byte": 0,
+        "request_caller_file_offset": 5933228,
+        "request_slot_2_buffer_and_size": [
+          285212672,
+          4660
+        ],
+        "record_types_and_descriptors": [
+          [
+            0,
+            [
+              [
+                285212672,
+                4660
+              ],
+              [
+                301989888,
+                42070
+              ],
+              [
+                318767104,
+                46985
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            0,
+            [
+              [
+                285216768,
+                22136
+              ],
+              [
+                301989888,
+                42070
+              ],
+              [
+                318767104,
+                46985
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            5,
+            [
+              [
+                335544320,
+                39612
+              ],
+              [
+                301989888,
+                42070
+              ],
+              [
+                318767104,
+                46985
+              ],
+              [
+                352321536,
+                0
+              ]
+            ]
+          ],
+          [
+            5,
+            [
+              [
+                335544320,
+                39612
+              ],
+              [
+                301989888,
+                42070
+              ],
+              [
+                318767104,
+                46985
+              ],
+              [
+                352321536,
+                0
+              ]
+            ]
+          ],
+          [
+            9,
+            [
+              [
+                385875968,
+                1536
+              ],
+              [
+                301989888,
+                42070
+              ],
+              [
+                369098752,
+                50808
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            9,
+            [
+              [
+                385875968,
+                1536
+              ],
+              [
+                301989888,
+                42070
+              ],
+              [
+                369098752,
+                50808
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ]
+        ]
+      },
+      {
+        "enabled_record_groups": [
+          0
+        ],
+        "available_index": 0,
+        "queue_event_id": 8388609,
+        "payload_capture_offset": 43088,
+        "availability_bytes": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "selected_record_offset": 43104,
+        "store_type_byte": 0,
+        "request_caller_file_offset": 5933228,
+        "request_slot_2_buffer_and_size": [
+          285212672,
+          4660
+        ],
+        "record_types_and_descriptors": [
+          [
+            0,
+            [
+              [
+                285212672,
+                4660
+              ],
+              [
+                301989888,
+                42070
+              ],
+              [
+                318767104,
+                46985
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            0,
+            [
+              [
+                285216768,
+                22136
+              ],
+              [
+                301989888,
+                42070
+              ],
+              [
+                318767104,
+                46985
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            0,
+            [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            0,
+            [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            0,
+            [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            0,
+            [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ]
+        ]
+      },
+      {
+        "enabled_record_groups": [
+          0
+        ],
+        "available_index": 1,
+        "queue_event_id": 8388609,
+        "payload_capture_offset": 43088,
+        "availability_bytes": [
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        "selected_record_offset": 44124,
+        "store_type_byte": 0,
+        "request_caller_file_offset": 5933228,
+        "request_slot_2_buffer_and_size": [
+          285216768,
+          22136
+        ],
+        "record_types_and_descriptors": [
+          [
+            0,
+            [
+              [
+                285212672,
+                4660
+              ],
+              [
+                301989888,
+                42070
+              ],
+              [
+                318767104,
+                46985
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            0,
+            [
+              [
+                285216768,
+                22136
+              ],
+              [
+                301989888,
+                42070
+              ],
+              [
+                318767104,
+                46985
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            0,
+            [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            0,
+            [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            0,
+            [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            0,
+            [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ]
+        ]
+      },
+      {
+        "enabled_record_groups": [
+          1
+        ],
+        "available_index": 0,
+        "queue_event_id": 8388609,
+        "payload_capture_offset": 43088,
+        "availability_bytes": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "selected_record_offset": 45144,
+        "store_type_byte": 1,
+        "request_caller_file_offset": 5934052,
+        "request_slot_2_buffer_and_size": [
+          335544320,
+          39612
+        ],
+        "record_types_and_descriptors": [
+          [
+            0,
+            [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            0,
+            [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            5,
+            [
+              [
+                335544320,
+                39612
+              ],
+              [
+                301989888,
+                42070
+              ],
+              [
+                318767104,
+                46985
+              ],
+              [
+                352321536,
+                0
+              ]
+            ]
+          ],
+          [
+            5,
+            [
+              [
+                335544320,
+                39612
+              ],
+              [
+                301989888,
+                42070
+              ],
+              [
+                318767104,
+                46985
+              ],
+              [
+                352321536,
+                0
+              ]
+            ]
+          ],
+          [
+            0,
+            [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            0,
+            [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ]
+        ]
+      },
+      {
+        "enabled_record_groups": [
+          1
+        ],
+        "available_index": 1,
+        "queue_event_id": 8388609,
+        "payload_capture_offset": 43088,
+        "availability_bytes": [
+          0,
+          0,
+          0,
+          1,
+          0,
+          0
+        ],
+        "selected_record_offset": 46164,
+        "store_type_byte": 1,
+        "request_caller_file_offset": 5934052,
+        "request_slot_2_buffer_and_size": [
+          335544320,
+          39612
+        ],
+        "record_types_and_descriptors": [
+          [
+            0,
+            [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            0,
+            [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            5,
+            [
+              [
+                335544320,
+                39612
+              ],
+              [
+                301989888,
+                42070
+              ],
+              [
+                318767104,
+                46985
+              ],
+              [
+                352321536,
+                0
+              ]
+            ]
+          ],
+          [
+            5,
+            [
+              [
+                335544320,
+                39612
+              ],
+              [
+                301989888,
+                42070
+              ],
+              [
+                318767104,
+                46985
+              ],
+              [
+                352321536,
+                0
+              ]
+            ]
+          ],
+          [
+            0,
+            [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            0,
+            [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ]
+        ]
+      },
+      {
+        "enabled_record_groups": [
+          2
+        ],
+        "available_index": 0,
+        "queue_event_id": 8388609,
+        "payload_capture_offset": 43088,
+        "availability_bytes": [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        "selected_record_offset": 47184,
+        "store_type_byte": 3,
+        "request_caller_file_offset": 5935584,
+        "request_slot_2_buffer_and_size": [
+          385875968,
+          1536
+        ],
+        "record_types_and_descriptors": [
+          [
+            0,
+            [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            0,
+            [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            0,
+            [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            0,
+            [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            9,
+            [
+              [
+                385875968,
+                1536
+              ],
+              [
+                301989888,
+                42070
+              ],
+              [
+                369098752,
+                50808
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            9,
+            [
+              [
+                385875968,
+                1536
+              ],
+              [
+                301989888,
+                42070
+              ],
+              [
+                369098752,
+                50808
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ]
+        ]
+      },
+      {
+        "enabled_record_groups": [
+          2
+        ],
+        "available_index": 1,
+        "queue_event_id": 8388609,
+        "payload_capture_offset": 43088,
+        "availability_bytes": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "selected_record_offset": 48204,
+        "store_type_byte": 3,
+        "request_caller_file_offset": 5935584,
+        "request_slot_2_buffer_and_size": [
+          385875968,
+          1536
+        ],
+        "record_types_and_descriptors": [
+          [
+            0,
+            [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            0,
+            [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            0,
+            [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            0,
+            [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            9,
+            [
+              [
+                385875968,
+                1536
+              ],
+              [
+                301989888,
+                42070
+              ],
+              [
+                369098752,
+                50808
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ],
+          [
+            9,
+            [
+              [
+                385875968,
+                1536
+              ],
+              [
+                301989888,
+                42070
+              ],
+              [
+                369098752,
+                50808
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "jpeg_completion_bridge": {
+    "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+    "code_va_base": 33554432,
+    "unicorn_version": "2.1.4",
+    "execution_replacements": [],
+    "codec_gate_cases": [
+      {
+        "selector": 2147483713,
+        "status": 1,
+        "mmio_reads": 0,
+        "mmio_writes": 0,
+        "callbacks": 0,
+        "receiver_count": 3735928559,
+        "end_exclusive": 5494136
+      },
+      {
+        "selector": 2147483712,
+        "status": 0,
+        "mmio_reads": 0,
+        "mmio_writes": 0,
+        "callbacks": 0,
+        "receiver_count": 3735928559,
+        "end_exclusive": 5494136
+      },
+      {
+        "selector": 2147483712,
+        "status": 2,
+        "mmio_reads": 0,
+        "mmio_writes": 0,
+        "callbacks": 0,
+        "receiver_count": 3735928559,
+        "end_exclusive": 5494136
+      }
+    ],
+    "count_boundary_cases": [
+      {
+        "injected_count": 0,
+        "limit": 4096,
+        "descriptor_count": 0,
+        "accepted": false,
+        "end_exclusive": 5729408
+      },
+      {
+        "injected_count": 4096,
+        "limit": 4096,
+        "descriptor_count": 4096,
+        "accepted": true,
+        "end_exclusive": 5729440
+      },
+      {
+        "injected_count": 4097,
+        "limit": 4096,
+        "descriptor_count": 4097,
+        "accepted": false,
+        "end_exclusive": 5729408
+      }
+    ],
+    "cancel_receiver_count": 0,
+    "connected_cases": [
+      {
+        "split_destinations": true,
+        "injected_codec_counts": [
+          4660,
+          4096
+        ],
+        "codec_completions": [
+          {
+            "stream": 0,
+            "synthetic_count": 4660,
+            "native_callback_args": [
+              [
+                7334268,
+                268959764,
+                33947649,
+                4660
+              ],
+              [
+                5726276,
+                268963844,
+                33947649,
+                4660
+              ],
+              [
+                5726216,
+                268963840,
+                33947649,
+                4660
+              ]
+            ],
+            "completion_mmio_reads": [
+              [
+                4948536,
+                537788448,
+                4,
+                4660
+              ],
+              [
+                4946468,
+                537792512,
+                4,
+                4294967295
+              ],
+              [
+                4946620,
+                537796608,
+                4,
+                4294967295
+              ],
+              [
+                4947256,
+                537796672,
+                4,
+                4294967295
+              ]
+            ],
+            "completion_mmio_writes": [
+              [
+                4946484,
+                537792512,
+                4,
+                16
+              ],
+              [
+                4946640,
+                537796608,
+                4,
+                226288
+              ],
+              [
+                4947276,
+                537796672,
+                4,
+                58130704
+              ]
+            ],
+            "programmed_mmio_addresses": [
+              301989888,
+              318767104,
+              335544320,
+              285212688
+            ],
+            "descriptor_count": 4660
+          },
+          {
+            "stream": 1,
+            "synthetic_count": 4096,
+            "native_callback_args": [
+              [
+                7334268,
+                268959764,
+                33947649,
+                4096
+              ],
+              [
+                5726276,
+                268963844,
+                33947649,
+                4096
+              ],
+              [
+                5726216,
+                268963840,
+                33947649,
+                4096
+              ]
+            ],
+            "completion_mmio_reads": [
+              [
+                4948536,
+                537788448,
+                4,
+                4096
+              ],
+              [
+                4946468,
+                537792512,
+                4,
+                4294967295
+              ],
+              [
+                4946620,
+                537796608,
+                4,
+                4294967295
+              ],
+              [
+                4947256,
+                537796672,
+                4,
+                4294967295
+              ]
+            ],
+            "completion_mmio_writes": [
+              [
+                4946484,
+                537792512,
+                4,
+                16
+              ],
+              [
+                4946640,
+                537796608,
+                4,
+                226288
+              ],
+              [
+                4947276,
+                537796672,
+                4,
+                58130704
+              ]
+            ],
+            "programmed_mmio_addresses": [
+              301993984,
+              318771200,
+              335548416,
+              285220880
+            ],
+            "descriptor_count": 4096
+          }
+        ],
+        "capture_lengths": [
+          4660,
+          4096
+        ],
+        "native_length_writes": [
+          [
+            6676856,
+            748,
+            4,
+            4660
+          ],
+          [
+            6676856,
+            752,
+            4,
+            4096
+          ]
+        ],
+        "store_event": 8388609,
+        "requests": [
+          {
+            "index": 0,
+            "record_offset": 43104,
+            "descriptor_offset": 43108,
+            "address": 285212688,
+            "length": 4660
+          },
+          {
+            "index": 1,
+            "record_offset": 44124,
+            "descriptor_offset": 44128,
+            "address": 285220880,
+            "length": 4096
+          }
+        ]
+      },
+      {
+        "split_destinations": false,
+        "injected_codec_counts": [
+          5497
+        ],
+        "codec_completions": [
+          {
+            "stream": 0,
+            "synthetic_count": 5497,
+            "native_callback_args": [
+              [
+                7334268,
+                268959764,
+                33947649,
+                5497
+              ],
+              [
+                5726276,
+                268963844,
+                33947649,
+                5497
+              ],
+              [
+                5726216,
+                268963840,
+                33947649,
+                5497
+              ]
+            ],
+            "completion_mmio_reads": [
+              [
+                4948536,
+                537788448,
+                4,
+                5497
+              ],
+              [
+                4946468,
+                537792512,
+                4,
+                4294967295
+              ],
+              [
+                4946620,
+                537796608,
+                4,
+                4294967295
+              ],
+              [
+                4947256,
+                537796672,
+                4,
+                4294967295
+              ]
+            ],
+            "completion_mmio_writes": [
+              [
+                4946484,
+                537792512,
+                4,
+                16
+              ],
+              [
+                4946640,
+                537796608,
+                4,
+                226288
+              ],
+              [
+                4947276,
+                537796672,
+                4,
+                58130704
+              ]
+            ],
+            "programmed_mmio_addresses": [
+              301989888,
+              318767104,
+              335544320,
+              285212688
+            ],
+            "descriptor_count": 5497
+          }
+        ],
+        "capture_lengths": [
+          5497,
+          5497
+        ],
+        "native_length_writes": [
+          [
+            6676856,
+            748,
+            4,
+            5497
+          ],
+          [
+            6676856,
+            752,
+            4,
+            0
+          ],
+          [
+            6676896,
+            752,
+            4,
+            5497
+          ]
+        ],
+        "store_event": 8388609,
+        "requests": [
+          {
+            "index": 0,
+            "record_offset": 43104,
+            "descriptor_offset": 43108,
+            "address": 285212688,
+            "length": 5497
+          },
+          {
+            "index": 1,
+            "record_offset": 44124,
+            "descriptor_offset": 44128,
+            "address": 285212688,
+            "length": 5497
+          }
+        ]
+      }
+    ],
+    "boundaries": {
+      "embedded_constructor_prefix": [
+        6634412,
+        5940276
+      ],
+      "embedded_pointer_stores": [
+        6634868,
+        6634952
+      ],
+      "embedded_reset_loop": [
+        6640884,
+        6640980
+      ],
+      "module9_binding": [
+        7190184,
+        7190212
+      ],
+      "destination_setup": [
+        6686728,
+        6686788
+      ],
+      "output_descriptor_setup": [
+        6686788,
+        6686896
+      ],
+      "module16_binding_entry": 6656944,
+      "codec_descriptor": [
+        5729016,
+        5729104
+      ],
+      "codec_mmio_addresses": [
+        5494912,
+        5495024
+      ],
+      "receiver_constructor_suffix": [
+        5725912,
+        5725972
+      ],
+      "recipient_bind_post_wait": [
+        7334180,
+        7334196
+      ],
+      "codec_callback_before_wake": [
+        5494044,
+        5726256
+      ],
+      "descriptor_length": [
+        5729356,
+        5729368
+      ],
+      "count_guard_entry": 5729376,
+      "prepared_cancel_before_wake": [
+        7334268,
+        5726256
+      ],
+      "leaf_return_sentinel_va": 269422592,
+      "controller_completion": [
+        7191060,
+        7191996
+      ],
+      "store_queue_entry": [
+        7193296,
+        7334456
+      ],
+      "store_receiver": [
+        5937104,
+        5933128
+      ],
+      "store_request": [
+        5933228,
+        5931840
+      ]
+    }
+  },
+  "limits": [
+    "All capture objects, flags, buffer-address values and device registers are synthetic. Pixel/bitstream buffers are not dereferenced.",
+    "The six embedded records use original constructor-prefix and pointer-store code. The complete outer/container constructors and allocation are not executed.",
+    "JPEG completion uses a prepared callback binding and original synchronous dispatch up to the receiver wake boundary. Registration locking, wake and scheduling are not executed.",
+    "Encoder descriptor storage resumes at576C4C after an unexecuted wait; cleanup576C58 is skipped and controller command03000002 is prepared at6DBA14.",
+    "StoreImage queue entry is end-exclusive. The same event is supplied to bounded receive code, and request callers use separately prepared stack frames.",
+    "Completion lengths pass through original native stores; MMIO counters remain injected inputs, not measured encoder results.",
+    "Real capture, sensor/CPP/scaler/encoder hardware, request validation, write-service and SD output are not executed."
+  ]
+}

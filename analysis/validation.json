@@ -878,6 +878,47 @@
     "pages": "success",
     "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42467700624",
     "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42467700072",
-    "http_files_byte_exact": 38
+    "http_files_byte_exact": 38,
+    "independent_HQ_review": "Approved: fixed Git blob AST scope audit, actual optimized pixel-records/preserved-record/ui-dispatch snapshots byte-identical, bool-to-int mutations rejected, focused tests normal and optimized."
+  },
+  "store_image_records": {
+    "original_ARM_replay": true,
+    "record_handoff_cases": 7,
+    "native_embedded_records": 6,
+    "jpeg_connected_cases": 2,
+    "connected_store_requests": 4,
+    "codec_gate_negatives": 3,
+    "count_boundary_cases": 3,
+    "prepared_cancel_cases": 1,
+    "execution_replacements": 0,
+    "same_VM_native_length_and_request_aliases": true,
+    "synchronous_codec_callback_executed": true,
+    "codec_wake_wait_and_cleanup_executed": false,
+    "StoreImage_queue_body_executed": false,
+    "write_service_executed": false,
+    "physical_capture": false,
+    "coordinator_replayed_both_private_results": true,
+    "public_normal_and_optimized_snapshot": "PASS",
+    "language_review": {
+      "route": "light",
+      "paragraphs": 7,
+      "change_rate_percent": 0.1,
+      "sentences_touched": 4,
+      "sentences_total": 36,
+      "self_check": "6/6",
+      "deterministic_gate": "PASS",
+      "modality_loss": 0
+    },
+    "independent_review": "No P0-P2. Reviewer reproduced normal/-O snapshot and checked native callback/request edges. Accepted P3 name shared-copy gates3E/3F separately from207C/207D and distinguish populated descriptor setters from zero reset859888. Coordinator confirmed both against original instructions. Added explicit wait/cleanup/controller-command limits; native result sections unchanged.",
+    "review_clarifications_language_review": {
+      "route": "light",
+      "paragraphs": 2,
+      "change_rate_percent": 0.9,
+      "sentences_touched": 1,
+      "sentences_total": 13,
+      "self_check": "6/6",
+      "deterministic_gate": "PASS",
+      "modality_loss": 0
+    }
   }
 }
