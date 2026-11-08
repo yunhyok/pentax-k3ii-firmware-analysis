@@ -821,6 +821,22 @@
       "self_check": "6/6",
       "deterministic_gate": "PASS",
       "modality_loss": 0
+    },
+    "publication": {
+      "commit": "f4ef308933559a7c17412aaef6e5093d6a0bfc67",
+      "ci": "success",
+      "pages": "success",
+      "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42466615887",
+      "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42466615224",
+      "http_files_byte_exact": 9,
+      "fresh_clone_snapshot": "PASS",
+      "unit_tests": 21,
+      "html_documents": 22,
+      "local_links": 548,
+      "public_files": 124,
+      "three_diagrams_visually_checked": true,
+      "inner_width": 1897,
+      "document_scroll_width": 1882
     }
   }
 }

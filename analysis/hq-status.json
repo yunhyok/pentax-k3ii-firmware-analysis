@@ -2,7 +2,7 @@
   "model": "PENTAX K-3 II",
   "firmware_version": "1.12",
   "baseline_commit": "66c85ea53f52b6e9489d742b5bd63e50e543055e",
-  "updated_at": "2026-11-08T18:18:24+09:00",
+  "updated_at": "2026-11-08T18:20:35+09:00",
   "goals": [
     {
       "id": "firmware_rebuild",
@@ -270,23 +270,22 @@
   ],
   "scope_clarification": "AF changes are future work. Current scope is sufficiently deep foundational research; exact target lens information is not a blocker.",
   "publication": {
-    "analysis_commit": "f551e8878ade29813979a5d1e1827ecb0341dc1c",
-    "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42464837255",
-    "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42464836746",
+    "analysis_commit": "f4ef308933559a7c17412aaef6e5093d6a0bfc67",
+    "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42466615887",
+    "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42466615224",
     "ci": "success",
     "pages": "success",
-    "http_files_byte_exact": 7,
+    "http_files_byte_exact": 9,
     "fresh_clone_repack_and_af_snapshots": "PASS",
-    "fresh_clone_unit_tests": 20,
-    "fresh_clone_html_documents": 21,
-    "fresh_clone_local_links": 519,
+    "fresh_clone_unit_tests": 21,
+    "fresh_clone_html_documents": 22,
+    "fresh_clone_local_links": 548,
     "browser": {
       "surface": "published HTTPS in Chrome",
       "reports": [
-        "pixel-records.html#coordinate-boundary"
+        "capture-prepare.html"
       ],
-      "new_figures_checked": 1,
-      "total_figures": 4,
+      "figures_per_report": 3,
       "inner_width": 1897,
       "document_scroll_width": 1882,
       "mobile_layout": "not checked"
@@ -301,16 +300,17 @@
       "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42453856476",
       "served_files_byte_exact": 5
     },
-    "previous_analysis_commit": "496800b991d5d702fcab96ef65173a41f7511bed",
+    "previous_analysis_commit": "f551e8878ade29813979a5d1e1827ecb0341dc1c",
     "fresh_clone_installation_ui_af_snapshots": "PASS",
-    "fresh_clone_public_files": 120,
+    "fresh_clone_public_files": 124,
     "fresh_clone_color_and_settings_snapshots": "PASS",
     "fresh_clone_tone_C_snapshot": "PASS",
     "fresh_clone_af_input_snapshot": "PASS",
     "fresh_clone_ui_dispatch_snapshot": "PASS",
     "fresh_clone_preserved_record_snapshot": "PASS",
     "fresh_clone_pixel_records_snapshot": "PASS",
-    "fresh_clone_pixel_policy_snapshot": "PASS"
+    "fresh_clone_pixel_policy_snapshot": "PASS",
+    "fresh_clone_capture_prepare_snapshot": "PASS"
   },
   "frozen_evidence": {
     "color-ui": {
@@ -428,7 +428,17 @@
         "http_files_byte_exact": 2,
         "native_optimized_bool_to_int_negative_control": "PASS"
       }
+    },
+    "capture-prepare": {
+      "commit": "f4ef308933559a7c17412aaef6e5093d6a0bfc67",
+      "path": "analysis/capture-prepare.json",
+      "html_path": "analysis/capture-prepare.html",
+      "verifier_path": "verify_capture_prepare.py",
+      "replay": "python verify_capture_prepare.py decoded.bin --compare analysis/capture-prepare.json",
+      "sha256": "04820eaa89fd6a0840e41f450dc2cb65cd1cc2224abed636aeddf5920750dfd1",
+      "html_sha256": "6d1a1fc8c1a059eb37f2e864557aaf34e78cf380974bcf6d19e678990836e33c",
+      "verifier_sha256": "974357fe130b631a7f701276c59ba7218f29ee1fb45c1f506f285afdecadcd84"
     }
   },
-  "offline_work_in_progress": "Publishing capture preparation with native embedded-record producer/reset linkage; remaining outer constructor allocation/RTOS and downstream buffer-use history stay offline research targets."
+  "offline_work_in_progress": "Native StoreImage module9 sender and consumer linkage for the embedded record container; whole constructor/RTOS allocation and real capture history remain unverified."
 }
