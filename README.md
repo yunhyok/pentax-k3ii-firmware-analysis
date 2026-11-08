@@ -1,6 +1,8 @@
 # PENTAX K-3 II v1.12 펌웨어 분석
 
-[최신 백엔드 B·CPP 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/backend-b-cpp-analysis.html) · [SD·대체 버퍼 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/storage-dma-analysis.html) · [버퍼·메뉴 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/output-menu-analysis.html) · [톤·색 처리 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/pipeline-analysis.html) · [심층 분석 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/deep-analysis.html) · [초기 분석](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/) · [최신 보고서 소스](analysis/backend-b-cpp-analysis.html)
+[최신 마스크 CPP·모드 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/masked-cpp-analysis.html) · [백엔드 B·CPP 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/backend-b-cpp-analysis.html) · [SD·대체 버퍼 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/storage-dma-analysis.html) · [버퍼·메뉴 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/output-menu-analysis.html) · [톤·색 처리 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/pipeline-analysis.html) · [심층 분석 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/deep-analysis.html) · [초기 분석](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/) · [최신 보고서 소스](analysis/masked-cpp-analysis.html)
+
+2026-11-08 마스크 CPP 후속: 보조 스케일러 두 출력과 JPEG 보조 입력의 조건부 평면 주소 공유, 모듈 20 출력→후속 CPP 입력을 검증했습니다. Color Fringe Correction 메뉴값→태그 0x245→작업 종류 5의 두 번째 패스도 연결했습니다. 네 작업의 배치 구분값 생산자와 SuperResolution 종류 11 호출을 확인했습니다. 보조 스케일러 활성값의 생산자와 실제 레이아웃 재사용 이력은 미확정입니다.
 
 2026-11-08 백엔드 B·CPP 후속: B의 파일 쓰기를 SD 명령·ADMA 설정까지 연결했습니다. 두 번째 CPP 출력은 모듈 17 합성 입력으로 전달되며, 기본 분기에서 합성 목적지→스케일러 입력과 스케일러 출력→JPEG 입력의 주소 일치를 확인했습니다. B 실행 7건, 레시피 4개, 버퍼 전달 4건과 보조 스케일러 gate를 검증했습니다. 마스크 분기의 이후 연결과 물리 픽셀 처리·SD 기록은 미확정입니다.
 
@@ -36,6 +38,8 @@ python verify_sd_controller.py .private/decoded/decoded.bin --emulate --compare 
 python verify_alternate_buffers.py .private/decoded/decoded.bin --compare analysis/alternate-buffers.json
 python verify_backend_b.py .private/decoded/decoded.bin --compare analysis/backend-b.json
 python verify_cpp_handoff.py .private/decoded/decoded.bin --compare analysis/cpp-handoff.json
+python verify_masked_scaler.py .private/decoded/decoded.bin --compare analysis/masked-scaler.json
+python verify_mode_reachability.py .private/decoded/decoded.bin --compare analysis/mode-reachability.json
 python -m unittest discover -s tests -v
 python verify_publication.py
 ```

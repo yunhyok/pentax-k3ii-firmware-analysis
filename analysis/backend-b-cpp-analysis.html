@@ -14,6 +14,7 @@
 <nav aria-label="보고서 탐색"><a href="../index.html">초기 분석</a><a href="storage-dma-analysis.html">앞선 SD·버퍼 분석</a><a href="#backend">백엔드 B</a><a href="#sectors">섹터 버퍼</a><a href="#cpp">CPP 합성</a><a href="#masked">마스크 분기</a><a href="#verification">검증·재현</a><a href="#limits">남은 범위</a></nav>
 </header>
 <main>
+<p class="note"><strong>후속 검증:</strong> <a href="masked-cpp-analysis.html">보조 스케일러 두 출력과 JPEG 보조 입력의 조건부 주소 공유, RAW 현상 메뉴와 모드 생산자</a>를 추가했다. 아래는 앞선 조사 범위이며 마스크 분기의 최신 결론은 후속 보고서를 참고한다.</p>
 <p class="note">코드 주소는 <strong>해제 이미지의 파일 오프셋</strong>이며 코드 VA는 <code>오프셋 + 0x02000000</code>이다. 장치 MMIO와 합성 메모리 주소는 절대 주소로 표시했다. 원본 ARM 명령을 합성 상태에서 실행한 결과이며, 카메라 촬영이나 물리 SD 기록 결과가 아니다.</p>
 
 <section aria-labelledby="backend"><h2 id="backend">1. 백엔드 B의 파일 쓰기와 SD 명령을 연결했다</h2>

@@ -1,0 +1,875 @@
+{
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "code_address_units": "decoded file offsets",
+  "static": {
+    "edges": [
+      [
+        6683400,
+        7273988
+      ],
+      [
+        6683408,
+        7271504
+      ],
+      [
+        6684480,
+        7884424
+      ],
+      [
+        6684532,
+        7884424
+      ],
+      [
+        7884428,
+        8758628
+      ],
+      [
+        6675656,
+        6675856
+      ],
+      [
+        5416948,
+        7271492
+      ],
+      [
+        8082880,
+        7369708
+      ],
+      [
+        6200168,
+        9751016
+      ],
+      [
+        6191828,
+        6184376
+      ],
+      [
+        6184476,
+        6184596
+      ],
+      [
+        6192348,
+        6400152
+      ],
+      [
+        6398056,
+        6396256
+      ],
+      [
+        6398076,
+        7352820
+      ],
+      [
+        6398092,
+        6396212
+      ],
+      [
+        6398180,
+        7271492
+      ],
+      [
+        5415004,
+        7525228
+      ],
+      [
+        5415016,
+        7525228
+      ],
+      [
+        5415028,
+        7525228
+      ],
+      [
+        5415040,
+        7525228
+      ],
+      [
+        5412592,
+        8073792
+      ],
+      [
+        5412832,
+        7273988
+      ],
+      [
+        5412840,
+        7271504
+      ],
+      [
+        5412880,
+        5903896
+      ],
+      [
+        5412896,
+        5903896
+      ],
+      [
+        5412912,
+        5903896
+      ],
+      [
+        8082864,
+        7294360
+      ],
+      [
+        8082872,
+        8083164
+      ],
+      [
+        8083168,
+        7369708
+      ],
+      [
+        8083240,
+        8082952
+      ],
+      [
+        7294364,
+        7281232
+      ],
+      [
+        7281240,
+        7347956
+      ]
+    ],
+    "words": {
+      "10913012": 40194736,
+      "10913084": 40237792,
+      "10913108": 40238760,
+      "5417140": 3818917893,
+      "5417148": 3851427860,
+      "5417156": 3778019122,
+      "5421712": 329252872,
+      "5421716": 60817415,
+      "5421764": 3851493396,
+      "5421768": 3852275748,
+      "5421772": 3778019122,
+      "8082944": 3818917893,
+      "8082948": 3851427860,
+      "6640320": 3854897284,
+      "6640424": 3854893184,
+      "6640436": 3854893185,
+      "6640448": 3854893186,
+      "6640740": 3851423836,
+      "6640748": 3778019121,
+      "6640804": 3851423860,
+      "6640812": 3778019121,
+      "6683388": 3813670917,
+      "6683404": 3808432709,
+      "6683412": 3813670913,
+      "6683420": 96731225,
+      "7271508": 3855614188,
+      "8758632": 3788505264,
+      "6675520": 3813736469,
+      "6675860": 3818917896,
+      "6675876": 60817536,
+      "10295556": 53018859,
+      "10295560": 4,
+      "10295564": 48498112,
+      "9751920": 53018859,
+      "6190004": 3808429237,
+      "6190012": 3851223076,
+      "6196536": 3808433333,
+      "6196544": 3851227180,
+      "6200156": 3852271660,
+      "6200160": 3855618048,
+      "6192336": 3852271652,
+      "6192340": 3855618048,
+      "6398100": 366241993,
+      "6398172": 3808432709,
+      "7525232": 3787463602,
+      "8083232": 3818917899,
+      "8083236": 3851427860,
+      "7294360": 3818918040,
+      "5412836": 3818918040,
+      "5412844": 3813670912,
+      "5412852": 3852271648,
+      "5413020": 3818938372,
+      "5413024": 3851223080
+    },
+    "ranges": {
+      "prepare_mode_prefix": {
+        "start": 6640304,
+        "end_exclusive": 6640452,
+        "sha256": "c3a3b562bb17d959b79a76d802c96191c6bf98270aaa2486975f9f4c6e4709e6"
+      },
+      "second_pass_producer": {
+        "start": 6683360,
+        "end_exclusive": 6683436,
+        "sha256": "d3c374118d3de1b0d7715e97c199a98ed85ed287449c6667caa69bc3d129641d"
+      },
+      "mask_producer": {
+        "start": 6684328,
+        "end_exclusive": 6684576,
+        "sha256": "14a8ffa6a32248206ba12b9a484b2289953d172b343828381bc1893634f3c40d"
+      },
+      "module20_completion_mask": {
+        "start": 6675856,
+        "end_exclusive": 6675896,
+        "sha256": "b895ebd571f4a45393281c97feab0dc506f39d0d822a6f116f0f82c3be3f0ae4"
+      },
+      "development_mode5_call": {
+        "start": 5417136,
+        "end_exclusive": 5417160,
+        "sha256": "06507494a8152d39cfe184f9de9fd898e5299a1b07c125b060cc5309f8afdba4"
+      },
+      "alternate_mode7_8_call": {
+        "start": 5421708,
+        "end_exclusive": 5421776,
+        "sha256": "40d3f17b26802b7339453b84948f6892360818bc56a25242ce537a26d0952b3f"
+      },
+      "color_fringe_toggle": {
+        "start": 6184376,
+        "end_exclusive": 6184656,
+        "sha256": "f4f26d34b15ae8c25aa6a156a1b0560112d66e032281c831972a6a8cfb0dc89c"
+      },
+      "color_fringe_config_setter": {
+        "start": 6400152,
+        "end_exclusive": 6400176,
+        "sha256": "0c0dc4837ff312544593cee4b297ed980ef16866c6ba5389b882815158e10c83"
+      },
+      "color_fringe_guards_and_export": {
+        "start": 6398048,
+        "end_exclusive": 6398184,
+        "sha256": "a3cbb429f0bf17ebdb1578b5e5d1bd314a54ea1e312a3e8f1d3eda4d7827a67f"
+      },
+      "color_fringe_label_display": {
+        "start": 9751016,
+        "end_exclusive": 9751184,
+        "sha256": "be498241e3552be97bed314d180d1c48a2a69fd689671e204543e6d96447fe72"
+      },
+      "four_job_kind_assignment": {
+        "start": 5414984,
+        "end_exclusive": 5415044,
+        "sha256": "19674de0d1bfb0a17bcaad7ce509b10e80df6ef3156a6a882cfb5c70951c732e"
+      },
+      "development_input_kind": {
+        "start": 5412588,
+        "end_exclusive": 5412676,
+        "sha256": "4927711e0b109201780eacfed528e0b5d2184903a32952b96770cc72244499c5"
+      },
+      "development_multiframe_condition": {
+        "start": 5412828,
+        "end_exclusive": 5413028,
+        "sha256": "1446ec3128d3978211f7e6f6da75b6d9f7b715fd39c58b551d9e81e58c62d432"
+      },
+      "superresolution_mode11_call": {
+        "start": 8083164,
+        "end_exclusive": 8083244,
+        "sha256": "f3438bb8ee144eaefe875892e647fd85d89b1894c6c9ed9c9c32184daddad03b"
+      },
+      "superresolution_condition": {
+        "start": 8082860,
+        "end_exclusive": 8082884,
+        "sha256": "591643c1ef89fa32c946be739e8f1d82160dc8527846541c9bc9c52209507bf6"
+      }
+    }
+  },
+  "original_a32": {
+    "engine": "Unicorn 2.1.4",
+    "hooks": [],
+    "mode_and_second_pass": [
+      {
+        "job_mode": 0,
+        "flags_2080_2081_2082": [
+          0,
+          0,
+          0
+        ],
+        "second_pass_for_tag245_values_0_1_2": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "job_mode": 1,
+        "flags_2080_2081_2082": [
+          0,
+          0,
+          0
+        ],
+        "second_pass_for_tag245_values_0_1_2": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "job_mode": 2,
+        "flags_2080_2081_2082": [
+          0,
+          0,
+          0
+        ],
+        "second_pass_for_tag245_values_0_1_2": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "job_mode": 3,
+        "flags_2080_2081_2082": [
+          0,
+          0,
+          0
+        ],
+        "second_pass_for_tag245_values_0_1_2": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "job_mode": 4,
+        "flags_2080_2081_2082": [
+          0,
+          0,
+          0
+        ],
+        "second_pass_for_tag245_values_0_1_2": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "job_mode": 5,
+        "flags_2080_2081_2082": [
+          1,
+          0,
+          0
+        ],
+        "second_pass_for_tag245_values_0_1_2": [
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "job_mode": 6,
+        "flags_2080_2081_2082": [
+          0,
+          0,
+          0
+        ],
+        "second_pass_for_tag245_values_0_1_2": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "job_mode": 7,
+        "flags_2080_2081_2082": [
+          1,
+          1,
+          0
+        ],
+        "second_pass_for_tag245_values_0_1_2": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "job_mode": 8,
+        "flags_2080_2081_2082": [
+          1,
+          1,
+          0
+        ],
+        "second_pass_for_tag245_values_0_1_2": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "job_mode": 9,
+        "flags_2080_2081_2082": [
+          0,
+          0,
+          0
+        ],
+        "second_pass_for_tag245_values_0_1_2": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "job_mode": 10,
+        "flags_2080_2081_2082": [
+          0,
+          0,
+          0
+        ],
+        "second_pass_for_tag245_values_0_1_2": [
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "job_mode": 11,
+        "flags_2080_2081_2082": [
+          1,
+          0,
+          1
+        ],
+        "second_pass_for_tag245_values_0_1_2": [
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "second_pass_runs": 36,
+    "original_raw_development_virtual_call_mode": 5,
+    "original_superresolution_virtual_call_mode": 11,
+    "mask_cases": [
+      {
+        "job_mode": 0,
+        "layout_kind": 0,
+        "capture_enum": 0,
+        "mask": 1,
+        "masked_cpp": false
+      },
+      {
+        "job_mode": 0,
+        "layout_kind": 0,
+        "capture_enum": 3,
+        "mask": 1,
+        "masked_cpp": false
+      },
+      {
+        "job_mode": 0,
+        "layout_kind": 1,
+        "capture_enum": 0,
+        "mask": 4,
+        "masked_cpp": true
+      },
+      {
+        "job_mode": 0,
+        "layout_kind": 1,
+        "capture_enum": 3,
+        "mask": 64,
+        "masked_cpp": true
+      },
+      {
+        "job_mode": 0,
+        "layout_kind": 2,
+        "capture_enum": 0,
+        "mask": 2,
+        "masked_cpp": false
+      },
+      {
+        "job_mode": 0,
+        "layout_kind": 2,
+        "capture_enum": 3,
+        "mask": 32,
+        "masked_cpp": false
+      },
+      {
+        "job_mode": 5,
+        "layout_kind": 0,
+        "capture_enum": 0,
+        "mask": 1,
+        "masked_cpp": false
+      },
+      {
+        "job_mode": 5,
+        "layout_kind": 0,
+        "capture_enum": 3,
+        "mask": 1,
+        "masked_cpp": false
+      },
+      {
+        "job_mode": 5,
+        "layout_kind": 1,
+        "capture_enum": 0,
+        "mask": 4,
+        "masked_cpp": true
+      },
+      {
+        "job_mode": 5,
+        "layout_kind": 1,
+        "capture_enum": 3,
+        "mask": 4,
+        "masked_cpp": true
+      },
+      {
+        "job_mode": 5,
+        "layout_kind": 2,
+        "capture_enum": 0,
+        "mask": 2,
+        "masked_cpp": false
+      },
+      {
+        "job_mode": 5,
+        "layout_kind": 2,
+        "capture_enum": 3,
+        "mask": 2,
+        "masked_cpp": false
+      },
+      {
+        "job_mode": 7,
+        "layout_kind": 0,
+        "capture_enum": 0,
+        "mask": 1,
+        "masked_cpp": false
+      },
+      {
+        "job_mode": 7,
+        "layout_kind": 0,
+        "capture_enum": 3,
+        "mask": 1,
+        "masked_cpp": false
+      },
+      {
+        "job_mode": 7,
+        "layout_kind": 1,
+        "capture_enum": 0,
+        "mask": 4,
+        "masked_cpp": true
+      },
+      {
+        "job_mode": 7,
+        "layout_kind": 1,
+        "capture_enum": 3,
+        "mask": 4,
+        "masked_cpp": true
+      },
+      {
+        "job_mode": 7,
+        "layout_kind": 2,
+        "capture_enum": 0,
+        "mask": 2,
+        "masked_cpp": false
+      },
+      {
+        "job_mode": 7,
+        "layout_kind": 2,
+        "capture_enum": 3,
+        "mask": 2,
+        "masked_cpp": false
+      },
+      {
+        "job_mode": 11,
+        "layout_kind": 0,
+        "capture_enum": 0,
+        "mask": 64,
+        "masked_cpp": true
+      },
+      {
+        "job_mode": 11,
+        "layout_kind": 0,
+        "capture_enum": 3,
+        "mask": 64,
+        "masked_cpp": true
+      },
+      {
+        "job_mode": 11,
+        "layout_kind": 1,
+        "capture_enum": 0,
+        "mask": 64,
+        "masked_cpp": true
+      },
+      {
+        "job_mode": 11,
+        "layout_kind": 1,
+        "capture_enum": 3,
+        "mask": 64,
+        "masked_cpp": true
+      },
+      {
+        "job_mode": 11,
+        "layout_kind": 2,
+        "capture_enum": 0,
+        "mask": 64,
+        "masked_cpp": true
+      },
+      {
+        "job_mode": 11,
+        "layout_kind": 2,
+        "capture_enum": 3,
+        "mask": 64,
+        "masked_cpp": true
+      }
+    ],
+    "module20_completion_cases": [
+      {
+        "before": 1,
+        "after": 8,
+        "masked_cpp_after": false,
+        "planar_input_after": true
+      },
+      {
+        "before": 2,
+        "after": 8,
+        "masked_cpp_after": false,
+        "planar_input_after": true
+      },
+      {
+        "before": 4,
+        "after": 8,
+        "masked_cpp_after": false,
+        "planar_input_after": true
+      },
+      {
+        "before": 64,
+        "after": 128,
+        "masked_cpp_after": false,
+        "planar_input_after": true
+      },
+      {
+        "before": 32,
+        "after": 8,
+        "masked_cpp_after": false,
+        "planar_input_after": true
+      },
+      {
+        "before": 8,
+        "after": 8,
+        "masked_cpp_after": false,
+        "planar_input_after": true
+      },
+      {
+        "before": 128,
+        "after": 8,
+        "masked_cpp_after": false,
+        "planar_input_after": true
+      }
+    ]
+  },
+  "ui_and_kind_a32": {
+    "toggle_cases": [
+      {
+        "direction": 0,
+        "before": 0,
+        "after": 1
+      },
+      {
+        "direction": 0,
+        "before": 1,
+        "after": 0
+      },
+      {
+        "direction": 1,
+        "before": 0,
+        "after": 1
+      },
+      {
+        "direction": 1,
+        "before": 1,
+        "after": 0
+      }
+    ],
+    "guarded_export_cases": [
+      {
+        "selected": 0,
+        "blocked_query": 0,
+        "config_enum20": 0,
+        "capable_query": 0,
+        "tag245_and_second_pass": 0
+      },
+      {
+        "selected": 0,
+        "blocked_query": 0,
+        "config_enum20": 0,
+        "capable_query": 1,
+        "tag245_and_second_pass": 0
+      },
+      {
+        "selected": 0,
+        "blocked_query": 0,
+        "config_enum20": 20,
+        "capable_query": 0,
+        "tag245_and_second_pass": 0
+      },
+      {
+        "selected": 0,
+        "blocked_query": 0,
+        "config_enum20": 20,
+        "capable_query": 1,
+        "tag245_and_second_pass": 0
+      },
+      {
+        "selected": 0,
+        "blocked_query": 1,
+        "config_enum20": 0,
+        "capable_query": 0,
+        "tag245_and_second_pass": 0
+      },
+      {
+        "selected": 0,
+        "blocked_query": 1,
+        "config_enum20": 0,
+        "capable_query": 1,
+        "tag245_and_second_pass": 0
+      },
+      {
+        "selected": 0,
+        "blocked_query": 1,
+        "config_enum20": 20,
+        "capable_query": 0,
+        "tag245_and_second_pass": 0
+      },
+      {
+        "selected": 0,
+        "blocked_query": 1,
+        "config_enum20": 20,
+        "capable_query": 1,
+        "tag245_and_second_pass": 0
+      },
+      {
+        "selected": 1,
+        "blocked_query": 0,
+        "config_enum20": 0,
+        "capable_query": 0,
+        "tag245_and_second_pass": 0
+      },
+      {
+        "selected": 1,
+        "blocked_query": 0,
+        "config_enum20": 0,
+        "capable_query": 1,
+        "tag245_and_second_pass": 1
+      },
+      {
+        "selected": 1,
+        "blocked_query": 0,
+        "config_enum20": 20,
+        "capable_query": 0,
+        "tag245_and_second_pass": 0
+      },
+      {
+        "selected": 1,
+        "blocked_query": 0,
+        "config_enum20": 20,
+        "capable_query": 1,
+        "tag245_and_second_pass": 0
+      },
+      {
+        "selected": 1,
+        "blocked_query": 1,
+        "config_enum20": 0,
+        "capable_query": 0,
+        "tag245_and_second_pass": 0
+      },
+      {
+        "selected": 1,
+        "blocked_query": 1,
+        "config_enum20": 0,
+        "capable_query": 1,
+        "tag245_and_second_pass": 0
+      },
+      {
+        "selected": 1,
+        "blocked_query": 1,
+        "config_enum20": 20,
+        "capable_query": 0,
+        "tag245_and_second_pass": 0
+      },
+      {
+        "selected": 1,
+        "blocked_query": 1,
+        "config_enum20": 20,
+        "capable_query": 1,
+        "tag245_and_second_pass": 0
+      }
+    ],
+    "kind_assignment_cases": [
+      {
+        "multiframe_expanded": 0,
+        "assigned_kinds": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "multiframe_expanded": 1,
+        "assigned_kinds": [
+          1,
+          2,
+          3,
+          4
+        ]
+      }
+    ],
+    "raw_expansion_cases": [
+      {
+        "tag98": 0,
+        "input_kind": 3,
+        "extra_allocations": 0,
+        "kinds": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "mode5_masks": [
+          1
+        ],
+        "inhibit20": 0
+      },
+      {
+        "tag98": 1,
+        "input_kind": 0,
+        "extra_allocations": 0,
+        "kinds": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "mode5_masks": [
+          1
+        ],
+        "inhibit20": 1
+      },
+      {
+        "tag98": 1,
+        "input_kind": 3,
+        "extra_allocations": 3,
+        "kinds": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "mode5_masks": [
+          4,
+          2,
+          2,
+          2
+        ],
+        "inhibit20": 0
+      }
+    ],
+    "hooked_allocator_offset": 5903896,
+    "hooked_guard_offsets": [
+      6396256,
+      6396212
+    ],
+    "limits": "UI drawing and physical input are not executed. The two capability/metadata queries are supplied as booleans; their firmware predicates and real availability are not established. Original UI toggle, commit segment, guarded exporter, tag getter and mode5 producer run as separate segments. Export cases independently seed the UI config value. The four-job segment first receives a seeded expansion flag; separate RAW cases derive it from original input-kind and tag branches with an intercepted allocator. Complete RAW jobs and metadata validity are untested."
+  },
+  "color_fringe_label": {
+    "widget_id": 53018859,
+    "widget_record": 10295556,
+    "locale_record": 14943680,
+    "english_glyph_offset": 14993689,
+    "decoded": "Color Fringe Correction",
+    "glyph_sha256": "43120f71d05756678de995528b2e998a1ccf907311fcd8d1169af29a52fbff71"
+  },
+  "limits": [
+    "The mode preparation prefix stops before unrelated virtual initialization methods. The second-pass producer, mask producer and module20 completion handler then run as separate original functions without hooks on synthetic state.",
+    "Mode 5 is tied to a real DevelopmentRawImage call site and a separate Normal DevMode diagnostic path. Numeric job modes are not exposure-dial labels.",
+    "The standalone mask cases seed layout kind and capture enum. Separate RAW expansion cases execute the four-job kind producer with an intercepted allocator. Their physical camera menu producers and all permitted combinations remain unresolved.",
+    "The module20 completion handler establishes state transitions; these probes do not execute the device, upstream eligibility or complete asynchronous recipe."
+  ]
+}

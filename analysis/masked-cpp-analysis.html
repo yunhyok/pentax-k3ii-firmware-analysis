@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="K-3 II 마스크 CPP의 보조 스케일러 활성 조건, JPEG 보조 입력의 조건부 평면 공유, RAW 현상 Color Fringe Correction과 작업 모드 생산자 검증.">
+<title>K-3 II — 마스크 CPP·보조 JPEG 입력과 RAW 현상 조건</title>
+<link rel="stylesheet" href="../assets/report.css">
+</head>
+<body>
+<header>
+<div class="eyebrow">PENTAX K-3 II · firmware 1.12 · 2026-11-08 · 마스크 분기 후속 분석</div>
+<h1>보조 JPEG 입력을 찾았다.<br>마스크 경로의 활성 조건은 일부 남아 있다.</h1>
+<p class="lead">보조 스케일러의 두 출력과 JPEG의 보조 입력을 연결할 수 있는 메모리 배치 조건을 확인했다. 그러나 확인한 두 초기화 경로는 보조 스케일러를 끈다. 실제 작업에서 이를 켜고 같은 메모리를 공유하게 만드는 경로는 아직 확정하지 못했다. 별도로 RAW 현상의 Color Fringe Correction 메뉴와 두 번째 CPP 패스의 조건을 연결했다.</p>
+<nav aria-label="보고서 탐색"><a href="../index.html">초기 분석</a><a href="backend-b-cpp-analysis.html">앞선 CPP·SD 분석</a><a href="#gate">활성 조건</a><a href="#jpeg">JPEG 입력</a><a href="#modes">작업 모드</a><a href="#fringe">실제 메뉴</a><a href="#module20">모듈 20</a><a href="#verification">검증·재현</a><a href="#limits">남은 범위</a></nav>
+</header>
+<main>
+<p class="note">코드 위치는 <strong>해제 이미지의 파일 오프셋</strong>이다. 코드 VA는 <code>오프셋 + 0x02000000</code>이며 <code>job+…</code>와 <code>payload+…</code>는 객체 내부 오프셋이다. 원본 ARM 명령을 합성 상태에서 구간별로 실행했다. 아래의 주소 일치는 픽셀 내용이나 실기 실행을 증명하지 않는다.</p>
+
+<section aria-labelledby="gate"><h2 id="gate">1. 보조 스케일러를 켜는 생산자는 아직 찾지 못했다</h2>
+<p>스케일러 payload는 <code>job+0xA7B4</code>에 있다. 생성자 호출 <code>0x653B74 → 0x71B0B0</code>은 활성 바이트 <code>payload+0x38</code>에 0을 쓴다. 설정 함수의 <code>0x659FAC → 0x71B090</code>도 0을 전달한다. 두 지점 모두 먼저 바이트를 <code>0xA5</code>로 채운 뒤 원본 코드를 실행해 0으로 덮어쓰는 것을 확인했다. <a href="masked-scaler.json">생산자·호출·실행 근거</a></p>
+<figure><figcaption>도식 1. 확인한 생산자와 조건을 주입해 확인한 소비자</figcaption>
+<div class="flow" role="group" aria-label="초기화는 gate를 0으로 쓰고 소비자는 0일 때 보조 스케일러를 건너뜀">
+<div class="stage"><strong>생성자·설정 함수</strong><span><code>0x71B100</code>: 직접 0 기록<br><code>0x659FAC</code>: setter에 0 전달<br>기존 값 <code>0xA5</code>도 지워짐</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>활성 바이트</strong><span><code>payload+0x38 == 0</code><br><code>0x5804A4</code>에서 읽음<br>0이면 보조 처리 생략</span></div><div class="arrow" aria-hidden="true">⇢</div>
+<div class="stage"><strong>1을 주입한 경우</strong><span><code>+0x2354 → +0x238C</code><br><code>+0x238C → +0x23A8</code><br>두 스케일러 호출 확인</span></div>
+</div>
+<p class="caption">실선은 확인한 설정 관계, ⇢는 합성 입력을 넣어야 도달한 경로다. 두 스케일러 진입점에서 호출 인수를 기록하고 장치 처리를 대체했다. 실제 픽셀 크기 변환은 실행하지 않았다.</p>
+</figure>
+<p>주 이미지 16 MiB를 4바이트 경계로 검색했다. setter <code>0x71B090</code>을 직접 분기 대상으로 삼는 곳은 <code>0x659FAC</code> 하나였다. setter의 VA와 같은 정렬된 워드는 없다. <code>MOVW</code>의 payload·gate 오프셋 후보와 <code>STRB [Rn,#0x38]</code> 후보 177개도 기록했다. 계산한 포인터를 통한 쓰기, 메모리 복사, 간접 실행, 다른 명령어 형식은 이 검색으로 배제할 수 없다. 따라서 “항상 비활성인 코드”라는 결론은 내리지 않는다. <a href="../verify_masked_scaler.py">검색 범위와 단언</a></p>
+</section>
+
+<section aria-labelledby="jpeg"><h2 id="jpeg">2. JPEG 보조 입력과의 연결은 앞선 메모리 배치에 달려 있다</h2>
+<p>앞선 분석은 JPEG의 주 입력 <code>+0x21B0/+0x21CC</code>를 확인했다. 이번에는 모듈 16이 <code>+0x21E8</code>과 <code>+0x2204</code>도 읽는 것을 확인했다. 설정 함수는 이 디스크립터들을 JPEG payload의 <code>+8/+0xC</code>에 넣는다. 실제 수신 경로의 <code>0x576FE8</code>과 <code>0x577044</code>는 각각 압축 함수에 넘긴다. 첫 보조 입력의 허용값은 1이고 두 번째는 <code>job+0x65 == 0</code>일 때 1이다. <a href="masked-scaler.json">JPEG 설정·수신 실행 사례</a></p>
+<figure><figcaption>도식 2. 다른 디스크립터가 같은 평면 주소를 가질 수 있는 조건</figcaption>
+<div class="flow" role="group" aria-label="마스크 보조 출력과 JPEG 입력은 서로 다른 디스크립터이며 조건부로 같은 평면 주소를 가짐">
+<div class="stage"><strong>마스크 측 디스크립터</strong><span><code>+0x2354</code>: 보조 스케일러 입력<br><code>+0x238C</code>: 첫 출력<br><code>+0x23A8</code>: 둘째 출력</span></div><div class="arrow" aria-hidden="true">⇄</div>
+<div class="stage"><strong>주소 일치를 재현한 이력</strong><span>일반 레이아웃을 먼저 구성<br>동일 시작 주소·치수·패딩 유지<br>마스크 레이아웃을 이어 구성</span></div><div class="arrow" aria-hidden="true">⇄</div>
+<div class="stage"><strong>일반 측 디스크립터</strong><span><code>+0x2140</code>: 일반 스케일러 입력<br><code>+0x21E8</code>: JPEG 보조 입력 1<br><code>+0x2204</code>: JPEG 보조 입력 2</span></div>
+</div>
+<p class="caption">⇄는 조건부 주소 일치이며 복사 명령을 뜻하지 않는다. 디스크립터의 <code>+4/+8/+0xC</code>에 든 세 평면 주소를 각각 비교했다. 앞선 CPP 합성 결과가 실제로 이 메모리에 기록됐는지는 확인하지 않았다.</p>
+</figure>
+<p>레이아웃 생성자 <code>0x6609AC</code>에서 <code>job+0x20B2 == 1</code>인 분기는 별도 디스크립터를 구성하고 일반 디스크립터의 평면 주소는 그대로 둔다. 일반 스케일러 설정도 <code>job+0x178…0x18C</code>의 기존 일반 주소를 다시 JPEG 보조 디스크립터에 쓴다. 세 가지 이력을 원본 코드로 실행한 결과는 다음과 같다. <a href="masked-scaler.json">세 레이아웃의 실제 주소</a></p>
+<div class="table-scroll"><table><thead><tr><th scope="col">합성 레이아웃 이력</th><th scope="col">세 쌍의 평면 주소</th><th scope="col">JPEG가 읽은 값</th></tr></thead><tbody>
+<tr><td>새 작업에서 마스크 레이아웃만 구성</td><td>모두 불일치</td><td>초기 0으로 둔 일반 주소가 그대로 남음</td></tr>
+<tr><td>일반 → 마스크, 같은 시작 주소·치수·패딩</td><td>모두 일치</td><td>보조 스케일러 출력과 같은 주소</td></tr>
+<tr><td>일반 → 마스크, 앞선 시작 주소가 다름</td><td>모두 불일치</td><td>앞선 일반 주소 유지; <code>job+0x65=1</code>이면 둘째 호출 생략</td></tr>
+</tbody></table></div>
+<p>보조 처리의 진행 메시지 <code>0x020C0001</code>은 <code>0x6DBEE0</code>으로 이어진다. 일반 완료 메시지 <code>0x020C0002</code>는 모듈 2 완료 처리로 들어가 <code>+0x21E8/+0x2204</code>의 치수를 바꾸지만 평면 포인터를 복사하지 않는다. 따라서 완료 메시지만으로 두 주소 집합이 연결되지는 않는다. 이 결과는 “실제 작업이 같은 배치를 재사용하는가”를 후속 검증 대상으로 좁힌다.</p>
+</section>
+
+<section aria-labelledby="modes"><h2 id="modes">3. 마스크의 생산 조건과 작업 종류를 분리했다</h2>
+<p>준비 함수 <code>0x6552B0</code>는 내부 작업 종류를 <code>job+0x2084</code>에 저장한다. 종류 5는 <code>+0x2080=1</code>, 7·8은 <code>+0x2080/+0x2081=1</code>, 11은 <code>+0x2080/+0x2082=1</code>로 만든다. 실제 <code>DevelopmentRawImage</code>의 <code>0x52A8B4</code>는 종류 5를 전달하며, 원본 가상 함수표를 거쳐 준비 함수에 진입하는 것도 실행했다. 이 숫자들을 P·Av·M 같은 노출 모드명으로 해석하지 않는다. <a href="mode-reachability.json">작업 종류 0–11 검증</a></p>
+<p>마스크 생산자 <code>0x65FEA8</code>의 우선순위는 아래와 같다. <code>+0x20B2</code>는 이 문서에서 작업의 배치 구분값으로 부른다. enum은 <code>job+0x34</code>가 가리키는 객체의 <code>+0x300</code>에서 읽으며 사용자 메뉴명은 미확정이다.</p>
+<div class="table-scroll"><table><thead><tr><th scope="col">선행 조건</th><th scope="col">배치 구분값</th><th scope="col">마스크 <code>+0x20B4</code></th></tr></thead><tbody>
+<tr><td><code>+0x2082 == 1</code></td><td>무관</td><td><code>0x40</code></td></tr>
+<tr><td>위 조건 아님</td><td>0</td><td><code>0x01</code></td></tr>
+<tr><td><code>+0x2080 != 0</code></td><td>1 / 그 밖의 비영 값</td><td><code>0x04 / 0x02</code></td></tr>
+<tr><td><code>+0x2080 == 0</code>, enum=3</td><td>1 / 그 밖의 비영 값</td><td><code>0x40 / 0x20</code></td></tr>
+<tr><td><code>+0x2080 == 0</code>, enum≠3</td><td>1 / 그 밖의 비영 값</td><td><code>0x04 / 0x02</code></td></tr>
+</tbody></table></div>
+<p>이 생산자 안에서는 <code>mask &amp; 0x44 != 0</code>이 되는 조건이 <code>job+0x2082 == 1</code> 또는 <code>job+0x20B2 == 1</code>이다. RAW 현상 경로의 <code>0x52A048…0x52A080</code>은 네 작업에 구분값 1·2·3·4를 쓴다. 앞선 코드에서 설정 태그 <code>0x98 != 0</code>이고 내부 억제값 <code>stack+0x20 == 0</code>이면 추가 작업 셋을 할당하고 확장 플래그 <code>stack+0x28=1</code>을 만든다. 원본 분기·할당 호출·구분값 기록·종류 5의 마스크 생산자를 이어 실행하면 첫 작업은 마스크 4, 나머지 세 작업은 마스크 2를 만든다. 할당기는 합성 작업 주소를 반환하도록 대체했다. 입력 종류 0·1·2가 억제값을 켜는 코드도 확인했지만, 이 입력 종류와 태그의 촬영 메뉴 의미는 미확정이다. <a href="../verify_mode_reachability.py">네 작업 구분값·마스크 검사</a></p>
+<p>별도의 <code>0x7B55AC</code> 경로는 전역 설정 API에서 ID <code>0x98</code>을 읽어 1이면 <code>SuperResolution DevMode</code> 진단 분기로 들어간다. 그 안의 <code>0x7B5720</code>이 작업 종류 11을 전달하며, 가상 함수표를 거친 준비 함수 진입을 원본 코드로 실행했다. 이 진단 분기에서 종류 11을 선택한다는 점은 확인됐다. 이 전역 설정과 RAW 작업의 태그 저장소는 별도 API이므로 숫자가 같다는 이유로 동일 객체나 동일 메뉴 이벤트라고 단정하지 않는다. <a href="mode-reachability.json">진단 문자열·분기·실제 종류 11 호출</a></p>
+</section>
+
+<section aria-labelledby="fringe"><h2 id="fringe">4. 두 번째 CPP 패스는 RAW 현상의 Color Fringe Correction과 연결된다</h2>
+<p>위젯 ID <code>0x032900EB</code>의 리소스 행 <code>0x9D1904</code>에서 영어 문자열 <code>Color Fringe Correction</code>을 복원했다. 화면 갱신 함수는 이 위젯과 <code>screen+0x4B5</code>의 설정값을 함께 사용한다. 같은 바이트를 다섯 번째 항목 토글 함수가 바꾼다. 적용 경로가 설정 객체의 <code>+0x8C9</code>에 전달한다. 문자열, 표시 값, 수정 값, 적용 값을 연결한 결과다. <a href="mode-reachability.json">리소스 포인터·토글·설정 전달 근거</a></p>
+<figure><figcaption>도식 3. 메뉴값에서 두 번째 CPP 패스까지의 조건</figcaption>
+<div class="flow" role="group" aria-label="Color Fringe Correction 메뉴값에서 가드를 거쳐 설정 태그245와 CPP 두번째 패스로">
+<div class="stage"><strong>RAW 현상 메뉴</strong><span>Color Fringe Correction<br><code>screen+0x4B5</code>: 0 ↔ 1<br><code>0x5E7CDC → 0x61A898</code><br>설정 <code>+0x8C9</code>에 적용</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>조건부 설정 내보내기</strong><span><code>0x619960</code> 반환값 = 0<br>설정 enum <code>0x20 ≠ 0x14</code><br><code>0x619934</code> 반환값 ≠ 0<br>성립 시 태그 <code>0x245 = 선택값</code></span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>CPP 두 번째 패스</strong><span><code>0x65FAE0</code><br>작업 종류 = 5<br>태그 <code>0x245 == 1</code><br><code>job+0x59/+0x8D = 1</code></span></div>
+</div>
+<p class="caption">이 조건은 두 번째 CPP 패스에 대한 것이다. 마스크 선택과 보조 스케일러의 <code>payload+0x38</code>은 별도 조건이다. 메뉴를 켰다는 사실만으로 보조 스케일러가 활성화된다고 볼 수 없다.</p>
+</figure>
+<p>두 토글 방향과 초기값 0·1의 조합 4건, 선택값과 세 가드 조건의 조합 16건을 실행했다. 설정 enum 조회·태그 쓰기·작업 종류 5의 패스 생산자는 원본 코드로 실행했다. <code>0x619960/0x619934</code> 두 질의의 반환값만 주입했다. 가드의 실제 기기 상태와 사용자 의미는 아직 확인하지 않았다. RAW 현상 안에도 <code>stack+0x20 != 0</code>일 때 태그를 0으로 지우는 <code>0x52A7F4</code> 경로가 있다.</p>
+<p>리코 공식 안내도 이 기능을 RAW 현상의 렌즈 보정 항목으로 설명하고 일반 촬영 시의 설정과 구분한다. 따라서 현재 확인한 실제 사용자 기능은 RAW 현상 보정이다. 특정 노출 모드에서 촬영 직후 마스크 경로가 실행된다는 뜻은 아니다. <a href="https://www.ricoh-imaging.co.jp/english/support/qa/k-3-2/index.html">Ricoh K-3 II FAQ의 Color Fringe Correction 안내</a></p>
+</section>
+
+<section aria-labelledby="module20"><h2 id="module20">5. 모듈 20 출력은 마스크 전환 뒤 CPP 입력이 된다</h2>
+<p>모듈 20의 설정은 마스크 <code>0x04</code>일 때 연결 작업 네 개의 <code>+0x204</code>를, <code>0x40</code>일 때는 <code>+0x13C</code>를 소스로 읽는다. 목적지는 현재 작업의 <code>+0x1F8/+0x1FC/+0x200</code>이다. 원본 할당 함수의 슬롯 15로 이 목적지를 구성하고 슬롯 16으로 연결 작업의 <code>+0x204</code>도 구성해 주소 전달을 확인했다. <a href="masked-scaler.json">두 마스크의 할당·소스·목적지 실행</a></p>
+<figure><figcaption>도식 4. 모듈 20 완료 이후의 별도 CPP 입력 경로</figcaption>
+<div class="flow" role="group" aria-label="네 연결 작업의 원본 버퍼에서 모듈20 목적지와 마스크 전환을 거쳐 CPP 입력으로">
+<div class="stage"><strong>연결 작업 4개</strong><span>마스크 <code>0x04</code>: 각각 <code>+0x204</code><br>마스크 <code>0x40</code>: 각각 <code>+0x13C</code><br><code>+0x2354</code> 출력 소비는 미확인</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>모듈 20 목적지·완료</strong><span><code>job+0x1F8/+0x1FC/+0x200</code><br><code>0x04 → 0x08</code><br><code>0x40 → 0x80</code></span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>이후 CPP 입력 선택</strong><span><code>mask &amp; 0x88 != 0</code><br><code>0x65962C…0x659678</code><br>모듈 20 목적지의 세 주소를 읽음</span></div>
+</div>
+<p class="caption">설정·완료 처리·후속 입력 선택을 순서대로 실행한 합성 사례다. 모듈 20의 픽셀 연산과 전체 비동기 레시피를 실행하지 않았다. 이 경로를 “마스크 CPP 출력이 보조 스케일러를 거쳐 돌아오는 경로”로 합치지 않는다.</p>
+</figure>
+<p>완료 후에는 <code>mask &amp; 0x44</code>가 0이 되고 CPP가 세 평면 입력을 고르는 조건인 <code>mask &amp; 0x88</code>이 참이 된다. 이 변화는 마스크 값이 고정된 촬영 모드 식별자가 아니라 처리 상태로도 쓰인다는 근거다. 이전 CPP·합성의 어느 시점에 해당 완료가 배치되는지와 실제 픽셀의 유효성은 전체 레시피에서 추가로 확인해야 한다.</p>
+</section>
+
+<section aria-labelledby="verification"><h2 id="verification">6. 검증 방법과 재현 자료</h2>
+<p>K-3 III의 <a href="https://github.com/yunhyok/pentax-k3iii-firmware-analysis/blob/a6b84f4e2e81213e54f1fe4d19beea9e93a6bbd9/analysis/pipeline-report.html">조건부 영상 버퍼 분석</a>과 <a href="https://github.com/yunhyok/pentax-k3iii-firmware-analysis/blob/614d1fe46b0041819f70f61559dc5e267183f717/analysis/startup-storage.html">모드 생산자 분석</a>처럼, 설정을 쓰는 코드·읽는 코드·분기 조건을 연결하고 합성 상태에서 원본 명령을 실행했다. K-3 III의 칩·주소·레지스터 의미는 가져오지 않았다. 현재 REA의 Ghidra·IDA 공급자를 사용할 수 없어 기존 Capstone·Unicorn 검증을 이어 사용했다.</p>
+<div class="table-scroll"><table><thead><tr><th scope="col">공개 증거</th><th scope="col">검증한 내용</th><th scope="col">실행 범위</th></tr></thead><tbody>
+<tr><td><a href="masked-scaler.json">masked-scaler.json</a><br><a href="../verify_masked_scaler.py">검증 스크립트</a></td><td>분기 63개·워드 76개·구간 해시 11개, 레이아웃 이력 3개, 모듈 20 사례 2개</td><td>스케일러·JPEG 호출과 합성 콜백 대체; 입력·출력 주소 및 조건 대조</td></tr>
+<tr><td><a href="mode-reachability.json">mode-reachability.json</a><br><a href="../verify_mode_reachability.py">검증 스크립트</a></td><td>작업 종류 12개, 패스 36건, 마스크 24건, 완료 7건, 메뉴 토글·적용 4건, 별도 가드 16건, 네 작업 구분값 2건, RAW 작업 확장 3건, 실제 종류 5·11 호출</td><td>작업 종류·마스크·완료 생산자는 후킹 없음. 메뉴 내보내기는 두 상태 질의, RAW 확장은 할당기 대체</td></tr>
+</tbody></table></div>
+<pre><code>python verify_masked_scaler.py decoded.bin --compare analysis/masked-scaler.json
+python verify_mode_reachability.py decoded.bin --compare analysis/mode-reachability.json
+python -m unittest discover -s tests -v
+python verify_publication.py</code></pre>
+<p>해제본 SHA-256은 <code class="hash">1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc</code>이며 원본 실행에는 Unicorn 2.1.4가 필요하다. 공개 저장소에는 펌웨어와 전체 디스어셈블리를 포함하지 않는다. CI는 펌웨어 없이 단위 테스트와 HTML·링크·증거 동일성·공개 파일 범위를 검사한다. <a href="validation.json">통합 검증 기록</a> · <a href="https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions">CI·배포 이력</a></p>
+</section>
+
+<section aria-labelledby="limits"><h2 id="limits">7. 남은 도달 조건</h2>
+<p>남은 핵심은 보조 스케일러를 켜는 비영 값의 생산자와 실제 작업에서 일반·마스크 레이아웃이 같은 평면을 재사용하는 이력이다. JPEG 보조 입력의 소비자는 찾았지만 실제 작업에서 이 두 조건이 성립하는지는 확인하지 못했다. SuperResolution 작업 종류 11의 실제 사용자 메뉴, 태그 0x98의 촬영 측 생산자, 모듈 17의 선행 기능 검사와 비동기 작업의 전체 순서도 추가 추적 대상이다.</p>
+<p>실제 RAW 픽셀·JPEG 생성·Exif·SD까지의 연속 실행, DMA 전송과 캐시 일관성은 확인하지 않았다. 정확한 SoC·보조 MCU 부품번호도 미확정 상태를 유지한다.</p>
+</section>
+</main>
+<footer>K-3 II v1.12 · <a href="../README.md">저장소 안내</a> · <a href="backend-b-cpp-analysis.html">앞선 CPP·저장 경로 보고서</a></footer>
+</body>
+</html>

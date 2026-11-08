@@ -256,5 +256,59 @@
       "evidence_identity_consistent": true,
       "svg_xml_valid": true
     }
+  },
+  "masked_cpp_analysis": {
+    "reference_project_pipeline_commit": "a6b84f4e2e81213e54f1fe4d19beea9e93a6bbd9",
+    "reference_project_mode_commit": "614d1fe46b0041819f70f61559dc5e267183f717",
+    "snapshots_reproduced": [
+      "masked-scaler",
+      "mode-reachability"
+    ],
+    "masked_scaler_branch_edges": 63,
+    "masked_scaler_exact_words": 76,
+    "masked_scaler_range_hashes": 11,
+    "layout_history_cases": 3,
+    "module20_pointer_handoff_cases": 2,
+    "mode_branch_edges": 32,
+    "mode_exact_words": 53,
+    "mode_range_hashes": 15,
+    "second_pass_runs": 36,
+    "mask_cases": 24,
+    "completion_cases": 7,
+    "ui_toggle_commit_cases": 4,
+    "guarded_export_cases": 16,
+    "raw_expansion_cases": 3,
+    "superresolution_diagnostic_mode": 11,
+    "color_fringe_menu_to_tag245_verified": true,
+    "second_pass_mode5_and_tag245_condition_verified": true,
+    "gate_nonzero_producer_found": false,
+    "auxiliary_scaler_gate_forced": true,
+    "actual_mode0_to_mode1_layout_history_confirmed": false,
+    "actual_masked_jpeg_reachability_confirmed": false,
+    "scaler_and_jpeg_entrypoints_intercepted": true,
+    "ui_capability_queries_and_raw_allocator_intercepted": true,
+    "physical_hardware_executed": false,
+    "complete_jpeg_generated": false,
+    "offline_publication_check": {
+      "passed": true,
+      "html_documents_checked": 7,
+      "local_links_checked": 210,
+      "public_files_checked": 70,
+      "evidence_identity_consistent": true,
+      "svg_xml_valid": true
+    }
+  },
+  "masked_language_review": {
+    "scope": "Extracted prose from lead and sections1,2,4,5; mode/verification/limits sections received technical review only",
+    "route": "standard",
+    "risk_score": 1,
+    "change_rate_percent": 0.6,
+    "sentences_touched": 9,
+    "sentences_reviewed": 63,
+    "numbers_dropped": 0,
+    "modality_lost": 0,
+    "golden": "PASS",
+    "gate": "OK",
+    "integrated_excerpt_matches_review": true
   }
 }

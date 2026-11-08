@@ -1,0 +1,741 @@
+{
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "candidate_load_base": 33554432,
+  "location_units": "decoded file offsets except synthetic addresses",
+  "static": {
+    "edges": {
+      "scaler_producers_and_gate": [
+        [
+          6634356,
+          7450800
+        ],
+        [
+          6659824,
+          7450656
+        ],
+        [
+          6659864,
+          7450744
+        ],
+        [
+          6659880,
+          7450760
+        ],
+        [
+          6660012,
+          7450768
+        ],
+        [
+          5769736,
+          5767220
+        ],
+        [
+          5767284,
+          7450648
+        ],
+        [
+          5767296,
+          7450736
+        ],
+        [
+          5767308,
+          7450752
+        ],
+        [
+          5768356,
+          7455808
+        ],
+        [
+          5768364,
+          5769384
+        ],
+        [
+          5768404,
+          5765380
+        ],
+        [
+          5769336,
+          5765380
+        ]
+      ],
+      "layout_and_jpeg": [
+        [
+          6687488,
+          6688092
+        ],
+        [
+          6687856,
+          8507312
+        ],
+        [
+          6687868,
+          8507320
+        ],
+        [
+          6687880,
+          8507328
+        ],
+        [
+          6687984,
+          8507312
+        ],
+        [
+          6687996,
+          8507320
+        ],
+        [
+          6688008,
+          8507328
+        ],
+        [
+          6688120,
+          8507312
+        ],
+        [
+          6688132,
+          8507320
+        ],
+        [
+          6688144,
+          8507328
+        ],
+        [
+          6688376,
+          8507312
+        ],
+        [
+          6688388,
+          8507320
+        ],
+        [
+          6688400,
+          8507328
+        ],
+        [
+          6688504,
+          8507312
+        ],
+        [
+          6688520,
+          8507320
+        ],
+        [
+          6688532,
+          8507328
+        ],
+        [
+          6660248,
+          8507312
+        ],
+        [
+          6660260,
+          8507320
+        ],
+        [
+          6660272,
+          8507328
+        ],
+        [
+          6660432,
+          8507312
+        ],
+        [
+          6660444,
+          8507320
+        ],
+        [
+          6660456,
+          8507328
+        ],
+        [
+          6673668,
+          7887212
+        ],
+        [
+          6673680,
+          7887228
+        ],
+        [
+          5729660,
+          7452288
+        ],
+        [
+          5729672,
+          7452312
+        ],
+        [
+          5730236,
+          7456088
+        ],
+        [
+          5730332,
+          7456112
+        ],
+        [
+          5730280,
+          5728964
+        ],
+        [
+          5730372,
+          5728964
+        ]
+      ],
+      "scaler_notifications": [
+        [
+          7191376,
+          7191584
+        ],
+        [
+          7191436,
+          7192288
+        ],
+        [
+          7191588,
+          6675508
+        ],
+        [
+          6675584,
+          6675740
+        ],
+        [
+          6675756,
+          7388960
+        ],
+        [
+          6675768,
+          7388968
+        ],
+        [
+          6675812,
+          7388960
+        ],
+        [
+          6675824,
+          7388968
+        ]
+      ],
+      "module20_field_handoff": [
+        [
+          6657316,
+          6662472
+        ],
+        [
+          6636156,
+          6637264
+        ],
+        [
+          6636160,
+          6637348
+        ],
+        [
+          6662500,
+          7446260
+        ],
+        [
+          6662588,
+          7454480
+        ],
+        [
+          6662648,
+          8069424
+        ],
+        [
+          6662768,
+          7449860
+        ],
+        [
+          6662844,
+          7449828
+        ],
+        [
+          6662856,
+          7449820
+        ],
+        [
+          6662868,
+          7449836
+        ],
+        [
+          6675656,
+          6675856
+        ],
+        [
+          6657612,
+          6657656
+        ]
+      ]
+    },
+    "instruction_offsets": [
+      6634348,
+      6634352,
+      7450800,
+      7450880,
+      7450768,
+      6659956,
+      6660004,
+      6660008,
+      7450656,
+      7450744,
+      7450760,
+      7450648,
+      7450736,
+      7450752,
+      7455808,
+      5768396,
+      5768400,
+      5769320,
+      5769324,
+      5769380,
+      6687156,
+      6687476,
+      6687480,
+      6687500,
+      6687508,
+      6687516,
+      6687540,
+      6687548,
+      6687556,
+      6687560,
+      6687568,
+      6687576,
+      6688096,
+      6688352,
+      6688368,
+      6688380,
+      6688392,
+      6688480,
+      6688496,
+      6688508,
+      6688524,
+      6660240,
+      6660252,
+      6660264,
+      6660424,
+      6660436,
+      6660448,
+      6673568,
+      6673580,
+      6673584,
+      7887212,
+      7887228,
+      7887236,
+      7887252,
+      7452288,
+      7452312,
+      7456088,
+      7456112,
+      5730268,
+      5730344,
+      7191372,
+      6675744,
+      6675800,
+      6662476,
+      6662636,
+      7454480,
+      8069424,
+      6662836,
+      6662848,
+      6662860,
+      6675864,
+      6675872,
+      6675880,
+      6675888,
+      6657596,
+      6657608
+    ],
+    "literal_reads": {
+      "5769368": 34340865,
+      "5769796": 34340866
+    },
+    "gate_search": {
+      "scan_range": [
+        0,
+        16777216
+      ],
+      "setter_direct_branches": [
+        6660012
+      ],
+      "setter_address_words": [],
+      "layout_movw_immediates": [
+        [
+          6634348,
+          42932
+        ],
+        [
+          6634360,
+          42932
+        ],
+        [
+          6646160,
+          42932
+        ],
+        [
+          6659792,
+          42932
+        ]
+      ],
+      "generic_byte_store_candidates": 177,
+      "scaler_setup_scan_windows": [
+        [
+          6634348,
+          6634368
+        ],
+        [
+          6659704,
+          6661248
+        ],
+        [
+          7450624,
+          7450888
+        ]
+      ],
+      "scaler_setup_byte_stores": [
+        7450768,
+        7450880
+      ]
+    },
+    "ranges": {
+      "scaler_constructor_call": {
+        "start": 6634348,
+        "end_exclusive": 6634368,
+        "sha256": "3ff372571f0389ce361f9759698d3a7eec7150c9e845f692d8934694a7afc6bf"
+      },
+      "scaler_constructor": {
+        "start": 7450800,
+        "end_exclusive": 7450888,
+        "sha256": "d1212e761788e0228dc4bd27b4ca3117dba453bda16729fff63215b0e4f46f4d"
+      },
+      "scaler_parameter_setup": {
+        "start": 6659704,
+        "end_exclusive": 6661248,
+        "sha256": "d4f9082243ec3a19ae51dea7ee393483d36ab635dfc316fe43c2a28d7ec5f0f9"
+      },
+      "auxiliary_scaler_worker": {
+        "start": 5768352,
+        "end_exclusive": 5769384,
+        "sha256": "8b496891f2ca429467d283e2cb24052eace8da397abca1a3eb6e5c716da0c7b1"
+      },
+      "plane_layout_builder": {
+        "start": 6687148,
+        "end_exclusive": 6688608,
+        "sha256": "00242a8873b01271c2191fe32ca2be6631a6332c8aa73609ffef795d9678c318"
+      },
+      "jpeg_payload_setup": {
+        "start": 6673488,
+        "end_exclusive": 6673764,
+        "sha256": "6d355a6c2b91057b7a84fde98f5133570dcfbf1a5df3827815801519dc70f6f9"
+      },
+      "jpeg_auxiliary_input_dispatch": {
+        "start": 5730232,
+        "end_exclusive": 5730376,
+        "sha256": "d6b45a81ba3c56135f349a2234e4bfd1bcecc4a471a35ab71b7b694130ce1382"
+      },
+      "scaler_completion_fields": {
+        "start": 6675740,
+        "end_exclusive": 6675856,
+        "sha256": "ae85f96d7806b9361d86563a3972af39398fafb3af5b34deabe19b1d13181054"
+      },
+      "module20_setup": {
+        "start": 6662472,
+        "end_exclusive": 6662872,
+        "sha256": "fdd36e07a7aa991273138583b8ee882cf132c08e73db1257b48911f99398f680"
+      },
+      "module20_mask_transition": {
+        "start": 6675856,
+        "end_exclusive": 6675896,
+        "sha256": "b895ebd571f4a45393281c97feab0dc506f39d0d822a6f116f0f82c3be3f0ae4"
+      },
+      "cpp_masked_input_selection": {
+        "start": 6657580,
+        "end_exclusive": 6657656,
+        "sha256": "6b02312dd409606de57784f5b196668de823721a11dd64352b8ebdd53984cb27"
+      }
+    }
+  },
+  "synthetic_a32": {
+    "engine": "Unicorn 2.1.4",
+    "layout_cases": [
+      {
+        "layout_history": "fresh_mode1",
+        "reservation_flag": 0,
+        "ordinary_plane_triplets": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0
+          ]
+        ],
+        "auxiliary_plane_triplets": [
+          [
+            285212736,
+            285213280,
+            285213568
+          ],
+          [
+            285213824,
+            285214016,
+            285214144
+          ],
+          [
+            285214272,
+            285214304,
+            285214320
+          ]
+        ],
+        "same_plane_addresses_by_pair": [
+          false,
+          false,
+          false
+        ],
+        "initialized_gate_launches": [],
+        "injected_gate_scaler_pairs": [
+          [
+            9044,
+            9100
+          ],
+          [
+            9100,
+            9128
+          ]
+        ],
+        "ordinary_completion_geometry": [
+          [
+            16,
+            8
+          ],
+          [
+            8,
+            4
+          ]
+        ],
+        "jpeg_ancillary_inputs": [
+          {
+            "descriptor": 8680,
+            "planes": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "descriptor": 8708,
+            "planes": [
+              0,
+              0,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "layout_history": "mode0_then_mode1_same_base",
+        "reservation_flag": 0,
+        "ordinary_plane_triplets": [
+          [
+            285212736,
+            285213280,
+            285213568
+          ],
+          [
+            285213824,
+            285214016,
+            285214144
+          ],
+          [
+            285214272,
+            285214304,
+            285214320
+          ]
+        ],
+        "auxiliary_plane_triplets": [
+          [
+            285212736,
+            285213280,
+            285213568
+          ],
+          [
+            285213824,
+            285214016,
+            285214144
+          ],
+          [
+            285214272,
+            285214304,
+            285214320
+          ]
+        ],
+        "same_plane_addresses_by_pair": [
+          true,
+          true,
+          true
+        ],
+        "initialized_gate_launches": [],
+        "injected_gate_scaler_pairs": [
+          [
+            9044,
+            9100
+          ],
+          [
+            9100,
+            9128
+          ]
+        ],
+        "ordinary_completion_geometry": [
+          [
+            16,
+            8
+          ],
+          [
+            8,
+            4
+          ]
+        ],
+        "jpeg_ancillary_inputs": [
+          {
+            "descriptor": 8680,
+            "planes": [
+              285213824,
+              285214016,
+              285214144
+            ]
+          },
+          {
+            "descriptor": 8708,
+            "planes": [
+              285214272,
+              285214304,
+              285214320
+            ]
+          }
+        ]
+      },
+      {
+        "layout_history": "mode0_then_mode1_shifted_base",
+        "reservation_flag": 1,
+        "ordinary_plane_triplets": [
+          [
+            285278272,
+            285278816,
+            285279104
+          ],
+          [
+            285279360,
+            285279552,
+            285279680
+          ],
+          [
+            285279808,
+            285279840,
+            285279856
+          ]
+        ],
+        "auxiliary_plane_triplets": [
+          [
+            285212736,
+            285213280,
+            285213568
+          ],
+          [
+            285213824,
+            285214016,
+            285214144
+          ],
+          [
+            285214272,
+            285214304,
+            285214320
+          ]
+        ],
+        "same_plane_addresses_by_pair": [
+          false,
+          false,
+          false
+        ],
+        "initialized_gate_launches": [],
+        "injected_gate_scaler_pairs": [
+          [
+            9044,
+            9100
+          ],
+          [
+            9100,
+            9128
+          ]
+        ],
+        "ordinary_completion_geometry": [
+          [
+            16,
+            8
+          ],
+          [
+            8,
+            4
+          ]
+        ],
+        "jpeg_ancillary_inputs": [
+          {
+            "descriptor": 8680,
+            "planes": [
+              285279360,
+              285279552,
+              285279680
+            ]
+          }
+        ]
+      }
+    ],
+    "module20_cases": [
+      {
+        "mask": 4,
+        "updated_mask": 8,
+        "source_bases": [
+          301989888,
+          301993984,
+          301998080,
+          302002176
+        ],
+        "module20_destinations_and_cpp_bases": [
+          335544320,
+          335548416,
+          335552512
+        ]
+      },
+      {
+        "mask": 64,
+        "updated_mask": 128,
+        "source_bases": [
+          318767104,
+          318771200,
+          318775296,
+          318779392
+        ],
+        "module20_destinations_and_cpp_bases": [
+          335544320,
+          335548416,
+          335552512
+        ]
+      }
+    ],
+    "hooked_code_offsets": [
+      5765380,
+      5728964
+    ],
+    "synthetic_callback": 268578848
+  },
+  "limits": [
+    "The aligned A32 search and resolved setter/constructor show zero producers in the inspected paths. Computed pointer stores, copies, indirect code and other instruction sets are outside the search. A nonzero producer is unresolved.",
+    "Mode 1 and mode 0 construct separate descriptors with the same corresponding plane layout for the same input parameters. Fresh mode 1 leaves ordinary plane pointers unchanged. The mode 0 to mode 1 transition is a synthetic replay, not a camera-job trace.",
+    "The auxiliary scaler calls were reached by forcing payload+0x38. The two stage pairs and JPEG encode inputs were intercepted. Plane equality in a paired fixture does not establish reachability, pixel contents or actual JPEG compression.",
+    "Module 20 probes cover its pointer fields and two exact completion masks. The linked objects are synthetic. No module 20 pixel operation was executed."
+  ]
+}
