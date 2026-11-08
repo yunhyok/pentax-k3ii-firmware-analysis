@@ -2,7 +2,7 @@
   "model": "PENTAX K-3 II",
   "firmware_version": "1.12",
   "baseline_commit": "66c85ea53f52b6e9489d742b5bd63e50e543055e",
-  "updated_at": "2026-11-08T16:05:09+09:00",
+  "updated_at": "2026-11-08T16:27:11+09:00",
   "goals": [
     {
       "id": "firmware_rebuild",
@@ -58,24 +58,28 @@
     },
     {
       "id": "af_and_lens_drive",
-      "status": "basic_research_active; original_capability_acquisition_and_target_producer_consumer_to_actuator_split_verified; patching_deferred",
+      "status": "basic_research_active; original_counter_driver_binding_additive_producer_and_same_object_handoff_verified; physical_counter_evolution_unverified",
       "evidence": [
         "analysis/af-drive.html",
         "analysis/af-drive.json",
         "verify_af_drive.py",
         "analysis/af-control.html",
         "analysis/af-control.json",
-        "verify_af_control.py"
+        "verify_af_control.py",
+        "analysis/af-input.html",
+        "analysis/af-input.json",
+        "verify_af_input.py"
       ],
       "gaps": [
-        "AF hardware sample generation and optics/sensor algorithms are not connected to the proven control input.",
-        "Execution between the two native application slices and complete drive state machine remain untested.",
-        "SDM/DC/PLM physical protocol identity and real transport failure buffer behavior remain unverified; not blockers for current foundational analysis."
+        "The AF counter addresses and driver bindings are proven; their physical signal source, units, optics/sensor algorithms and actual counter evolution remain unverified.",
+        "Execution between native application slices and complete drive state machine remain untested.",
+        "Body hardware preparation and alternate completion reset are explicit execution replacements; no physical actuation or interrupt delivery is proven.",
+        "SDM/DC/PLM physical protocol identity and real transport failure buffer behavior remain unverified; not blockers for foundational analysis."
       ],
       "next_actions": [
-        "Trace producers of the AF input record and relevant shared calculation values.",
-        "Extend one coherent control state path where feasible without hardware.",
-        "Keep lens-specific patching and physical drive outside the present scope."
+        "Trace parent AF state-gate producers and counter configuration when feasible offline.",
+        "Extend coherent control state paths while retaining explicit hardware and scheduler boundaries.",
+        "Keep lens-specific patching and physical drive outside present scope."
       ]
     },
     {
@@ -134,7 +138,10 @@
     "C reconstruction of tone leaf0x4DD3EC..0x4DD42C compiles to64-byte A32 text with Zig0.17.1/Clang22.1.8, no text relocation or undefined symbols.",
     "Original and rebuilt runs match2304 calls at9 original sites and2048 outputs,33 direct cases and268288 numeric outputs plus2 application cases. r3-r12/SP/LR/A32 and exact direct table reads are checked.",
     "Input0x3FC1 returns original Z1 versus rebuilt Z0. Three observed loops execute their own CMP before conditional backedges; full CPU-state equivalence is not claimed.",
-    "Return-time r3/r12 poison controls fault in original caller memory accesses, proving these registers must be preserved for the observed callers despite generic AAPCS scratch allowances."
+    "Return-time r3/r12 poison controls fault in original caller memory accesses, proving these registers must be preserved for the observed callers despite generic AAPCS scratch allowances.",
+    "Original timer/UDC constructors and registry entries connect CAfMotor through CAfDriver to timerD1/MMIO30011024 for selector0 and UDC117/MMIO30014060 for nonzero; three getter cases reproduce.",
+    "AF producer54284 writes additive halfword0010316E through ITCM STRH3980. Fourteen gate/boundary cases distinguish count>40, alternate subtraction0, no-write retention and modulo16 behavior.",
+    "Twelve subsequent calculations read the same counter driver and additive state. Two full producer tails retain native resulting direction/state and pass requests367/40 to52E38 entry with argument8; counters are independently injected between slices."
   ],
   "validation": {
     "commands": [
@@ -148,7 +155,8 @@
       "python verify_af_control.py decoded.bin --emulate --compare analysis/af-control.json",
       "python verify_color_ui.py decoded.bin --compare analysis/color-ui.json",
       "python verify_settings_storage.py decoded.bin --compare analysis/settings-storage.json",
-      "python verify_tone_rebuild.py decoded.bin --zig <Zig0.17.1> --compare analysis/tone-rebuild.json"
+      "python verify_tone_rebuild.py decoded.bin --zig <Zig0.17.1> --compare analysis/tone-rebuild.json",
+      "python verify_af_input.py decoded.bin --compare analysis/af-input.json"
     ],
     "results": [
       "PASS: unchanged, one-byte menu edit and secondary corruption fixture decode and pass the bounded original validation.",
@@ -172,7 +180,8 @@
       "PASS: 8940312 CI and Pages;13 served files byte-identical; fresh clone reproduces color UI/settings storage snapshots and20 unit tests. Four diagrams visually checked at1882px with no horizontal overflow. Prose light gate:18 paragraphs,0% edits,0/81 sentences touched,no numeric/modality loss.",
       "PASS: coordinator independently recompiled the C tone function and reproduced the complete snapshot; one64-byte emulator overlay, no firmware export.",
       "PASS: independent review recompiled and replayed original and rebuilt snapshots, LF/CRLF normalization, invalid image and short ELF rejection; no P0-P2 findings. Additional per-return NZCV inversion now reproduces in the public verifier for both images.",
-      "PASS: f7c9aa4 CI and Pages;12 served files byte-identical. Fresh clone recompiles and reproduces tone C snapshot,20 unit tests and publication checks (16 HTML,400 local links,105 public files). Two diagrams visually inspected at1882px without horizontal overflow. Light prose gate0.2%,7/55 sentences,modality0; hook-scope technical wording corrected afterwards."
+      "PASS: f7c9aa4 CI and Pages;12 served files byte-identical. Fresh clone recompiles and reproduces tone C snapshot,20 unit tests and publication checks (16 HTML,400 local links,105 public files). Two diagrams visually inspected at1882px without horizontal overflow. Light prose gate0.2%,7/55 sentences,modality0; hook-scope technical wording corrected afterwards.",
+      "PASS: coordinator replayed AF input snapshot:3 getters,14 additive cases,12 calculators,2 prepare-entry handoffs. Independent review accepted no P0-P2; modulo expectation fixed and four boundary cases added."
     ],
     "limits": [
       "Unicorn 2.1.4 synthetic memory; no physical device I/O.",
@@ -206,7 +215,10 @@
     "analysis/tone-rebuild.html",
     "analysis/tone-rebuild.json",
     "verify_tone_rebuild.py",
-    "rebuild/tone_interpolate.c"
+    "rebuild/tone_interpolate.c",
+    "analysis/af-input.html",
+    "analysis/af-input.json",
+    "verify_af_input.py"
   ],
   "blockers": [
     {
@@ -241,7 +253,11 @@
       "mobile_layout": "not checked"
     },
     "local_preview": "Unavailable under tool policy; published HTTPS preview verified instead.",
-    "pending_local_artifacts": [],
+    "pending_local_artifacts": [
+      "analysis/af-input.html",
+      "analysis/af-input.json",
+      "verify_af_input.py"
+    ],
     "checksum_sentinel_fix": {
       "commit": "9521f6881b356429ed0b8b58123c6483e23eddd5",
       "ci": "success",

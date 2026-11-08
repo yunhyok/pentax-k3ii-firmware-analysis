@@ -210,7 +210,7 @@
     "scope": "Extracted prose, excluding CSD capacity, request/descriptor capacity, JPEG retry-capacity, and large-request residual paragraphs; final technical additions received coordinator and SD-worker review",
     "route": "light",
     "risk_score": 0,
-    "deterministic_gate": "OK — 수렴",
+    "deterministic_gate": "OK \u2014 \uc218\ub834",
     "change_rate_percent": 0.63,
     "sentences_touched": 2,
     "sentences_reviewed": 82,
@@ -515,6 +515,32 @@
       "two_diagrams_visually_checked": true,
       "viewport_width": 1882,
       "document_scroll_width": 1882
+    }
+  },
+  "af_counter_input": {
+    "getter_cases": 3,
+    "additive_cases": 14,
+    "calculator_cases": 12,
+    "prepare_entry_handoffs": 2,
+    "static_words": 59,
+    "static_branch_targets": 59,
+    "RTTI_classes": 6,
+    "code_ranges": 9,
+    "execution_replacements": [
+      "0xAB71C",
+      "0x5234C",
+      "ITCM VA0x2A60"
+    ],
+    "coordinator_replayed_snapshot": true,
+    "independent_review": "No P0-P2. Accepted P3 modulo16 expectation and four signed/wrap/state5 fixtures; clarified normal retained direction zero versus alternate native write one.",
+    "physical_counter_evolution_or_motion": false,
+    "language_review": {
+      "route": "light",
+      "paragraphs": 11,
+      "change_rate_percent": 0.0,
+      "self_check": "6/6",
+      "deterministic_gate": "PASS",
+      "wording_changes": 0
     }
   }
 }

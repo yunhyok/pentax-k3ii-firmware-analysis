@@ -7,7 +7,8 @@
 <h1>렌즈 능력 조회에서<br>AF 요청 계산과 구동 준비까지</h1>
 <p class="lead">렌즈 능력 조회의 실행 조건과 16비트 구동 요청의 생산자·소비자를 연결했다. 계산한 값은 원본 CAfMotor 준비 함수의 바디·렌즈 분기까지 전달됐다. 입력 센서의 계산과 호출 사이의 스케줄링은 아직 분석 범위 밖이며, 이번 결과는 향후 AF 변경에 필요한 기본 구조를 확인한 것이다.</p>
 <nav aria-label="보고서 탐색"><a href="af-drive.html">앞선 구동 분기</a><a href="#capability">능력 조회</a><a href="#body">바디 요청</a><a href="#lens">렌즈 응답</a><a href="#limits">검증 범위</a><a href="hq-status.json">연구 상태</a></nav></header>
-<main><p class="note">코드 위치는 해제 파일 오프셋이다. ITCM 실행 주소는 <code>VA</code>로 구분했다. CAfMotor·CAfPulse·CAfPosition의 명칭은 펌웨어 RTTI에 근거한다. 내부 요청값을 물리 이동 거리나 초점 오차 단위로 단정하지 않았다.</p>
+<main><p class="note"><strong>후속 검증:</strong> <a href="af-input.html">타이머 카운터와 보정값 생산자</a>를 원본 생성자부터 연결했다. 하드웨어 카운터 변화와 전체 스케줄링은 여전히 미검증이다.</p>
+<p class="note">코드 위치는 해제 파일 오프셋이다. ITCM 실행 주소는 <code>VA</code>로 구분했다. CAfMotor·CAfPulse·CAfPosition의 명칭은 펌웨어 RTTI에 근거한다. 내부 요청값을 물리 이동 거리나 초점 오차 단위로 단정하지 않았다.</p>
 
 <section aria-labelledby="capability"><h2 id="capability">1. 능력 조회는 상태 비트와 캐시값으로 결정한다</h2>
 <p><code>0x94DC4</code>는 <code>[VA 0x40006064] + 1</code> 바이트의 비트 6을 확인한다. 비트가 꺼져 있으면 조회하지 않고 돌아간다. 켜져 있어도 <code>CLensKaf2+6</code>이 0이 아니면 기존 값을 사용해 <code>0x94E78</code>로 이어진다. 캐시가 0일 때만 명령 <code>0x8205</code>로 1바이트 응답을 요청한다. <a href="af-control.json">acquisition 조건과 사례 8건</a></p>

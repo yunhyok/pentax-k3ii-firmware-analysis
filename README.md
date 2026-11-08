@@ -1,5 +1,7 @@
 # PENTAX K-3 II v1.12 펌웨어 분석
 
+[AF 카운터·보정값 생산자](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/af-input.html): 타이머·UDC 생성자와 실제 레지스터 주소를 연결하고 보정값 분기 14건·후속 계산 12건을 원본 ARM으로 재현했습니다. 같은 객체의 요청 367·40이 구동 준비 입구까지 전달됐습니다. 두 시점의 카운터 변화와 물리 구동은 미검증입니다.
+
 [톤 보간 함수의 C 재구현](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/tone-rebuild.html): 원본 64바이트 함수와 같은 크기의 Cortex-A9 A32 코드를 만들고, 에뮬레이터에서 원본 호출 2,304회·출력 2,048개와 수치 출력 268,288개를 대조했습니다. 지정한 빌드는 원본 호출자가 요구하는 r3·r12를 보존합니다. 조건 플래그는 달라지는 반례가 있으며 확인된 호출 루프는 자체 비교로 이를 다시 설정합니다. 설치 파일 생성·물리 설치는 하지 않았습니다.
 
 [색 공간 메뉴·표시](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/color-ui.html) · [보존 섹터·설정 저장](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/settings-storage.html)
@@ -69,6 +71,7 @@ python verify_scaler_gate.py .private/decoded/decoded.bin --compare analysis/sca
 python verify_repack.py <fwdc230b.bin 경로> --compare analysis/repack.json
 python verify_af_drive.py .private/decoded/decoded.bin --emulate --compare analysis/af-drive.json
 python verify_af_control.py .private/decoded/decoded.bin --emulate --compare analysis/af-control.json
+python verify_af_input.py .private/decoded/decoded.bin --compare analysis/af-input.json
 python verify_installation.py .private/decoded/decoded.bin --emulate --compare analysis/installation.json
 python verify_ui_resources.py .private/decoded/decoded.bin --compare analysis/ui-resources.json
 python verify_color_ui.py .private/decoded/decoded.bin --compare analysis/color-ui.json

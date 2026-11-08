@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ko">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="K-3 II AF 카운터의 드라이버 연결, 보정값 생산자와 후속 구동 요청을 원본 ARM 실행으로 검증.">
+<title>K-3 II — AF 카운터와 보정값 생산자</title><link rel="stylesheet" href="../assets/report.css"></head>
+<body><header><div class="eyebrow">PENTAX K-3 II · firmware 1.12 · 2026-11-08</div>
+<h1>AF 카운터에서<br>보정값과 구동 요청까지</h1>
+<p class="lead">앞서 입력으로 주었던 AF 보정값의 생산자를 찾았다. 원본 드라이버 생성자와 레지스트리 연결을 실행해 두 카운터 주소를 확인했고, 같은 모터 객체의 보정값 생산·후속 계산·구동 준비 전달을 이어 검증했다. 두 시점의 카운터 값은 각각 주입했으며 실제 하드웨어가 값을 바꾸는 과정은 실행하지 않았다.</p>
+<nav aria-label="보고서 탐색"><a href="af-control.html">앞선 AF 계산</a><a href="#binding">카운터 연결</a><a href="#producer">보정값 생산</a><a href="#handoff">후속 전달</a><a href="#limits">재현과 한계</a><a href="hq-status.json">연구 상태</a></nav></header>
+<main><p class="note">기본 주소 표기는 해제 파일 오프셋이다. 실행 주소에는 <code>VA</code>를 붙였다. CAfMotor·CAfDriver·CUdcDriver·C32bitReloadTimerDriver의 이름은 펌웨어 RTTI에서 확인했다. 내부 요청값의 물리 단위는 아직 확인하지 않았다.</p>
+
+<section aria-labelledby="binding"><h2 id="binding">1. 선택 인수 0은 타이머 0xD1을 읽는다</h2>
+<figure><figcaption>도식 1. 원본 생성자·레지스트리 조회로 연결한 카운터</figcaption><div class="flow" role="group" aria-label="모터가 드라이버를 참조하고 선택 인수에 따라 타이머 또는 UDC 레지스터의 하위 16비트를 읽는 경로">
+<div class="stage"><strong>CAfMotor+8</strong><span>composite+0x20에서 연결<br>CAfDriver singleton<br>VA 0x4000B25C</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>VA 0x26E4 · 선택</strong><span>r1 = 0 → driver+4 → ID 0xD1<br>r1 ≠ 0 → driver+0x18 → ID 0x117<br>레지스트리 항목 12바이트</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>32비트 읽기 → 하위 16비트</strong><span>타이머: VA 0x30011024<br>UDC: VA 0x30014060<br>이번 생산자·계산기는 r1 = 0</span></div></div>
+<p class="caption">카운터 레지스터는 에뮬레이터 RAM으로 구성했다. 생성자와 레지스트리 기록·조회는 원본 명령이며, 선택 0·1·2에서 실제 메모리 읽기 주소와 폭을 관찰했다.</p></figure>
+<p>타이머 팩터리 <code>0x3221C…0x322AC</code>는 ID <code>0xD1</code>과 이벤트 슬롯 <code>0x82</code>를 지정한다. 생성자 <code>0x32DE0</code>가 기술자에 담긴 <code>VA 0x30011024</code>를 <code>timer+0x24</code>에 기록한다. UDC 팩터리 <code>0x3391C…0x339B4</code>는 ID <code>0x117</code>·슬롯 <code>0x5F</code>를 사용하며 생성자 <code>0x33BF8</code>가 <code>VA 0x30014060</code>을 <code>UDC+0x1C</code>에 연결한다. <a href="af-input.json">counter_binding·classes·branches</a></p>
+<p><code>VA 0x26E4</code>는 선택 인수 0에서 타이머 경로를, 그 외에는 UDC 경로를 호출한다. 주입한 <code>0xAAAA1234</code>와 <code>0xBBBB5678</code>에서 각각 <code>0x1234</code>와 <code>0x5678</code>이 나왔다. 레지스트리 항목과 이벤트 슬롯의 객체 포인터도 원본 생성자가 기록했다. 이벤트 슬롯 등록이 실제 인터럽트 전달을 증명하지는 않는다. <a href="../verify_af_input.py">생성자 실행과 getter_cases</a></p>
+</section>
+
+<section aria-labelledby="producer"><h2 id="producer">2. 조건을 통과하면 최초 카운터에서 보정값을 만든다</h2>
+<p>애플리케이션의 ITCM 호출 <code>VA 0x2140</code>은 <code>0x54284</code>로 이어진다. 렌즈 능력 비트 6이 꺼진 경로에서 초기 카운터를 읽고, 전역 <code>VA 0x001030AB = 0</code>·상태 판정 참·<code>motor+0x4D = 0</code>·카운터가 40보다 큰 조건을 확인한다. 이번 실행은 부모 상태 분기 이후인 <code>VA 0x213C</code>에서 시작한다. 전체 AF 작업의 도달 조건을 검증한 것은 아니다. <a href="af-input.json">additive_and_request·numeric.limits</a></p>
+<div class="table-scroll"><table><thead><tr><th scope="col">조건을 통과한 뒤의 분기</th><th scope="col">0x5234C에 전달한 원본 인수</th><th scope="col">보정값</th></tr></thead><tbody>
+<tr><td>VA 0x00103120 ≠ 0, VA 0x0010311A ≠ 2</td><td>(방향, 목표) = (0, 40), (1, 80)</td><td>초기 카운터 − 40</td></tr>
+<tr><td>VA 0x00103120 = 0 또는 VA 0x0010311A = 2</td><td>(0, 0xFFFF), (1, 0)</td><td>초기 카운터</td></tr>
+</tbody></table></div>
+<p><code>0x54344</code>는 <code>pulse+0xBA</code>에서 이 보정값을 빼고 하위 16비트를 저장한다. 이어 <code>0x54358</code>이 ITCM setter <code>VA 0x397C</code>를 호출한다. 실제 <code>STRH</code> 명령 <code>VA 0x3980</code>이 공유 반워드 <code>VA 0x0010316E</code>에 보정값을 쓴다. 초기화 호출 <code>VA 0x19F4</code>도 같은 setter에 0을 전달했다. <a href="af-input.json">native_reset_writes·native_additive_writes</a></p>
+<p>경계값 40에서는 저장하지 않아 이전 보정값 12가 남았고, 41에서는 새 보정값 1을 기록했다. 상태 판정 실패·모터 플래그 설정·모드 플래그 설정·렌즈 능력 비트 6 설정 사례에서도 새 보정값을 쓰지 않았다. 호출을 생략하는 분기와 값을 지우는 동작을 구분해야 한다. 추가 대조에서는 잔량의 16비트 순환, 요청 32767 유지와 32768의 signed 해석에 따른 0 처리를 확인했다. <a href="af-input.json">threshold_40·threshold_41 및 나머지 조건 사례</a></p>
+</section>
+
+<section aria-labelledby="handoff"><h2 id="handoff">3. 같은 객체가 보정값을 다시 읽고 요청을 전달한다</h2>
+<figure><figcaption>도식 2. 원본 상태를 이어 사용한 두 사례</figcaption><div class="flow" role="group" aria-label="최초 카운터로 보정값을 저장한 뒤 별도로 주입한 다음 카운터와 합산하여 구동 준비 함수 입구까지 전달">
+<div class="stage"><strong>원본 생산자 전체 꼬리</strong><span>일반: 초기 400 → 보정 360<br>대체: 초기 50 → 보정 50<br>두 사례 모두 상태 2 기록</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>다음 카운터 별도 주입</strong><span>일반: 7, 방향 0 → 7 + 360<br>대체: 65525, 방향 1 → −10 + 50<br>원본 계산: 367 / 40</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>0x52E38 입구 도달</strong><span>같은 CAfMotor, 인수 8<br>pulse+0x9E = 367 / 40<br>position+0x166 = 367 / 40</span></div></div>
+<p class="caption">각 실행 구간 사이의 스케줄러와 하드웨어 카운터 변화는 실행하지 않았다. 대체 분기의 완료 리셋 함수는 대체했으며 그 뒤 방향 플래그 1을 쓰는 명령은 원본으로 실행했다.</p></figure>
+<p>일반 사례와 상태값 2의 대체 사례는 생산자 복귀까지 실행했다. 대체 사례는 <code>0x54414</code>에서 방향 플래그 <code>VA 0x00103116</code>에 1을 쓴다. 일반 사례는 준비해 둔 0을 유지했다. 두 사례 모두 <code>0x54424 → 0xB7130</code>을 거쳐 상태 <code>VA 0x001030E2 = 2</code>를 기록했고, 이 방향·상태를 후속 계산에 그대로 사용했다. <a href="af-input.json">normal·alternate_state_2</a></p>
+<p>후속 호출 <code>VA 0x2258 → 0x5455C</code>는 같은 모터 객체와 타이머 ID <code>0xD1</code>을 사용한다. <code>0x544EC</code>가 새 카운터를 방향에 따라 정규화하고 <code>0x54640 → 0xB7530</code>이 앞서 저장한 보정값을 읽는다. 계산 플래그와 모드 조건을 고정한 12건에서 요청값을 확인했다. 앞부분만 실행한 사례는 후속 방향·상태를 따로 준비했으므로 위 두 전체 꼬리 사례와 구분했다. <a href="../verify_af_input.py">동일 객체 재사용과 후속 입력 조건</a></p>
+<p>두 전체 꼬리 사례는 <code>VA 0x2348</code>부터 원본 소비자를 추가 실행해 <code>0x52E38</code> 입구에 도달했다. 요청 367과 40이 <code>pulse+0x9E</code>·<code>position+0x166</code>에 남았고 호출 인수는 같은 모터 객체와 8이었다. 이번 검사는 이 함수 입구에서 멈춘다. 함수 내부의 바디·렌즈 분기는 <a href="af-control.html#body">앞선 별도 검증</a>에서 다뤘다.</p>
+</section>
+
+<section aria-labelledby="limits"><h2 id="limits">4. 원본 실행 범위와 재현 방법</h2>
+<pre><code>python verify_af_input.py decoded.bin --compare analysis/af-input.json</code></pre>
+<p>Unicorn 2.1.4에서 카운터 선택 3건, 보정값 분기 14건, 후속 계산 12건, 준비 함수 입구 전달 2건을 재현했다. 59개 명령·상수, 59개 분기 목적지, RTTI 6개와 코드 범위 9개의 해시를 대조한다. 해제 파일의 SHA-256도 실행 전에 확인한다. <a href="af-input.json">재현 가능한 결과 전체</a> · <a href="../verify_af_input.py">검증기</a></p>
+<p>실행을 대체한 함수는 할당 <code>0xAB71C</code>, 바디 구동 준비 <code>0x5234C</code>, 대체 경로의 완료 리셋 <code>VA 0x2A60</code> 세 곳이다. 팩터리 진입 시의 스택·객체, 레지스트리 초기화 가드와 카운터 입력은 검증기에 명시한 합성 상태다. 광학 센서에서 초점 오차를 만드는 과정, 물리 카운터의 발생원과 단위, 호출 사이의 스케줄링 및 실제 모터 움직임은 미검증이다. <a href="af-input.json">execution_replacements·limits</a></p>
+</section></main><footer>K-3 II v1.12 · <a href="af-control.html">AF 요청 계산 보고서</a> · <a href="../README.md">저장소 안내</a></footer></body></html>

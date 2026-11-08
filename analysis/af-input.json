@@ -1,0 +1,869 @@
+{
+  "schema_version": 1,
+  "firmware_version": "1.12",
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "image_base": 33554432,
+  "offset_units": "Decoded file offsets except fields explicitly named VA or object offsets.",
+  "word_check_count": 59,
+  "classes": {
+    "8CAfMotor": {
+      "name_file_offset": 861712,
+      "rtti_file_offset": 855952,
+      "vtable_file_offset": 872348
+    },
+    "9CAfDriver": {
+      "name_file_offset": 861783,
+      "rtti_file_offset": 856044,
+      "vtable_file_offset": 872580
+    },
+    "10CUdcDriver": {
+      "name_file_offset": 856362,
+      "rtti_file_offset": 852876,
+      "vtable_file_offset": 862512
+    },
+    "17CUdcDriverFactory": {
+      "name_file_offset": 858308,
+      "rtti_file_offset": 854284,
+      "vtable_file_offset": 867332
+    },
+    "19CTimerDriverFactory": {
+      "name_file_offset": 858846,
+      "rtti_file_offset": 854584,
+      "vtable_file_offset": 868264
+    },
+    "23C32bitReloadTimerDriver": {
+      "name_file_offset": 859707,
+      "rtti_file_offset": 855040,
+      "vtable_file_offset": 869604
+    }
+  },
+  "branches": [
+    {
+      "file_offset": 205428,
+      "target_va": 34312428
+    },
+    {
+      "file_offset": 205460,
+      "target_va": 34256668
+    },
+    {
+      "file_offset": 205468,
+      "target_va": 33762784
+    },
+    {
+      "file_offset": 208448,
+      "target_va": 34315956
+    },
+    {
+      "file_offset": 208484,
+      "target_va": 33712804
+    },
+    {
+      "file_offset": 208504,
+      "target_va": 33712864
+    },
+    {
+      "file_offset": 211296,
+      "target_va": 34302936
+    },
+    {
+      "file_offset": 211364,
+      "target_va": 34256668
+    },
+    {
+      "file_offset": 211372,
+      "target_va": 33766392
+    },
+    {
+      "file_offset": 212032,
+      "target_va": 34315460
+    },
+    {
+      "file_offset": 212104,
+      "target_va": 33712804
+    },
+    {
+      "file_offset": 212124,
+      "target_va": 33712864
+    },
+    {
+      "file_offset": 158408,
+      "target_va": 33713224
+    },
+    {
+      "file_offset": 158868,
+      "target_va": 33713212
+    },
+    {
+      "file_offset": 158468,
+      "target_va": 33714996
+    },
+    {
+      "file_offset": 289740,
+      "target_va": 33713328
+    },
+    {
+      "file_offset": 289804,
+      "target_va": 33713328
+    },
+    {
+      "file_offset": 298728,
+      "target_va": 33844464
+    },
+    {
+      "file_offset": 335372,
+      "target_va": 34301632
+    },
+    {
+      "file_offset": 883464,
+      "target_va": 9980
+    },
+    {
+      "file_offset": 883476,
+      "target_va": 16840512
+    },
+    {
+      "file_offset": 883484,
+      "target_va": 16840516
+    },
+    {
+      "file_offset": 950176,
+      "target_va": 33767564
+    },
+    {
+      "file_offset": 950180,
+      "target_va": 33764384
+    },
+    {
+      "file_offset": 209952,
+      "target_va": 34315904
+    },
+    {
+      "file_offset": 213136,
+      "target_va": 34315416
+    },
+    {
+      "file_offset": 880144,
+      "target_va": 14716
+    },
+    {
+      "file_offset": 882012,
+      "target_va": 16840424
+    },
+    {
+      "file_offset": 950088,
+      "target_va": 33899140
+    },
+    {
+      "file_offset": 344728,
+      "target_va": 33867008
+    },
+    {
+      "file_offset": 344748,
+      "target_va": 16839640
+    },
+    {
+      "file_offset": 949304,
+      "target_va": 10644
+    },
+    {
+      "file_offset": 884200,
+      "target_va": 9956
+    },
+    {
+      "file_offset": 344780,
+      "target_va": 16839600
+    },
+    {
+      "file_offset": 949264,
+      "target_va": 948
+    },
+    {
+      "file_offset": 874492,
+      "target_va": 11160
+    },
+    {
+      "file_offset": 344812,
+      "target_va": 33899356
+    },
+    {
+      "file_offset": 344836,
+      "target_va": 33899416
+    },
+    {
+      "file_offset": 344852,
+      "target_va": 33891148
+    },
+    {
+      "file_offset": 344868,
+      "target_va": 33891148
+    },
+    {
+      "file_offset": 344900,
+      "target_va": 34314236
+    },
+    {
+      "file_offset": 344920,
+      "target_va": 16839904
+    },
+    {
+      "file_offset": 949568,
+      "target_va": 14716
+    },
+    {
+      "file_offset": 345004,
+      "target_va": 33891148
+    },
+    {
+      "file_offset": 345012,
+      "target_va": 33899292
+    },
+    {
+      "file_offset": 345096,
+      "target_va": 16839700
+    },
+    {
+      "file_offset": 949364,
+      "target_va": 10848
+    },
+    {
+      "file_offset": 345124,
+      "target_va": 34304304
+    },
+    {
+      "file_offset": 882292,
+      "target_va": 16840456
+    },
+    {
+      "file_offset": 950120,
+      "target_va": 33899868
+    },
+    {
+      "file_offset": 345608,
+      "target_va": 33899756
+    },
+    {
+      "file_offset": 345356,
+      "target_va": 16839844
+    },
+    {
+      "file_offset": 345396,
+      "target_va": 16839844
+    },
+    {
+      "file_offset": 949508,
+      "target_va": 9956
+    },
+    {
+      "file_offset": 345664,
+      "target_va": 34305328
+    },
+    {
+      "file_offset": 345848,
+      "target_va": 34314284
+    },
+    {
+      "file_offset": 882536,
+      "target_va": 16840464
+    },
+    {
+      "file_offset": 950128,
+      "target_va": 33900492
+    },
+    {
+      "file_offset": 346428,
+      "target_va": 33893944
+    }
+  ],
+  "ranges": {
+    "timer_factory_d1": {
+      "start": 205340,
+      "end_exclusive": 205484,
+      "sha256": "5abfa88307e77d11765f4a177190db3f48b311d7ea034f8bec022c38915dbb16"
+    },
+    "timer_constructor": {
+      "start": 208352,
+      "end_exclusive": 208516,
+      "sha256": "da585242f2afda1a11d13f10d67d3779cb3cb5e39278534eeec209d0b066a139"
+    },
+    "udc_factory_117": {
+      "start": 211228,
+      "end_exclusive": 211380,
+      "sha256": "df3a22243e84947fca635bbcb2a4a4b4169806f0ce1625b5b84977c1e5d81310"
+    },
+    "udc_constructor": {
+      "start": 211960,
+      "end_exclusive": 212136,
+      "sha256": "d60fdd53b19492562b6d329abc3deddf6791efa1567184b6f5e64d868a953d6d"
+    },
+    "body_registry_lookups": {
+      "start": 289732,
+      "end_exclusive": 289812,
+      "sha256": "ab6eaf0d739f40d469437331bd853ff6569f73a370a88b1162e99407c15464ed"
+    },
+    "itcm_counter_select": {
+      "start": 883456,
+      "end_exclusive": 883500,
+      "sha256": "133b73701c7743c7605fa0b601023e02155509dab39127d5c448caf4907a5301"
+    },
+    "itcm_additive_store": {
+      "start": 888216,
+      "end_exclusive": 888232,
+      "sha256": "ead92509dfbe0ff4df2f1aac863c014cf12da5f7b4b8774b2d32328216e2318f"
+    },
+    "motor_additive_producer": {
+      "start": 344708,
+      "end_exclusive": 345128,
+      "sha256": "2e62ed18127d849d85e8613196e9b7b4f5927db6cf3c10631b0d2de3491ae9f7"
+    },
+    "motor_request_calculator": {
+      "start": 345324,
+      "end_exclusive": 346060,
+      "sha256": "ce75f3161920717b6375022102709de3c2b4bf1ab871638a2ae7a4faf125b8c9"
+    }
+  },
+  "counter_binding": {
+    "body_singleton_va": 1073787484,
+    "registry_va": 1073768772,
+    "registry_entry_stride": 12,
+    "composite_driver_object_offset": 32,
+    "motor_driver_object_offset": 8,
+    "counter_getter_va": 9956,
+    "zero_selector": {
+      "registry_id": 209,
+      "event_table_slot": 130,
+      "body_timer_object_offset": 4,
+      "timer_register_pointer_object_offset": 36,
+      "counter_mmio_va": 805376036
+    },
+    "nonzero_selector": {
+      "registry_id": 279,
+      "event_table_slot": 95,
+      "body_udc_object_offset": 24,
+      "udc_register_pointer_object_offset": 28,
+      "counter_mmio_va": 805388384
+    }
+  },
+  "additive_and_request": {
+    "additive_halfword_va": 1061230,
+    "additive_writer_va": 14716,
+    "reset_call_va": 6644,
+    "producer_dispatch_call_va": 8512,
+    "producer_file_offset": 344708,
+    "unsigned_counter_exclusive_threshold": 40,
+    "normal_subtrahend": 40,
+    "alternate_subtrahend": 0,
+    "alternate_selection": "After the producer gates, global 0x00103120 is zero or global 0x0010311a equals 2.",
+    "native_direction_write_file_offset": 345108,
+    "direction_flag_va": 1061142,
+    "calculator_dispatch_call_va": 8792,
+    "calculator_file_offset": 345436,
+    "request_halfword_pulse_object_offset": 188,
+    "prepare_handoff_dispatch_call_va": 9036,
+    "prepare_entry_file_offset": 339512
+  },
+  "numeric": {
+    "engine": "Unicorn 2.1.4",
+    "emulated_cpu": "Cortex-A9",
+    "getter_cases": [
+      {
+        "r1": 0,
+        "register": 805376036,
+        "result": 4660
+      },
+      {
+        "r1": 1,
+        "register": 805388384,
+        "result": 22136
+      },
+      {
+        "r1": 2,
+        "register": 805388384,
+        "result": 22136
+      }
+    ],
+    "native_reset_writes": [
+      {
+        "address_va": 1061230,
+        "size": 2,
+        "value": 0,
+        "writer_va": 14720
+      }
+    ],
+    "execution_replacements": [
+      {
+        "file_offset": 702236,
+        "role": "Supplies scratch storage of 0x2c or 0x30 bytes for the native driver constructors."
+      },
+      {
+        "file_offset": 336716,
+        "role": "Records the original direction and target arguments and returns without running body hardware preparation."
+      },
+      {
+        "file_offset": 884348,
+        "execution_va": 10848,
+        "role": "Records the alternate completion reset helper's argument and returns without reconfiguring hardware."
+      }
+    ],
+    "cases": [
+      {
+        "case": "normal",
+        "injected_counter_word": 2779054480,
+        "previous_additive": 12,
+        "native_additive": 360,
+        "native_additive_writes": [
+          {
+            "address_va": 1061230,
+            "size": 2,
+            "value": 360,
+            "writer_va": 14720
+          }
+        ],
+        "initial_counter_read": true,
+        "control_103120": 1,
+        "state_10311a": 1,
+        "motor_flag_4d": 0,
+        "mode_flag_1030ab": 0,
+        "lens_capability_byte": 0,
+        "body_prepare_calls": [
+          [
+            0,
+            40
+          ],
+          [
+            1,
+            80
+          ]
+        ],
+        "completion_reset_calls": [],
+        "producer_stop_va": 8516,
+        "native_direction_flag_after_producer": 0,
+        "calculator_uses_producer_direction": true,
+        "calculator_direction": 0,
+        "next_injected_counter_word": 4276944903,
+        "native_request": 367,
+        "verified_prepare_entry_file_offset": 339512,
+        "native_prepare_argument": 8
+      },
+      {
+        "case": "alternate_state_2",
+        "injected_counter_word": 50,
+        "previous_additive": 12,
+        "native_additive": 50,
+        "native_additive_writes": [
+          {
+            "address_va": 1061230,
+            "size": 2,
+            "value": 50,
+            "writer_va": 14720
+          }
+        ],
+        "initial_counter_read": true,
+        "control_103120": 1,
+        "state_10311a": 2,
+        "motor_flag_4d": 0,
+        "mode_flag_1030ab": 0,
+        "lens_capability_byte": 0,
+        "body_prepare_calls": [
+          [
+            0,
+            65535
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "completion_reset_calls": [
+          0
+        ],
+        "producer_stop_va": 8516,
+        "native_direction_flag_after_producer": 1,
+        "calculator_uses_producer_direction": true,
+        "calculator_direction": 1,
+        "next_injected_counter_word": 2779119605,
+        "native_request": 40,
+        "verified_prepare_entry_file_offset": 339512,
+        "native_prepare_argument": 8
+      },
+      {
+        "case": "normal_unchanged_counter_fixture",
+        "injected_counter_word": 305397810,
+        "previous_additive": 12,
+        "native_additive": 10,
+        "native_additive_writes": [
+          {
+            "address_va": 1061230,
+            "size": 2,
+            "value": 10,
+            "writer_va": 14720
+          }
+        ],
+        "initial_counter_read": true,
+        "control_103120": 1,
+        "state_10311a": 1,
+        "motor_flag_4d": 0,
+        "mode_flag_1030ab": 0,
+        "lens_capability_byte": 0,
+        "body_prepare_calls": [
+          [
+            0,
+            40
+          ],
+          [
+            1,
+            80
+          ]
+        ],
+        "completion_reset_calls": [],
+        "producer_stop_va": 33899356,
+        "native_direction_flag_after_producer": 0,
+        "calculator_uses_producer_direction": false,
+        "calculator_direction": 0,
+        "next_injected_counter_word": 305397810,
+        "native_request": 60,
+        "verified_prepare_entry_file_offset": null,
+        "native_prepare_argument": null
+      },
+      {
+        "case": "alternate_control_clear",
+        "injected_counter_word": 50,
+        "previous_additive": 12,
+        "native_additive": 50,
+        "native_additive_writes": [
+          {
+            "address_va": 1061230,
+            "size": 2,
+            "value": 50,
+            "writer_va": 14720
+          }
+        ],
+        "initial_counter_read": true,
+        "control_103120": 0,
+        "state_10311a": 1,
+        "motor_flag_4d": 0,
+        "mode_flag_1030ab": 0,
+        "lens_capability_byte": 0,
+        "body_prepare_calls": [
+          [
+            0,
+            65535
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "completion_reset_calls": [],
+        "producer_stop_va": 33899356,
+        "native_direction_flag_after_producer": 0,
+        "calculator_uses_producer_direction": false,
+        "calculator_direction": 1,
+        "next_injected_counter_word": 2779119605,
+        "native_request": 40,
+        "verified_prepare_entry_file_offset": null,
+        "native_prepare_argument": null
+      },
+      {
+        "case": "threshold_40",
+        "injected_counter_word": 40,
+        "previous_additive": 12,
+        "native_additive": 12,
+        "native_additive_writes": [],
+        "initial_counter_read": true,
+        "control_103120": 1,
+        "state_10311a": 1,
+        "motor_flag_4d": 0,
+        "mode_flag_1030ab": 0,
+        "lens_capability_byte": 0,
+        "body_prepare_calls": [],
+        "completion_reset_calls": [],
+        "producer_stop_va": 33899356,
+        "native_direction_flag_after_producer": 0,
+        "calculator_uses_producer_direction": false,
+        "calculator_direction": 0,
+        "next_injected_counter_word": 5,
+        "native_request": 17,
+        "verified_prepare_entry_file_offset": null,
+        "native_prepare_argument": null
+      },
+      {
+        "case": "threshold_41",
+        "injected_counter_word": 41,
+        "previous_additive": 12,
+        "native_additive": 1,
+        "native_additive_writes": [
+          {
+            "address_va": 1061230,
+            "size": 2,
+            "value": 1,
+            "writer_va": 14720
+          }
+        ],
+        "initial_counter_read": true,
+        "control_103120": 1,
+        "state_10311a": 1,
+        "motor_flag_4d": 0,
+        "mode_flag_1030ab": 0,
+        "lens_capability_byte": 0,
+        "body_prepare_calls": [
+          [
+            0,
+            40
+          ],
+          [
+            1,
+            80
+          ]
+        ],
+        "completion_reset_calls": [],
+        "producer_stop_va": 33899356,
+        "native_direction_flag_after_producer": 0,
+        "calculator_uses_producer_direction": false,
+        "calculator_direction": 0,
+        "next_injected_counter_word": 5,
+        "native_request": 6,
+        "verified_prepare_entry_file_offset": null,
+        "native_prepare_argument": null
+      },
+      {
+        "case": "halfword_wrap",
+        "injected_counter_word": 65535,
+        "previous_additive": 12,
+        "native_additive": 65495,
+        "native_additive_writes": [
+          {
+            "address_va": 1061230,
+            "size": 2,
+            "value": 65495,
+            "writer_va": 14720
+          }
+        ],
+        "initial_counter_read": true,
+        "control_103120": 1,
+        "state_10311a": 1,
+        "motor_flag_4d": 0,
+        "mode_flag_1030ab": 0,
+        "lens_capability_byte": 0,
+        "body_prepare_calls": [
+          [
+            0,
+            40
+          ],
+          [
+            1,
+            80
+          ]
+        ],
+        "completion_reset_calls": [],
+        "producer_stop_va": 33899356,
+        "native_direction_flag_after_producer": 0,
+        "calculator_uses_producer_direction": false,
+        "calculator_direction": 0,
+        "next_injected_counter_word": 42,
+        "native_request": 1,
+        "verified_prepare_entry_file_offset": null,
+        "native_prepare_argument": null
+      },
+      {
+        "case": "signed_positive_limit",
+        "injected_counter_word": 41,
+        "previous_additive": 12,
+        "native_additive": 1,
+        "native_additive_writes": [
+          {
+            "address_va": 1061230,
+            "size": 2,
+            "value": 1,
+            "writer_va": 14720
+          }
+        ],
+        "initial_counter_read": true,
+        "control_103120": 1,
+        "state_10311a": 1,
+        "motor_flag_4d": 0,
+        "mode_flag_1030ab": 0,
+        "lens_capability_byte": 0,
+        "body_prepare_calls": [
+          [
+            0,
+            40
+          ],
+          [
+            1,
+            80
+          ]
+        ],
+        "completion_reset_calls": [],
+        "producer_stop_va": 33899356,
+        "native_direction_flag_after_producer": 0,
+        "calculator_uses_producer_direction": false,
+        "calculator_direction": 0,
+        "next_injected_counter_word": 32766,
+        "native_request": 32767,
+        "verified_prepare_entry_file_offset": null,
+        "native_prepare_argument": null
+      },
+      {
+        "case": "signed_negative_clamp",
+        "injected_counter_word": 41,
+        "previous_additive": 12,
+        "native_additive": 1,
+        "native_additive_writes": [
+          {
+            "address_va": 1061230,
+            "size": 2,
+            "value": 1,
+            "writer_va": 14720
+          }
+        ],
+        "initial_counter_read": true,
+        "control_103120": 1,
+        "state_10311a": 1,
+        "motor_flag_4d": 0,
+        "mode_flag_1030ab": 0,
+        "lens_capability_byte": 0,
+        "body_prepare_calls": [
+          [
+            0,
+            40
+          ],
+          [
+            1,
+            80
+          ]
+        ],
+        "completion_reset_calls": [],
+        "producer_stop_va": 33899356,
+        "native_direction_flag_after_producer": 0,
+        "calculator_uses_producer_direction": false,
+        "calculator_direction": 0,
+        "next_injected_counter_word": 32767,
+        "native_request": 0,
+        "verified_prepare_entry_file_offset": null,
+        "native_prepare_argument": null
+      },
+      {
+        "case": "state_predicate_five",
+        "injected_counter_word": 400,
+        "previous_additive": 12,
+        "native_additive": 12,
+        "native_additive_writes": [],
+        "initial_counter_read": true,
+        "control_103120": 1,
+        "state_10311a": 5,
+        "motor_flag_4d": 0,
+        "mode_flag_1030ab": 0,
+        "lens_capability_byte": 0,
+        "body_prepare_calls": [],
+        "completion_reset_calls": [],
+        "producer_stop_va": 33899356,
+        "native_direction_flag_after_producer": 0,
+        "calculator_uses_producer_direction": false,
+        "calculator_direction": 0,
+        "next_injected_counter_word": 5,
+        "native_request": 17,
+        "verified_prepare_entry_file_offset": null,
+        "native_prepare_argument": null
+      },
+      {
+        "case": "state_predicate_clear",
+        "injected_counter_word": 400,
+        "previous_additive": 12,
+        "native_additive": 12,
+        "native_additive_writes": [],
+        "initial_counter_read": true,
+        "control_103120": 1,
+        "state_10311a": 0,
+        "motor_flag_4d": 0,
+        "mode_flag_1030ab": 0,
+        "lens_capability_byte": 0,
+        "body_prepare_calls": [],
+        "completion_reset_calls": [],
+        "producer_stop_va": 33899356,
+        "native_direction_flag_after_producer": 0,
+        "calculator_uses_producer_direction": false,
+        "calculator_direction": 0,
+        "next_injected_counter_word": 5,
+        "native_request": 17,
+        "verified_prepare_entry_file_offset": null,
+        "native_prepare_argument": null
+      },
+      {
+        "case": "motor_flag_set",
+        "injected_counter_word": 400,
+        "previous_additive": 12,
+        "native_additive": 12,
+        "native_additive_writes": [],
+        "initial_counter_read": true,
+        "control_103120": 1,
+        "state_10311a": 1,
+        "motor_flag_4d": 1,
+        "mode_flag_1030ab": 0,
+        "lens_capability_byte": 0,
+        "body_prepare_calls": [],
+        "completion_reset_calls": [],
+        "producer_stop_va": 33899356,
+        "native_direction_flag_after_producer": 0,
+        "calculator_uses_producer_direction": false,
+        "calculator_direction": 0,
+        "next_injected_counter_word": 5,
+        "native_request": 17,
+        "verified_prepare_entry_file_offset": null,
+        "native_prepare_argument": null
+      },
+      {
+        "case": "mode_flag_set",
+        "injected_counter_word": 400,
+        "previous_additive": 12,
+        "native_additive": 12,
+        "native_additive_writes": [],
+        "initial_counter_read": true,
+        "control_103120": 1,
+        "state_10311a": 1,
+        "motor_flag_4d": 0,
+        "mode_flag_1030ab": 1,
+        "lens_capability_byte": 0,
+        "body_prepare_calls": [],
+        "completion_reset_calls": [],
+        "producer_stop_va": 33899356,
+        "native_direction_flag_after_producer": 0,
+        "calculator_uses_producer_direction": null,
+        "calculator_direction": null,
+        "next_injected_counter_word": null,
+        "native_request": null,
+        "verified_prepare_entry_file_offset": null,
+        "native_prepare_argument": null
+      },
+      {
+        "case": "lens_capability_set",
+        "injected_counter_word": 400,
+        "previous_additive": 12,
+        "native_additive": 12,
+        "native_additive_writes": [],
+        "initial_counter_read": false,
+        "control_103120": 1,
+        "state_10311a": 1,
+        "motor_flag_4d": 0,
+        "mode_flag_1030ab": 0,
+        "lens_capability_byte": 64,
+        "body_prepare_calls": [],
+        "completion_reset_calls": [],
+        "producer_stop_va": 33899468,
+        "native_direction_flag_after_producer": 0,
+        "calculator_uses_producer_direction": null,
+        "calculator_direction": null,
+        "next_injected_counter_word": null,
+        "native_request": null,
+        "verified_prepare_entry_file_offset": null,
+        "native_prepare_argument": null
+      }
+    ],
+    "limits": [
+      "The driver factory slices use prepared stack, factory objects, initialized registry guards and RAM-backed device addresses. Driver constructors, registry writes and driver pointer wiring are original instructions.",
+      "The producer slice starts at ITCM VA 0x213c, after its parent state gate. Normal and alternate-state-2 cases run its tail through VA 0x2144. Other cases stop at file 0x5435c or 0x543cc after the tested decision.",
+      "The calculator slice is VA 0x2248 through 0x225c. Its MMIO input is supplied separately from the initial counter word. Full-tail cases retain the resulting direction and state into the calculator: normal retains seeded direction zero, alternate writes direction one, and both write state two. Prefix-only cases supply those fields explicitly.",
+      "Two cases continue at VA 0x2348 to drive-prepare entry 0x52e38. Scheduling between slices, device updates between injected counter samples, physical counter units, optical sensing and motor movement are outside the probes."
+    ]
+  }
+}
