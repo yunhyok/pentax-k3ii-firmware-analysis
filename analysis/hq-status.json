@@ -2,7 +2,7 @@
   "model": "PENTAX K-3 II",
   "firmware_version": "1.12",
   "baseline_commit": "66c85ea53f52b6e9489d742b5bd63e50e543055e",
-  "updated_at": "2026-11-08T14:50:15+09:00",
+  "updated_at": "2026-11-08T14:53:52+09:00",
   "goals": [
     {
       "id": "firmware_rebuild",
@@ -75,8 +75,8 @@
         "No transferred UI has run on the K-3 II or Q7."
       ],
       "next_actions": [
-        "Choose one common menu semantic from the official correspondence table.",
-        "Trace each model's resource, renderer and apply-event boundaries before an offline semantic adapter."
+        "Verify K-3 II RAW File Format PEF/DNG widget IDs, pending state, apply events and profile setting 0x97 using original instructions.",
+        "Use the official RAW File Format semantic correspondence; do not reuse K-3 III numeric event IDs."
       ]
     }
   ],
@@ -103,12 +103,13 @@
       "PASS: three unit tests for independent byte orders, input rejection, no overwrite and partial-output cleanup.",
       "PASS: coordinator independently replayed AF snapshot, 6 drive cases and 3 native profile cases.",
       "PASS: 19 unit tests.",
-      "PASS: Korean prose gate, 0.1% change, 6 of 87 sentences touched, no numeric or modality loss."
+      "PASS: Korean prose gate, 0.1% change, 6 of 87 sentences touched, no numeric or modality loss.",
+      "PASS: published analysis commit CI and Pages deployment; 14 served files match committed bytes.",
+      "PASS: independent clean clone reproduces both new firmware snapshots and 19 unit tests."
     ],
     "limits": [
       "Unicorn 2.1.4 synthetic memory; no physical device I/O.",
-      "Sequential shared-memory CPU contexts do not establish real cache coherency, multicore timing or receiver core identity.",
-      "First local checkpoint; CI and Pages publication for these new files have not yet run."
+      "Sequential shared-memory CPU contexts do not establish real cache coherency, multicore timing or receiver core identity."
     ]
   },
   "artifacts": [
@@ -131,5 +132,28 @@
       "detail": "Matched camera RAW/JPEG and a measured Lightroom render are required for a validated color match."
     }
   ],
-  "scope_clarification": "AF changes are future work. Current scope is sufficiently deep foundational research; exact target lens information is not a blocker."
+  "scope_clarification": "AF changes are future work. Current scope is sufficiently deep foundational research; exact target lens information is not a blocker.",
+  "publication": {
+    "analysis_commit": "7f91b0b7d6c6786193be964b5c56ef7924f13687",
+    "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42452338338",
+    "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42452337778",
+    "ci": "success",
+    "pages": "success",
+    "http_files_byte_exact": 14,
+    "fresh_clone_repack_and_af_snapshots": "PASS",
+    "fresh_clone_unit_tests": 19,
+    "fresh_clone_html_documents": 10,
+    "fresh_clone_local_links": 280,
+    "browser": {
+      "surface": "published HTTPS in Chrome",
+      "reports": [
+        "rebuild.html",
+        "af-drive.html"
+      ],
+      "figures_per_report": 2,
+      "viewport_width": 1882,
+      "af_document_scroll_width": 1882
+    },
+    "local_preview": "Unavailable under tool policy; published HTTPS preview verified instead."
+  }
 }
