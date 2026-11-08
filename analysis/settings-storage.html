@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="K-3 II 일반 업데이트가 보존하는 섹터 13·22의 설정 복사본, 세대 선택, RAM 미러와 반대 섹터 쓰기 요청을 원본 코드로 검증.">
+<title>K-3 II — 보존 섹터와 설정 저장</title><link rel="stylesheet" href="../assets/report.css"></head>
+<body><header><div class="eyebrow">PENTAX K-3 II · firmware 1.12 · 2026-11-08</div>
+<h1>보존 섹터의 설정 복사본을<br>RAM 변경과 쓰기 요청까지 연결했다</h1>
+<p class="lead">일반 펌웨어 업데이트가 건너뛰는 섹터 13…22 중 13과 22에서 설정 저장 경로를 확인했다. 원본은 표식과 세대 카운터로 복사본을 선택하고, 변경이 있으면 메타데이터 선택의 반대쪽 섹터에 쓰기를 요청한다. 같은 색 공간을 다시 확정한 경우에는 RAM에 기록해도 섹터 쓰기는 요청하지 않았다.</p>
+<nav aria-label="보고서 탐색"><a href="#layout">보존 구간</a><a href="#select">복사본 선택</a><a href="#save">저장 요청</a><a href="#limits">재현·한계</a><a href="installation.html">설치 제어</a><a href="color-ui.html">색 공간 메뉴</a></nav></header>
+<main><p class="note">아래 플래시·RAM 위치는 <code>VA</code>, 함수 번호는 해제 파일 오프셋이다. 합성 메모리에서 원본 제어 코드를 실행했다. ‘쓰기 요청’은 실제 플래시 기록 성공을 뜻하지 않는다.</p>
+
+<section aria-labelledby="layout"><h2 id="layout">1. 업데이트가 보존하는 두 섹터에 설정 복사본이 있다</h2>
+<p>앞선 <code>0xC07C</code> 원본 실행에서 일반 진입은 128 KiB 섹터 13…22를 건너뛰었다. 이번에는 섹터 13의 <code>VA 0x021A0000</code>과 섹터 22의 <code>VA 0x022C0000</code>을 설정 제공자와 연결했다. 배포 이미지의 두 섹터는 바이트 단위로 같다. 이것은 초기 배포 내용의 비교이며 사용 중인 카메라의 두 복사본이 같다는 뜻은 아니다. <a href="installation.json">기존 섹터 순서 검증</a> · <a href="settings-storage.json">복사본 해시·주소</a></p>
+<div class="table-scroll"><table><thead><tr><th scope="col">섹터 내 범위</th><th scope="col">길이</th><th scope="col">대응 RAM</th><th scope="col">직접 확인한 사용</th></tr></thead><tbody>
+<tr><td><code>+0x0000</code></td><td><code>0x23B4</code></td><td><code>0x404A4F20</code></td><td>색 공간 0x15C·RAW 형식 0x97을 포함한 설정</td></tr>
+<tr><td><code>+0x4000</code></td><td><code>0x100</code></td><td><code>0x404A4628</code></td><td>키 0x38, 바이트 +0xE4의 32비트 세대 카운터</td></tr>
+<tr><td><code>+0x6000</code></td><td><code>0x7F8</code></td><td><code>0x404A4728</code></td><td>별도 제공자의 저장 블록; 개별 필드 의미는 미확정</td></tr>
+</tbody></table></div>
+<p><code>0x700770…0x700788</code>의 원본 연결 구간은 설정 객체 <code>+0xC</code>에 첫 RAM 주소를 넣는다. <code>0x7007A4</code>는 그 내용을 객체 <code>+0x14</code>의 현재값으로 복사한다. 이어 <code>0x700E84</code>의 설정 쓰기가 두 위치를 함께 바꾼다. 따라서 앞선 메뉴 검증에서 관찰한 RAM 미러를 이 저장 버퍼와 연결할 수 있다. 이 실행은 상위 싱글턴 접근자가 관리자를 반환한 이후부터 시작했다. <a href="../verify_settings_storage.py">연결·복사·쓰기 대조</a></p>
+</section>
+
+<section aria-labelledby="select"><h2 id="select">2. 표식과 세대 카운터를 따로 검사한다</h2>
+<figure><figcaption>도식 1. 부트 전체가 아닌, 복사본 선택 함수의 원본 실행</figcaption><div class="flow" role="group" aria-label="메타데이터 블록의 유효성과 세대 카운터가 선호 복사본을 정하고, 설정 블록 표식 검사가 유효한 복사본 또는 기본값으로 보정">
+<div class="stage"><strong>0x517F08 · 세대 선택</strong><span>+0x4000 블록의 양끝 표식<br>+0x40E4 카운터 비교<br>0xFFFFFFFF와 0의 전환 처리</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>0x537FE8 · 설정 유효성</strong><span>+0x0000 / +0x23B0 표식<br>둘 다 유효하면 선호 쪽 유지<br>한쪽만 유효하면 그쪽 선택</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>0x6E7FE0 · RAM 읽기</strong><span>유효 복사본의 0x23B4바이트<br>둘 다 무효면 VA 0x02008F70<br>기본값을 RAM 미러로 복사</span></div></div>
+<p class="caption">검사 표식은 0xA55A5AA5다. 표식 두 개의 일치만 검사하는 함수를 설정 블록 전체의 무결성 검사로 확대 해석하지 않았다.</p></figure>
+<p>설정 복사본 선택은 양쪽 표식의 유효·무효와 선호값 0·1을 조합한 8건으로 대조했다. A·B의 내부 바이트를 서로 다르게 바꿔 실제로 어느 쪽을 읽는지 확인했다. 둘 다 무효인 경우 선택 함수 자체는 A를 반환하지만, 후속 읽기 함수가 무효를 확인해 기본값을 사용했다. 이 두 단계를 분리하지 않으면 잘못된 설정을 읽는다고 오해할 수 있다. <a href="settings-storage.json">main_selection_cases</a></p>
+<p>세대 선택은 10건을 실행했다. 양쪽이 유효하면 큰 카운터를 고르고 같으면 A를 고른다. 예외적으로 <code>A=0xFFFFFFFF, B=0</code>에서는 B, 반대 조합에서는 A를 선택했다. 한쪽 메타데이터가 무효면 유효한 쪽을 고른다. 일반적인 순환 순서 알고리즘 전체를 입증한 것이 아니라 원본에 있는 이 경계 처리를 확인했다. <a href="settings-storage.json">metadata_generation_cases</a></p>
+</section>
+
+<section aria-labelledby="save"><h2 id="save">3. 내용이 달라야 반대쪽 섹터 쓰기를 요청한다</h2>
+<figure><figcaption>도식 2. RAM 설정에서 섹터 쓰기 경계까지</figcaption><div class="flow" role="group" aria-label="메타데이터가 고른 섹터를 준비 버퍼에 복사하고 세 RAM 블록으로 덮은 뒤 비교, 차이가 있을 때 세대 번호를 늘려 그 반대 섹터 쓰기 함수에 전달">
+<div class="stage"><strong>0x6E8194 · 저장 진입</strong><span>메타데이터가 고른 섹터 읽기<br>VA 0x40459204에 128 KiB 준비<br>세 RAM 블록만 해당 위치에 복사</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>0x599DC0 · 내용 비교</strong><span>16비트 값으로 섹터 전체 비교<br>동일하면 0 반환, 쓰기 없음<br>차이가 있으면 카운터 +1</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>0x599D6C → 0x599914</strong><span>A를 읽었으면 B에 요청<br>B를 읽었으면 A에 요청<br>0x10000개 16비트 값</span></div></div>
+<p class="caption">마지막 0x599914는 상태값을 공급하고 복귀시키는 검증 경계다. 준비 버퍼 전체가 원래 섹터에 세 RAM 블록을 덮은 결과와 일치하는지 대조했다. 나머지 바이트는 보존됐다.</p></figure>
+<p>색 공간 변경을 양방향 저장 위치에서 실행했고 RAW 형식 변경도 같은 경로에 도달했다. sRGB 값 0을 다시 쓰는 경우 원본 setter는 현재값과 미러에 각각 기록했지만, 섹터 비교가 같아서 쓰기 요청은 0건이었다. AdobeRGB 값 1로 바꾸면 반대쪽 섹터 요청이 1건 생겼고 카운터가 5에서 6으로 바뀌었다. <a href="settings-storage.json">connected_save_cases</a></p>
+<p>쓰기 경계에 오류 1·2·3을 각각 공급하면 상위 함수는 같은 값을 반환했다. 이 경우에도 RAM의 설정과 증가한 카운터는 그대로 남았다. 카운터 <code>0xFFFFFFFF</code>에서 증가시키면 0이 됐다. 오류 입력은 호출자 동작을 확인하기 위한 값이며 실제 하위 계층에서 모든 오류가 그대로 올라온다는 주장은 아니다. 특히 <a href="installation.html#errors">앞선 프로그램 명령의 오류 전달</a>과 구분해야 한다.</p>
+<p>독립 검토 뒤 두 선택값이 다른 사례를 추가했다. 메타데이터 선택은 관리자 <code>+0x2CB</code>, 주 설정의 표식 보정 결과는 <code>+0x2CC</code>다. 메타데이터가 A를 고르고 B만 주 설정 표식 검사를 통과하면, 주 설정은 B에서 읽지만 섹터 준비의 바탕은 A이고 쓰기 요청 대상은 B였다. 블록 밖의 서로 다른 표식 바이트로 이 차이를 확인했다. 따라서 이 경로가 마지막 유효 설정 복사본을 항상 보존한다고 주장할 수 없다. <a href="settings-storage.json">metadata_a_main_b</a></p>
+</section>
+
+<section aria-labelledby="limits"><h2 id="limits">4. 29건의 함수 재생과 물리 저장 검증을 구분한다</h2>
+<pre><code>python verify_settings_storage.py decoded.bin --compare analysis/settings-storage.json
+python verify_installation.py decoded.bin --emulate --compare analysis/installation.json
+python verify_color_ui.py decoded.bin --compare analysis/color-ui.json</code></pre>
+<p>Unicorn 2.1.4에서 설정 선택 8건, 세대 선택 10건, 연결된 설정·저장 11건을 재현했다. 원본 객체의 가상 함수 표와 읽기·복사·설정·준비·비교 명령을 사용했다. 동기화·메일박스 시작과 종료, 실제 섹터 쓰기는 명시적으로 대체했다. 검증 중 합성 플래시 영역도 바뀌지 않았는지 검사했다. <a href="../verify_settings_storage.py">실행 경계와 단정 검사</a></p>
+<p>이 결과로 보존 섹터 13과 22의 설정 저장 역할을 좁혔다. 섹터 14…21의 모든 필드, 실제 전원 차단 시 복구, 쓰기 후 활성 복사본의 전환 시점, 재부팅 후 설정 유지와 물리 플래시 수명은 검증하지 않았다. 메뉴 이벤트에서 저장 스케줄러까지 한 번에 실행한 시험도 아니다.</p>
+</section></main><footer>K-3 II v1.12 · <a href="rebuild.html">재포장 도구</a> · <a href="../index.html">전체 분석</a></footer></body></html>

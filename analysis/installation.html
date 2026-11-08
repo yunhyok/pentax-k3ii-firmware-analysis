@@ -57,5 +57,5 @@ python verify_ui_resources.py decoded.bin --compare analysis/ui-resources.json
 python -m unittest discover -s tests -v
 python verify_publication.py</code></pre>
 <p>Unicorn 2.1.4에서 보조 제어 7건, 직렬 전달 4건, 주 이미지 송수신 9건, 일반 쓰기 제어 7건을 확인했다. 실제 갱신 루틴은 진입 2건, 블록 제어 5건, 섹터 순서 6건, 패스 재시도 3건을 추가했다. 해제본 SHA-256은 <code class="hash">1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc</code>로 고정한다. 공개 CI에는 펌웨어가 없으므로 문서·파일 경계와 단위 검사만 실행한다. 원본 명령 검증은 로컬 재현 결과다.</p>
-<p>보조 CPU의 원격 수신기와 실제 플래시 목적지, 보존 영역의 의미, 전원 중단 복구, 설치 후 부트 경로는 아직 검증하지 않았다. 각 단계의 반환값을 공급한 검사와 실제 연결 실행을 구분했으며 전체 설치를 실행한 결과는 아니다. NOR 상태 함수를 대체했으므로 물리 기록 성공도 주장하지 않는다. 이번 결과는 <a href="rebuild.html">재포장·검사</a> 다음의 제어 경로를 좁힌 것으로, 카메라 업데이트·부팅·촬영 수용은 별도 과제다.</p>
+<p>후속 <a href="settings-storage.html">설정 저장 분석</a>에서 보존 섹터 13과 22를 설정 복사본과 연결했다. 보조 CPU의 원격 수신기와 실제 플래시 목적지, 나머지 보존 영역의 의미, 전원 중단 복구, 설치 후 부트 경로는 아직 검증하지 않았다. 각 단계의 반환값을 공급한 검사와 실제 연결 실행을 구분했으며 전체 설치를 실행한 결과는 아니다. NOR 상태 함수를 대체했으므로 물리 기록 성공도 주장하지 않는다. 이번 결과는 <a href="rebuild.html">재포장·검사</a> 다음의 제어 경로를 좁힌 것으로, 카메라 업데이트·부팅·촬영 수용은 별도 과제다.</p>
 </section></main><footer>K-3 II v1.12 · <a href="ui-resources.html">RAW 형식 메뉴와 텍스트 ABI</a> · <a href="../README.md">저장소 안내</a></footer></body></html>

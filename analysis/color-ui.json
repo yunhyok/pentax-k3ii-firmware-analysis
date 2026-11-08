@@ -1,0 +1,402 @@
+{
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "candidate_load_base": 33554432,
+  "location_units": "Decoded file offsets unless an object offset, widget ID or address.",
+  "screen": {
+    "parent_vtable": 10871252,
+    "detail_vtable": 10885224,
+    "detail_id": 180,
+    "category_index": 13,
+    "category_row": 10182388,
+    "category_row_index": 6,
+    "widget_table": 10103780,
+    "open": 4421980,
+    "reverse": 4423900,
+    "choose": 4424044,
+    "depart": 4424272,
+    "action": 4424464,
+    "apply": 4424436,
+    "pending_byte": 231,
+    "last_logical_widget": 212
+  },
+  "configuration": {
+    "id": 348,
+    "bank_lookup_row": 10828864,
+    "banks": [
+      0,
+      0,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "bank_stride": 1048,
+    "setting_offset_within_bank": 1764,
+    "active_index_offset": 9160,
+    "live_bank_base_offset": 20,
+    "mirror_pointer_offset": 12,
+    "value_by_choice": {
+      "sRGB": 0,
+      "AdobeRGB": 1
+    }
+  },
+  "focus": {
+    "choice_widgets": [
+      26292234,
+      26292238
+    ],
+    "caption_widgets": [
+      26292236,
+      26292240
+    ],
+    "help_widgets": [
+      26292242,
+      26292243
+    ],
+    "choice_and_caption_slot": 72,
+    "choice_and_caption_method": 7371348,
+    "wrapper_state_offset": 14,
+    "leaf_state_offset": 81,
+    "leaf_parameter_u16_offsets": [
+      84,
+      86
+    ],
+    "help_visibility_slot": 12,
+    "help_visibility_field": 12
+  },
+  "resources": [
+    {
+      "label": "Color Space",
+      "widget": 26292233,
+      "record": 10103960,
+      "type": 3,
+      "setup": 4422916,
+      "locale_row": 14975684,
+      "english_source": 15004015,
+      "glyph_sha256": "67d8c97a4039b67789c88a31c9c7d61a7c74783fce7ddb024419a2a08b3b06aa"
+    },
+    {
+      "label": "sRGB choice",
+      "widget": 26292234,
+      "record": 10103980,
+      "type": 2,
+      "setup": 4422940,
+      "sprite_resource_id": 843
+    },
+    {
+      "label": "sRGB",
+      "widget": 26292236,
+      "record": 10104020,
+      "type": 4,
+      "setup": 4422988,
+      "locale_row": 14975852,
+      "english_source": 15004039,
+      "glyph_sha256": "dc9e1a9d05d8cd864a5274e25fa1ae11a863d4453076ead1dd19b3a89f7cb8f8"
+    },
+    {
+      "label": "AdobeRGB choice",
+      "widget": 26292238,
+      "record": 10104060,
+      "type": 2,
+      "setup": 4423036,
+      "sprite_resource_id": 847
+    },
+    {
+      "label": "AdobeRGB",
+      "widget": 26292240,
+      "record": 10104100,
+      "type": 4,
+      "setup": 4423084,
+      "locale_row": 14975936,
+      "english_source": 15004044,
+      "glyph_sha256": "faa2ab42584545631283f21da2003b0c51a966eccf13d2b2b7c4b448ae73d2ad"
+    },
+    {
+      "label": "Sets color space to sRGB",
+      "widget": 26292242,
+      "record": 10104140,
+      "type": 3,
+      "setup": 4423132,
+      "locale_row": 14976020,
+      "english_source": 15004053,
+      "glyph_sha256": "a04d31b7f8bdfc3aeedb5e2ff2f3cb88129b30cf889b5723980e7a7883a41792"
+    },
+    {
+      "label": "Sets color space to AdobeRGB",
+      "widget": 26292243,
+      "record": 10104160,
+      "type": 3,
+      "setup": 4423156,
+      "locale_row": 14976104,
+      "english_source": 15004078,
+      "glyph_sha256": "5f36640bb5e9a4b2ae11960ca8bf5601325c832674839b0a7061427c4d554e7c"
+    }
+  ],
+  "original_a32": {
+    "unicorn_version": "2.1.4",
+    "text_cases": [
+      {
+        "label": "Color Space",
+        "widget": 26292233,
+        "units_including_terminator": 12,
+        "prepared_sha256": "6bd33bdda4a887b043e916dac03c3ec4ab185b6681594288beee4f4cc34cb3d3"
+      },
+      {
+        "label": "sRGB",
+        "widget": 26292236,
+        "units_including_terminator": 5,
+        "prepared_sha256": "da129a136e958d2b7cab1605213fbde085b3efd4c9d5aceb91e01d8f3017d2b7"
+      },
+      {
+        "label": "AdobeRGB",
+        "widget": 26292240,
+        "units_including_terminator": 9,
+        "prepared_sha256": "6cc554a807da5727e31bad8a4a3ac6cc89242207644377859a0d13c212e6e4ef"
+      },
+      {
+        "label": "Sets color space to sRGB",
+        "widget": 26292242,
+        "units_including_terminator": 25,
+        "prepared_sha256": "d208a20512d6407062b615b02189e2272fa98d608dbb7d7783f6c9f611f8b252"
+      },
+      {
+        "label": "Sets color space to AdobeRGB",
+        "widget": 26292243,
+        "units_including_terminator": 29,
+        "prepared_sha256": "a85f5f83c90295200587cf99045caea997a1fd817e3332f133ca8170c1967269"
+      }
+    ],
+    "lifecycle_cases": [
+      {
+        "case": "sRGB to AdobeRGB",
+        "active_index": 1,
+        "storage_bank": 0,
+        "initial": 0,
+        "chosen": 1,
+        "action": 6,
+        "notify": 194,
+        "saved": 1,
+        "pending_after_action": 1,
+        "pending_after_reopen": 1,
+        "live_byte_writes": 1,
+        "mirror_byte_writes": 1,
+        "focus": {
+          "choice": 26292238,
+          "caption": 26292240,
+          "help": 26292243,
+          "selected_pair": [
+            100,
+            150
+          ],
+          "departed_pair": [
+            100,
+            100
+          ]
+        }
+      },
+      {
+        "case": "AdobeRGB to sRGB",
+        "active_index": 2,
+        "storage_bank": 2,
+        "initial": 1,
+        "chosen": 0,
+        "action": 6,
+        "notify": 194,
+        "saved": 0,
+        "pending_after_action": 0,
+        "pending_after_reopen": 0,
+        "live_byte_writes": 1,
+        "mirror_byte_writes": 1,
+        "focus": {
+          "choice": 26292234,
+          "caption": 26292236,
+          "help": 26292242,
+          "selected_pair": [
+            100,
+            150
+          ],
+          "departed_pair": [
+            100,
+            100
+          ]
+        }
+      },
+      {
+        "case": "cancel AdobeRGB",
+        "active_index": 1,
+        "storage_bank": 0,
+        "initial": 0,
+        "chosen": 1,
+        "action": 3,
+        "notify": 193,
+        "saved": 0,
+        "pending_after_action": 1,
+        "pending_after_reopen": 0,
+        "live_byte_writes": 0,
+        "mirror_byte_writes": 0,
+        "focus": {
+          "choice": 26292238,
+          "caption": 26292240,
+          "help": 26292243,
+          "selected_pair": [
+            100,
+            150
+          ],
+          "departed_pair": [
+            100,
+            100
+          ]
+        }
+      },
+      {
+        "case": "cancel sRGB",
+        "active_index": 2,
+        "storage_bank": 2,
+        "initial": 1,
+        "chosen": 0,
+        "action": 3,
+        "notify": 193,
+        "saved": 1,
+        "pending_after_action": 0,
+        "pending_after_reopen": 1,
+        "live_byte_writes": 0,
+        "mirror_byte_writes": 0,
+        "focus": {
+          "choice": 26292234,
+          "caption": 26292236,
+          "help": 26292242,
+          "selected_pair": [
+            100,
+            150
+          ],
+          "departed_pair": [
+            100,
+            100
+          ]
+        }
+      },
+      {
+        "case": "reconfirm sRGB",
+        "active_index": 0,
+        "storage_bank": 0,
+        "initial": 0,
+        "chosen": 0,
+        "action": 6,
+        "notify": 194,
+        "saved": 0,
+        "pending_after_action": 0,
+        "pending_after_reopen": 0,
+        "live_byte_writes": 1,
+        "mirror_byte_writes": 1,
+        "focus": {
+          "choice": 26292234,
+          "caption": 26292236,
+          "help": 26292242,
+          "selected_pair": [
+            100,
+            150
+          ],
+          "departed_pair": [
+            100,
+            100
+          ]
+        }
+      },
+      {
+        "case": "reconfirm AdobeRGB",
+        "active_index": 2,
+        "storage_bank": 2,
+        "initial": 1,
+        "chosen": 1,
+        "action": 6,
+        "notify": 194,
+        "saved": 1,
+        "pending_after_action": 1,
+        "pending_after_reopen": 1,
+        "live_byte_writes": 1,
+        "mirror_byte_writes": 1,
+        "focus": {
+          "choice": 26292238,
+          "caption": 26292240,
+          "help": 26292243,
+          "selected_pair": [
+            100,
+            150
+          ],
+          "departed_pair": [
+            100,
+            100
+          ]
+        }
+      },
+      {
+        "case": "confirm without choice event",
+        "active_index": 1,
+        "storage_bank": 0,
+        "initial": 1,
+        "chosen": null,
+        "action": 6,
+        "notify": 194,
+        "saved": 1,
+        "pending_after_action": 1,
+        "pending_after_reopen": 1,
+        "live_byte_writes": 1,
+        "mirror_byte_writes": 1,
+        "focus": null
+      },
+      {
+        "case": "confirm route 0x11",
+        "active_index": 2,
+        "storage_bank": 2,
+        "initial": 0,
+        "chosen": 1,
+        "action": 17,
+        "notify": 193,
+        "saved": 1,
+        "pending_after_action": 1,
+        "pending_after_reopen": 1,
+        "live_byte_writes": 1,
+        "mirror_byte_writes": 1,
+        "focus": {
+          "choice": 26292238,
+          "caption": 26292240,
+          "help": 26292243,
+          "selected_pair": [
+            100,
+            150
+          ],
+          "departed_pair": [
+            100,
+            100
+          ]
+        }
+      }
+    ],
+    "parent_route": {
+      "logical_action": 29,
+      "widget": 21016643,
+      "notified_detail_id": 180,
+      "registry_slot": 720
+    }
+  },
+  "range_hashes": {
+    "0x4a5888..0x4a5c30": "2a4686f48e0e056ecc1603de536737d920bf56dbe936a32d81f3d276e53c9393",
+    "0x6d9e7c..0x6d9e90": "e8d3ec6d3d7955d18443a40055f0100becac802b564ae952a4aabd875e1f3cd3",
+    "0x4377a0..0x4377c0": "f6032359f30b4478d8ec7a420716d401b8c5314e98ee7f7e3b66fed846d6d32f",
+    "0x43795c..0x43799c": "774e4cadee289fa9827889a27f99a0b98abb2e88c4f0c2dbd698df035d32e9f6",
+    "0x437c14..0x437e00": "e0d592ee02c94ad19a4936a99b92c33db81f20d861c8fee39aafeb580c107a67",
+    "0x4380dc..0x43831c": "9052c75b4b7ae8edd8fb3b35db93fe52e629bd63b4654692408504247d661bae",
+    "0x438310..0x438480": "efb09a200ecc5cb725d0062e154c990381517975a2eccdbfe8a23550145b5996",
+    "0x70acb8..0x70ad10": "f4d5f2fbbb1375f2c8aaad26a59461dcffb531b80bd234611cf3ddacdb9a5484",
+    "0x8c1b00..0x8c1b20": "974361582e035ed6f18b2a532f1365606993a0ccb56eb7a65d0b391f50a3ce2e",
+    "0x873964..0x873a58": "1ef22fb6688aa200123b8931de833e2da4fd31991023c088ec80200b2966890b"
+  },
+  "limits": [
+    "Parent notification and detail registry dispatch are separate original segments. The notification consumer and parent input mapping were outside the replay.",
+    "Original resource lookup runs to leaf construction. Fixture wrappers use original vtables and the constructed leaves. Text preparation stops before rendering. Help checks show the selected help widget being enabled, without assuming exclusive visibility.",
+    "Allocator stubs are 0x712828 and 0x712860. Base screen construction 0x6d5a38 and root focus-list service 0x708774 are boundary stubs. Widget lookup, notifier and initialized singleton flags use fixtures.",
+    "Open and reopen run through the original setting read at 0x437998. Logical UI actions use original dispatchers. The fixtures observe writes to RAM live and mirror bank bytes. They do not establish physical controls, LCD output, persistent writes or behavior of another model."
+  ]
+}

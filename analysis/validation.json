@@ -452,5 +452,19 @@
       "self_check": "6/6",
       "subsequent_technical_precision_corrections": true
     }
+  },
+  "color_ui_and_settings_storage": {
+    "snapshots_reproduced": [
+      "color-ui",
+      "settings-storage"
+    ],
+    "color_ui_lifecycle_cases": 8,
+    "text_preparations": 5,
+    "sprite_leaves": 2,
+    "settings_selection_cases": 8,
+    "metadata_selection_cases": 10,
+    "connected_settings_save_cases": 11,
+    "independent_review": "P2 separate metadata/main selector scope and P3 indistinguishable copy fixtures accepted; canaries plus mixed selection, reverse and same AdobeRGB cases added and replayed.",
+    "physical_hardware_executed": false
   }
 }

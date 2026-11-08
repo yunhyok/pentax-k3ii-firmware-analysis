@@ -1,5 +1,9 @@
 # PENTAX K-3 II v1.12 펌웨어 분석
 
+[색 공간 메뉴·표시](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/color-ui.html) · [보존 섹터·설정 저장](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/settings-storage.html)
+
+2026-11-08 색 공간 후속: sRGB=0·AdobeRGB=1, 설정 0x15C의 선택·확정·취소·재열기 8건을 검증했습니다. 같은 값 확정도 RAM 두 위치에 기록하지만 별도 저장 함수는 동일 섹터의 쓰기 요청을 생략합니다. 설정 복사본 선택과 반대 섹터 요청 29건을 재현했으며, 메타데이터와 주 설정의 선택값이 다를 수 있음을 확인했습니다. 물리 버튼·LCD·플래시 기록은 미검증입니다.
+
 [업데이트 전송·기록 오류](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/installation.html) · [RAW 형식 메뉴·텍스트 ABI](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/ui-resources.html)
 
 [AF 요청 계산·구동 준비](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/af-control.html): 능력 조회 조건과 같은 객체의 요청값 생산·소비를 원본 ARM 25건으로 검증했습니다. 바디·렌즈 구동 준비 분기까지 실행했으며 센서 입력 생성·호출 사이의 스케줄링·물리 구동은 미검증입니다.
@@ -64,6 +68,8 @@ python verify_af_drive.py .private/decoded/decoded.bin --emulate --compare analy
 python verify_af_control.py .private/decoded/decoded.bin --emulate --compare analysis/af-control.json
 python verify_installation.py .private/decoded/decoded.bin --emulate --compare analysis/installation.json
 python verify_ui_resources.py .private/decoded/decoded.bin --compare analysis/ui-resources.json
+python verify_color_ui.py .private/decoded/decoded.bin --compare analysis/color-ui.json
+python verify_settings_storage.py .private/decoded/decoded.bin --compare analysis/settings-storage.json
 python -m unittest discover -s tests -v
 python verify_publication.py
 ```

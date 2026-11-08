@@ -2,11 +2,11 @@
   "model": "PENTAX K-3 II",
   "firmware_version": "1.12",
   "baseline_commit": "66c85ea53f52b6e9489d742b5bd63e50e543055e",
-  "updated_at": "2026-11-08T15:27:25+09:00",
+  "updated_at": "2026-11-08T15:39:47+09:00",
   "goals": [
     {
       "id": "firmware_rebuild",
-      "status": "offline_repack_verified; bounded_post_validation_transport_and_write_error_control_reproduced; physical_installation_unverified",
+      "status": "offline_repack_and_bounded_installation_verified; preserved_settings_sectors_and_save_requests_reproduced; physical_installation_unverified",
       "evidence": [
         "analysis/repack.json",
         "analysis/rebuild.html",
@@ -15,16 +15,20 @@
         "tests/test_repack.py",
         "analysis/installation.html",
         "analysis/installation.json",
-        "verify_installation.py"
+        "verify_installation.py",
+        "analysis/settings-storage.html",
+        "analysis/settings-storage.json",
+        "verify_settings_storage.py"
       ],
       "gaps": [
         "Only same-size edits; insertion/deletion and relocation are unsupported.",
         "Whole updater, internal ROM authentication, physical flash, reboot and capture have not been executed.",
-        "Auxiliary remote receiver/flash destination and meanings of primary preserved sectors remain unresolved.",
+        "Auxiliary remote receiver/flash destination and remaining preserved sectors 14..21 are unresolved.",
         "Native NOR status polling is stubbed; recorded memory writes are not physical flash acceptance."
       ],
       "next_actions": [
-        "Investigate skipped/preserved sector content and the auxiliary remote receiver without physical writes.",
+        "Assess one previously verified numeric function for a bounded C replacement: code size, ABI and an original-caller replay.",
+        "Continue offline investigation of the auxiliary remote receiver and preserved sectors 14..21.",
         "Keep physical update outside the current offline scope."
       ]
     },
@@ -71,24 +75,30 @@
     },
     {
       "id": "k3iii_ui_port",
-      "status": "k3ii_raw_format_resource_text_ABI_and_event_to_RAM_setting_contract_verified; cross_model_adapter_not_implemented",
+      "status": "k3ii_color_space_parent_route_pending_confirm_cancel_reopen_text_focus_and_exact_RAM_write_counts_verified; persistent_sector_request_separately_traced; cross_model_port_unimplemented",
       "evidence": [
         "analysis/superresolution-menu.json",
         "analysis/menu-events.json",
         "analysis/superresolution-lifecycle.html",
         "analysis/ui-resources.html",
         "analysis/ui-resources.json",
-        "verify_ui_resources.py"
+        "verify_ui_resources.py",
+        "analysis/color-ui.html",
+        "analysis/color-ui.json",
+        "verify_color_ui.py",
+        "analysis/settings-storage.html",
+        "analysis/settings-storage.json",
+        "verify_settings_storage.py"
       ],
       "gaps": [
         "Resource lookup/text preparation and UI state are bounded replays; LCD rasterization and physical input are untested.",
-        "RAM live/mirror setting writes are verified; persistent storage is untraced.",
+        "RAM live/mirror writes and their staged sector-write requests are verified in separate bounded runs; menu-to-save scheduling and physical persistence remain untested.",
         "K-3 III and Q7 numeric IDs and rendering ABI need independent evidence; no UI transfer has run."
       ],
       "next_actions": [
-        "Use capture color space sRGB/AdobeRGB as the common semantic UI target selected by the cross-model coordinator.",
-        "Bind the K-3 II color-space screen to original input/widget/event, pending/current state and getter/setter paths.",
-        "Replay bidirectional confirmation, cancellation, same-value confirmation and reopening with write counts; reuse proven text resource mechanisms."
+        "Provide frozen color-space evidence, hashes and replay commands for cross-model semantic comparison.",
+        "Trace the notification consumer or physical input mapping if required by the cross-model contract.",
+        "Preserve actual same-value RAM writes; do not impose a no-write optimization."
       ]
     }
   ],
@@ -110,7 +120,12 @@
     "Independent review found computed checksum FFFFFFFF could select the native bypass. Commit 9521f68 rejects this value in both endian sections before export; native sentinel comparison and regression tests pass.",
     "Original capability query requires status bit 6 and a zero cache; body/lens control fixtures inherit the original cached response.",
     "Two original ITCM application slices share the same motor object and pass a calculated 16-bit request to the original drive-preparation split with argument 8.",
-    "Lens command 0x8211 returns two big-endian bytes; under an explicitly supplied error-without-reply-update boundary, the caller uses the previous word."
+    "Lens command 0x8211 returns two big-endian bytes; under an explicitly supplied error-without-reply-update boundary, the caller uses the previous word.",
+    "Color Space parent widget0x0140B043/action0x1D requests detail0xB4. Original detail settings map sRGB0/AdobeRGB1 to key0x15C; eight lifecycle cases reproduce.",
+    "Every confirmed color-space case performs exactly one live and one mirror byte store, including same-value confirmation. Cancel3 leaves the pending byte until reopen reloads persisted RAM.",
+    "Preserved sectors13/22 hold settings copies. Original config binding points its mirror at0x404A4F20; two other staged regions include a generation counter.",
+    "Metadata selection and main-marker fallback are independent. The save controller uses metadata selector+0x2CB for source/target even when main selector+0x2CC differs.",
+    "Same-value color setting causes two RAM stores but no sector request. Changed values stage three RAM blocks, increment metadata and request the metadata-opposite sector; 29 bounded storage cases reproduce."
   ],
   "validation": {
     "commands": [
@@ -121,7 +136,9 @@
       "python verify_publication.py",
       "python verify_installation.py decoded.bin --emulate --compare analysis/installation.json",
       "python verify_ui_resources.py decoded.bin --compare analysis/ui-resources.json",
-      "python verify_af_control.py decoded.bin --emulate --compare analysis/af-control.json"
+      "python verify_af_control.py decoded.bin --emulate --compare analysis/af-control.json",
+      "python verify_color_ui.py decoded.bin --compare analysis/color-ui.json",
+      "python verify_settings_storage.py decoded.bin --compare analysis/settings-storage.json"
     ],
     "results": [
       "PASS: unchanged, one-byte menu edit and secondary corruption fixture decode and pass the bounded original validation.",
@@ -139,7 +156,9 @@
       "PASS: coordinator replayed AF acquisition 8, body control 14 and lens control 3 cases with original drive-preparation prefixes.",
       "PASS: independent installation review replayed 43 cases; no P0-P2 findings. Nonzero-vs-one wording and source alignment clarified.",
       "PASS: light Korean review, installation/UI 22 and AF 10 prose paragraphs, 0% changes; deterministic gates passed. Subsequent installation precision corrections received technical review.",
-      "PASS: f9577d5 CI and Pages; 16 served files byte-identical; fresh clone reproduces installation/UI/AF snapshots, 20 unit tests and publication validation (13 HTML documents, 341 local links, 95 public files). Six published diagrams visually checked in Chrome."
+      "PASS: f9577d5 CI and Pages; 16 served files byte-identical; fresh clone reproduces installation/UI/AF snapshots, 20 unit tests and publication validation (13 HTML documents, 341 local links, 95 public files). Six published diagrams visually checked in Chrome.",
+      "PASS: coordinator independently replayed color UI: eight lifecycle cases, five text preparations, two sprite leaves and parent/registry segments; inspected critical apply/cancel ARM branches.",
+      "PASS: independent review replayed settings storage and found separate metadata/main selectors. Coordinator accepted P2 scope correction and P3 source-distinguishing canaries, added reverse/same AdobeRGB and mixed-selector tests; final29 cases reproduce."
     ],
     "limits": [
       "Unicorn 2.1.4 synthetic memory; no physical device I/O.",
@@ -163,7 +182,13 @@
     "verify_ui_resources.py",
     "analysis/af-control.html",
     "analysis/af-control.json",
-    "verify_af_control.py"
+    "verify_af_control.py",
+    "analysis/color-ui.html",
+    "analysis/color-ui.json",
+    "verify_color_ui.py",
+    "analysis/settings-storage.html",
+    "analysis/settings-storage.json",
+    "verify_settings_storage.py"
   ],
   "blockers": [
     {
@@ -200,7 +225,10 @@
       "mobile_layout": "not checked"
     },
     "local_preview": "Unavailable under tool policy; published HTTPS preview verified instead.",
-    "pending_local_artifacts": [],
+    "pending_local_artifacts": [
+      "color-ui",
+      "settings-storage"
+    ],
     "checksum_sentinel_fix": {
       "commit": "9521f6881b356429ed0b8b58123c6483e23eddd5",
       "ci": "success",
@@ -211,6 +239,20 @@
     },
     "previous_analysis_commit": "7f91b0b7d6c6786193be964b5c56ef7924f13687",
     "fresh_clone_installation_ui_af_snapshots": "PASS",
-    "fresh_clone_public_files": 95
+    "fresh_clone_public_files": 95,
+    "subsequent_status_commit": "bc41d977b36ff9d5d0337cb650dae84993212822",
+    "subsequent_status_checks": "success"
+  },
+  "frozen_evidence": {
+    "color-ui": {
+      "path": "analysis/color-ui.json",
+      "sha256": "dac85f29f19948f639c30966d3403edaff948aaa58171e19daf439b8b79abb7e",
+      "replay": "python verify_color_ui.py decoded.bin --compare analysis/color-ui.json"
+    },
+    "settings-storage": {
+      "path": "analysis/settings-storage.json",
+      "sha256": "6b0cdf22738cd023782aef93fdd3e3da27fd2a362b538e51400151685abb0a2a",
+      "replay": "python verify_settings_storage.py decoded.bin --compare analysis/settings-storage.json"
+    }
   }
 }
