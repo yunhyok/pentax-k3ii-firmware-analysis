@@ -2,11 +2,11 @@
   "model": "PENTAX K-3 II",
   "firmware_version": "1.12",
   "baseline_commit": "66c85ea53f52b6e9489d742b5bd63e50e543055e",
-  "updated_at": "2026-11-08T15:43:01+09:00",
+  "updated_at": "2026-11-08T16:00:02+09:00",
   "goals": [
     {
       "id": "firmware_rebuild",
-      "status": "offline_repack_and_bounded_installation_verified; preserved_settings_sectors_and_save_requests_reproduced; physical_installation_unverified",
+      "status": "bounded_C_tone_recompilation_and_original_callers_verified; repack_installation_and_settings_save_separately_verified; physical_installation_unverified",
       "evidence": [
         "analysis/repack.json",
         "analysis/rebuild.html",
@@ -18,16 +18,21 @@
         "verify_installation.py",
         "analysis/settings-storage.html",
         "analysis/settings-storage.json",
-        "verify_settings_storage.py"
+        "verify_settings_storage.py",
+        "analysis/tone-rebuild.html",
+        "analysis/tone-rebuild.json",
+        "verify_tone_rebuild.py",
+        "rebuild/tone_interpolate.c"
       ],
       "gaps": [
         "Only same-size edits; insertion/deletion and relocation are unsupported.",
         "Whole updater, internal ROM authentication, physical flash, reboot and capture have not been executed.",
         "Auxiliary remote receiver/flash destination and remaining preserved sectors 14..21 are unresolved.",
-        "Native NOR status polling is stubbed; recorded memory writes are not physical flash acceptance."
+        "Native NOR status polling is stubbed; recorded memory writes are not physical flash acceptance.",
+        "C tone leaf changes APSR flags and r1/r2 scratch values. Three observed caller loops reset flags; unknown indirect callers and runtime timing remain unverified."
       ],
       "next_actions": [
-        "Assess one previously verified numeric function for a bounded C replacement: code size, ABI and an original-caller replay.",
+        "Continue offline caller/state-dependency analysis; the proven C tone leaf is a pinned64-byte A32 build, not a whole-firmware rebuild.",
         "Continue offline investigation of the auxiliary remote receiver and preserved sectors 14..21.",
         "Keep physical update outside the current offline scope."
       ]
@@ -125,7 +130,11 @@
     "Every confirmed color-space case performs exactly one live and one mirror byte store, including same-value confirmation. Cancel3 leaves the pending byte until reopen reloads persisted RAM.",
     "Preserved sectors13/22 hold settings copies. Original config binding points its mirror at0x404A4F20; two other staged regions include a generation counter.",
     "Metadata selection and main-marker fallback are independent. The save controller uses metadata selector+0x2CB for source/target even when main selector+0x2CC differs.",
-    "Same-value color setting causes two RAM stores but no sector request. Changed values stage three RAM blocks, increment metadata and request the metadata-opposite sector; 29 bounded storage cases reproduce."
+    "Same-value color setting causes two RAM stores but no sector request. Changed values stage three RAM blocks, increment metadata and request the metadata-opposite sector; 29 bounded storage cases reproduce.",
+    "C reconstruction of tone leaf0x4DD3EC..0x4DD42C compiles to64-byte A32 text with Zig0.17.1/Clang22.1.8, no text relocation or undefined symbols.",
+    "Original and rebuilt runs match2304 calls at9 original sites and2048 outputs,33 direct cases and268288 numeric outputs plus2 application cases. r3-r12/SP/LR/A32 and exact direct table reads are checked.",
+    "Input0x3FC1 returns original Z1 versus rebuilt Z0. Three observed loops execute their own CMP before conditional backedges; full CPU-state equivalence is not claimed.",
+    "Return-time r3/r12 poison controls fault in original caller memory accesses, proving these registers must be preserved for the observed callers despite generic AAPCS scratch allowances."
   ],
   "validation": {
     "commands": [
@@ -138,7 +147,8 @@
       "python verify_ui_resources.py decoded.bin --compare analysis/ui-resources.json",
       "python verify_af_control.py decoded.bin --emulate --compare analysis/af-control.json",
       "python verify_color_ui.py decoded.bin --compare analysis/color-ui.json",
-      "python verify_settings_storage.py decoded.bin --compare analysis/settings-storage.json"
+      "python verify_settings_storage.py decoded.bin --compare analysis/settings-storage.json",
+      "python verify_tone_rebuild.py decoded.bin --zig <Zig0.17.1> --compare analysis/tone-rebuild.json"
     ],
     "results": [
       "PASS: unchanged, one-byte menu edit and secondary corruption fixture decode and pass the bounded original validation.",
@@ -159,7 +169,9 @@
       "PASS: f9577d5 CI and Pages; 16 served files byte-identical; fresh clone reproduces installation/UI/AF snapshots, 20 unit tests and publication validation (13 HTML documents, 341 local links, 95 public files). Six published diagrams visually checked in Chrome.",
       "PASS: coordinator independently replayed color UI: eight lifecycle cases, five text preparations, two sprite leaves and parent/registry segments; inspected critical apply/cancel ARM branches.",
       "PASS: independent review replayed settings storage and found separate metadata/main selectors. Coordinator accepted P2 scope correction and P3 source-distinguishing canaries, added reverse/same AdobeRGB and mixed-selector tests; final29 cases reproduce.",
-      "PASS: 8940312 CI and Pages;13 served files byte-identical; fresh clone reproduces color UI/settings storage snapshots and20 unit tests. Four diagrams visually checked at1882px with no horizontal overflow. Prose light gate:18 paragraphs,0% edits,0/81 sentences touched,no numeric/modality loss."
+      "PASS: 8940312 CI and Pages;13 served files byte-identical; fresh clone reproduces color UI/settings storage snapshots and20 unit tests. Four diagrams visually checked at1882px with no horizontal overflow. Prose light gate:18 paragraphs,0% edits,0/81 sentences touched,no numeric/modality loss.",
+      "PASS: coordinator independently recompiled the C tone function and reproduced the complete snapshot; one64-byte emulator overlay, no firmware export.",
+      "PASS: independent review recompiled and replayed original and rebuilt snapshots, LF/CRLF normalization, invalid image and short ELF rejection; no P0-P2 findings. Additional per-return NZCV inversion now reproduces in the public verifier for both images."
     ],
     "limits": [
       "Unicorn 2.1.4 synthetic memory; no physical device I/O.",
@@ -189,7 +201,11 @@
     "verify_color_ui.py",
     "analysis/settings-storage.html",
     "analysis/settings-storage.json",
-    "verify_settings_storage.py"
+    "verify_settings_storage.py",
+    "analysis/tone-rebuild.html",
+    "analysis/tone-rebuild.json",
+    "verify_tone_rebuild.py",
+    "rebuild/tone_interpolate.c"
   ],
   "blockers": [
     {
@@ -225,7 +241,12 @@
       "mobile_layout": "not checked"
     },
     "local_preview": "Unavailable under tool policy; published HTTPS preview verified instead.",
-    "pending_local_artifacts": [],
+    "pending_local_artifacts": [
+      "analysis/tone-rebuild.html",
+      "analysis/tone-rebuild.json",
+      "verify_tone_rebuild.py",
+      "rebuild/tone_interpolate.c"
+    ],
     "checksum_sentinel_fix": {
       "commit": "9521f6881b356429ed0b8b58123c6483e23eddd5",
       "ci": "success",

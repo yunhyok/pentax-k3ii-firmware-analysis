@@ -476,5 +476,31 @@
       "deterministic_gate": "PASS",
       "modality_lost": 0
     }
+  },
+  "tone_C_rebuild": {
+    "compiler": "Zig0.17.1 / Clang22.1.8",
+    "compiled_text_bytes": 64,
+    "caller_calls": 2304,
+    "caller_outputs": 2048,
+    "direct_cases": 33,
+    "negative_register_controls_per_image": 2,
+    "numeric_outputs": 268288,
+    "application_cases": 2,
+    "coordinator_replayed_snapshot": true,
+    "physical_hardware_executed": false,
+    "firmware_candidate_exported": false,
+    "review": "Independent full replay and source/disassembly review; no P0-P2 findings. Added executable NZCV perturbation after reviewer P3 precision finding. Invalid/truncated input, missing compiler and short ELF reject; LF/CRLF build identically.",
+    "NZCV_perturbed_returns_per_image": 2304,
+    "language_review": {
+      "route": "light",
+      "paragraphs": 12,
+      "change_rate_percent": 0.2,
+      "touched_sentences": 7,
+      "sentences": 55,
+      "self_check": "6/6",
+      "deterministic_gate": "PASS",
+      "modality_lost": 0,
+      "subsequent_technical_correction": "Hook-scope prose now also names explicit return-flag perturbation."
+    }
   }
 }

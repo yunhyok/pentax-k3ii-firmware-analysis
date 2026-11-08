@@ -1,5 +1,7 @@
 # PENTAX K-3 II v1.12 펌웨어 분석
 
+[톤 보간 함수의 C 재구현](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/tone-rebuild.html): 원본 64바이트 함수와 같은 크기의 Cortex-A9 A32 코드를 만들고, 에뮬레이터에서 원본 호출 2,304회·출력 2,048개와 수치 출력 268,288개를 대조했습니다. 지정한 빌드는 원본 호출자가 요구하는 r3·r12를 보존합니다. 조건 플래그는 달라지는 반례가 있으며 확인된 호출 루프는 자체 비교로 이를 다시 설정합니다. 설치 파일 생성·물리 설치는 하지 않았습니다.
+
 [색 공간 메뉴·표시](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/color-ui.html) · [보존 섹터·설정 저장](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/settings-storage.html)
 
 2026-11-08 색 공간 후속: sRGB=0·AdobeRGB=1, 설정 0x15C의 선택·확정·취소·재열기 8건을 검증했습니다. 같은 값 확정도 RAM 두 위치에 기록하지만 별도 저장 함수는 동일 섹터의 쓰기 요청을 생략합니다. 설정 복사본 선택과 반대 섹터 요청 29건을 재현했으며, 메타데이터와 주 설정의 선택값이 다를 수 있음을 확인했습니다. 물리 버튼·LCD·플래시 기록은 미검증입니다.
@@ -39,6 +41,7 @@ K-3 II의 `fwdc230b.bin`을 식별하고 XOR 난독화 해제, 코드·주소 �
 문서는 HTML을 기본으로 합니다. 저장소를 내려받아 `index.html`을 열면 도식과 근거 표를 오프라인으로 읽을 수 있습니다. 원본 펌웨어·해제 바이너리·디스어셈블 결과는 공개하지 않습니다.
 
 수치 검증에는 Unicorn 2.1.4가 필요합니다. 별도 Python 환경에서 `python -m pip install unicorn==2.1.4`로 설치할 수 있습니다.
+톤 함수 C 재컴파일에는 pyelftools와 Zig 0.17.1도 필요합니다. 설치·빌드 옵션은 [재현 안내](analysis/tone-rebuild.html#reproduce)에 정리했습니다.
 
 ```powershell
 python inspect_firmware.py <fwdc230b.bin 경로> --output-dir .private/decoded
@@ -70,6 +73,7 @@ python verify_installation.py .private/decoded/decoded.bin --emulate --compare a
 python verify_ui_resources.py .private/decoded/decoded.bin --compare analysis/ui-resources.json
 python verify_color_ui.py .private/decoded/decoded.bin --compare analysis/color-ui.json
 python verify_settings_storage.py .private/decoded/decoded.bin --compare analysis/settings-storage.json
+python verify_tone_rebuild.py .private/decoded/decoded.bin --zig <Zig-0.17.1-실행파일> --compare analysis/tone-rebuild.json
 python -m unittest discover -s tests -v
 python verify_publication.py
 ```

@@ -3,6 +3,7 @@
 SPDX-License-Identifier: GPL-2.0-only
 """
 from html.parser import HTMLParser
+from hashlib import sha256
 import json
 from pathlib import Path
 import subprocess
@@ -69,6 +70,10 @@ def main():
     for name in ("hardware", "raw-path", "raw-numeric", "tone-path", "tone-numeric", "selector-path", "isp-paths", "isp-numeric", "pipeline-flow", "jpeg-buffers", "menu-events", "exif-output", "filesystem-backend", "sd-controller", "alternate-buffers", "backend-b", "cpp-handoff", "masked-scaler", "mode-reachability", "superresolution-menu", "buffer-history", "scaler-gate", "repack", "af-drive", "installation", "ui-resources", "af-control", "color-ui", "settings-storage"):
         evidence = json.loads((root / f"analysis/{name}.json").read_text(encoding="utf-8"))
         assert evidence["decoded_sha256"] == findings["decoded_sha256"], name
+    rebuilt = json.loads((root / "analysis/tone-rebuild.json").read_text(encoding="utf-8"))
+    assert rebuilt["source_image_sha256"] == findings["decoded_sha256"]
+    source = (root / rebuilt["c_source"]).read_text(encoding="utf-8").encode("utf-8")
+    assert sha256(source).hexdigest() == rebuilt["c_source_sha256"]
     for name in files:
         path = Path(name)
         assert not any(part in {".private", "_workspace", "__pycache__"} for part in path.parts), name

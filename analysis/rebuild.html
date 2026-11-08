@@ -7,7 +7,7 @@
 <h1>원본과 같은 파일을 재포장하고,<br>수정 후보의 검사 경로를 실행했다</h1>
 <p class="lead">변경 없는 해제 이미지를 다시 포장하면 배포 파일과 바이트 단위로 일치한다. 메뉴 글자 한 바이트를 바꾼 후보는 원본 ARM의 복호화·모델 표식·체크섬 검사를 통과했다. 이 검증은 메모리에서 실행한 업데이트 검사의 일부이며 카메라에 설치하거나 부팅한 결과는 아니다.</p>
 <nav aria-label="보고서 탐색"><a href="../index.html">초기 분석</a><a href="#layout">파일 구조</a><a href="#native">원본 검사</a><a href="#cases">대조 사례</a><a href="#reproduce">재현</a><a href="#limits">남은 범위</a><a href="hq-status.json">연구 상태</a></nav></header>
-<main><p class="note">명시한 코드 위치는 해제 이미지의 파일 오프셋이다. 코드 VA는 <code>0x02000000 + 오프셋</code>이며 <code>0xC0001FD0</code> 계열은 메모리 매핑 통신 주소다. K-3 III의 압축 컨테이너·주소·체크섬 규칙을 K-3 II에 적용하지 않았다.</p>
+<main><p class="note"><strong>C 재컴파일 후속:</strong> <a href="tone-rebuild.html">톤 보간 함수 하나를 C로 재구현한 빌드·원본 호출자 대조</a>를 별도로 검증했다. 설치 파일 생성과 물리 수용은 포함하지 않는다.</p><p class="note">명시한 코드 위치는 해제 이미지의 파일 오프셋이다. 코드 VA는 <code>0x02000000 + 오프셋</code>이며 <code>0xC0001FD0</code> 계열은 메모리 매핑 통신 주소다. K-3 III의 압축 컨테이너·주소·체크섬 규칙을 K-3 II에 적용하지 않았다.</p>
 
 <section aria-labelledby="layout"><h2 id="layout">1. 주 이미지와 보조 이미지의 포장은 다르다</h2>
 <p>배포 파일은 <code>0x100F000</code>바이트다. 앞의 16 MiB와 뒤의 <code>0xF000</code>바이트가 서로 다른 IV를 사용한다. 128바이트 블록의 고정 키 XOR을 두 번 적용하면 원래 바이트로 돌아온다. 원본 복호화 함수 <code>0x8476CC</code>를 전체 파일에 실행해 Python 해제 결과와 대조했다. <a href="repack.json">원본 복호화·재포장 근거</a> · <a href="../inspect_firmware.py">기존 해제 도구</a></p>

@@ -1,0 +1,217 @@
+{
+  "schema_version": 1,
+  "firmware_version": "1.12",
+  "source_image_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "leaf_file_start": 5100524,
+  "leaf_file_end_exclusive": 5100588,
+  "leaf_execution_va": 38654956,
+  "original_leaf_sha256": "48d5fa13e54e9ee871b49fb1ec22c5e110ca2f5b6fef7715f70487b40023006f",
+  "c_source": "rebuild/tone_interpolate.c",
+  "c_source_sha256": "f3f0ab73adf4842b914f532fe240d03e0ae40b66b49b3fed49c5a2be2355eedb",
+  "c_source_hash_input": "UTF-8 with LF line endings",
+  "compiled_leaf_sha256": "3774a245327835e8a775e716b5c3cc81d3c1f8153a61805ef7f368e90c62bc08",
+  "compiler": {
+    "zig_version": "0.17.1",
+    "clang_version": "22.1.8",
+    "clang_target": "armv7a-unknown-unknown-eabi",
+    "flags": [
+      "-target",
+      "arm-freestanding-eabi",
+      "-mcpu=cortex_a9",
+      "-marm",
+      "-Os",
+      "-ffreestanding",
+      "-fno-stack-protector",
+      "-fno-unwind-tables",
+      "-fno-asynchronous-unwind-tables"
+    ],
+    "object": {
+      "format": "ELF32 little-endian ARM relocatable",
+      "arm_eabi_version": 5,
+      "arm_cpu": "cortex-a9",
+      "arm_arch_tag": 10,
+      "execution_mode": "A32",
+      "text_size": 64,
+      "text_alignment": 4,
+      "symbol_size": 64,
+      "text_relocations": 0,
+      "other_relocation_sections": [
+        ".rel.ARM.exidx"
+      ]
+    }
+  },
+  "emulator_overlay": {
+    "bytes": 64,
+    "unchanged_image_size": true,
+    "unchanged_outside_leaf": true,
+    "unchanged_image_first_64_bytes": true
+  },
+  "matching_original_and_rebuilt_replay": {
+    "engine": "Unicorn 2.1.4",
+    "caller_slices": {
+      "composer_four_outputs": {
+        "slice_file_offsets": [
+          "0x4dd4f0",
+          "0x4dd5a8"
+        ],
+        "calls": {
+          "0x4dd510": 256,
+          "0x4dd52c": 256,
+          "0x4dd54c": 256
+        },
+        "outputs": 1024,
+        "output_sha256": "680e24b39721d2d9b7e3b480a1383c7cdccf678acc6a64e07df71dbbca494859"
+      },
+      "composer_weighted_only": {
+        "slice_file_offsets": [
+          "0x4dd768",
+          "0x4dd7f4"
+        ],
+        "calls": {
+          "0x4dd790": 256,
+          "0x4dd7a8": 256,
+          "0x4dd7c4": 256
+        },
+        "outputs": 256,
+        "output_sha256": "9e6e7bb78821ded90700b9fb0bb69fa8ff9217c4617a5e262483a19dea022a64"
+      },
+      "composer_three_outputs": {
+        "slice_file_offsets": [
+          "0x4dd848",
+          "0x4dd8a4"
+        ],
+        "calls": {
+          "0x4dd85c": 256,
+          "0x4dd874": 256,
+          "0x4dd88c": 256
+        },
+        "outputs": 768,
+        "output_sha256": "395bf3dec17b81adfe873163740f4ea95f1fc7fd2dd4706499b489465a37bf3c"
+      }
+    },
+    "caller_calls": 2304,
+    "caller_outputs": 2048,
+    "direct_leaf_cases": 33,
+    "direct_table_halfword_reads": 48,
+    "register_clobber_negative_controls": [
+      {
+        "register_clobbered_at_caller_return": "r3",
+        "caller_fault_file_offset": "0x4dd518",
+        "fault_address": "0x90020600"
+      },
+      {
+        "register_clobbered_at_caller_return": "r12",
+        "caller_fault_file_offset": "0x4dd798",
+        "fault_address": "0xdead0008"
+      }
+    ]
+  },
+  "caller_return_flags_perturbation": {
+    "changed_bits": "N,Z,C,V",
+    "method": "XOR 0xf0000000 at every observed caller return",
+    "returns_per_image": 2304,
+    "images": [
+      "original",
+      "rebuilt"
+    ],
+    "same_caller_outputs": true
+  },
+  "flags_difference_case": {
+    "input_r2": 16321,
+    "original_z": 1,
+    "rebuilt_z": 0,
+    "caller_local_cmp_file_offsets": [
+      5100956,
+      5101524,
+      5101720
+    ],
+    "caller_conditional_branch_file_offsets": [
+      5100964,
+      5101552,
+      5101728
+    ]
+  },
+  "published_original_numeric_baseline": "analysis/tone-numeric.json",
+  "matching_numeric_results": {
+    "engine": "Unicorn 2.1.4",
+    "emulated_cpu": "Cortex-A9",
+    "checks": [
+      {
+        "case": "mixed ascending",
+        "kernel": "interpolation",
+        "outputs_compared": 65536,
+        "sha256": "af46d5ec18e572afc66bde41e6907103e3d1de927fe24bddd060d469a92db92a"
+      },
+      {
+        "case": "mixed ascending",
+        "kernel": "NEON expansion including Thumb fill",
+        "outputs_compared": 1280,
+        "sha256": "ca8f5dc731f8383ace755c99a6491404102a4dad17649e06a162ad9a99904e48"
+      },
+      {
+        "case": "descending",
+        "kernel": "interpolation",
+        "outputs_compared": 65536,
+        "sha256": "53195b1f116805768e53b6a68230fc2b11ecf45800771d3340b738ed2261a717"
+      },
+      {
+        "case": "descending",
+        "kernel": "NEON expansion including Thumb fill",
+        "outputs_compared": 1280,
+        "sha256": "669cf8ccadcea432b420645919ee931c900ac7ea5d5b78da5436d733027a3a49"
+      },
+      {
+        "case": "alternating endpoints",
+        "kernel": "interpolation",
+        "outputs_compared": 65536,
+        "sha256": "3c77fc45860d4b5eeebe1d0fd69085f3a82507bad1d5d9dab3c05faec52604e3"
+      },
+      {
+        "case": "alternating endpoints",
+        "kernel": "NEON expansion including Thumb fill",
+        "outputs_compared": 1280,
+        "sha256": "8dc44c7cd0b7398eca0f29d1143f0ee015466e8d6f270c19f1027f733a2bb398"
+      },
+      {
+        "case": "unsigned stress",
+        "kernel": "interpolation",
+        "outputs_compared": 65536,
+        "sha256": "8fbda5414555ad8bd84169f2b4747f6a90e22de0fb7c473bc7d583a33518383d"
+      },
+      {
+        "case": "unsigned stress",
+        "kernel": "NEON expansion including Thumb fill",
+        "outputs_compared": 1280,
+        "sha256": "bf4b1249ea68111c3035e611b64ce584782b9e99e8bcc577e11886b4f20a782d"
+      },
+      {
+        "case": "distinct source curves and samples",
+        "kernel": "four-curve composition",
+        "outputs_compared": 1024,
+        "sha256": "cf8b9597173aba8612a9f2645c24e715a010a980098ad768c41f7ffcf5504b19"
+      }
+    ],
+    "outputs_compared": 268288,
+    "apply_checks": [
+      {
+        "curve_banks": 4,
+        "bytes_per_curve_bank": 2560,
+        "additional_copy_bytes": 32,
+        "register_words_compared": 4
+      },
+      {
+        "curve_banks": 4,
+        "bytes_per_curve_bank": 4096,
+        "additional_copy_bytes": 32,
+        "register_words_compared": 4
+      }
+    ]
+  },
+  "limits": [
+    "Only the bounded scalar tone leaf is reconstructed. The input image is read-only and the replacement exists only in emulator memory.",
+    "The temporary ELF has unwind metadata outside .text. Only the validated 64-byte A32 text is used.",
+    "The original caller slices receive prepared stack, tables and objects. Direct fixtures check r3-r12, SP, LR, A32 state, and exact table reads without stores.",
+    "APSR flags and the scratch values of r1/r2 may differ. The nine observed calls are in three loops that set their own condition flags before the conditional backedges.",
+    "The complete numeric replay uses synthetic inputs and RAM-backed device addresses. Hardware, timing, installation and firmware packaging are outside the checks."
+  ]
+}

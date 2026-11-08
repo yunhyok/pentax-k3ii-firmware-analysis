@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="K-3 II의 64바이트 톤 보간 함수를 C로 재구현하고 Cortex-A9 A32 빌드, 원본 호출자와 수치 결과를 대조한 오프라인 검증.">
+<title>K-3 II — 톤 보간 함수의 C 재구현</title><link rel="stylesheet" href="../assets/report.css"></head>
+<body><header><div class="eyebrow">PENTAX K-3 II · firmware 1.12 · 2026-11-08</div>
+<h1>64바이트 톤 보간 함수를<br>C로 빌드해 원본 호출자와 대조했다</h1>
+<p class="lead">검증했던 톤 보간식을 C로 작성하고 Cortex-A9용 A32 코드로 컴파일했다. 생성된 함수는 원본과 같은 64바이트였으며 에뮬레이터에서 해당 구간만 바꾸자 확인된 호출자 9곳의 2,304회 호출과 출력 2,048개가 일치했다. 조건 플래그는 달라지는 반례가 있어 전체 CPU 상태의 동일성을 주장하지 않는다.</p>
+<nav aria-label="보고서 탐색"><a href="../index.html">전체 분석</a><a href="#function">재구현 범위</a><a href="#contract">호출 규약</a><a href="#results">실행 대조</a><a href="#reproduce">재현</a><a href="#limits">남은 범위</a></nav></header>
+<main><p class="note">주소는 해제 이미지의 파일 오프셋이며 실행 VA는 <code>0x02000000 + 오프셋</code>이다. 입력 펌웨어는 읽기 전용으로 사용했다. 변경된 64바이트는 에뮬레이터 입력에만 반영했으며 재포장 파일이나 설치 파일을 만들지 않았다. <a href="tone-rebuild.json">이번 검증 기록</a></p>
+
+<section aria-labelledby="function"><h2 id="function">1. 수식과 코드 크기를 함께 고정했다</h2>
+<p>대상은 <code>[0x4DD3EC, 0x4DD42C)</code>의 스칼라 톤 보간 함수다. 원본 수식과 앞선 수치 검증을 바탕으로 <a href="../rebuild/tone_interpolate.c">C 소스</a>를 작성했다. <code>r0</code>의 문맥 포인터는 사용하지 않고 <code>r1</code>에서 256개 unsigned 16비트 곡선을 읽으며 <code>r2</code>의 입력에 대응하는 값을 <code>r0</code>로 돌려준다. 실제 확인한 호출자는 입력을 반워드로 읽지만 함수 자체는 32비트 입력을 받는다. <a href="tone-numeric.json">원본 수치 근거</a> · <a href="../verify_tone_rebuild.py">빌드·호출자 검증 코드</a></p>
+<pre><code>index = sample &gt;&gt; 6
+fraction = sample &amp; 63
+index &gt;= 255: return curve[255]
+otherwise: return curve[index]
+  + trunc_toward_zero((curve[index + 1] - curve[index]) * fraction / 64)</code></pre>
+<p>음의 차이는 0 방향으로 나눈다. 곡선 값의 차이에 최대 63을 곱해도 절댓값은 4,128,705 이하이므로 C의 32비트 signed 계산 범위 안에 있다. <code>sample &gt;= 0x3FC0</code>이면 마지막 원소만 읽어 경계 밖 접근을 피한다. 원본의 전체 LUT는 공개하지 않고 합성 곡선으로 대조했다.</p>
+<figure><figcaption>도식 1. C 소스에서 원본 호출자 대조까지</figcaption><div class="flow" role="group" aria-label="C 소스를 ARM 대상으로 컴파일하고 ELF를 검사한 뒤 메모리의 원본 함수64바이트만 교체해 원본 호출자를 실행">
+<div class="stage"><strong>C 소스</strong><span>256개 u16 곡선<br>정수 보간·상한 처리<br>사용하지 않는 문맥 인자 유지</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>ARM 빌드·ELF 검사</strong><span>Cortex-A9 · A32 · -Os<br>.text와 함수 심벌 모두 64바이트<br>.text 재배치·미해결 심벌 없음</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>메모리 안에서 대조</strong><span>원본 호출 명령은 그대로 실행<br>9곳 × 256회 호출<br>출력·레지스터·메모리 접근 확인</span></div></div></figure>
+<p>Zig 0.17.1에 포함된 Clang 22.1.8을 사용했다. 생성 ELF는 32비트 little-endian ARM EABI 5이며 함수 심벌 전체가 4바이트 정렬된 A32 코드다. <code>.ARM.exidx</code>와 그 재배치 메타데이터도 존재하지만 사용한 영역은 검증된 <code>.text</code> 64바이트뿐이다. ELF 전체를 펌웨어에 넣지 않았다. 컴파일러 버전·옵션과 생성 코드 해시는 <a href="tone-rebuild.json">JSON 기록</a>에 고정했다.</p>
+</section>
+
+<section aria-labelledby="contract"><h2 id="contract">2. C 호출 규약만으로 원본과의 호환성을 판단할 수 없다</h2>
+<p>AAPCS32에서 <code>r3</code>와 <code>r12</code>는 임시 레지스터로 쓸 수 있다. 그러나 확인한 원본 호출자는 보간 함수가 이 값을 보존한다는 전제로 다음 메모리 주소를 계산한다. 따라서 일반적인 C 함수 호출 규약 준수만으로 이 위치에 대체 코드를 넣을 수는 없다. 이번 빌드는 <code>r0…r2</code>만 사용했고 실행 대조에서도 <code>r3…r12</code>·SP·LR과 A32 복귀를 확인했다. 이 결과는 지정한 컴파일러와 옵션으로 만든 코드에 한정된다. <a href="https://github.com/ARM-software/abi-aa/blob/2025Q1/aapcs32/aapcs32.rst#611-core-registers">Arm AAPCS32 2025Q1</a> · <a href="../verify_tone_rebuild.py">보존값 관찰과 음성 대조</a></p>
+<div class="table-scroll"><table><thead><tr><th scope="col">확인 항목</th><th scope="col">관찰 결과</th><th scope="col">해석</th></tr></thead><tbody>
+<tr><td><code>r3</code>를 복귀 직후 변경</td><td>원본 <code>0x4DD518</code>에서 쓰기 주소 오류</td><td>호출자가 인덱스로 계속 사용</td></tr>
+<tr><td><code>r12</code>를 복귀 직후 변경</td><td>원본 <code>0x4DD798</code>에서 읽기 주소 오류</td><td>호출자가 객체 포인터로 계속 사용</td></tr>
+<tr><td>입력 <code>0x3FC1</code>의 Z 플래그</td><td>원본 1 · C 빌드 0</td><td>수치 일치가 전체 레지스터 상태 일치는 아님</td></tr>
+<tr><td>원본 호출 루프의 다음 조건 분기</td><td><code>0x4DD59C / 0x4DD7D4 / 0x4DD898</code>에서 자체 CMP</td><td>확인된 루프는 반환된 플래그를 분기 조건으로 쓰지 않음</td></tr>
+</tbody></table></div>
+<p>원본은 <code>sample &gt;&gt; 6</code>을 255와 비교하고 새 코드는 입력 자체를 <code>0x3FC0</code>과 비교한다. 따라서 반환값이 같아도 조건 플래그는 다르다. 독립 검토에서 호출 이후 자체 CMP까지의 명령을 확인했고 추가 실행에서는 원본·새 코드 각각 2,304회 복귀 때마다 N·Z·C·V를 뒤집어도 호출자 출력이 일치했다. 임시값인 <code>r1/r2</code>나 모든 플래그가 같다는 주장은 하지 않는다. 아직 찾지 못한 간접 호출까지 호환성이 확장되는 것도 아니다.</p>
+<figure><figcaption>도식 2. 호출자가 요구하는 보존값과 다시 설정하는 플래그</figcaption><div class="flow" role="group" aria-label="호출자가 인덱스와 객체포인터를 유지한채 톤함수를 부르고 반환후 주소계산을 한 다음 자체 비교로 루프 조건을 결정">
+<div class="stage"><strong>원본 호출자</strong><span>r3: 반복 인덱스<br>r12: 객체 포인터<br>BL로 보간 함수 진입</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>64바이트 C 빌드</strong><span>r0: 같은 보간 결과<br>r3·r12: 보존 확인<br>Z: 다른 값이 되는 반례 존재</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>원본 후속 명령</strong><span>보존값으로 다음 주소 계산<br>자체 CMP로 조건 다시 설정<br>BLT로 256회 반복</span></div></div></figure>
+</section>
+
+<section aria-labelledby="results"><h2 id="results">3. 호출자 연결과 수치 회귀를 따로 대조했다</h2>
+<div class="table-scroll"><table><thead><tr><th scope="col">실행 범위</th><th scope="col">검증 수</th><th scope="col">대조 대상</th></tr></thead><tbody>
+<tr><td><code>0x4DD4F0…0x4DD5A8</code></td><td>768회 호출 · 출력 1,024개</td><td>세 곡선 결과와 가중합</td></tr>
+<tr><td><code>0x4DD768…0x4DD7F4</code></td><td>768회 호출 · 출력 256개</td><td>가중합 <code>(77R + 150G + 29B) &gt;&gt; 8</code></td></tr>
+<tr><td><code>0x4DD848…0x4DD8A4</code></td><td>768회 호출 · 출력 768개</td><td>세 곡선별 출력</td></tr>
+<tr><td>직접 함수 호출</td><td>곡선 3개 × 입력 11종 = 33건</td><td>경계·상한·큰 32비트 입력, 정확한 반워드 읽기와 무기록</td></tr>
+<tr><td>복귀 플래그 반전</td><td>원본·새 코드 각각 2,304회</td><td>매 복귀 시 N·Z·C·V를 뒤집어도 같은 호출자 출력</td></tr>
+<tr><td>기존 수치 검증 전체</td><td>출력 268,288개 · 적용 경로 2건</td><td>스칼라 262,144개, SIMD 5,120개, 곡선 합성 1,024개</td></tr>
+</tbody></table></div>
+<p>직접 호출에서는 512바이트 곡선을 매핑된 페이지의 끝에 두고 다음 페이지를 매핑하지 않았다. 읽기는 기대한 한두 개의 반워드와 일치했으며 저장이나 스택 접근은 없었다. 문맥 포인터도 매핑하지 않은 주소를 넣어 사용하지 않음을 확인했다. 호출자에 넣는 객체·스택·곡선은 합성 데이터다. 일반 대조의 후크는 호출과 복귀를 관찰한다. 두 레지스터 손상 사례와 별도 복귀 플래그 반전 시험은 의도적으로 값을 바꾸는 대조다. <a href="tone-rebuild.json">호출 횟수·출력 해시·반례</a></p>
+<p>새 코드를 넣은 이미지에 <a href="../verify_tone_numeric.py">기존 수치 검증기</a>도 실행해 공개된 원본 결과와 비교했다. 스칼라 검사는 곡선 4개에 대해 0부터 65,535까지 모두 대조한다. 나머지는 원본 SIMD·합성·적용 경로의 회귀 검사이며 그 함수들을 C로 다시 작성했다는 의미는 아니다. 변경 이미지에 원본 SHA를 부여하지 않도록 이번 기록은 입력 원본의 SHA와 생성 함수의 SHA를 분리했다.</p>
+</section>
+
+<section aria-labelledby="reproduce"><h2 id="reproduce">4. 고정한 도구와 소스로 재현한다</h2>
+<pre><code>python -m pip install unicorn==2.1.4 pyelftools
+python verify_tone_rebuild.py decoded.bin --zig &lt;Zig 0.17.1 실행 파일&gt; \
+  --compare analysis/tone-rebuild.json
+python -m unittest discover -s tests -v
+python verify_publication.py</code></pre>
+<p>명령의 역슬래시는 줄 연결을 표시한다. Windows PowerShell에서는 검증 명령을 한 줄로 입력한다. 스크립트는 입력 펌웨어의 크기·SHA를 먼저 확인하고 임시 디렉터리에서 컴파일한 뒤 ELF 형식·심벌 크기·재배치·원본 호출 관계를 검사한다. 종료하면 임시 빌드 파일은 제거된다. 생성 함수가 원본 슬롯의 크기나 실행 모드와 다르면 검증은 중단된다. <a href="../verify_tone_rebuild.py">전체 재현 코드</a></p>
+<p>사용한 Windows x86_64 Zig 0.17.1 배포 파일은 공식 인덱스의 SHA-256과 대조했다. 압축 파일 해시는 <code class="hash">b03f477a1943673e02aca0f570e8030dffd536ce1f45cbc4d3326ec31159562e</code>이다. 컴파일러 파일은 저장소에 포함하지 않는다. 대상 지정의 의미는 Clang의 공식 교차 컴파일 문서를 참고했다. <a href="https://ziglang.org/download/index.json">Zig 공식 다운로드 인덱스</a> · <a href="https://clang.llvm.org/docs/CrossCompilation.html">Clang 대상 지정</a></p>
+</section>
+<section aria-labelledby="limits"><h2 id="limits">5. 함수 하나의 연결 검증이며 전체 펌웨어 빌드는 아니다</h2>
+<p>확인한 것은 특정 C 소스·컴파일러·옵션에서 나온 64바이트 코드와 세 원본 호출 구간의 오프라인 호환성이다. 다른 컴파일러가 <code>r3/r12</code>를 사용하거나 크기·메모리 접근을 바꿀 수 있으므로 다시 검증해야 한다. 아직 찾지 못한 간접 호출, 동시 실행, 캐시 일관성, 실시간 처리 시간과 하드웨어 영상 품질은 확인하지 않았다.</p>
+<p>설치용 파일 재포장, 장치 플래시, 부팅·촬영·저장은 수행하지 않았다. 기존 <a href="rebuild.html">재포장 검사</a>와 <a href="installation.html">업데이트 경로 분석</a>은 별도 근거이며 이번 C 함수가 실기에 수용된다는 증거로 합치지 않는다. 다음 단계는 이러한 경계를 유지하면서 추가 호출자와 상태 의존성을 확인하는 것이다.</p>
+</section></main><footer>K-3 II v1.12 · <a href="../README.md">저장소 안내</a> · <a href="hq-status.json">목표별 상태</a></footer></body></html>
