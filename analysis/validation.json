@@ -1,6 +1,6 @@
 {
   "analysis_date": "2026-11-08",
-  "scope": "Identity, CPU and RAW/tone analysis; conditional B2Y/scaler/JPEG/Exif chain and menu events; filesystem backend A, SD commands/ADMA2, CPP alternate planes and JPEG layout/retry; backend B file-write to SD/ADMA and conditional CPP/module17/scaler/JPEG descriptor handoff",
+  "scope": "Identity, CPU and RAW/tone analysis; conditional B2Y/scaler/JPEG/Exif chain and menu events; filesystem backend A, SD commands/ADMA2, CPP alternate planes and JPEG layout/retry; backend B file-write to SD/ADMA and conditional CPP/module17/scaler/JPEG descriptor handoff; Pixel Shift menu/profile versus RAW MakerNote state, recipe-selected buffer lifetime/reallocation, and full common scaler setup to queue callsite",
   "python": "3.12.3",
   "node": "24.15.0",
   "capstone": "5.0.7",
@@ -9,7 +9,7 @@
   "original_input_sha256": "a33485f351019960192891ef69ddc5d4904ef9e298671d9d9955679e4c901a9a",
   "independent_decoder_byte_comparison": true,
   "published_findings_reproduced": true,
-  "independent_review": "Initial hardware/RAW review and six snapshot replays retained below. For the pipeline update, workers independently checked the selector metadata dispatcher and reviewed ISP evidence. Coordinator accepted conditional matrix-product and tone-cache corrections, inspected completion/Exif/output instructions, and independently reproduced all four new snapshots. For the output/menu update, separate workers traced JPEG and GUI paths. A worker independently replayed and reviewed the Exif route; the coordinator independently replayed all three new snapshots and inspected event dispatch, JPEG alignment and capacity checks against disassembly. For the storage update, workers traced SD and alternate buffers. The SD worker independently replayed and reviewed the filesystem verifier and reviewed the final storage HTML. The coordinator replayed all three new snapshots, inspected critical ADMA, address selection, retry and buffer instructions, and corrected the diagram owner of the block callback to the filesystem-library volume object. For the backend B/CPP update, a worker traced CPP handoff while the coordinator traced backend B. Another worker independently reviewed and replayed both verifiers. The coordinator replayed both snapshots, checked the critical producer/consumer instructions and retained the masked-path and hardware-execution limits. The backend cache was poisoned with 0xA5 before the zero-tail assertion to prove the original clear actually executes.",
+  "independent_review": "Initial hardware/RAW review and six snapshot replays retained below. For the pipeline update, workers independently checked the selector metadata dispatcher and reviewed ISP evidence. Coordinator accepted conditional matrix-product and tone-cache corrections, inspected completion/Exif/output instructions, and independently reproduced all four new snapshots. For the output/menu update, separate workers traced JPEG and GUI paths. A worker independently replayed and reviewed the Exif route; the coordinator independently replayed all three new snapshots and inspected event dispatch, JPEG alignment and capacity checks against disassembly. For the storage update, workers traced SD and alternate buffers. The SD worker independently replayed and reviewed the filesystem verifier and reviewed the final storage HTML. The coordinator replayed all three new snapshots, inspected critical ADMA, address selection, retry and buffer instructions, and corrected the diagram owner of the block callback to the filesystem-library volume object. For the backend B/CPP update, a worker traced CPP handoff while the coordinator traced backend B. Another worker independently reviewed and replayed both verifiers. The coordinator replayed both snapshots, checked the critical producer/consumer instructions and retained the masked-path and hardware-execution limits. The backend cache was poisoned with 0xA5 before the zero-tail assertion to prove the original clear actually executes. For the Pixel Shift/lifecycle update, separate workers implemented menu and buffer proofs. Another worker replayed and reviewed the common scaler gate and required queue-callsite wording. The menu worker independently replayed and reviewed the buffer verifier. The coordinator replayed all three final snapshots, checked producer/consumer instructions and synthesized the report. No P1 findings remained; queue delivery, output enablement and actual pixel completion are explicitly outside the descriptor proofs.",
   "not_performed": [
     "Camera flashing or physical camera execution",
     "Whole firmware rebuild",
@@ -19,7 +19,7 @@
     "Physical button/dial input, LCD raster rendering or persistent settings write",
     "Whole-file allocation/cluster-chain execution, complete backend B mounting, and every card-level recovery branch",
     "Physical SD writes, actual DMA data movement, cache coherency and CPU-to-bus address mapping",
-    "Masked CPP descriptor to JPEG input continuation, module 17 physical camera-mode eligibility, intervening recipe stages, and every real-mode buffer alignment path"
+    "Nonzero auxiliary scaler gate producer and direct masked-output-to-JPEG continuation; whole asynchronous recipes, actual frame-by-frame buffer addresses, all camera-mode restrictions and every buffer alignment path"
   ],
   "reference_project_commit": "b51d680202336a5872a66f99ca2924a2cb7c75fa",
   "initial_analysis_date": "2026-11-07",
@@ -309,6 +309,64 @@
     "modality_lost": 0,
     "golden": "PASS",
     "gate": "OK",
+    "integrated_excerpt_matches_review": true
+  },
+  "superresolution_lifecycle_analysis": {
+    "reference_project_commit": "6944fa6ce99985ce13e33672597f10c9f520f6d7",
+    "snapshots_reproduced": [
+      "superresolution-menu",
+      "buffer-history",
+      "scaler-gate"
+    ],
+    "menu_cases": 10,
+    "other_profile_value_cases": 1,
+    "raw_import_cross_cases": 6,
+    "menu_branch_edges": 43,
+    "menu_range_hashes": 16,
+    "recipe_factory_cases": 6,
+    "recipe_rows_checked": 44,
+    "buffer_word_checks": 36,
+    "buffer_branch_edges": 30,
+    "buffer_range_hashes": 12,
+    "module20_completion_mask_cases": 2,
+    "full_scaler_setup_cases": 64,
+    "scaler_gate_values_observed": [
+      0
+    ],
+    "scaler_gate_branch_edges": 20,
+    "scaler_gate_words": 15,
+    "scaler_gate_range_hashes": 7,
+    "actual_menu_resource_and_profile_branch_connected": true,
+    "raw_recipe_tag_and_profile_setting_proved_distinct": true,
+    "ordinary_and_masked_backing_lifetimes_distinguished": true,
+    "original_pool_release_and_reacquire_executed": true,
+    "scaler_output_and_jpeg_input_descriptor_identity_verified": true,
+    "gate_nonzero_producer_found": false,
+    "queue_call_intercepted_and_consumer_executed_separately": true,
+    "actual_frame_address_history_observed": false,
+    "whole_async_recipe_executed": false,
+    "physical_hardware_executed": false,
+    "complete_jpeg_generated": false,
+    "offline_publication_check": {
+      "passed": true,
+      "html_documents_checked": 8,
+      "local_links_checked": 242,
+      "public_files_checked": 77,
+      "evidence_identity_consistent": true,
+      "svg_xml_valid": true
+    }
+  },
+  "lifecycle_language_review": {
+    "scope": "18 extracted prose paragraphs; later buffer-pool paragraph, fixture table and hook disclosure received coordinator technical review",
+    "route": "light",
+    "risk_score": 1,
+    "change_rate_percent": 0.1,
+    "sentences_touched": 1,
+    "sentences_reviewed": 76,
+    "modality_lost": 0,
+    "golden": "PASS",
+    "gate": "OK",
+    "manual_self_check": "6/6",
     "integrated_excerpt_matches_review": true
   }
 }

@@ -1,8 +1,10 @@
 # PENTAX K-3 II v1.12 펌웨어 분석
 
-[최신 마스크 CPP·모드 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/masked-cpp-analysis.html) · [백엔드 B·CPP 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/backend-b-cpp-analysis.html) · [SD·대체 버퍼 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/storage-dma-analysis.html) · [버퍼·메뉴 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/output-menu-analysis.html) · [톤·색 처리 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/pipeline-analysis.html) · [심층 분석 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/deep-analysis.html) · [초기 분석](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/) · [최신 보고서 소스](analysis/masked-cpp-analysis.html)
+[최신 Pixel Shift·버퍼 수명 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/superresolution-lifecycle.html) · [마스크 CPP·모드 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/masked-cpp-analysis.html) · [백엔드 B·CPP 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/backend-b-cpp-analysis.html) · [SD·대체 버퍼 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/storage-dma-analysis.html) · [버퍼·메뉴 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/output-menu-analysis.html) · [톤·색 처리 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/pipeline-analysis.html) · [심층 분석 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/deep-analysis.html) · [초기 분석](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/) · [최신 보고서 소스](analysis/superresolution-lifecycle.html)
 
-2026-11-08 마스크 CPP 후속: 보조 스케일러 두 출력과 JPEG 보조 입력의 조건부 평면 주소 공유, 모듈 20 출력→후속 CPP 입력을 검증했습니다. Color Fringe Correction 메뉴값→태그 0x245→작업 종류 5의 두 번째 패스도 연결했습니다. 네 작업의 배치 구분값 생산자와 SuperResolution 종류 11 호출을 확인했습니다. 보조 스케일러 활성값의 생산자와 실제 레이아웃 재사용 이력은 미확정입니다.
+2026-11-08 Pixel Shift·버퍼 수명 후속: 실제 Pixel Shift Resolution 메뉴의 On/Off→활성 프로필 설정→SuperResolution 종류 11을 연결했습니다. RAW MakerNote의 같은 번호 태그는 별도 저장소임을 검증했습니다. 슬롯 4·17의 할당·해제·재할당과 일반 출력→스케일러→JPEG 디스크립터 연결을 재현했습니다. 공통 스케일러 설정부터 큐 호출 지점까지의 64개 합성 사례는 모두 활성값 0이었으며, 비영 생산자와 실기 촬영별 주소 이력은 미확정입니다.
+
+2026-11-08 마스크 CPP 후속: 보조 스케일러 두 출력과 JPEG 보조 입력의 조건부 평면 주소 공유, 모듈 20 출력→후속 CPP 입력을 검증했습니다. Color Fringe Correction 메뉴값→태그 0x245→작업 종류 5의 두 번째 패스도 연결했습니다. 네 작업의 배치 구분값 생산자와 SuperResolution 종류 11 호출을 확인했습니다. 당시 남았던 할당·재사용 규칙은 최신 보고서에서 후속 검증했습니다. 비영 활성값의 생산자와 실기 촬영 이력은 미확정입니다.
 
 2026-11-08 백엔드 B·CPP 후속: B의 파일 쓰기를 SD 명령·ADMA 설정까지 연결했습니다. 두 번째 CPP 출력은 모듈 17 합성 입력으로 전달되며, 기본 분기에서 합성 목적지→스케일러 입력과 스케일러 출력→JPEG 입력의 주소 일치를 확인했습니다. B 실행 7건, 레시피 4개, 버퍼 전달 4건과 보조 스케일러 gate를 검증했습니다. 마스크 분기의 이후 연결과 물리 픽셀 처리·SD 기록은 미확정입니다.
 
@@ -40,6 +42,9 @@ python verify_backend_b.py .private/decoded/decoded.bin --compare analysis/backe
 python verify_cpp_handoff.py .private/decoded/decoded.bin --compare analysis/cpp-handoff.json
 python verify_masked_scaler.py .private/decoded/decoded.bin --compare analysis/masked-scaler.json
 python verify_mode_reachability.py .private/decoded/decoded.bin --compare analysis/mode-reachability.json
+python verify_superresolution_menu.py .private/decoded/decoded.bin --emulate --compare analysis/superresolution-menu.json
+python verify_buffer_history.py .private/decoded/decoded.bin --compare analysis/buffer-history.json
+python verify_scaler_gate.py .private/decoded/decoded.bin --compare analysis/scaler-gate.json
 python -m unittest discover -s tests -v
 python verify_publication.py
 ```

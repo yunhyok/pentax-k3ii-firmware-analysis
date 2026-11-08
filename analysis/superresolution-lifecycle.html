@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="K-3 II Pixel Shift Resolution 메뉴와 SuperResolution 작업 선택, 일반·마스크 출력의 버퍼 수명, 공통 스케일러 활성값 생산 경로 검증.">
+<title>K-3 II — Pixel Shift 메뉴와 버퍼 할당·해제 이력</title>
+<link rel="stylesheet" href="../assets/report.css">
+</head>
+<body>
+<header>
+<div class="eyebrow">PENTAX K-3 II · firmware 1.12 · 2026-11-08 · SuperResolution 후속 분석</div>
+<h1>Pixel Shift 메뉴를 연결하고,<br>일반·마스크 버퍼의 수명을 구분했다</h1>
+<p class="lead">Pixel Shift Resolution의 On/Off 이벤트가 쓰는 설정과 SuperResolution 분기가 읽는 설정을 연결했다. 버퍼 분석에서는 일반 출력 평면이 별도 슬롯에서 먼저 만들어지고 JPEG 처리까지 유지되는 경로를 찾았다. 보조 스케일러 활성값은 공통 설정부터 큐 호출 지점까지 추적했지만, 확인한 실행은 모두 0을 기록했다.</p>
+<nav aria-label="보고서 탐색"><a href="../index.html">초기 분석</a><a href="masked-cpp-analysis.html">앞선 마스크 분석</a><a href="#menu">실제 메뉴</a><a href="#recipe">SuperResolution 순서</a><a href="#buffers">RAW 버퍼 수명</a><a href="#gate">보조 활성값</a><a href="#verification">검증·재현</a><a href="#limits">남은 범위</a></nav>
+</header>
+<main>
+<p class="note">코드 위치는 <strong>해제 이미지의 파일 오프셋</strong>이며 코드 VA는 <code>오프셋 + 0x02000000</code>이다. 슬롯 번호·레시피 행·내부 작업 종류는 서로 다른 값이다. 원본 ARM과 원본 레시피를 합성 메모리에서 검증했으며 실제 촬영을 관찰한 결과는 아니다.</p>
+
+<section aria-labelledby="menu"><h2 id="menu">1. Pixel Shift Resolution 메뉴가 SuperResolution 선택에 연결된다</h2>
+<p>위젯 행 <code>0x98EDC4</code>는 ID <code>0x01306003</code>과 문자열 리소스를 연결한다. 영어 리소스 <code>0xE4C6D8</code>을 복원하면 <code>Pixel Shift Resolution</code>이다. 선택 이벤트 <code>0x01306005</code>는 화면의 <code>+0xE7</code>에 1을, <code>0x01306006</code>은 0을 쓴다. 별도 적용 함수 <code>0x3C651C</code>가 이 값을 설정 ID <code>0x98</code>로 전달한다. <a href="superresolution-menu.json">리소스·이벤트·설정 근거</a></p>
+<figure><figcaption>도식 1. 표시 이름에서 같은 설정 저장소를 거쳐 작업 선택까지</figcaption>
+<div class="flow" role="group" aria-label="Pixel Shift 메뉴 On Off 선택을 적용한 값이 SuperResolution 분기에서 조회됨">
+<div class="stage"><strong>Pixel Shift Resolution</strong><span>On <code>0x01306005 → 1</code><br>Off <code>0x01306006 → 0</code><br>선택값 <code>screen+0xE7</code></span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>적용·프로필 설정</strong><span><code>0x3C6530 → 0x6F1A38</code><br>설정 ID <code>0x98</code><br>활성 프로필의 같은 바이트를 읽고 씀</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>원본 작업 선택</strong><span><code>0x6F4D98 → 0x6F1A50</code><br>조회값 = 1: SuperResolution 분기<br><code>0x7B5720</code>: 작업 종류 11</span></div>
+</div>
+<p class="caption">메뉴 선택과 적용은 별도 단계다. 실제 LCD 표시·물리 버튼·센서 촬영은 실행하지 않았다. 내부 작업 종류 11은 노출 다이얼의 모드 번호가 아니다.</p>
+</figure>
+<p>화면의 가상 함수표 <code>0xA70BFC</code>는 선택·이벤트·적용 처리기를 각각 연결한다. 적용 처리의 내부 이벤트 0·1·<code>0x10</code>·<code>0x11</code>·6·<code>0x1D</code>는 설정 쓰기로 이어지며, 3·<code>0xF</code>는 같은 쓰기를 하지 않는다. 이 이벤트 숫자를 물리 버튼 이름으로 치환하지 않았다. 쓰기와 조회가 같은 활성 프로필의 값을 사용하는지 원본 명령으로 대조했다. <a href="../verify_superresolution_menu.py">메뉴 적용·조회 검증</a></p>
+<p>이 프로필 설정 <code>0x98</code>과 RAW 현상 객체의 태그 <code>0x98</code>은 저장소가 다르다. RAW 쪽은 MakerNote <code>0x0243</code>의 원본 처리기 <code>0x7496DC</code>가 입력 첫 바이트를 1과 비교해 기록한다. 프로필 0·1과 RAW 입력 0·1·2를 교차한 6개 사례에서 RAW 가져오기는 작업 태그만 바꿨고, 촬영 작업 선택은 프로필 값을 따랐다. 같은 번호라는 이유로 RAW 파일의 설정을 현재 메뉴 상태와 동일시할 수 없다. <a href="superresolution-menu.json">독립 저장소 교차 검증</a></p>
+<p>제조사 설명서는 Pixel Shift Resolution을 촬영 메뉴 A1 또는 컨트롤 패널에서 켤 수 있다고 설명한다. 센서를 이동해 얻은 네 장을 합성하는 기능이라는 공식 설명도 펌웨어의 메뉴 식별을 뒷받침한다. 단, 사용 가능한 노출 모드와 기능 조합에 관한 공식 제한을 이번 합성 실행으로 검증한 것은 아니다. <a href="https://www.ricoh-imaging.co.jp/english/support/man-pdf/k-3-2.pdf#page=62">Ricoh K-3 II 설명서, 인쇄 60쪽</a> · <a href="https://www.ricoh-imaging.co.jp/english/support/qa/k-3-2/index.html">공식 Pixel Shift FAQ</a></p>
+</section>
+
+<section aria-labelledby="recipe"><h2 id="recipe">2. SuperResolution 레시피에는 마스크용 슬롯 17이 없다</h2>
+<p>위 진단 분기는 레시피 <code>0x09</code>를 선택한 뒤 작업 종류 11을 준비 함수에 전달한다. 원본 레시피 생성자로 복원한 주요 순서는 아래와 같다. 행 번호는 0부터 시작하며 중간 작업은 표에서 생략했다. <a href="buffer-history.json">레시피 생성·행 대조</a></p>
+<figure><figcaption>도식 2. 레시피 0x09의 입력 준비와 일반 출력 버퍼 수명</figcaption>
+<div class="flow" role="group" aria-label="모듈20 처리 후 슬롯4의 일반 출력 평면으로 CPP 스케일러 JPEG를 구성함">
+<div class="stage"><strong>입력 준비</strong><span>행 0: 슬롯 18 할당<br>행 1: 슬롯 15 할당<br>행 2: 모듈 20<br>완료 시 마스크 <code>0x40 → 0x80</code></span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>일반 출력 구성</strong><span>행 4: 슬롯 4 할당<br>행 5: CPP 모듈 0<br>행 7·8: 슬롯 18·15 해제<br>슬롯 17 할당 없음</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>저장용 영상 처리</strong><span>행 11: 스케일러<br>행 13: JPEG 모듈 16<br>행 15: 슬롯 4 해제<br>일반 출력 버퍼가 그동안 유지됨</span></div>
+</div>
+<p class="caption">레시피 순서와 할당·해제 코드, 완료 상태 전환을 연결한 도식이다. 전체 RTOS 스케줄러와 각 장치의 픽셀 연산을 연속 실행하지 않았다. 행 번호만으로 앞선 장치의 성공이나 출력 데이터 유효성을 보장할 수 없다.</p>
+</figure>
+<p>앞선 보고서에서 확인한 모듈 20 완료는 마스크 <code>0x40</code>을 <code>0x80</code>으로 바꾼다. 이후 <code>(mask &amp; 0x44) == 0</code>인 CPP 출력 선택은 일반 평면을 사용한다. 원본 출력 선택 구간을 별도로 실행해 마스크 <code>4 → 8</code>과 <code>0x40 → 0x80</code> 모두 일반 평면으로 바뀌고 <code>job+0x7F</code>가 0이 됨을 확인했다. 따라서 확인한 후속 경로는 일반 출력으로 설명된다. 보조 스케일러 출력과 JPEG 입력이 반드시 같은 주소여야 한다는 가정은 필요하지 않다. <a href="masked-scaler.json">모듈 20 완료·CPP 입력 근거</a> · <a href="buffer-history.json">후속 출력 선택과 버퍼 상태</a></p>
+</section>
+
+<section aria-labelledby="buffers"><h2 id="buffers">3. RAW 현상은 일반 버퍼와 마스크 버퍼를 따로 구성한다</h2>
+<p>슬롯 4의 원본 생성 경로 <code>0x654218 → 0x6603AC</code>는 일반 평면 필드 <code>job+0x160…0x18C</code>와 디스크립터 <code>+0x2140/+0x21E8/+0x2204</code>를 구성한다. 배치 구분값 <code>job+0x20B2=1</code>인 상태에서도 이 일반 평면이 만들어진다. 슬롯 17의 <code>0x65473C → 0x6609AC</code>는 같은 구분값에서 마스크 디스크립터 <code>+0x2354/+0x238C/+0x23A8</code>를 구성하고 일반 평면을 유지한다. <a href="buffer-history.json">원본 슬롯 할당·레이아웃 검증</a></p>
+<figure><figcaption>도식 3. RAW 레시피 0x15에서 두 버퍼의 수명</figcaption>
+<div class="flow" role="group" aria-label="슬롯4 일반 출력은 JPEG까지 유지되고 슬롯17 마스크 출력은 그전에 해제됨">
+<div class="stage"><strong>행 6·12: 서로 다른 할당</strong><span>슬롯 4: 컨트롤러의 버퍼 풀<br>일반 평면·디스크립터 구성<br>슬롯 17: 별도 class 2 할당<br>마스크 평면·디스크립터 구성</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>행 69: 슬롯 17 해제</strong><span>일반 평면 주소는 유지<br><code>job+0xD8=0</code><br>마스크 디스크립터 값은 남을 수 있음<br>남은 숫자가 유효 버퍼를 뜻하지 않음</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>일반 버퍼가 유지되는 후속 단계</strong><span>행 72: 스케일러<br>행 74: JPEG<br>행 76: 슬롯 4 반환<br>이후 풀에서 다시 사용할 수 있음</span></div>
+</div>
+<p class="caption">할당기가 반환하는 실제 주소는 합성 값이다. 서로 다른 슬롯의 주소가 같다는 가정을 넣지 않았다. 같은 작업 객체의 평면 유지와 컨트롤러 풀의 버퍼 재사용을 구분했다.</p>
+</figure>
+<p>컨트롤러의 슬롯 4 할당은 풀의 사용 표식을 검사하고, 선택한 버퍼를 작업의 가상 할당 함수에 넘긴다. 슬롯 17은 기존 슬롯 포인터가 없을 때 별도 할당기를 호출한다. 따라서 두 슬롯은 할당 출처부터 다르다. 앞선 보고서의 “일반 레이아웃을 만든 뒤 같은 주소로 마스크 레이아웃을 만들면 일치한다”는 결과는 조건부 합성 사례로 남는다. 그것을 실제 RAW 작업의 필수 이력으로 채택하지 않았다.</p>
+<p>해제 함수가 슬롯 포인터를 지워도 평면 디스크립터에 과거 주소가 남을 수 있다. 이번에는 주소 값의 잔존과 버퍼의 사용 기간을 함께 추적했다. 실제 촬영 프레임을 관찰하지 않았으므로 어느 물리 주소가 몇 번째 촬영에서 재사용되는지는 확인하지 않았다. <a href="../verify_buffer_history.py">할당·반환·잔존 필드 검증</a></p>
+<p>항목이 하나인 합성 풀에서 슬롯 4를 반환한 뒤 다시 요청하면 같은 풀 항목을 다시 받았다. 반면 슬롯 17을 해제 후 다른 주소로 재할당하면 마스크 평면만 새 주소로 구성됐다. 이미 연결된 슬롯을 다시 요청할 때는 기존 디스크립터를 재구성하지 않았다. 이 결과는 원본 할당·해제 코드의 재사용 규칙이며, 실제 카메라의 촬영별 주소 기록은 아니다.</p>
+<p>후속 스케일러의 입력 디스크립터는 <code>job+0x2140</code>, 출력은 <code>+0x21B0/+0x21CC</code>다. 원본 JPEG 모듈 16 설정도 같은 두 출력 객체를 입력으로 사용한다. 이는 앞서 미확정이던 마스크 디스크립터의 직접 전달과 별개로, 일반 출력으로 돌아온 뒤의 연결을 보여 준다. 배치 구분값 2인 보조 작업은 슬롯 17만으로 일반 평면을 구성하므로, 구분값 1의 주 작업과 같은 배치로 해석하지 않았다. <a href="buffer-history.json">작업별 평면 구성·스케일러/JPEG 객체 일치</a></p>
+<p>작업 객체와 그 객체가 가리키는 메모리도 구분했다. <code>0x5A152C/0x5A1534</code>는 작업 객체의 할당기와 생성자를 호출한다. 별도의 부속 버퍼 풀 <code>0x5A1448/0x5A1400</code>은 합성 항목에 대해 취득 성공→사용 중 재취득 실패→반환 후 재취득 성공을 보였고, 마지막에는 처음과 같은 네 포인터를 반환했다. 이 부속 풀은 컨트롤러의 슬롯 4 풀과 다른 구조다. <a href="buffer-history.json">객체 생성 호출·부속 풀 재취득 근거</a></p>
+</section>
+
+<section aria-labelledby="gate"><h2 id="gate">4. 공통 스케일러 설정에서 큐 호출까지 활성값은 0이다</h2>
+<p>앞선 검증은 생성자와 설정 함수 일부에서 <code>payload+0x38=0</code>을 확인했다. 이번에는 컨트롤러 <code>0x6DC2D0</code>부터 모듈 2의 설정 함수 전체, payload 조회, 메시지 조립, 큐 삽입 호출 지점까지 원본 코드를 실행했다. 출력·상태 플래그와 메시지 저장 위치를 바꾼 합성 사례 64개 모두, <code>0x71B090</code>이 활성 바이트에 0을 한 번 기록했다. 큐 호출 지점에서 기록한 메시지도 같은 payload를 가리켰다. <a href="scaler-gate.json">64개 전체 설정·큐 호출 사례</a></p>
+<figure><figcaption>도식 4. 공통 설정·메시지 조립과 별도 소비자 실행</figcaption>
+<div class="flow" role="group" aria-label="컨트롤러가 전체 모듈2 설정으로 활성값을 지운 뒤 큐 호출 지점에서 메시지를 기록함. 별도 실행한 소비자도 같은 payload에서 0을 읽음">
+<div class="stage"><strong>원본 컨트롤러·설정</strong><span><code>0x6DC2D0 → 0x6593B0</code><br>원본 레시피 행의 모듈 번호 2 조회<br><code>payload+0x38: 0xA5 → 0</code></span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>원본 payload·메시지</strong><span><code>0x656984</code>: <code>job+0xA7B4</code><br>메시지 <code>+8</code>에 같은 포인터<br>명령 <code>0x00708001</code><br>큐 진입점에서 기록</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>동일 메모리의 소비자</strong><span><code>0x5804A0 → 0x71C440</code><br>별도 구간에서 활성값 0 조회<br><code>0x5808A8</code>로 분기<br>보조 두 스케일러 건너뜀</span></div>
+</div>
+<p class="caption">큐 삽입 <code>0x6FEA38</code>은 요청 기록 후 반환하도록 대체했다. 설정·포인터 전달 명령은 그대로 실행했고 메모리 쓰기 후크는 기록만 했다. 소비자는 같은 payload를 넣어 별도로 실행했다. 큐 삽입·수신·RTOS 스케줄링을 통한 전달은 검증하지 않았다.</p>
+</figure>
+<p>다른 미리보기 호출 지점 <code>0x528BD4/0x528BE0</code>이 바꾸는 바이트는 <code>+0x2A/+0x2B</code>로, 조사 중인 <code>+0x38</code>과 다르다. 기존의 정렬된 A32 직접 호출·setter 주소·오프셋 검색 결과도 다시 대조했다. 확인한 공통 경로 안에는 비영 활성값의 생산자가 없지만 다른 코드의 계산된 포인터 쓰기·메모리 복사·동시 작업까지 배제한 것은 아니다. <a href="../verify_scaler_gate.py">검사 범위와 한계</a></p>
+</section>
+
+<section aria-labelledby="verification"><h2 id="verification">5. 검증 방법과 공개 자료</h2>
+<p>K-3 III의 <a href="https://github.com/yunhyok/pentax-k3iii-firmware-analysis/blob/6944fa6ce99985ce13e33672597f10c9f520f6d7/analysis/startup-storage.html">생산자·소비자와 메모리 연결의 검증 방법</a>을 참고했다. 설정 이름만 대응시키거나 합성 메모리에서 두 주소를 임의로 같게 만들지 않고, 실제 쓰기·조회·할당·해제 코드를 연결했다. 주소와 장치 의미는 K-3 II 펌웨어에서 별도로 검증했다.</p>
+<div class="table-scroll"><table><thead><tr><th scope="col">검증 자료</th><th scope="col">주요 대상</th><th scope="col">대체·미실행 범위</th></tr></thead><tbody>
+<tr><td><a href="superresolution-menu.json">superresolution-menu.json</a><br><a href="../verify_superresolution_menu.py">메뉴 검증 스크립트</a></td><td>UI 10건·비정상 설정값 1건·RAW 교차 6건. 분기 43개·해시 구간 16개</td><td>합성 화면·프로필·CCA 명령(키 2/1). UI 콜백과 설정 보조 함수 대체. 물리 버튼·LCD·촬영 미실행</td></tr>
+<tr><td><a href="buffer-history.json">buffer-history.json</a><br><a href="../verify_buffer_history.py">버퍼 검증 스크립트</a></td><td>원본 레시피 6개·지정 행 44개. 슬롯 할당·평면·해제·재취득과 후속 디스크립터 일치</td><td>합성 버퍼 풀·치수. 레시피 할당 <code>0x712828</code>, arena 할당·해제 <code>0x72CED8/0x72CF00</code> 대체. 실제 픽셀·전체 스케줄러 미실행</td></tr>
+<tr><td><a href="scaler-gate.json">scaler-gate.json</a><br><a href="../verify_scaler_gate.py">활성값 검증 스크립트</a></td><td>전체 모듈 2 설정·큐 호출 지점 64건과 별도 소비자 실행</td><td>큐 삽입 대체. 합성 플래그 조합의 실제 메뉴 허용 여부 미검증</td></tr>
+</tbody></table></div>
+<details><summary>메뉴 재현에서 대체한 경계</summary><p>UI 알림·위젯 조회·위젯 활성화 콜백은 합성 객체가 대신했다. On 적용 뒤의 <code>0x6F5E6C/0x6F83AC</code>와 작업 준비의 <code>0x7073EC/0x76E764/0x7774E4/0x6540BC/0x76D5E4/0x76DAF0</code>는 반환하도록 대체했다. 작업 분기는 원본 CCA 디스패처 <code>0x7B5954</code>에서 시작해 준비 함수 앞부분 끝 <code>0x655344</code>에서 멈췄다. 레시피 생성자는 별도 버퍼 검증에서 원본으로 실행했다. 이 경계를 넘어선 모든 기능 제한과 장치 실행을 검증한 것은 아니다.</p></details>
+<pre><code>python verify_superresolution_menu.py decoded.bin --emulate --compare analysis/superresolution-menu.json
+python verify_buffer_history.py decoded.bin --compare analysis/buffer-history.json
+python verify_scaler_gate.py decoded.bin --compare analysis/scaler-gate.json
+python -m unittest discover -s tests -v
+python verify_publication.py</code></pre>
+<p>해제본 SHA-256은 <code class="hash">1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc</code>이다. 원본 실행은 Unicorn 2.1.4로 검증했다. REA의 사용할 수 없는 네이티브 공급자 대신 기존 Capstone·Unicorn 도구를 사용했으며, 공개 자료에는 제조사 펌웨어나 전체 디스어셈블리를 넣지 않았다. <a href="validation.json">통합 검증 기록</a> · <a href="https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions">CI·배포 이력</a></p>
+</section>
+
+<section aria-labelledby="limits"><h2 id="limits">6. 이번에 확인한 것과 남은 것</h2>
+<p>Pixel Shift 메뉴와 SuperResolution 설정 조회는 연결했다. 일반 출력 평면을 만드는 슬롯과 마스크 평면을 만드는 슬롯, JPEG 전후의 해제 순서도 구분했다. 보조 스케일러를 실제로 켜는 생산자는 아직 찾지 못했다. 확인한 레시피의 일반 출력 경로와, 활성 조건이 미확정인 보조 경로를 별개로 기록한다.</p>
+<p>촬영 시 모든 기능 제한의 판정, 실제 할당 주소와 프레임별 재사용, 각 모듈의 픽셀 결과·JPEG 생성·SD 기록은 검증하지 않았다. 디스크립터 주소가 남아 있다는 사실만으로 버퍼가 유효하거나 데이터가 보존됐다고 볼 수 없다.</p>
+</section>
+</main>
+<footer>K-3 II v1.12 · <a href="../README.md">저장소 안내</a> · <a href="masked-cpp-analysis.html">앞선 마스크 CPP 보고서</a></footer>
+</body>
+</html>

@@ -1,0 +1,463 @@
+{
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "offset_space": "Decoded file offsets except object fields, IDs and runtime addresses.",
+  "menu": {
+    "constructor": 3956324,
+    "vtable": 10947580,
+    "widget_table": 10022280,
+    "label_widget": 10022340,
+    "label": {
+      "name": "Pixel Shift Resolution",
+      "locale_record": 14940656,
+      "english_glyph_offset": 14993112,
+      "glyph_sha256": "43255c01b6150ecca03edc445fededf3190473717852b617147d85fa75c07696"
+    },
+    "choice_widget": 19947524,
+    "choice_table": 10022256,
+    "choices": [
+      {
+        "key": 0,
+        "event": 19947526,
+        "widget_record": 10022400,
+        "name": "Off",
+        "locale_record": 14915960,
+        "english_glyph_offset": 14989718,
+        "glyph_sha256": "c4b289c4fb376058e6818f63e49be303f55392c37a28a268a5d0b5fe464fbcee"
+      },
+      {
+        "key": 1,
+        "event": 19947525,
+        "widget_record": 10022380,
+        "name": "On",
+        "locale_record": 14915876,
+        "english_glyph_offset": 14989715,
+        "glyph_sha256": "d092ad673073a21f8b43e00527ddd98df87e31f2f7588679989855e680b6fbb4"
+      }
+    ],
+    "selection_byte": 231,
+    "reverse_selection_dispatch": 7167684,
+    "event_dispatch": 7167696,
+    "commit_dispatch": 7167800,
+    "commit_event_codes": [
+      0,
+      1,
+      6,
+      16,
+      17,
+      29
+    ],
+    "selection_handler": 3957928,
+    "commit_handler": 3958116
+  },
+  "profile_setting": {
+    "id": 152,
+    "bank_stride": 1048,
+    "bank_byte_offset": 1568,
+    "primary_base_object_offset": 20,
+    "mirror_pointer_object_offset": 12,
+    "active_index_object_offset": 9160,
+    "bank_lookup_row": 10825728,
+    "banks_by_active_index": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "write_entry": 3958044,
+    "reader_entry": 7294360
+  },
+  "mode_branch": {
+    "cca_dispatcher": 8083796,
+    "dispatch_keys": [
+      2,
+      1
+    ],
+    "devmode_helper": 8082432,
+    "verified_subtypes": [
+      0,
+      1
+    ],
+    "compare": 8082868,
+    "normal_path": 8082876,
+    "superresolution_path": 8083164,
+    "prepare": 6640304
+  },
+  "raw_import": {
+    "makernote_tag": 579,
+    "dispatch": 7653088,
+    "handler": 7640796,
+    "recipe_tag": 152,
+    "recipe_object_offset": 388,
+    "raw_development_reader_call": 5412840,
+    "payload_first_byte_equals": 1
+  },
+  "branch_checks": [
+    [
+      3956328,
+      7166520
+    ],
+    [
+      3956740,
+      7281232
+    ],
+    [
+      3957128,
+      7377260
+    ],
+    [
+      3957220,
+      7381432
+    ],
+    [
+      3957244,
+      7381432
+    ],
+    [
+      3957268,
+      7381432
+    ],
+    [
+      3957292,
+      7381432
+    ],
+    [
+      3958004,
+      7168232
+    ],
+    [
+      3958016,
+      5166360
+    ],
+    [
+      5166464,
+      8862472
+    ],
+    [
+      3958052,
+      7185892
+    ],
+    [
+      3958064,
+      7281208
+    ],
+    [
+      3958092,
+      7298668
+    ],
+    [
+      3958112,
+      7308204
+    ],
+    [
+      3958260,
+      3958044
+    ],
+    [
+      3958296,
+      3958044
+    ],
+    [
+      3958348,
+      3958044
+    ],
+    [
+      7281216,
+      7343748
+    ],
+    [
+      7343828,
+      4920516
+    ],
+    [
+      7343852,
+      7333164
+    ],
+    [
+      7343876,
+      7333164
+    ],
+    [
+      7294364,
+      7281232
+    ],
+    [
+      7281240,
+      7347956
+    ],
+    [
+      7348008,
+      4920516
+    ],
+    [
+      7348028,
+      7333308
+    ],
+    [
+      8082752,
+      8082860
+    ],
+    [
+      8082860,
+      7280392
+    ],
+    [
+      8083860,
+      8083940
+    ],
+    [
+      8083956,
+      8084064
+    ],
+    [
+      8084076,
+      8083244
+    ],
+    [
+      8083388,
+      6499908
+    ],
+    [
+      8083632,
+      8082432
+    ],
+    [
+      8082468,
+      7884432
+    ],
+    [
+      8082524,
+      7685296
+    ],
+    [
+      8082528,
+      7273988
+    ],
+    [
+      7653116,
+      8247272
+    ],
+    [
+      8082864,
+      7294360
+    ],
+    [
+      8082872,
+      8083164
+    ],
+    [
+      8083240,
+      8082952
+    ],
+    [
+      7653888,
+      7640796
+    ],
+    [
+      7640860,
+      7102908
+    ],
+    [
+      7640888,
+      7271492
+    ],
+    [
+      5412840,
+      7271504
+    ]
+  ],
+  "range_sha256": {
+    "0x3c5e64..0x3c5e84": "6baa689332a760e3e49c16f1e471c847fd4ad9dd05c99fa84be1836ec42c23a7",
+    "0x3c5ff8..0x3c600c": "98aed9c82ab78b83340ecbc14f14466f10dc84b57187bf2cfe47bee17d396848",
+    "0x3c617c..0x3c6234": "cf161c57e089b0e66b0bda92ec1a26e0b220a06891a6d6077b762ebebc8e11a3",
+    "0x3c6474..0x3c6660": "e5bd14a4ea427ca05c1b97bfdbba54cc4eafb8099aa251c1e651f8c4f8b27a98",
+    "0x6d5ec4..0x6d5edc": "ee5ce85f05a5590d3f7bd55e4c7c834033ecdb42c1a3e76cdd6bbbf501c4e29e",
+    "0x6d5f38..0x6d5f8c": "8eea4bb9a0dced7c74a314406be62409aecea026f350356669d26cc053d9c3a6",
+    "0x700e84..0x700f08": "45a8c0d2449719ddf43d0ff5e01ba6d310098ef64b330515c99af587e15c0422",
+    "0x701ef4..0x701f40": "a6847346a1d5a632e89ce59c58621df24dc3ba1dc619bed3ccf1dc01aae7a93b",
+    "0x7b5538..0x7b5610": "bb2e626df774d6fcee6d1093798d5b953adeb97b1312ebc0cacf1c6c35722e8c",
+    "0x7b5400..0x7b5538": "e08eedeb25f9eca3bdb6d8d77d4814849f2b513c2e69652e8946a5d2106c6fac",
+    "0x7b56dc..0x7b572c": "f3438bb8ee144eaefe875892e647fd85d89b1894c6c9ed9c9c32184daddad03b",
+    "0x7b572c..0x7b58b4": "a1a51bf4a04af160219b3ff7f64f2b1f4115e682412cabd338bff9e793c6666b",
+    "0x7b5954..0x7b5a70": "4847e1e8cd93d6684d21c3db8be029e0391ddec5cfbc07e02990de61bb49e530",
+    "0x74c6e0..0x74ca08": "6d37c04b322d5ee8582e5caa1e787ed262e23e52f237bca5f4b4bfb0712d2237",
+    "0x7496dc..0x74973c": "84018a9d11fef0252ac1ffb6cabc940b8cf73cfc95f36676bfc1cb216a660bb0",
+    "0x98ed70..0x98ee14": "67226159d447f848deba74d6f20dc9656fc69565259cc501981f78fe6ebf0406"
+  },
+  "external_references": {
+    "Ricoh K-3 II operating manual, printed p. 60": "https://www.ricoh-imaging.co.jp/english/support/man-pdf/k-3-2.pdf#page=62",
+    "Ricoh K-3 II specifications": "https://www.ricoh-imaging.co.jp/english/products/k-3-2/spec/",
+    "ExifTool Pentax MakerNote 0x0243 mapping": "https://github.com/exiftool/exiftool/blob/9b8664dfcf2c609d3cc8925d380e98ad2a379f9b/lib/Image/ExifTool/Pentax.pm#L3129-L3132"
+  },
+  "numeric": {
+    "unicorn_version": "2.1.4",
+    "menu_cases": [
+      {
+        "active_index": 1,
+        "bank": 1,
+        "initial": 0,
+        "event": 19947525,
+        "selected": 1,
+        "commit_event": 0,
+        "stored": 1,
+        "job_mode": 11
+      },
+      {
+        "active_index": 1,
+        "bank": 1,
+        "initial": 0,
+        "event": 19947525,
+        "selected": 1,
+        "commit_event": 1,
+        "stored": 1,
+        "job_mode": 11
+      },
+      {
+        "active_index": 1,
+        "bank": 1,
+        "initial": 0,
+        "event": 19947525,
+        "selected": 1,
+        "commit_event": 6,
+        "stored": 1,
+        "job_mode": 11
+      },
+      {
+        "active_index": 1,
+        "bank": 1,
+        "initial": 0,
+        "event": 19947525,
+        "selected": 1,
+        "commit_event": 16,
+        "stored": 1,
+        "job_mode": 11
+      },
+      {
+        "active_index": 1,
+        "bank": 1,
+        "initial": 0,
+        "event": 19947525,
+        "selected": 1,
+        "commit_event": 17,
+        "stored": 1,
+        "job_mode": 11
+      },
+      {
+        "active_index": 1,
+        "bank": 1,
+        "initial": 0,
+        "event": 19947525,
+        "selected": 1,
+        "commit_event": 29,
+        "stored": 1,
+        "job_mode": 11
+      },
+      {
+        "active_index": 0,
+        "bank": 0,
+        "initial": 1,
+        "event": 19947526,
+        "selected": 0,
+        "commit_event": 6,
+        "stored": 0,
+        "job_mode": 5
+      },
+      {
+        "active_index": 1,
+        "bank": 1,
+        "initial": 0,
+        "event": 19947525,
+        "selected": 1,
+        "commit_event": 3,
+        "stored": 0,
+        "job_mode": 5
+      },
+      {
+        "active_index": 1,
+        "bank": 1,
+        "initial": 0,
+        "event": 19947525,
+        "selected": 1,
+        "commit_event": 15,
+        "stored": 0,
+        "job_mode": 5
+      },
+      {
+        "active_index": 1,
+        "bank": 1,
+        "initial": 0,
+        "event": 19947524,
+        "selected": 0,
+        "commit_event": 6,
+        "stored": 0,
+        "job_mode": 5
+      }
+    ],
+    "other_value": {
+      "primary": 2,
+      "mirror": 1,
+      "subtype": 1,
+      "job_mode": 5
+    },
+    "raw_import_cases": [
+      {
+        "payload_first_byte": 0,
+        "recipe_tag": 0,
+        "profile_setting": 0,
+        "job_mode": 5
+      },
+      {
+        "payload_first_byte": 1,
+        "recipe_tag": 1,
+        "profile_setting": 0,
+        "job_mode": 5
+      },
+      {
+        "payload_first_byte": 2,
+        "recipe_tag": 0,
+        "profile_setting": 0,
+        "job_mode": 5
+      },
+      {
+        "payload_first_byte": 0,
+        "recipe_tag": 0,
+        "profile_setting": 1,
+        "job_mode": 11
+      },
+      {
+        "payload_first_byte": 1,
+        "recipe_tag": 1,
+        "profile_setting": 1,
+        "job_mode": 11
+      },
+      {
+        "payload_first_byte": 2,
+        "recipe_tag": 0,
+        "profile_setting": 1,
+        "job_mode": 11
+      }
+    ],
+    "boundaries": {
+      "ui": "Fixture notifier slots 0x18/0x08 and widget activation slot 0x0c return immediately. Fixture manager slot 0x08 verifies the widget ID and returns the RAM widget.",
+      "profile": "Initialized singleton and profile RAM. On-only sibling setting helpers are stubbed.",
+      "on_only_helpers_stubbed": [
+        7298668,
+        7308204
+      ],
+      "job": "Starts at CCA dispatcher 0x7b5954 with prepared controller, job pool and command keys 2/1. Stops at prepare prefix end 0x655344.",
+      "job_setup_helpers_stubbed": [
+        7369708,
+        7792484,
+        7828708,
+        6635708,
+        7788004,
+        7789296
+      ],
+      "raw": "Prepared MakerNote record passed to the original importer. The imported recipe belongs to the same job later used for the profile branch. RAW file parsing and capture are outside the fixture.",
+      "hardware": "Physical input, actual capture, pixels and persistent writes are outside the fixture."
+    }
+  }
+}

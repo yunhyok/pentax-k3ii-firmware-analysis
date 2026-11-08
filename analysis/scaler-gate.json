@@ -1,0 +1,1869 @@
+{
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "location_units": "decoded file offsets",
+  "static": {
+    "edges": [
+      [
+        7193316,
+        8505200
+      ],
+      [
+        8505204,
+        8603684
+      ],
+      [
+        7193332,
+        6656944
+      ],
+      [
+        6657244,
+        6659704
+      ],
+      [
+        6660012,
+        7450768
+      ],
+      [
+        7193396,
+        6646148
+      ],
+      [
+        6646204,
+        6646328
+      ],
+      [
+        7193348,
+        8505276
+      ],
+      [
+        7193356,
+        8241324
+      ],
+      [
+        7193372,
+        8239368
+      ],
+      [
+        7193384,
+        8239392
+      ],
+      [
+        7193408,
+        8239376
+      ],
+      [
+        7193420,
+        8239384
+      ],
+      [
+        7193440,
+        7334456
+      ],
+      [
+        5768356,
+        7455808
+      ],
+      [
+        5768364,
+        5769384
+      ],
+      [
+        5409736,
+        6646148
+      ],
+      [
+        5409804,
+        6646148
+      ],
+      [
+        5409748,
+        7686880
+      ],
+      [
+        5409760,
+        7686888
+      ]
+    ],
+    "words": {
+      "6659956": 3818946560,
+      "6660004": 3785363464,
+      "7450768": 3854569528,
+      "7455808": 3855614008,
+      "6646328": 3785359363,
+      "6646160": 3809097652,
+      "7193320": 3791675647,
+      "7193400": 3785363456,
+      "8239376": 3850375176,
+      "8239368": 3850375180,
+      "8239384": 3850375184,
+      "8239392": 3850375172,
+      "7686880": 3854569514,
+      "7686888": 3854569515,
+      "5768360": 3813670912
+    },
+    "search": {
+      "scan_range": [
+        0,
+        16777216
+      ],
+      "setter_direct_branches": [
+        6660012
+      ],
+      "setter_address_words": [],
+      "layout_movw_immediates": [
+        [
+          6634348,
+          42932
+        ],
+        [
+          6634360,
+          42932
+        ],
+        [
+          6646160,
+          42932
+        ],
+        [
+          6659792,
+          42932
+        ]
+      ],
+      "generic_byte_store_candidates": 177,
+      "scaler_setup_scan_windows": [
+        [
+          6634348,
+          6634368
+        ],
+        [
+          6659704,
+          6661248
+        ],
+        [
+          7450624,
+          7450888
+        ]
+      ],
+      "scaler_setup_byte_stores": [
+        7450768,
+        7450880
+      ]
+    },
+    "ranges": {
+      "controller_submit": {
+        "start": 7193296,
+        "end_exclusive": 7193444,
+        "sha256": "7d87e93f7dc0bca728e6e0c286748ed6714d05017c4a053687505fe4fabdc694"
+      },
+      "module_dispatch": {
+        "start": 6656944,
+        "end_exclusive": 6657320,
+        "sha256": "0ade55a59fe8e8cc9ef9ac6f396f8169316b5dbdefbb9706d5bb551b3cad9bed"
+      },
+      "complete_module2_setup": {
+        "start": 6659704,
+        "end_exclusive": 6661248,
+        "sha256": "d4f9082243ec3a19ae51dea7ee393483d36ab635dfc316fe43c2a28d7ec5f0f9"
+      },
+      "payload_selector": {
+        "start": 6646148,
+        "end_exclusive": 6646452,
+        "sha256": "4aefb78b6744b4bdd1d6d397c78cf6e3c3a156e9dcd0deca7633f4d09d5e7855"
+      },
+      "packet_setters": {
+        "start": 8239368,
+        "end_exclusive": 8239400,
+        "sha256": "cd165ce630db4cd4f6105e567902b768e548b93f4ef8b34413c4201ec385f641"
+      },
+      "special_preview_disable": {
+        "start": 5409716,
+        "end_exclusive": 5409844,
+        "sha256": "530c99a56130a47993b6acf37e3c9da0fd1f785765fded9c38a820ddb37f5179"
+      },
+      "gate_consumer": {
+        "start": 5768352,
+        "end_exclusive": 5768368,
+        "sha256": "61c43e1446cb2b0e79c0ccfa658a49cd1dc676786e1cb2bde37be61267035675"
+      }
+    }
+  },
+  "original_a32": {
+    "engine": "Unicorn 2.1.4",
+    "case_count": 64,
+    "cases": [
+      {
+        "output_flags": 0,
+        "flags40_42": 0,
+        "initial_state5e": 0,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 0,
+        "flags40_42": 0,
+        "initial_state5e": 0,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 0,
+        "flags40_42": 0,
+        "initial_state5e": 1,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 0,
+        "flags40_42": 0,
+        "initial_state5e": 1,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 0,
+        "flags40_42": 1,
+        "initial_state5e": 0,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 0,
+        "flags40_42": 1,
+        "initial_state5e": 0,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 0,
+        "flags40_42": 1,
+        "initial_state5e": 1,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 0,
+        "flags40_42": 1,
+        "initial_state5e": 1,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 0,
+        "flags40_42": 2,
+        "initial_state5e": 0,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 0,
+        "flags40_42": 2,
+        "initial_state5e": 0,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 0,
+        "flags40_42": 2,
+        "initial_state5e": 1,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 0,
+        "flags40_42": 2,
+        "initial_state5e": 1,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 0,
+        "flags40_42": 3,
+        "initial_state5e": 0,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 0,
+        "flags40_42": 3,
+        "initial_state5e": 0,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 0,
+        "flags40_42": 3,
+        "initial_state5e": 1,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 0,
+        "flags40_42": 3,
+        "initial_state5e": 1,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 1,
+        "flags40_42": 0,
+        "initial_state5e": 0,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 1,
+        "flags40_42": 0,
+        "initial_state5e": 0,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 1,
+        "flags40_42": 0,
+        "initial_state5e": 1,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 1,
+        "flags40_42": 0,
+        "initial_state5e": 1,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 1,
+        "flags40_42": 1,
+        "initial_state5e": 0,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 1,
+        "flags40_42": 1,
+        "initial_state5e": 0,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 1,
+        "flags40_42": 1,
+        "initial_state5e": 1,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 1,
+        "flags40_42": 1,
+        "initial_state5e": 1,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 1,
+        "flags40_42": 2,
+        "initial_state5e": 0,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 1,
+        "flags40_42": 2,
+        "initial_state5e": 0,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 1,
+        "flags40_42": 2,
+        "initial_state5e": 1,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 1,
+        "flags40_42": 2,
+        "initial_state5e": 1,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 1,
+        "flags40_42": 3,
+        "initial_state5e": 0,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 1,
+        "flags40_42": 3,
+        "initial_state5e": 0,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 1,
+        "flags40_42": 3,
+        "initial_state5e": 1,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 1,
+        "flags40_42": 3,
+        "initial_state5e": 1,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 2,
+        "flags40_42": 0,
+        "initial_state5e": 0,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 2,
+        "flags40_42": 0,
+        "initial_state5e": 0,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 2,
+        "flags40_42": 0,
+        "initial_state5e": 1,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 2,
+        "flags40_42": 0,
+        "initial_state5e": 1,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 2,
+        "flags40_42": 1,
+        "initial_state5e": 0,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 2,
+        "flags40_42": 1,
+        "initial_state5e": 0,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 2,
+        "flags40_42": 1,
+        "initial_state5e": 1,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 2,
+        "flags40_42": 1,
+        "initial_state5e": 1,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 2,
+        "flags40_42": 2,
+        "initial_state5e": 0,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 2,
+        "flags40_42": 2,
+        "initial_state5e": 0,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 2,
+        "flags40_42": 2,
+        "initial_state5e": 1,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 2,
+        "flags40_42": 2,
+        "initial_state5e": 1,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 2,
+        "flags40_42": 3,
+        "initial_state5e": 0,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 2,
+        "flags40_42": 3,
+        "initial_state5e": 0,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 2,
+        "flags40_42": 3,
+        "initial_state5e": 1,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 2,
+        "flags40_42": 3,
+        "initial_state5e": 1,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 3,
+        "flags40_42": 0,
+        "initial_state5e": 0,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 3,
+        "flags40_42": 0,
+        "initial_state5e": 0,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 3,
+        "flags40_42": 0,
+        "initial_state5e": 1,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 3,
+        "flags40_42": 0,
+        "initial_state5e": 1,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 3,
+        "flags40_42": 1,
+        "initial_state5e": 0,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 3,
+        "flags40_42": 1,
+        "initial_state5e": 0,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 3,
+        "flags40_42": 1,
+        "initial_state5e": 1,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 3,
+        "flags40_42": 1,
+        "initial_state5e": 1,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 3,
+        "flags40_42": 2,
+        "initial_state5e": 0,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 3,
+        "flags40_42": 2,
+        "initial_state5e": 0,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 3,
+        "flags40_42": 2,
+        "initial_state5e": 1,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 3,
+        "flags40_42": 2,
+        "initial_state5e": 1,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 3,
+        "flags40_42": 3,
+        "initial_state5e": 0,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 3,
+        "flags40_42": 3,
+        "initial_state5e": 0,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 3,
+        "flags40_42": 3,
+        "initial_state5e": 1,
+        "packet_variant": 0,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 8,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      },
+      {
+        "output_flags": 3,
+        "flags40_42": 3,
+        "initial_state5e": 1,
+        "packet_variant": 1,
+        "gate_writes": [
+          {
+            "pc": 7450768,
+            "offset": 56,
+            "width": 1,
+            "value": 0
+          }
+        ],
+        "submission": {
+          "queue": 324478056,
+          "priority": 2,
+          "request_offset": 28,
+          "fields": [
+            268566532,
+            268478388,
+            7372801,
+            268435456
+          ]
+        },
+        "consumer_gate": 0
+      }
+    ],
+    "hooked_code_offsets": [
+      7334456
+    ],
+    "write_observer_does_not_replace_instructions": true
+  },
+  "limits": [
+    "All 64 cases run the full module-2 setup inside controller submission. The only replaced code call is queue insertion. The auxiliary consumer is then executed as a separate short segment on the same payload.",
+    "Output flags, controller queue and command table, recipe row, geometry and other job state are synthetic. Cases are not a camera-mode availability test.",
+    "The result excludes a nonzero gate producer within these complete module-2 paths, not throughout all firmware execution. Other queued work, concurrent writes, copies, indirect stores and untested state remain outside this execution.",
+    "The special preview caller changes payload+0x2a/+0x2b; those are distinct from the auxiliary gate at +0x38. Its complete surrounding operation is not replayed."
+  ]
+}

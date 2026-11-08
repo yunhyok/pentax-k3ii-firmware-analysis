@@ -14,6 +14,7 @@
 <nav aria-label="보고서 탐색"><a href="../index.html">초기 분석</a><a href="backend-b-cpp-analysis.html">앞선 CPP·SD 분석</a><a href="#gate">활성 조건</a><a href="#jpeg">JPEG 입력</a><a href="#modes">작업 모드</a><a href="#fringe">실제 메뉴</a><a href="#module20">모듈 20</a><a href="#verification">검증·재현</a><a href="#limits">남은 범위</a></nav>
 </header>
 <main>
+<p class="note"><strong>후속 검증:</strong> <a href="superresolution-lifecycle.html">Pixel Shift 메뉴·버퍼 수명 보고서</a>에서 실제 메뉴 설정과 작업 선택, 슬롯 4·17의 할당·반환·재할당을 연결했다. 아래의 같은 주소 레이아웃 사례는 조건부 합성 결과이며 실제 촬영 이력을 뜻하지 않는다.</p>
 <p class="note">코드 위치는 <strong>해제 이미지의 파일 오프셋</strong>이다. 코드 VA는 <code>오프셋 + 0x02000000</code>이며 <code>job+…</code>와 <code>payload+…</code>는 객체 내부 오프셋이다. 원본 ARM 명령을 합성 상태에서 구간별로 실행했다. 아래의 주소 일치는 픽셀 내용이나 실기 실행을 증명하지 않는다.</p>
 
 <section aria-labelledby="gate"><h2 id="gate">1. 보조 스케일러를 켜는 생산자는 아직 찾지 못했다</h2>

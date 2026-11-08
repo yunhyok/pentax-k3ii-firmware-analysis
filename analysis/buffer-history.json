@@ -1,0 +1,619 @@
+{
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "candidate_load_base": 33554432,
+  "location_units": "decoded file offsets except code pointers and synthetic addresses",
+  "words": {
+    "0x5a133c": 91248,
+    "0x654330": 44467424,
+    "0xa684e8": 40190488,
+    "0xa68564": 40240044,
+    "0xa6856c": 40241580,
+    "0x6535b0": 3850391904,
+    "0x6535dc": 3850391948,
+    "0x653830": 3787479986,
+    "0x653d10": 3850457236,
+    "0x654340": 3850637476,
+    "0x654740": 3850637528,
+    "0x654758": 3850637532,
+    "0x6dc414": 3800502109,
+    "0x6dc438": 3778019124,
+    "0x6dc4b4": 3778019127,
+    "0x6dc6a0": 3778019100,
+    "0x72d370": 3787463602,
+    "0x659794": 3809476676,
+    "0x6597e0": 3851686240,
+    "0x65980c": 3854827647,
+    "0x659ac8": 3851686240,
+    "0x659ad4": 3851686244,
+    "0x659ae0": 3851686248,
+    "0x52acd0": 329256981,
+    "0x52acd4": 60821521,
+    "0x52acfc": 329256980,
+    "0x52ad00": 60821520,
+    "0x7b56e8": 3818917897,
+    "0x5a1424": 96473176,
+    "0x5a1498": 3854569560,
+    "0x5a1564": 3818917894,
+    "0x5a1570": 3778019125,
+    "0x6dcf90": 3818921984,
+    "0x6dcf98": 3818921985,
+    "0x7dc0ac": 3800039432,
+    "0x81c7bc": 3800039452
+  },
+  "calls": {
+    "0x5a110c": 6632516,
+    "0x5a152c": 7415848,
+    "0x5a1534": 6632516,
+    "0x52a05c": 7525228,
+    "0x52a068": 7525228,
+    "0x52a074": 7525228,
+    "0x52a080": 7525228,
+    "0x638d90": 7525228,
+    "0x52ace4": 6635708,
+    "0x52ad10": 6635708,
+    "0x7b56f8": 6635708,
+    "0x6dc418": 7193476,
+    "0x6dc3c0": 8509560,
+    "0x6dc47c": 7685284,
+    "0x6dc494": 7390444,
+    "0x6dc67c": 7390576,
+    "0x6dc6dc": 7194096,
+    "0x6dcfa4": 7193296,
+    "0x70c55c": 7273572,
+    "0x6efca0": 7524056,
+    "0x6efd3c": 7524096,
+    "0x76e7b8": 7415848,
+    "0x659ad0": 8507312,
+    "0x659adc": 8507320,
+    "0x659ae8": 8507328,
+    "0x6dc2f4": 6656944,
+    "0x6dc304": 8505276,
+    "0x6dc30c": 8241324,
+    "0x6dd018": 7192660,
+    "0x6dc068": 8505308
+  },
+  "range_hashes": {
+    "attached_pool_and_job_allocation": {
+      "start": 5903360,
+      "end_exclusive": 5903896,
+      "sha256": "9d03e3e36458dfffca1c9bb06fb9fb3dcdc2ed0432be0a516946f7e137402255"
+    },
+    "job_constructor": {
+      "start": 6632516,
+      "end_exclusive": 6634784,
+      "sha256": "c8ad2d1b8211e0e60544f280c8b3de488399c6d4c6ba77a34f538c0cb3f7392e"
+    },
+    "indexed_buffer_setter": {
+      "start": 6636056,
+      "end_exclusive": 6637420,
+      "sha256": "413e614ebcc93b3695626e351c3eb1a48c75bd1dff9b6f49b48c011d76642bff"
+    },
+    "ordinary_layout": {
+      "start": 6685612,
+      "end_exclusive": 6686488,
+      "sha256": "c6c467f9e6fde9127de5e5cda218e30020c11a8d6b6d6219dab32843abebf4b3"
+    },
+    "slot17_layout": {
+      "start": 6687148,
+      "end_exclusive": 6688608,
+      "sha256": "00242a8873b01271c2191fe32ca2be6631a6332c8aa73609ffef795d9678c318"
+    },
+    "pool_and_allocate": {
+      "start": 7193444,
+      "end_exclusive": 7193808,
+      "sha256": "7c679ec015e0fedcae25770679a0bd8c44e60d5a7a206d85ad3362bb5dc7673f"
+    },
+    "release": {
+      "start": 7194084,
+      "end_exclusive": 7194364,
+      "sha256": "468ec6772c6b604a13a54074dbc8e47c50d8bd56f6bb4cc73c6ca9b4df82e120"
+    },
+    "raw_kind_assignments": {
+      "start": 5414984,
+      "end_exclusive": 5415044,
+      "sha256": "19674de0d1bfb0a17bcaad7ce509b10e80df6ef3156a6a882cfb5c70951c732e"
+    },
+    "capture_kind_assignment": {
+      "start": 6524292,
+      "end_exclusive": 6524308,
+      "sha256": "a79ebf7ec160bf9ecab463a9ae7d1b9650afa3e7a6ac19bfcde1d156eba101a8"
+    },
+    "cpp_plane_select": {
+      "start": 6657936,
+      "end_exclusive": 6658064,
+      "sha256": "0d2dda0050c196762e13e55ecba968e372945fc29e6bc49df7e49c0780669cd5"
+    },
+    "cpp_ordinary_descriptor": {
+      "start": 6658760,
+      "end_exclusive": 6658796,
+      "sha256": "5639b9c9fb5a0247e02fc57af4c37d0a0f272ac757de63e7a7bc5c869743712c"
+    },
+    "module20_mask_update": {
+      "start": 6675856,
+      "end_exclusive": 6675896,
+      "sha256": "b895ebd571f4a45393281c97feab0dc506f39d0d822a6f116f0f82c3be3f0ae4"
+    }
+  },
+  "synthetic_a32": {
+    "unicorn_version": "2.1.4",
+    "hooks": {
+      "recipe_allocation": 7415848,
+      "arena_allocate": 7524056,
+      "arena_free": 7524096
+    },
+    "recipes": {
+      "0x8": {
+        "sha256": "143b5c6ccb983b220977b8d295199984fee66101917ba61d77798ec6d398aeeb",
+        "selected_rows": {
+          "0": [
+            2,
+            4,
+            0
+          ],
+          "1": [
+            5,
+            0,
+            0
+          ],
+          "8": [
+            5,
+            2,
+            0
+          ],
+          "10": [
+            5,
+            16,
+            0
+          ],
+          "12": [
+            1,
+            4,
+            0
+          ]
+        },
+        "tracked_allocation_rows": [
+          [
+            0,
+            4
+          ]
+        ]
+      },
+      "0x9": {
+        "sha256": "3a99b81284a8e3d83310f93022a5ae1c06985ecaf1608646972c5681b33b2332",
+        "selected_rows": {
+          "0": [
+            2,
+            18,
+            2
+          ],
+          "1": [
+            2,
+            15,
+            2
+          ],
+          "2": [
+            5,
+            20,
+            0
+          ],
+          "4": [
+            2,
+            4,
+            0
+          ],
+          "5": [
+            5,
+            0,
+            0
+          ],
+          "7": [
+            1,
+            18,
+            0
+          ],
+          "8": [
+            1,
+            15,
+            0
+          ],
+          "11": [
+            5,
+            2,
+            0
+          ],
+          "13": [
+            5,
+            16,
+            0
+          ],
+          "15": [
+            1,
+            4,
+            0
+          ]
+        },
+        "tracked_allocation_rows": [
+          [
+            0,
+            18
+          ],
+          [
+            4,
+            4
+          ]
+        ]
+      },
+      "0x10": {
+        "sha256": "9d7cf7ee6e0a63fd7eca2a3dfb74ed5332b325fa56c2c48b04c2db7df398f9b5",
+        "selected_rows": {
+          "14": [
+            2,
+            17,
+            2
+          ],
+          "15": [
+            5,
+            0,
+            0
+          ],
+          "36": [
+            5,
+            2,
+            0
+          ],
+          "38": [
+            5,
+            16,
+            0
+          ],
+          "48": [
+            1,
+            17,
+            0
+          ]
+        },
+        "tracked_allocation_rows": [
+          [
+            14,
+            17
+          ]
+        ]
+      },
+      "0x11": {
+        "sha256": "c27352844614ab648830b36b3151fb3c056c533db8aee458b8899b4cc4bbdb9d",
+        "selected_rows": {
+          "6": [
+            2,
+            4,
+            0
+          ],
+          "12": [
+            2,
+            17,
+            2
+          ],
+          "14": [
+            2,
+            18,
+            2
+          ],
+          "16": [
+            6,
+            0,
+            0
+          ],
+          "17": [
+            5,
+            20,
+            0
+          ],
+          "40": [
+            5,
+            0,
+            0
+          ],
+          "43": [
+            21,
+            0,
+            0
+          ],
+          "68": [
+            1,
+            17,
+            0
+          ],
+          "69": [
+            1,
+            18,
+            0
+          ],
+          "72": [
+            5,
+            2,
+            0
+          ],
+          "76": [
+            1,
+            4,
+            0
+          ]
+        },
+        "tracked_allocation_rows": [
+          [
+            6,
+            4
+          ],
+          [
+            12,
+            17
+          ],
+          [
+            14,
+            18
+          ]
+        ]
+      },
+      "0x14": {
+        "sha256": "645c76d028ef3286af62125da40918054715def04cc6b8a3e42ba3ea4b5fe479",
+        "selected_rows": {
+          "25": [
+            1,
+            17,
+            0
+          ]
+        },
+        "tracked_allocation_rows": []
+      },
+      "0x15": {
+        "sha256": "b3f9bf7c88ca3f1d7f86831514c5fa68697555c816b959734f361d942632433f",
+        "selected_rows": {
+          "6": [
+            2,
+            4,
+            0
+          ],
+          "12": [
+            2,
+            17,
+            2
+          ],
+          "14": [
+            2,
+            18,
+            2
+          ],
+          "16": [
+            6,
+            0,
+            0
+          ],
+          "17": [
+            5,
+            20,
+            0
+          ],
+          "41": [
+            5,
+            0,
+            0
+          ],
+          "44": [
+            21,
+            0,
+            0
+          ],
+          "69": [
+            1,
+            17,
+            0
+          ],
+          "70": [
+            1,
+            18,
+            0
+          ],
+          "72": [
+            5,
+            2,
+            0
+          ],
+          "74": [
+            5,
+            16,
+            0
+          ],
+          "76": [
+            1,
+            4,
+            0
+          ]
+        },
+        "tracked_allocation_rows": [
+          [
+            6,
+            4
+          ],
+          [
+            12,
+            17
+          ],
+          [
+            14,
+            18
+          ]
+        ]
+      }
+    },
+    "raw_kinds": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "capture_kind_from_counter": 3,
+    "attached_pool_acquire_results": [
+      1,
+      0,
+      1
+    ],
+    "attached_pool_reissued_pointers": [
+      2248146944,
+      2248151040,
+      2248155136,
+      2248159232
+    ],
+    "ordinary_slot4_planes": [
+      [
+        2164260928,
+        2164261472,
+        2164261760
+      ],
+      [
+        2164262016,
+        2164262208,
+        2164262336
+      ],
+      [
+        2164262464,
+        2164262496,
+        2164262512
+      ]
+    ],
+    "masked_slot17_planes": [
+      [
+        2181038144,
+        2181038688,
+        2181038976
+      ],
+      [
+        2181039232,
+        2181039424,
+        2181039552
+      ],
+      [
+        2181039680,
+        2181039712,
+        2181039728
+      ]
+    ],
+    "masked_slot17_reallocated_planes": [
+      [
+        2197815360,
+        2197815904,
+        2197816192
+      ],
+      [
+        2197816448,
+        2197816640,
+        2197816768
+      ],
+      [
+        2197816896,
+        2197816928,
+        2197816944
+      ]
+    ],
+    "secondary_slot17_ordinary_planes": [
+      [
+        2214592576,
+        2214593120,
+        2214593408
+      ],
+      [
+        2214593664,
+        2214593856,
+        2214593984
+      ],
+      [
+        2214594112,
+        2214594144,
+        2214594160
+      ]
+    ],
+    "mask_routes": [
+      {
+        "initial_mask": 4,
+        "completion_mask": 8,
+        "masked_planes": [
+          2181038144,
+          2181038688,
+          2181038976
+        ],
+        "ordinary_planes": [
+          2164260928,
+          2164261472,
+          2164261760
+        ]
+      },
+      {
+        "initial_mask": 64,
+        "completion_mask": 128,
+        "masked_planes": [
+          2181038144,
+          2181038688,
+          2181038976
+        ],
+        "ordinary_planes": [
+          2164260928,
+          2164261472,
+          2164261760
+        ]
+      }
+    ],
+    "recipe9_fixture": {
+      "completion_mask": 128,
+      "slot18_aligned_base": 2231369760,
+      "slot17_base": 0,
+      "cpp_planes": [
+        2164260928,
+        2164261472,
+        2164261760
+      ]
+    },
+    "slot4_pool_single_entry_reacquired": 2164260883,
+    "scaler_descriptors": [
+      8512,
+      8624,
+      8652
+    ],
+    "jpeg_input_descriptors": [
+      8624,
+      8652
+    ],
+    "arena_allocation_calls": [
+      [
+        268836864,
+        16384
+      ],
+      [
+        268836864,
+        16384
+      ],
+      [
+        268836864,
+        16384
+      ],
+      [
+        268836864,
+        8192
+      ]
+    ],
+    "arena_free_calls": [
+      [
+        268836864,
+        2181038099
+      ],
+      [
+        268836864,
+        2197815315
+      ]
+    ]
+  },
+  "limits": [
+    "Recipe tables are built by original code. Selected rows are zero based. Recipe order and the segmented probes do not establish asynchronous completion order.",
+    "Constructor coverage is the prefix through plane descriptor initialization and the separate buffer-slot clear loop. Fixture globals model initialized services.",
+    "Pool entries, arena metadata, dimensions and allocator results are synthetic. The firmware pool and heap wrappers execute, but the lowest arena calls are hooked.",
+    "The two live backings differ in these fixtures. Their real camera addresses and pixel contents are outside the probe. Descriptor words alone outlive slot release.",
+    "CPP and module 20 probes execute address selection and completion-mask updates only. Scaler and JPEG probes check descriptor bindings without executing pixel operations."
+  ]
+}
