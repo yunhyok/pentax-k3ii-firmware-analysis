@@ -1,0 +1,882 @@
+{
+  "schema_version": 1,
+  "firmware_version": "1.12",
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "config_callers": {
+    "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+    "code_va_base": 33554432,
+    "unicorn_version": "2.1.4",
+    "static_checks": {
+      "branches": 35,
+      "words": 28,
+      "mask_table_halfwords": 10
+    },
+    "execution_replacements": [],
+    "planning_cases": [
+      {
+        "type": 2,
+        "subtype": 4,
+        "selector": 1,
+        "requests": [
+          {
+            "address": 269418160,
+            "fields": [
+              1,
+              2,
+              6,
+              7,
+              257,
+              513,
+              4880,
+              0
+            ]
+          },
+          {
+            "address": 269418188,
+            "fields": [
+              1,
+              3,
+              8,
+              9,
+              258,
+              514,
+              4095,
+              0
+            ]
+          }
+        ],
+        "request_list": 269418356,
+        "plan_stack": 269418160
+      },
+      {
+        "type": 2,
+        "subtype": 4,
+        "selector": 2,
+        "requests": [
+          {
+            "address": 269418160,
+            "fields": [
+              1,
+              4,
+              10,
+              11,
+              257,
+              513,
+              4880,
+              0
+            ]
+          },
+          {
+            "address": 269418188,
+            "fields": [
+              1,
+              5,
+              12,
+              13,
+              258,
+              514,
+              4095,
+              0
+            ]
+          }
+        ],
+        "request_list": 269418356,
+        "plan_stack": 269418160
+      },
+      {
+        "type": 2,
+        "subtype": 4,
+        "selector": 3,
+        "requests": [
+          {
+            "address": 269418160,
+            "fields": [
+              1,
+              6,
+              14,
+              15,
+              257,
+              513,
+              4880,
+              0
+            ]
+          },
+          {
+            "address": 269418188,
+            "fields": [
+              1,
+              7,
+              16,
+              17,
+              258,
+              514,
+              4095,
+              0
+            ]
+          }
+        ],
+        "request_list": 269418356,
+        "plan_stack": 269418160
+      },
+      {
+        "type": 2,
+        "subtype": 4,
+        "selector": 4,
+        "requests": [
+          {
+            "address": 269418160,
+            "fields": [
+              1,
+              8,
+              24,
+              25,
+              257,
+              513,
+              4880,
+              0
+            ]
+          }
+        ],
+        "request_list": 269418356,
+        "plan_stack": 269418160
+      },
+      {
+        "type": 2,
+        "subtype": 4,
+        "selector": 5,
+        "requests": [
+          {
+            "address": 269418160,
+            "fields": [
+              1,
+              0,
+              0,
+              0,
+              257,
+              513,
+              4880,
+              0
+            ]
+          }
+        ],
+        "request_list": 269418356,
+        "plan_stack": 269418160
+      },
+      {
+        "type": 2,
+        "subtype": 4,
+        "selector": 4294967295,
+        "requests": [
+          {
+            "address": 269418160,
+            "fields": [
+              1,
+              0,
+              0,
+              0,
+              257,
+              513,
+              4880,
+              0
+            ]
+          }
+        ],
+        "request_list": 269418356,
+        "plan_stack": 269418160
+      },
+      {
+        "type": 2,
+        "subtype": 4,
+        "selector": 0,
+        "requests": [
+          {
+            "address": 269418160,
+            "fields": [
+              1,
+              0,
+              0,
+              1,
+              257,
+              513,
+              4880,
+              0
+            ]
+          },
+          {
+            "address": 269418188,
+            "fields": [
+              1,
+              0,
+              2,
+              3,
+              258,
+              514,
+              4095,
+              1
+            ]
+          },
+          {
+            "address": 269418216,
+            "fields": [
+              1,
+              0,
+              4,
+              5,
+              259,
+              515,
+              4912,
+              1
+            ]
+          }
+        ],
+        "request_list": 269418356,
+        "plan_stack": 269418160
+      }
+    ],
+    "unhandled_subtype": {
+      "type": 2,
+      "subtype": 7,
+      "selector": 0,
+      "requests": []
+    },
+    "worker_without_flag2_stop": 6514428,
+    "linked_caller_cases": [
+      {
+        "prepared_result_flag": 0,
+        "prepared_counts": [
+          2,
+          3
+        ],
+        "prepared_lengths": [
+          4,
+          4
+        ],
+        "resolved_indices": [
+          0,
+          1
+        ],
+        "setter_calls": [
+          [
+            7665988,
+            268566528,
+            0,
+            4
+          ],
+          [
+            7665988,
+            268566528,
+            1,
+            4
+          ]
+        ],
+        "prepared_wait_result": 0,
+        "observed_counts": [
+          1,
+          1
+        ],
+        "config_bytes": [
+          1,
+          1
+        ],
+        "response": [
+          25,
+          0
+        ]
+      },
+      {
+        "prepared_result_flag": 1,
+        "prepared_counts": [
+          2,
+          1
+        ],
+        "prepared_lengths": [
+          4,
+          4
+        ],
+        "resolved_indices": [
+          0,
+          1
+        ],
+        "setter_calls": [
+          [
+            7666036,
+            268566528,
+            0,
+            2
+          ],
+          [
+            7666036,
+            268566528,
+            1,
+            1
+          ],
+          [
+            7665988,
+            268566528,
+            0,
+            4
+          ],
+          [
+            7665988,
+            268566528,
+            1,
+            4
+          ]
+        ],
+        "prepared_wait_result": 0,
+        "observed_counts": [
+          2,
+          1
+        ],
+        "config_bytes": [
+          0,
+          1
+        ],
+        "response": [
+          25,
+          0
+        ]
+      },
+      {
+        "prepared_result_flag": 1,
+        "prepared_counts": [
+          1,
+          1
+        ],
+        "prepared_lengths": [
+          4,
+          4
+        ],
+        "resolved_indices": [
+          0,
+          1
+        ],
+        "setter_calls": [
+          [
+            7666036,
+            268566528,
+            0,
+            1
+          ],
+          [
+            7666036,
+            268566528,
+            1,
+            1
+          ],
+          [
+            7665988,
+            268566528,
+            0,
+            4
+          ],
+          [
+            7665988,
+            268566528,
+            1,
+            4
+          ]
+        ],
+        "prepared_wait_result": 1023,
+        "observed_counts": [
+          1,
+          1
+        ],
+        "config_bytes": [
+          1,
+          1
+        ],
+        "response": [
+          25,
+          1023
+        ]
+      }
+    ],
+    "setter_range_control": {
+      "prepared_index_words": [
+        257,
+        26
+      ],
+      "resolved_indices": [
+        1,
+        26
+      ],
+      "setter_calls": [
+        [
+          7666036,
+          268566528,
+          1,
+          3
+        ],
+        [
+          7666036,
+          268566528,
+          26,
+          9
+        ],
+        [
+          7665988,
+          268566528,
+          1,
+          4
+        ],
+        [
+          7665988,
+          268566528,
+          26,
+          2864434397
+        ]
+      ]
+    },
+    "alternate_mask_cases": [
+      {
+        "prepared_mask": 1023,
+        "writer_called": true,
+        "end_exclusive": 6512516
+      },
+      {
+        "prepared_mask": 511,
+        "writer_called": false,
+        "end_exclusive": 6512564
+      },
+      {
+        "prepared_mask": 2047,
+        "writer_called": false,
+        "end_exclusive": 6512564
+      }
+    ],
+    "boundaries": {
+      "command_through_native_copy": [
+        8083796,
+        6499544
+      ],
+      "worker_post_lock_flag_slice": [
+        6491588,
+        6491604
+      ],
+      "worker_through_native_pair_lookup": [
+        6514324,
+        6509268
+      ],
+      "prepared_result_caller": [
+        6509876,
+        6510004
+      ],
+      "prepared_wait_return_through_writer": [
+        8081704,
+        8081744
+      ],
+      "alternate_mask_caller_entry": 6512460
+    }
+  },
+  "packets": {
+    "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+    "cases": [
+      {
+        "write_subcommand": 6,
+        "read_subcommand": 7,
+        "provider_selector": 99,
+        "block_index": 0,
+        "read_words": 513,
+        "backing_sha256": "de79bfa6c88e496d81ace18ae953dec27f12ec85ac37cce137db84b6b934d133",
+        "write_trace": [
+          {
+            "pc": 8643192,
+            "r0": 268566528,
+            "r1": 99,
+            "r2": 268632076
+          },
+          {
+            "pc": 8641380,
+            "r0": 1077981020,
+            "r1": 268632076,
+            "r2": 41083384
+          },
+          {
+            "pc": 7528952,
+            "r0": 1077981020,
+            "r1": 268632076,
+            "r2": 41083384
+          },
+          {
+            "pc": 7528684,
+            "r0": 2147483648,
+            "r1": 268632076,
+            "r2": 41083384
+          }
+        ],
+        "read_trace": [
+          {
+            "pc": 8643616,
+            "r0": 268566528,
+            "r1": 99,
+            "r2": 269418460
+          },
+          {
+            "pc": 8641244,
+            "r0": 1077981020,
+            "r1": 268632072,
+            "r2": 41083392
+          },
+          {
+            "pc": 7528960,
+            "r0": 1077981020,
+            "r1": 268632072,
+            "r2": 41083392
+          },
+          {
+            "pc": 7528752,
+            "r0": 2147483648,
+            "r1": 268632072,
+            "r2": 41083392
+          }
+        ]
+      },
+      {
+        "write_subcommand": 6,
+        "read_subcommand": 7,
+        "provider_selector": 99,
+        "block_index": 1,
+        "read_words": 512,
+        "backing_sha256": "119add684d99e2251b16794610e1d4a49d3ca72ac1ada51146d881c637e0326f",
+        "write_trace": [
+          {
+            "pc": 8643192,
+            "r0": 268566528,
+            "r1": 99,
+            "r2": 268632076
+          },
+          {
+            "pc": 8641380,
+            "r0": 1077981020,
+            "r1": 268632076,
+            "r2": 41083384
+          },
+          {
+            "pc": 7528952,
+            "r0": 1077981020,
+            "r1": 268632076,
+            "r2": 41083384
+          },
+          {
+            "pc": 7528684,
+            "r0": 2147483648,
+            "r1": 268632076,
+            "r2": 41083384
+          }
+        ],
+        "read_trace": [
+          {
+            "pc": 8643616,
+            "r0": 268566528,
+            "r1": 99,
+            "r2": 269418460
+          },
+          {
+            "pc": 8641244,
+            "r0": 1077981020,
+            "r1": 268632072,
+            "r2": 41083392
+          },
+          {
+            "pc": 7528960,
+            "r0": 1077981020,
+            "r1": 268632072,
+            "r2": 41083392
+          },
+          {
+            "pc": 7528752,
+            "r0": 2147483648,
+            "r1": 268632072,
+            "r2": 41083392
+          }
+        ]
+      },
+      {
+        "write_subcommand": 6,
+        "read_subcommand": 7,
+        "provider_selector": 99,
+        "block_index": 31,
+        "read_words": 508,
+        "backing_sha256": "3e90d1c0dbad91a8136c6cec3b04d52b7d88c207c3be8784011552fabdd4a460",
+        "write_trace": [
+          {
+            "pc": 8643192,
+            "r0": 268566528,
+            "r1": 99,
+            "r2": 268632076
+          },
+          {
+            "pc": 8641380,
+            "r0": 1077981020,
+            "r1": 268632076,
+            "r2": 41083384
+          },
+          {
+            "pc": 7528952,
+            "r0": 1077981020,
+            "r1": 268632076,
+            "r2": 41083384
+          },
+          {
+            "pc": 7528684,
+            "r0": 2147483648,
+            "r1": 268632076,
+            "r2": 41083384
+          }
+        ],
+        "read_trace": [
+          {
+            "pc": 8643616,
+            "r0": 268566528,
+            "r1": 99,
+            "r2": 269418460
+          },
+          {
+            "pc": 8641244,
+            "r0": 1077981020,
+            "r1": 268632072,
+            "r2": 41083392
+          },
+          {
+            "pc": 7528960,
+            "r0": 1077981020,
+            "r1": 268632072,
+            "r2": 41083392
+          },
+          {
+            "pc": 7528752,
+            "r0": 2147483648,
+            "r1": 268632072,
+            "r2": 41083392
+          }
+        ]
+      },
+      {
+        "write_subcommand": 10,
+        "read_subcommand": 11,
+        "provider_selector": 3,
+        "block_index": 0,
+        "read_words": 513,
+        "backing_sha256": "e322f9d6459acaee2d1bad08927769addd4aa106caec621931bd6ff3b4206fd1",
+        "write_trace": [
+          {
+            "pc": 8643192,
+            "r0": 268566528,
+            "r1": 99,
+            "r2": 268632076
+          },
+          {
+            "pc": 8641380,
+            "r0": 1077981020,
+            "r1": 268632076,
+            "r2": 41083384
+          },
+          {
+            "pc": 7528952,
+            "r0": 1077981020,
+            "r1": 268632076,
+            "r2": 41083384
+          },
+          {
+            "pc": 7528684,
+            "r0": 2147483648,
+            "r1": 268632076,
+            "r2": 41083384
+          }
+        ],
+        "read_trace": [
+          {
+            "pc": 8643616,
+            "r0": 268566528,
+            "r1": 99,
+            "r2": 269418460
+          },
+          {
+            "pc": 8641244,
+            "r0": 1077981020,
+            "r1": 268632072,
+            "r2": 41083392
+          },
+          {
+            "pc": 7528960,
+            "r0": 1077981020,
+            "r1": 268632072,
+            "r2": 41083392
+          },
+          {
+            "pc": 7528752,
+            "r0": 2147483648,
+            "r1": 268632072,
+            "r2": 41083392
+          }
+        ]
+      },
+      {
+        "write_subcommand": 10,
+        "read_subcommand": 11,
+        "provider_selector": 3,
+        "block_index": 1,
+        "read_words": 512,
+        "backing_sha256": "2b1ad182bf8bdb17359a796cf11fed99824b5b1717b52a43739eda2e2019d2a1",
+        "write_trace": [
+          {
+            "pc": 8643192,
+            "r0": 268566528,
+            "r1": 99,
+            "r2": 268632076
+          },
+          {
+            "pc": 8641380,
+            "r0": 1077981020,
+            "r1": 268632076,
+            "r2": 41083384
+          },
+          {
+            "pc": 7528952,
+            "r0": 1077981020,
+            "r1": 268632076,
+            "r2": 41083384
+          },
+          {
+            "pc": 7528684,
+            "r0": 2147483648,
+            "r1": 268632076,
+            "r2": 41083384
+          }
+        ],
+        "read_trace": [
+          {
+            "pc": 8643616,
+            "r0": 268566528,
+            "r1": 99,
+            "r2": 269418460
+          },
+          {
+            "pc": 8641244,
+            "r0": 1077981020,
+            "r1": 268632072,
+            "r2": 41083392
+          },
+          {
+            "pc": 7528960,
+            "r0": 1077981020,
+            "r1": 268632072,
+            "r2": 41083392
+          },
+          {
+            "pc": 7528752,
+            "r0": 2147483648,
+            "r1": 268632072,
+            "r2": 41083392
+          }
+        ]
+      },
+      {
+        "write_subcommand": 10,
+        "read_subcommand": 11,
+        "provider_selector": 3,
+        "block_index": 31,
+        "read_words": 508,
+        "backing_sha256": "ae8707654f619a9af7e4c7de906ffe963b01cc23799f97fe8154bae076a0d50d",
+        "write_trace": [
+          {
+            "pc": 8643192,
+            "r0": 268566528,
+            "r1": 99,
+            "r2": 268632076
+          },
+          {
+            "pc": 8641380,
+            "r0": 1077981020,
+            "r1": 268632076,
+            "r2": 41083384
+          },
+          {
+            "pc": 7528952,
+            "r0": 1077981020,
+            "r1": 268632076,
+            "r2": 41083384
+          },
+          {
+            "pc": 7528684,
+            "r0": 2147483648,
+            "r1": 268632076,
+            "r2": 41083384
+          }
+        ],
+        "read_trace": [
+          {
+            "pc": 8643616,
+            "r0": 268566528,
+            "r1": 99,
+            "r2": 269418460
+          },
+          {
+            "pc": 8641244,
+            "r0": 1077981020,
+            "r1": 268632072,
+            "r2": 41083392
+          },
+          {
+            "pc": 7528960,
+            "r0": 1077981020,
+            "r1": 268632072,
+            "r2": 41083392
+          },
+          {
+            "pc": 7528752,
+            "r0": 2147483648,
+            "r1": 268632072,
+            "r2": 41083392
+          }
+        ]
+      }
+    ],
+    "rejected_providers": [
+      {
+        "subcommand": 6,
+        "selector": 102,
+        "status": 131
+      },
+      {
+        "subcommand": 7,
+        "selector": 102,
+        "status": 131
+      },
+      {
+        "subcommand": 10,
+        "selector": 16,
+        "status": 131
+      },
+      {
+        "subcommand": 11,
+        "selector": 16,
+        "status": 131
+      }
+    ],
+    "index32_prefix": {
+      "subcommand": 10,
+      "provider_selector": 3,
+      "stop_before": 7528588,
+      "pending_write_va": 2147549200,
+      "store_executed": false
+    },
+    "execution_replacements": [],
+    "limits": [
+      "Synthetic command and RAM. Handler manager binding and native registered ID63 are real code with supplied guards/manager link.",
+      "Dispatcher prefix runs to before lock construction; resume at83DC98 bypasses outer lock/state gate. Nested writes resume83DB4C after omitted lock wait and83DB40 after omitted cleanup. No lock result is executed or inferred.",
+      "Stop83E434 before outer cleanup/return; no transport producer or actual device reachability proof.",
+      "Provider ID rejection and block index are separate. Index32 only reaches first store boundary; store is not executed."
+    ]
+  },
+  "limits": [
+    "Synthetic command/config/worker objects and Flash records; original constructor and binding slices use supplied allocator result, manager link and initialization guards.",
+    "Config command reaches original pointer-list copy, stopping before wait/state work. The post-lock flag OR/store runs with prepared value2. Computation-result fields and wait return value are supplied; no scheduler or computation algorithm is run.",
+    "Only the first pair of selector0 is joined to result setters and writer. All seven selectors have separately checked planning output; this is not all work items completing.",
+    "Alternate completion-mask caller starts after its worker return and stops before restore on rejection; no restore body or preceding calculation is run.",
+    "Packet dispatcher omits outer lock/state gate, write-side lock wait and cleanup, and outer cleanup/return. Original saved frames are retained across those explicit resume boundaries.",
+    "Index32 packet control stops before its first out-of-span store. No transport or real device reachability and no exploitability claim.",
+    "No physical Flash/DMA/capture or menu activation is exercised; these command selectors are not shown to be user menu values."
+  ]
+}

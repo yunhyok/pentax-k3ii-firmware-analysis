@@ -1025,5 +1025,22 @@
       "document_scroll_width": 1882,
       "mobile_viewport_checked": false
     }
+  },
+  "preserved_dispatch": {
+    "config_plans": 7,
+    "unhandled_subtype_controls": 1,
+    "bit_clear_controls": 1,
+    "linked_config_cases": 3,
+    "malformed_index_controls": 1,
+    "alternate_mask_cases": 3,
+    "packet_write_read_pairs": 6,
+    "invalid_provider_controls": 4,
+    "index32_before_store_controls": 1,
+    "execution_replacements": 0,
+    "physical_capture": false,
+    "normal_and_optimized_snapshot": "PASS",
+    "promotion_AST": "Both probe function bodies unchanged except public function names",
+    "independent_review": "No P0-P2. Accepted P3 packet outer status R4 wording. Native flag OR control preserves existing bit; zero input rejected; missing ID63 registration fails native vtable read.",
+    "language_gate": "light;0.1 percent;3 sentences touched;deterministic gates PASS;modality restored0"
   }
 }

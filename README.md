@@ -1,5 +1,7 @@
 # PENTAX K-3 II v1.12 펌웨어 분석
 
+[보존 레코드의 상위 명령 경로](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/preserved-dispatch.html): 원본 명령의 작업 계획·포인터 복사·개수 갱신 조건과 별도 ID 0x63 패킷 전달을 검증했습니다. 계산·대기 결과를 준비하거나 잠금을 생략한 경계를 도식에 구분했습니다.
+
 [정책 플래그의 원본 생산자](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/preserved-config.html): 보존 레코드의 두 그룹 검사 결과가 설정 +0xC·+0xD에 각각 저장되고, 같은 객체에서 초기 CAP+0x4A까지 전달되는 경로를 초기화 5건·갱신 3건으로 검증했습니다. 메뉴 값이나 실제 촬영 활성화로 확정하지 않았습니다.
 
 [보존 섹터 20·21과 픽셀 정책 입력](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/preserved-sector20.html): 원본 공급자 적재 6건, 같은 RAM 마커를 읽는 초기 플래그 대조 12건, 전체 섹터 저장 준비 8건을 검증했습니다. ID 0x63의 패킷 수정이 두 저장 준비 버퍼에 반영되며, 별도 블록 경계와 저장 전 정지 조건도 구분했습니다. 물리 기록과 상위 패킷 검증은 미확정입니다.
@@ -100,6 +102,7 @@ python verify_capture_prepare.py .private/decoded/decoded.bin --compare analysis
 python verify_store_image_records.py .private/decoded/decoded.bin --compare analysis/store-image-records.json
 python verify_preserved_sector20.py .private/decoded/decoded.bin --compare analysis/preserved-sector20.json
 python verify_preserved_config.py .private/decoded/decoded.bin --compare analysis/preserved-config.json
+python verify_preserved_dispatch.py .private/decoded/decoded.bin --compare analysis/preserved-dispatch.json
 python verify_tone_rebuild.py .private/decoded/decoded.bin --zig <Zig-0.17.1-실행파일> --compare analysis/tone-rebuild.json
 python -m unittest discover -s tests -v
 python verify_publication.py

@@ -43,7 +43,10 @@
         "verify_preserved_sector20.py",
         "analysis/preserved-config.html",
         "analysis/preserved-config.json",
-        "verify_preserved_config.py"
+        "verify_preserved_config.py",
+        "analysis/preserved-dispatch.html",
+        "analysis/preserved-dispatch.json",
+        "verify_preserved_dispatch.py"
       ],
       "gaps": [
         "Only same-size edits; insertion/deletion and relocation are unsupported.",
@@ -137,6 +140,8 @@
     }
   ],
   "new_findings": [
+    "Bounded upstream dispatch: type2/sub4 command plans 1..3 requests, native 632CD4 copies pointer list to worker+28C, post-lock630DC4 OR/store supplies work bit2. Same first request reaches original count/length setters with prepared calculation results and same saved config reaches74ED98 after prepared wait return. Alternate caller requires exact3FF. Separate ID63 packet commands6/7 direct63 and10/11 mapped3 execute virtual packet calls under explicit omitted lock/state gates; six write/read pairs, four invalid providers and index32 before-store control pass. No real transport/menu/capture claim.",
+    "HQ config documentation corrections: consumers74F9BC and74F9F8 re-read both live RAM markers through72E004/72DDEC; C/D=1 alone is insufficient. Corrected 33 original words to include literals/pointers. Config verifier/JSON unchanged; diagram now includes live marker recheck.",
     "Native config flag producers: service owner4047D108+3C is bound by original5660B4 after ctor74E598. Native later virtual init56670C→74ED54 binds ID63/64 and validates same native-loaded RAM in independent groups C=0..5,D=6..17/24/25. Five init and three same-RAM indexed-count updates produce independent C/D and initial CAP4A/neighbor values. Native capture prefix65EA68 resolves same owner/config itself. Supplied allocator result, guards, call frames, synthetic records and version-zero ID62 route remain explicit; upstream events and hardware are unproven.",
     "Unchanged K-3 II decoded bytes repack byte-identically to the original distribution package.",
     "Primary 16 MiB checksum is little-endian at 0x1f0; secondary 0xf000-byte checksum is big-endian at 0x100007c.",
@@ -277,7 +282,10 @@
     "verify_preserved_sector20.py",
     "analysis/preserved-config.html",
     "analysis/preserved-config.json",
-    "verify_preserved_config.py"
+    "verify_preserved_config.py",
+    "analysis/preserved-dispatch.html",
+    "analysis/preserved-dispatch.json",
+    "verify_preserved_dispatch.py"
   ],
   "blockers": [
     {
@@ -524,7 +532,8 @@
       },
       "sha256": "a070b76296b328e29d07638d895430f2646c18caebfc72ddac53fb5c91c84575",
       "html_sha256": "cae5aa5b99c9f268d0062bc548bb2a7783d1ce25d1e0f8bb7f6852d23510f6e8",
-      "verifier_sha256": "ecf0c72d1729d9dabb74f9c3f0cba96a073ca88a830ef1e4b404284663c81338"
+      "verifier_sha256": "ecf0c72d1729d9dabb74f9c3f0cba96a073ca88a830ef1e4b404284663c81338",
+      "independent_HQ_review": "Accepted: independent native edges/words, clamp/shift and rejection controls plus HQ full public replay. Physical writes/power recovery/upstream index reachability remain unverified."
     },
     "preserved-config": {
       "commit": "e4ebc71e1c2862ec63d29a946c5688265ed34eb4",
@@ -554,7 +563,7 @@
       "verifier_sha256": "16024df64a6af3c914c634303838a51d8bda202ee548bf1523cb92cbcc39f6db"
     }
   },
-  "offline_work_in_progress": "Preserved-config publication verified through fresh clone optimized replay, 24 unit tests, CI/Pages, 9 byte-exact HTTP files and 2 visual diagrams. One worker tracing original count-setter/writer callers; manager tracing ID63 packet virtual slots. Physical capture/Flash and upstream live event reachability remain unproven.",
+  "offline_work_in_progress": "Publishing preserved-dispatch after independent two-probe review. Remaining: actual command producer/transport, lock/state gates, worker computation63495C, wait completion and physical record meaning. Prepared input and omitted execution boundaries are documented. Latest advisory usage13 percent; user continuation threshold5 percent.",
   "snapshot_comparison_type_fix": {
     "commit": "bcacf0fd9aa4f77d35ca664bbb6e71cbdf830ea3",
     "shared_helper": "verify_findings.require_snapshot",
