@@ -1058,6 +1058,7 @@
       "inner_width": 1897,
       "document_scroll_width": 1882,
       "mobile_viewport_checked": false
-    }
+    },
+    "pre_release_terminology_correction": "Native state snapshot/copy/query/cleanup replaces unsupported packet lock-wait label; code behavior and evidence excluding limits unchanged; normal/-O PASS"
   }
 }

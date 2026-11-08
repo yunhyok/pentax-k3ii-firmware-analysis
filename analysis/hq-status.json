@@ -140,6 +140,7 @@
     }
   ],
   "new_findings": [
+    "Pre-release terminology correction: omitted packet6EB310/6EB44C/6EB620/6EB60C path is state snapshot construction/copy/field query/cleanup, not a demonstrated lock wait. Native6EB44C→50F550 copies13 bytes;6EB620 reads table9DF9B0;6EB60C→520500 returns immediately. Outer field2 accepts2/3; write-side field0 accepts1. Packet execution still omits these gates, and behavioral JSON is unchanged apart from limit text.",
     "Bounded upstream dispatch: type2/sub4 command plans 1..3 requests, native 632CD4 copies pointer list to worker+28C, post-lock630DC4 OR/store supplies work bit2. Same first request reaches original count/length setters with prepared calculation results and same saved config reaches74ED98 after prepared wait return. Alternate caller requires exact3FF. Separate ID63 packet commands6/7 direct63 and10/11 mapped3 execute virtual packet calls under explicit omitted lock/state gates; six write/read pairs, four invalid providers and index32 before-store control pass. No real transport/menu/capture claim.",
     "HQ config documentation corrections: consumers74F9BC and74F9F8 re-read both live RAM markers through72E004/72DDEC; C/D=1 alone is insufficient. Corrected 33 original words to include literals/pointers. Config verifier/JSON unchanged; diagram now includes live marker recheck.",
     "Native config flag producers: service owner4047D108+3C is bound by original5660B4 after ctor74E598. Native later virtual init56670C→74ED54 binds ID63/64 and validates same native-loaded RAM in independent groups C=0..5,D=6..17/24/25. Five init and three same-RAM indexed-count updates produce independent C/D and initial CAP4A/neighbor values. Native capture prefix65EA68 resolves same owner/config itself. Supplied allocator result, guards, call frames, synthetic records and version-zero ID62 route remain explicit; upstream events and hardware are unproven.",
@@ -615,7 +616,7 @@
       "verifier_sha256": "3034abb1c76328fd9314a004dcac6a3f95b3129ea0f705cc16740e37ad7b63a0"
     }
   },
-  "offline_work_in_progress": "Preserved-dispatch published and verified: fresh clone optimized replay,24 tests,CI/Pages,9 HTTP files,3 diagrams. HQ config live-marker/33-word corrections included in6a4f885 with original config verifier/JSON unchanged. One worker tracing original result producer and tail copy into caller; manager checking omitted packet state predicate separately. Latest usage11 percent; user stop threshold5 percent.",
+  "offline_work_in_progress": "Finishing pre-release terminology correction and publication verification, then freezing public files for HQ-owned initial GitHub Release. New result-producer research stays private. Prior config P3 corrections are in6a4f885. No additional Release/tag/assets will be created by this manager.",
   "snapshot_comparison_type_fix": {
     "commit": "bcacf0fd9aa4f77d35ca664bbb6e71cbdf830ea3",
     "shared_helper": "verify_findings.require_snapshot",

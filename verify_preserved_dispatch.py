@@ -603,9 +603,9 @@ def emulate_packets(data):
                 cmd + 12,
                 "native packet argument points after provider selector",
             )
-            # Lock setup/wait is omitted; retained nested frame enters its success body.
+            # State snapshot setup/check is omitted; retained nested frame enters its success body.
             resume(0x83DB4C, 0x83DB38)
-            # Lock cleanup is omitted; native epilogue returns to the original caller.
+            # State snapshot cleanup is omitted; native epilogue returns to the original caller.
             resume(0x83DB40, 0x83E434)
             expected = bytearray(original)
             expected[0x10 + idx * 0x800 : 0x10 + idx * 0x800 + len(body)] = body
@@ -701,7 +701,7 @@ def emulate_packets(data):
         execution_replacements=[],
         limits=[
             "Synthetic command and RAM. Handler manager binding and native registered ID63 are real code with supplied guards/manager link.",
-            "Dispatcher prefix runs to before lock construction; resume at83DC98 bypasses outer lock/state gate. Nested writes resume83DB4C after omitted lock wait and83DB40 after omitted cleanup. No lock result is executed or inferred.",
+            "Dispatcher prefix stops before state snapshot construction/copy/check; resume at83DC98 bypasses that outer gate. Nested writes resume83DB4C after omitted state check and83DB40 after omitted snapshot cleanup. No snapshot state result is executed or inferred.",
             "Stop83E434 before outer cleanup/return; no transport producer or actual device reachability proof.",
             "Provider ID rejection and block index are separate. Index32 only reaches first store boundary; store is not executed.",
         ],
@@ -725,7 +725,7 @@ def main():
             "Config command reaches original pointer-list copy, stopping before wait/state work. The post-lock flag OR/store runs with prepared value2. Computation-result fields and wait return value are supplied; no scheduler or computation algorithm is run.",
             "Only the first pair of selector0 is joined to result setters and writer. All seven selectors have separately checked planning output; this is not all work items completing.",
             "Alternate completion-mask caller starts after its worker return and stops before restore on rejection; no restore body or preceding calculation is run.",
-            "Packet dispatcher omits outer lock/state gate, write-side lock wait and cleanup, and outer cleanup/return. Original saved frames are retained across those explicit resume boundaries.",
+            "Packet dispatcher omits outer state snapshot/copy/check, write-side state snapshot/check and cleanup, and outer cleanup/return. Original saved frames are retained across those explicit resume boundaries.",
             "Index32 packet control stops before its first out-of-span store. No transport or real device reachability and no exploitability claim.",
             "No physical Flash/DMA/capture or menu activation is exercised; these command selectors are not shown to be user menu values.",
         ],
