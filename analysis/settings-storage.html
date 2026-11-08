@@ -45,4 +45,4 @@ python verify_installation.py decoded.bin --emulate --compare analysis/installat
 python verify_color_ui.py decoded.bin --compare analysis/color-ui.json</code></pre>
 <p>Unicorn 2.1.4에서 설정 선택 8건, 세대 선택 10건, 연결된 설정·저장 11건을 재현했다. 원본 객체의 가상 함수 표와 읽기·복사·설정·준비·비교 명령을 사용했다. 동기화·메일박스 시작과 종료, 실제 섹터 쓰기는 명시적으로 대체했다. 검증 중 합성 플래시 영역도 바뀌지 않았는지 검사했다. <a href="../verify_settings_storage.py">실행 경계와 단정 검사</a></p>
 <p>이 결과로 보존 섹터 13과 22의 설정 저장 역할을 좁혔다. 섹터 14…21의 모든 필드, 실제 전원 차단 시 복구, 쓰기 후 활성 복사본의 전환 시점, 재부팅 후 설정 유지와 물리 플래시 수명은 검증하지 않았다. 메뉴 이벤트에서 저장 스케줄러까지 한 번에 실행한 시험도 아니다.</p>
-</section><p class="note">다른 보존 영역의 후속 검증: <a href="preserved-record.html">섹터 14는 등록 객체의 32바이트 레코드를 별도로 저장한다.</a> 이 경로의 상위 저장 함수는 같은 내용이어도 백엔드를 호출했다.</p></main><footer>K-3 II v1.12 · <a href="rebuild.html">재포장 도구</a> · <a href="../index.html">전체 분석</a></footer></body></html>
+</section><p class="note">다른 보존 영역의 후속 검증: <a href="preserved-record.html">섹터 14는 등록 객체의 32바이트 레코드를 덮어 넣어 저장을 요청한다.</a> 이 경로의 상위 저장 함수는 같은 내용이어도 백엔드를 호출했다.</p></main><footer>K-3 II v1.12 · <a href="rebuild.html">재포장 도구</a> · <a href="../index.html">전체 분석</a></footer></body></html>
