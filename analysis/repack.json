@@ -1,0 +1,385 @@
+{
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "input_sha256": "a33485f351019960192891ef69ddc5d4904ef9e298671d9d9955679e4c901a9a",
+  "locations": "decoded file offsets except explicit object/MMIO addresses",
+  "branches": [
+    [
+      6120796,
+      6120328
+    ],
+    [
+      6120808,
+      6120328
+    ],
+    [
+      6120340,
+      8681164
+    ],
+    [
+      6120828,
+      6113232
+    ],
+    [
+      6120848,
+      6113232
+    ],
+    [
+      6113380,
+      6113160
+    ],
+    [
+      6113404,
+      6113144
+    ],
+    [
+      6113208,
+      5873592
+    ],
+    [
+      6113156,
+      8681052
+    ]
+  ],
+  "range_hashes": {
+    "header_guards": {
+      "start": 6113144,
+      "end_exclusive": 6113408,
+      "sha256": "9a23484b428689dd2f151ba64519606dbb29981a34a8d7f8817259d112fa72b5"
+    },
+    "file_size_decode_check": {
+      "start": 6120640,
+      "end_exclusive": 6120860,
+      "sha256": "f1ef42b27df1ddbcf740999da6c83d83476a8bef65df872ccadad4e6e0ab5c8c"
+    },
+    "additive_checksum": {
+      "start": 8681052,
+      "end_exclusive": 8681164,
+      "sha256": "8ee6c357bb0396b2555926b56baa3181684f733c5b78a81c31882206041f4d8e"
+    },
+    "xor_decoder": {
+      "start": 8681164,
+      "end_exclusive": 8681608,
+      "sha256": "e0cbf07501527ff38c7729a39846aae439db33d880c2ba9b8fdd3894b4cf5de1"
+    },
+    "validation_command7": {
+      "start": 5873592,
+      "end_exclusive": 5873692,
+      "sha256": "be1ff64e4dc4f3dc932045730a58951a5d266e4108eef4b8c886a9f709ebee73"
+    },
+    "mailbox_receiver": {
+      "start": 893048,
+      "end_exclusive": 893708,
+      "sha256": "1782585aaf2ba70d416d70a410873a7267b19938be91810c60f8de353468752a"
+    },
+    "marker_tables": {
+      "start": 10379400,
+      "end_exclusive": 10379520,
+      "sha256": "d0f0e7eaa5f32b6908f662f41a25766951c73177675816f95cfaf34a91142184"
+    },
+    "decoder_checksum_tables": {
+      "start": 10379644,
+      "end_exclusive": 10379736,
+      "sha256": "713544d158fa938c4c338c83383d464d9193ce9c8d5acc0adf8e74e96ac757de"
+    }
+  },
+  "repack_cases": [
+    {
+      "label": "unchanged",
+      "original_sha256": "a33485f351019960192891ef69ddc5d4904ef9e298671d9d9955679e4c901a9a",
+      "source_decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+      "edited_decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+      "repaired_decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+      "package_sha256": "a33485f351019960192891ef69ddc5d4904ef9e298671d9d9955679e4c901a9a",
+      "size": 16838656,
+      "unchanged_input": true,
+      "unchanged_round_trip_exact": true,
+      "edited_bytes": 0,
+      "package_changed_bytes": 0,
+      "checksums": [
+        {
+          "start": 0,
+          "end_exclusive": 16777216,
+          "field": 496,
+          "byte_order": "little",
+          "stored": 2611143573,
+          "sum_mod_2_32": 0
+        },
+        {
+          "start": 16777216,
+          "end_exclusive": 16838656,
+          "field": 16777340,
+          "byte_order": "big",
+          "stored": 2337509467,
+          "sum_mod_2_32": 0
+        }
+      ],
+      "status": "offline_candidate_only",
+      "limits": [
+        "Fixed-size replacement only; no insertion, deletion or relocation.",
+        "Checksums and structure do not prove updater acceptance, boot or camera operation.",
+        "The command-7 validation boundary and physical update are not executed by this tool."
+      ]
+    },
+    {
+      "label": "primary_menu_letter",
+      "original_sha256": "a33485f351019960192891ef69ddc5d4904ef9e298671d9d9955679e4c901a9a",
+      "source_decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+      "edited_decoded_sha256": "e68eca1d88069b1fcf9ab761404dd85a4fd4c97ceac2ff8b7bb9160e3ba2c4ef",
+      "repaired_decoded_sha256": "4d38f73da9bd52d29de946692276dafcc861841c34b8dcab149fbf61cedb5412",
+      "package_sha256": "e415ffb878fcf05a88e754cb577e9579ca807f4c489d646675cf726daa677d2e",
+      "size": 16838656,
+      "unchanged_input": false,
+      "unchanged_round_trip_exact": false,
+      "edited_bytes": 1,
+      "package_changed_bytes": 2,
+      "checksums": [
+        {
+          "start": 0,
+          "end_exclusive": 16777216,
+          "field": 496,
+          "byte_order": "little",
+          "stored": 2611143541,
+          "sum_mod_2_32": 0
+        },
+        {
+          "start": 16777216,
+          "end_exclusive": 16838656,
+          "field": 16777340,
+          "byte_order": "big",
+          "stored": 2337509467,
+          "sum_mod_2_32": 0
+        }
+      ],
+      "status": "offline_candidate_only",
+      "limits": [
+        "Fixed-size replacement only; no insertion, deletion or relocation.",
+        "Checksums and structure do not prove updater acceptance, boot or camera operation.",
+        "The command-7 validation boundary and physical update are not executed by this tool."
+      ]
+    },
+    {
+      "label": "secondary_corruption_fixture",
+      "original_sha256": "a33485f351019960192891ef69ddc5d4904ef9e298671d9d9955679e4c901a9a",
+      "source_decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+      "edited_decoded_sha256": "bd20c0ce6a3e5ae8243dbfb38823ef6f2931268c402ea1d2cf5e2a6df4a6c7b5",
+      "repaired_decoded_sha256": "f669d70fd43c8bd551bb30f4a8d7b89b243e5db086e212cd8bc3cc9e9a3fc129",
+      "package_sha256": "3a1553d3e8b9cdb7409bf541b05c138db76805a0f00d1437fa523b4e669a993f",
+      "size": 16838656,
+      "unchanged_input": false,
+      "unchanged_round_trip_exact": false,
+      "edited_bytes": 1,
+      "package_changed_bytes": 2,
+      "checksums": [
+        {
+          "start": 0,
+          "end_exclusive": 16777216,
+          "field": 496,
+          "byte_order": "little",
+          "stored": 2611143573,
+          "sum_mod_2_32": 0
+        },
+        {
+          "start": 16777216,
+          "end_exclusive": 16838656,
+          "field": 16777340,
+          "byte_order": "big",
+          "stored": 2320732251,
+          "sum_mod_2_32": 0
+        }
+      ],
+      "status": "offline_candidate_only",
+      "limits": [
+        "Fixed-size replacement only; no insertion, deletion or relocation.",
+        "Checksums and structure do not prove updater acceptance, boot or camera operation.",
+        "The command-7 validation boundary and physical update are not executed by this tool."
+      ]
+    }
+  ],
+  "rejected_edits": [
+    "primary_iv",
+    "model",
+    "secondary_iv",
+    "middle_marker",
+    "resize",
+    "existing_output"
+  ],
+  "original_a32": {
+    "engine": "2.1.4",
+    "cases": [
+      {
+        "label": "unchanged",
+        "full_native_decoder_matches": true,
+        "checksum_accept": [
+          1,
+          1
+        ],
+        "header_guard_accept": [
+          1,
+          1
+        ],
+        "command7": {
+          "return": 1,
+          "request": [
+            7,
+            268435456,
+            4194304,
+            0,
+            7
+          ],
+          "reply": [
+            7,
+            0,
+            7
+          ]
+        },
+        "corrupt_primary_command7": {
+          "return": 0,
+          "request": [
+            7,
+            268435456,
+            4194304,
+            0,
+            7
+          ],
+          "reply": [
+            7,
+            1,
+            7
+          ]
+        },
+        "corrupted_checksum_accept": [
+          0,
+          0
+        ]
+      },
+      {
+        "label": "primary_menu_letter",
+        "full_native_decoder_matches": true,
+        "checksum_accept": [
+          1,
+          1
+        ],
+        "header_guard_accept": [
+          1,
+          1
+        ],
+        "command7": {
+          "return": 1,
+          "request": [
+            7,
+            268435456,
+            4194304,
+            0,
+            7
+          ],
+          "reply": [
+            7,
+            0,
+            7
+          ]
+        },
+        "corrupt_primary_command7": {
+          "return": 0,
+          "request": [
+            7,
+            268435456,
+            4194304,
+            0,
+            7
+          ],
+          "reply": [
+            7,
+            1,
+            7
+          ]
+        },
+        "corrupted_checksum_accept": [
+          0,
+          0
+        ]
+      },
+      {
+        "label": "secondary_corruption_fixture",
+        "full_native_decoder_matches": true,
+        "checksum_accept": [
+          1,
+          1
+        ],
+        "header_guard_accept": [
+          1,
+          1
+        ],
+        "command7": {
+          "return": 1,
+          "request": [
+            7,
+            268435456,
+            4194304,
+            0,
+            7
+          ],
+          "reply": [
+            7,
+            0,
+            7
+          ]
+        },
+        "corrupt_primary_command7": {
+          "return": 0,
+          "request": [
+            7,
+            268435456,
+            4194304,
+            0,
+            7
+          ],
+          "reply": [
+            7,
+            1,
+            7
+          ]
+        },
+        "corrupted_checksum_accept": [
+          0,
+          0
+        ]
+      }
+    ],
+    "marker_cases": [
+      {
+        "kind": 0,
+        "offset": 508,
+        "result": 0
+      },
+      {
+        "kind": 0,
+        "offset": 1703932,
+        "result": 0
+      },
+      {
+        "kind": 0,
+        "offset": 16777212,
+        "result": 0
+      },
+      {
+        "kind": 1,
+        "offset": 16777332,
+        "result": 0
+      },
+      {
+        "kind": 1,
+        "offset": 16838404,
+        "result": 0
+      }
+    ],
+    "instruction_hooks": [],
+    "mailbox_model": "Original sender and receiver execute in sequential saved CPU contexts over shared mapped bytes. No supplied result or ready-status hooks.",
+    "receiver_core_identity": "not established by this replay"
+  },
+  "limits": [
+    "No camera update or physical command7 result was observed.",
+    "The identified additive checks and fixed markers are not a cryptographic-signature proof.",
+    "Whole updater, ROM installation, boot, image capture and data preservation remain untested.",
+    "A repaired checksum can accept intentionally corrupted executable data; validity is not correctness."
+  ]
+}

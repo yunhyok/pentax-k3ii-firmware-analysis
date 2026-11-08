@@ -1,0 +1,410 @@
+{
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "firmware_version": "1.12",
+  "image_base": 33554432,
+  "offset_units": "Decoded file offsets except execution addresses and object fields.",
+  "word_check_count": 33,
+  "branch_checks": [
+    {
+      "file_offset": 589988,
+      "target_va": 34164164
+    },
+    {
+      "file_offset": 597416,
+      "target_va": 34164164
+    },
+    {
+      "file_offset": 609764,
+      "target_va": 34315080
+    },
+    {
+      "file_offset": 609784,
+      "target_va": 34161156
+    },
+    {
+      "file_offset": 607588,
+      "target_va": 34162756
+    },
+    {
+      "file_offset": 608344,
+      "target_va": 34160532
+    },
+    {
+      "file_offset": 608360,
+      "target_va": 34315100
+    },
+    {
+      "file_offset": 312584,
+      "target_va": 34315080
+    },
+    {
+      "file_offset": 949760,
+      "target_va": 33867008
+    },
+    {
+      "file_offset": 339588,
+      "target_va": 33867008
+    },
+    {
+      "file_offset": 339604,
+      "target_va": 33894100
+    },
+    {
+      "file_offset": 339672,
+      "target_va": 33894180
+    },
+    {
+      "file_offset": 339800,
+      "target_va": 16839688
+    },
+    {
+      "file_offset": 949352,
+      "target_va": 10572
+    },
+    {
+      "file_offset": 339620,
+      "target_va": 33921812
+    },
+    {
+      "file_offset": 340524,
+      "target_va": 33873260
+    },
+    {
+      "file_offset": 318848,
+      "target_va": 33867008
+    },
+    {
+      "file_offset": 318856,
+      "target_va": 33873972
+    },
+    {
+      "file_offset": 319732,
+      "target_va": 34161156
+    },
+    {
+      "file_offset": 608924,
+      "target_va": 34159908
+    },
+    {
+      "file_offset": 340260,
+      "target_va": 33893656
+    },
+    {
+      "file_offset": 339488,
+      "target_va": 33891148
+    },
+    {
+      "file_offset": 336760,
+      "target_va": 33848704
+    },
+    {
+      "file_offset": 294296,
+      "target_va": 33848528
+    },
+    {
+      "file_offset": 294244,
+      "target_va": 33764072
+    },
+    {
+      "file_offset": 209656,
+      "target_va": 33763920
+    },
+    {
+      "file_offset": 209548,
+      "target_va": 34312368
+    },
+    {
+      "file_offset": 309760,
+      "target_va": 34144860
+    },
+    {
+      "file_offset": 316420,
+      "target_va": 33864184
+    },
+    {
+      "file_offset": 316524,
+      "target_va": 33871080
+    },
+    {
+      "file_offset": 316572,
+      "target_va": 33871068
+    },
+    {
+      "file_offset": 316644,
+      "target_va": 33870524
+    },
+    {
+      "file_offset": 316656,
+      "target_va": 33870268
+    },
+    {
+      "file_offset": 8761480,
+      "target_va": 39626844
+    },
+    {
+      "file_offset": 6072424,
+      "target_va": 39678004
+    },
+    {
+      "file_offset": 6123640,
+      "target_va": 39677516
+    }
+  ],
+  "copy_rows": [
+    {
+      "file_offset": 873036,
+      "source_file_offset": 873500,
+      "destination_va": 0,
+      "length": 15808
+    },
+    {
+      "file_offset": 873052,
+      "source_file_offset": 889308,
+      "destination_va": 1058816,
+      "length": 2196
+    },
+    {
+      "file_offset": 873068,
+      "source_file_offset": 891504,
+      "destination_va": 1061012,
+      "length": 244
+    },
+    {
+      "file_offset": 873116,
+      "source_file_offset": 896096,
+      "destination_va": 16786432,
+      "length": 55448
+    }
+  ],
+  "class_records": {
+    "7CAfLens": {
+      "rtti": 855888,
+      "name_offset": 861655,
+      "vtable": 872168
+    },
+    "8CAfMotor": {
+      "rtti": 855952,
+      "name_offset": 861712,
+      "vtable": 872348
+    },
+    "8CLensSdm": {
+      "rtti": 855996,
+      "name_offset": 861732,
+      "vtable": 872436
+    },
+    "9CLensKaf2": {
+      "rtti": 856100,
+      "name_offset": 861816,
+      "vtable": 872696
+    },
+    "20CAfLensCommunication": {
+      "rtti": 854628,
+      "name_offset": 858936,
+      "vtable": 868372
+    }
+  },
+  "capability": {
+    "query_caller": 609784,
+    "dispatch": 606724,
+    "command": 33285,
+    "response_bytes": 1,
+    "accepted_transport_status": 0,
+    "write": 760668,
+    "lens_object_offset": 6,
+    "predicate": 312576,
+    "relocated_veneer_va": 16840096,
+    "mask": 64
+  },
+  "drive": {
+    "prepare": 339512,
+    "predicate_call": 339588,
+    "lens_start": 318828,
+    "lens_transaction": 35072,
+    "body_target": 339224,
+    "body_dispatch": 294272,
+    "body_register_preparation": 209488
+  },
+  "model_and_service": {
+    "raw_model_getter": 309752,
+    "raw_model_index": 19,
+    "native_profile_dispatch": 316408,
+    "native_profile_targets": {
+      "0xf1": 315836,
+      "0xf2": 316092
+    },
+    "service_label": 8761964,
+    "service_command": 34305,
+    "service_on_payload_byte": 2
+  },
+  "range_sha256": {
+    "startup_copy": "21ccc5302296f3221e70a0a132e9b4e5b70155e169966ba0d2b10b6390e5fa3c",
+    "startup_copy_rows": "919c8d36e715c49cdf18d95a52b4635da0793ed2f502e15dd335ef57cc7e2b31",
+    "capability_query": "5cf9d057ac138e372eba66f08df07352bc3cfd2974b9b57a219add8575059a84",
+    "lens_command_dispatch": "68056c792c5beb6ab715fb3af99e50b0fb14baaa1ee6945075d302a96651e393",
+    "capability_predicate": "b47951e57939763c452d42bacfc39185a935f17eabd8733a75cc4523d4241e0d",
+    "drive_preparation": "c0bd92e6604a14b18b9908dbdbde7ae39747e3c622ff3fe55cc6e5ce4de60257",
+    "lens_af_transaction_preparation": "58feb92825a38b537185863eea16973dba5a635823f7a14b3e5a8cdc7b9e922c",
+    "body_drive_entry_and_direction": "0ef042c55fe59b1330bc3d45f6cb2be4e0117e4696ad60388c9a1cbf214d6ca9",
+    "body_register_preparation": "91c76c71be4a58955757c50621fbdf73fe4694448ebcd051db2baf1f3fa1d245",
+    "native_model_profile_selection": "743c4e7859be86f0bc91e936574e8968d644ad64cbc0f9a6dbaccafddff05d7f",
+    "service_control": "ffa565a5819c05349514159f6b2c74fe199b0e2fbafc86c6244020ed6f192c49"
+  },
+  "references": {
+    "Ricoh K-3 II FAQ": "https://www.ricoh-imaging.co.jp/english/support/qa/k-3-2/index.html",
+    "Ricoh original smc DA* 16-50 SDM": "https://www.ricoh-imaging.co.jp/english/products/lens/k/standard/smcpentax-das16-50/",
+    "Ricoh original smc DA* 50-135 SDM": "https://www.ricoh-imaging.co.jp/english/products/lens/k/telephoto/smcpentax-das50-135/",
+    "ExifTool MakerNote lens labels": "https://github.com/exiftool/exiftool/blob/9b8664dfcf2c609d3cc8925d380e98ad2a379f9b/lib/Image/ExifTool/Pentax.pm#L344-L360"
+  },
+  "numeric": {
+    "unicorn_version": "2.1.4",
+    "drive_cases": [
+      {
+        "reply": 0,
+        "transport_status": 0,
+        "prior_capability": 0,
+        "stored_capability": 0,
+        "lens_af_predicate": 0,
+        "route": "body_driver",
+        "lens_transactions": [],
+        "outbound_payloads": [],
+        "body_target": 18
+      },
+      {
+        "reply": 64,
+        "transport_status": 0,
+        "prior_capability": 0,
+        "stored_capability": 64,
+        "lens_af_predicate": 1,
+        "route": "lens_transaction",
+        "lens_transactions": [
+          [
+            35104,
+            1
+          ],
+          [
+            35072,
+            2
+          ]
+        ],
+        "outbound_payloads": [
+          [
+            0
+          ],
+          [
+            3,
+            69
+          ]
+        ],
+        "body_target": null
+      },
+      {
+        "reply": 192,
+        "transport_status": 0,
+        "prior_capability": 0,
+        "stored_capability": 192,
+        "lens_af_predicate": 1,
+        "route": "lens_transaction",
+        "lens_transactions": [
+          [
+            35104,
+            1
+          ],
+          [
+            35072,
+            2
+          ]
+        ],
+        "outbound_payloads": [
+          [
+            0
+          ],
+          [
+            3,
+            69
+          ]
+        ],
+        "body_target": null
+      },
+      {
+        "reply": 128,
+        "transport_status": 0,
+        "prior_capability": 0,
+        "stored_capability": 128,
+        "lens_af_predicate": 0,
+        "route": "body_driver",
+        "lens_transactions": [],
+        "outbound_payloads": [],
+        "body_target": 18
+      },
+      {
+        "reply": 64,
+        "transport_status": 7,
+        "prior_capability": 0,
+        "stored_capability": 0,
+        "lens_af_predicate": 0,
+        "route": "body_driver",
+        "lens_transactions": [],
+        "outbound_payloads": [],
+        "body_target": 18
+      },
+      {
+        "reply": 0,
+        "transport_status": 7,
+        "prior_capability": 64,
+        "stored_capability": 64,
+        "lens_af_predicate": 1,
+        "route": "lens_transaction",
+        "lens_transactions": [
+          [
+            35104,
+            1
+          ],
+          [
+            35072,
+            2
+          ]
+        ],
+        "outbound_payloads": [
+          [
+            0
+          ],
+          [
+            3,
+            69
+          ]
+        ],
+        "body_target": null
+      }
+    ],
+    "native_profile_cases": [
+      {
+        "raw_key": 241,
+        "target_file_offset": 315836
+      },
+      {
+        "raw_key": 242,
+        "target_file_offset": 316092
+      },
+      {
+        "raw_key": 0,
+        "target_file_offset": 315476
+      }
+    ],
+    "stubbed_file_offsets": [
+      606100,
+      605476,
+      294456,
+      294488,
+      269832
+    ],
+    "limits": [
+      "The capability transaction starts at the dispatcher with synthetic lens replies.",
+      "Motion starts at 0x52e38 with prepared objects and argument 5. The lens leg ends after dispatch of 0x8900. The body leg ends at the driver entry 0x47d80.",
+      "Hooks replace the two lens transfer helpers, body reset/prepare helpers 0x47e38 and 0x47e58, and focus position bookkeeping 0x41e08.",
+      "The reconstructed A32 ranges use firmware copy-row addresses. The full boot and the external lens/body controllers were outside the probes.",
+      "The KAF2 response bit identifies the traced branch. The fixture does not distinguish SDM from DC or PLM at the motor protocol level.",
+      "The raw model byte reaches distinct native profiles. The mapping from a physical lens to an allowlisted native key and safe behavior across all AF stages remain unverified.",
+      "No patch, lens ROM write, physical drive or firmware update was applied."
+    ]
+  }
+}

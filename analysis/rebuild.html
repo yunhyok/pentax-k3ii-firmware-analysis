@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ko">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="K-3 II 1.12의 무손실 재포장, 주·보조 이미지 체크섬과 원본 ARM 송수신 검사 검증.">
+<title>K-3 II — 무손실 재포장과 업데이트 검사</title><link rel="stylesheet" href="../assets/report.css"></head>
+<body><header><div class="eyebrow">PENTAX K-3 II · firmware 1.12 · 2026-11-08</div>
+<h1>원본과 같은 파일을 재포장하고,<br>수정 후보의 검사 경로를 실행했다</h1>
+<p class="lead">변경 없는 해제 이미지를 다시 포장하면 배포 파일과 바이트 단위로 일치한다. 메뉴 글자 한 바이트를 바꾼 후보는 원본 ARM의 복호화·모델 표식·체크섬 검사를 통과했다. 이 검증은 메모리에서 실행한 업데이트 검사의 일부이며 카메라에 설치하거나 부팅한 결과는 아니다.</p>
+<nav aria-label="보고서 탐색"><a href="../index.html">초기 분석</a><a href="#layout">파일 구조</a><a href="#native">원본 검사</a><a href="#cases">대조 사례</a><a href="#reproduce">재현</a><a href="#limits">남은 범위</a><a href="hq-status.json">연구 상태</a></nav></header>
+<main><p class="note">명시한 코드 위치는 해제 이미지의 파일 오프셋이다. 코드 VA는 <code>0x02000000 + 오프셋</code>이며 <code>0xC0001FD0</code> 계열은 메모리 매핑 통신 주소다. K-3 III의 압축 컨테이너·주소·체크섬 규칙을 K-3 II에 적용하지 않았다.</p>
+
+<section aria-labelledby="layout"><h2 id="layout">1. 주 이미지와 보조 이미지의 포장은 다르다</h2>
+<p>배포 파일은 <code>0x100F000</code>바이트다. 앞의 16 MiB와 뒤의 <code>0xF000</code>바이트가 서로 다른 IV를 사용한다. 128바이트 블록의 고정 키 XOR을 두 번 적용하면 원래 바이트로 돌아온다. 원본 복호화 함수 <code>0x8476CC</code>를 전체 파일에 실행해 Python 해제 결과와 대조했다. <a href="repack.json">원본 복호화·재포장 근거</a> · <a href="../inspect_firmware.py">기존 해제 도구</a></p>
+<div class="table-scroll"><table><thead><tr><th scope="col">영역</th><th scope="col">변환 제외 헤더</th><th scope="col">체크섬</th><th scope="col">원본 검사</th></tr></thead><tbody>
+<tr><td>주 이미지 <code>0…0x1000000</code></td><td><code>0x100…0x200</code></td><td><code>0x1F0</code>에 little-endian 32비트. 영역 전체 합은 0</td><td><code>0x84765C</code> kind 0과 통신 명령 7</td></tr>
+<tr><td>보조 이미지 <code>0x1000000…0x100F000</code></td><td><code>0x1000000…0x1000080</code></td><td><code>0x100007C</code>에 big-endian 32비트. 영역 전체 합은 0</td><td><code>0x84765C</code> kind 1. 명령 7은 생략</td></tr>
+</tbody></table></div>
+<p>체크섬 필드를 0으로 놓고 해당 영역의 워드 합을 구한 뒤, 그 합의 2의 보수를 기록한다. 원본 필드 값은 주 이미지 <code>0x9BA2E395</code>, 보조 이미지 <code>0x8B53905B</code>다. 이 포장 단계에는 K-3 III와 같은 바깥쪽 압축 스트림이 없다. 내부 리소스까지 모두 비압축이라는 의미는 아니다. <a href="../repack_firmware.py">영역·체크섬 구현</a></p>
+<figure><figcaption>도식 1. 고정 크기 수정 후보를 만드는 과정</figcaption><div class="flow" role="group" aria-label="원본 식별과 해제 후 고정 크기 수정과 체크섬 보정, XOR 재포장과 재해제 대조">
+<div class="stage"><strong>원본 식별·해제</strong><span>SHA-256 고정<br>주·보조 이미지 분리<br>원본 ARM 복호화와 일치</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>같은 크기의 바이트 수정</strong><span>IV·모델·표식 보존<br>서로 다른 바이트 순서로 합 보정<br>삽입·삭제·주소 이동은 미지원</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>XOR 재포장·대조</strong><span>재해제 결과와 수정본 일치<br>무수정 결과는 원본과 완전 일치<br>기존 출력 폴더는 덮어쓰지 않음</span></div></div></figure>
+</section>
+
+<section aria-labelledby="native"><h2 id="native">2. 명령 7의 결과를 원본 수신기가 계산한다</h2>
+<p>업데이트의 파일 크기 검사는 <code>0x5D64DC</code>부터 고정 길이를 확인한다. 호출 <code>0x5D655C/0x5D6568</code>은 두 이미지의 복호화로, <code>0x5D657C/0x5D6590</code>은 모델·표식·체크섬 검사로 이어진다. 이 호출 관계를 바이트와 직접 분기로 대조했다. 전체 업데이트 함수의 장치 I/O는 실행하지 않았다. <a href="../verify_repack.py">검사 위치·분기·해시</a></p>
+<p>헤더 검사 <code>0x5D47D0</code>는 기대 모델값과 반복 표식 <code>0xA55A5AA5</code>를 확인한다. 주 이미지에서는 <code>0x5D4788 → 0x599FB8</code>이 통신 명령 7을 보낸다. 같은 이미지의 수신 디스패처 <code>0xDA078</code>는 명령 7을 <code>0xDA248</code>의 덧셈 루프로 연결한다. 이 루프는 전달된 워드 수만큼 읽어 32비트 합을 반환한다. 따라서 확인한 명령 7은 추가적인 암호 서명 연산이 아니다. <a href="repack.json">송신기·수신기 실행 결과</a></p>
+<figure><figcaption>도식 2. 원본 명령 7의 요청과 응답</figcaption><div class="flow" role="group" aria-label="송신기가 주소와 워드 수를 기록하면 수신기가 합을 계산하고 송신기가 두 완료 슬롯과 결과를 읽음">
+<div class="stage"><strong>송신기 0x599FB8</strong><span><code>1FD0/1FE0: 7</code><br><code>1FD4: 이미지 포인터</code><br><code>1FD8: 0x400000워드</code></span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>수신기 0xDA078</strong><span><code>0xDA188: 명령 7 선택</code><br><code>0xDA248: LDR·ADD 반복</code><br><code>1FEC: 합 mod 2³²</code></span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>검사로 복귀</strong><span><code>1FE8/1FF0: 완료값 7</code><br>합 0이면 검사 진행<br>송신기는 요청 슬롯을 0으로 지움</span></div></div>
+<p class="caption">슬롯 주소의 공통 상위 부분은 <code>0xC0000000</code>이다. Unicorn의 CPU 문맥 두 개를 순서대로 실행하고 같은 메모리를 공유했다. 완료값·결과값을 후크로 대신하지 않았다. 실제 코어의 정체·동시 실행·캐시 일관성을 재현한 것은 아니다.</p></figure>
+<p>별도의 검사 함수 <code>0x84765C</code>도 합이 0인지 확인한다. kind 1에서는 워드를 바이트 반전해 더한다. 저장된 체크섬이 <code>0xFFFFFFFF</code>일 때 이 검사만 건너뛰는 조건도 있으나, 재포장 도구는 이 조건을 이용하지 않고 실제 합을 계산한다. 이 조건만으로 전체 검사 우회를 주장하지 않는다. <a href="../verify_repack.py">원본 명령 고정값과 실행 경계</a></p>
+</section>
+
+<section aria-labelledby="cases"><h2 id="cases">3. 검사 통과와 정상 실행은 다르다</h2>
+<div class="table-scroll"><table><thead><tr><th scope="col">대조 입력</th><th scope="col">확인 결과</th><th scope="col">해석</th></tr></thead><tbody>
+<tr><td>무수정 해제 이미지</td><td>재포장 SHA-256이 원본과 동일. 원본 복호화·검사 통과</td><td>무손실 왕복 변환 확인</td></tr>
+<tr><td>Pixel Shift 영문 리소스 첫 글자 <code>P → p</code></td><td><code>0xE4C6D8</code> 한 바이트 수정 후 체크섬 보정. 원본 검사 통과</td><td>같은 길이 리소스 후보의 오프라인 검사. 실제 표시 미확인</td></tr>
+<tr><td>보조 실행 코드 한 바이트를 의도적으로 손상</td><td>체크섬 보정 후 같은 검사 통과</td><td>체크섬 통과가 실행 코드의 정합성을 보장하지 않는 음성 대조</td></tr>
+<tr><td>체크섬 보정 없이 데이터 한 바이트 변경</td><td>주·보조 검사 모두 거부. 주 이미지 명령 7도 0이 아닌 합 반환</td><td>결과값을 고정한 가짜 통과가 아님</td></tr>
+<tr><td>모델 표식 5곳을 각각 손상</td><td>원본 헤더 검사 거부</td><td>고정 표식 검사 확인</td></tr>
+</tbody></table></div>
+<p>입력 크기 변경, IV·모델·중간 표식 변경, 기존 출력 폴더 재사용은 도구가 거부한다. 공개 저장소에는 원본·수정 펌웨어가 없고 검증 코드와 해시·수치만 남긴다. 메뉴 문자열의 식별 근거는 <a href="superresolution-menu.json">앞선 Pixel Shift 메뉴 분석</a>에 있다.</p>
+</section>
+
+<section aria-labelledby="reproduce"><h2 id="reproduce">4. 재현 도구와 검증 범위</h2>
+<pre><code>python verify_repack.py fwdc230b.bin --compare analysis/repack.json
+python repack_firmware.py fwdc230b.bin edited-decoded.bin --output-dir private-candidate
+python -m unittest discover -s tests -v
+python verify_publication.py</code></pre>
+<p>첫 명령은 Unicorn 2.1.4가 필요하다. 두 번째 명령은 새로운 디렉터리에만 후보와 기록을 저장하며 장치를 열지 않는다. <a href="../tests/test_repack.py">단위 검사</a>는 바이트 순서가 다른 두 합, 잘못된 입력, 덮어쓰기 방지, 쓰기 실패 후 부분 출력 정리를 확인한다. 펌웨어가 필요한 원본 실행은 로컬에서 수행하고 공개 CI는 단위 검사와 문서·공개 파일 검사를 수행한다.</p>
+<p>원본 SHA-256은 <code class="hash">a33485f351019960192891ef69ddc5d4904ef9e298671d9d9955679e4c901a9a</code>이다. 해제본은 <code class="hash">1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc</code>이다. 이 두 버전에 검증 범위를 고정했다. XOR 해제 알고리즘의 기존 출처는 <a href="https://github.com/twang2218/pentax-firmware-tool/blob/3e2597b5d4cfa9ce242b6d3aeef32c28e64b6f73/index.js">pentax-firmware-tool 고정 커밋</a>이며 이번에는 실제 펌웨어 복호화 명령까지 대조했다.</p>
+</section>
+<section aria-labelledby="limits"><h2 id="limits">5. 설치·부팅·촬영 검증은 남아 있다</h2>
+<p>검증한 파일 길이·모델·반복 표식·덧셈 검사는 암호 서명 검증이 아니다. 다만 전체 업데이트 경로, 장치 내부 ROM, 설치 후 부트 경로에 다른 인증이 없다고 입증한 것은 아니다. 현재 도구는 같은 크기의 바이트 교체만 처리한다. 코드·섹션 추가와 삭제, 재배치, 호출 ABI 변경은 지원하지 않는다.</p>
+<p>실기 플래시·보조 CPU 업데이트·렌즈 EEPROM 쓰기는 하지 않았다. 원본으로의 왕복 일치, 수정 후보의 구조 검사, 실제 업데이트 수용, 부팅, 촬영·저장은 각각 별도 단계다. 마지막 세 단계는 미검증이다. <a href="hq-status.json">네 연구 목표의 근거·미해결 항목</a></p>
+</section></main><footer>K-3 II v1.12 · <a href="../README.md">저장소 안내</a> · <a href="superresolution-lifecycle.html">Pixel Shift·버퍼 수명 보고서</a></footer></body></html>

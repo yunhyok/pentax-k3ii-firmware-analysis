@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="K-3 II 원본 ARM에서 렌즈 능력 응답과 AF 구동 분기를 연결한 검증."><title>K-3 II — 렌즈 능력 응답과 AF 구동 선택</title><link rel="stylesheet" href="../assets/report.css"></head>
+<body><header><div class="eyebrow">PENTAX K-3 II · firmware 1.12 · 2026-11-08</div><h1>렌즈 응답의 비트 6이<br>AF 구동 준비 경로를 가른다</h1>
+<p class="lead">렌즈 명령 0x8205의 응답이 저장되는 곳과, 그 값을 읽어 렌즈 명령 또는 바디 드라이버로 분기하는 원본 코드를 연결했다. 합성 응답 6개에서 두 경로와 오류 시 값 보존을 확인했다. 실물 렌즈의 구동·AF 성능이나 특정 렌즈용 수정 펌웨어를 검증한 결과는 아니다.</p>
+<nav aria-label="보고서 탐색"><a href="../index.html">초기 분석</a><a href="#capability">능력값 생산자</a><a href="#drive">구동 분기</a><a href="#model">렌즈별 조건</a><a href="#validation">검증·한계</a><a href="rebuild.html">재포장</a><a href="hq-status.json">연구 상태</a></nav></header><main>
+<p class="note">코드 위치는 해제 이미지의 파일 오프셋이다. 일부 명령은 시작 시 SRAM으로 복사되므로 단순히 <code>0x02000000</code>을 더한 주소에서 실행하면 안 된다. 원본 복사 표 4개를 재현해 해당 실행 주소를 사용했다. <a href="af-drive.json">복사 표·클래스 RTTI·분기 근거</a></p>
+<section aria-labelledby="capability"><h2 id="capability">1. 성공한 응답만 능력 바이트를 갱신한다</h2>
+<p><code>CLensSdm</code> 경로 <code>0x94DC4</code>는 <code>CLensKaf2+6</code>이 0이면 명령 <code>0x8205</code>를 준비한다. 디스패처 <code>0x94204</code>와 처리기 <code>0x94844</code>는 한 바이트를 요청하고 전송 결과가 0일 때만 <code>0xB9B5C</code>로 응답을 저장한다. <code>CAfLens</code>의 <code>0x4C500</code>은 그 바이트의 <code>0x40</code> 비트를 추출한다. <a href="../verify_af_drive.py">원본 생산자·저장·조회 검증</a></p>
+<figure><figcaption>도식 1. 능력값의 생산과 소비</figcaption><div class="flow" role="group" aria-label="명령8205의 한 바이트 응답이 성공할 때만 저장되고 비트6이 AF 분기로 전달됨">
+<div class="stage"><strong>렌즈 능력 조회</strong><span><code>0x94DF8 → 0x94204</code><br>명령 <code>0x8205</code><br>응답 크기 1바이트</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>성공 여부에 따른 저장</strong><span>결과 0: <code>CLensKaf2+6</code> 갱신<br>오류: 이전 바이트 유지<br><code>0x94868 → 0xB9B5C</code></span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>AF 구동 준비의 조회</strong><span><code>0x52E84 → 0x4C500</code><br><code>(capability &amp; 0x40) &gt;&gt; 6</code><br>bit 7만 켜져 있으면 0</span></div></div>
+<p class="caption">응답 바이트와 전송 결과는 합성 입력이다. 저장·비트 추출·후속 분기는 원본 명령을 실행했다. 조회를 수행하는 전체 렌즈 부착 시퀀스는 실행하지 않았다.</p></figure>
+</section>
+<section aria-labelledby="drive"><h2 id="drive">2. 두 분기는 서로 다른 구동 요청을 만든다</h2>
+<p>원본 <code>CAfMotor</code> 진입점 <code>0x52E38</code>에 준비된 객체와 인수 5를 넣었다. 비트 6이 켜지면 <code>0x4DD6C</code>를 거쳐 렌즈 명령 <code>0x8920</code>, <code>0x8900</code>을 제출했다. 시험 위치값 <code>0x0345</code>는 두 바이트 <code>03 45</code>로 준비됐다. 비트가 꺼지면 렌즈 명령을 보내지 않고 <code>0x52D18 → 0x5234C → 0x47D80</code>에 도달했다. <a href="af-drive.json">6개 연쇄 실행과 출력 인수</a></p>
+<figure><figcaption>도식 2. 같은 시작점에서 갈라지는 AF 준비</figcaption><div class="flow" role="group" aria-label="능력 비트6에 따라 렌즈 명령 제출 또는 바디 드라이버 진입점으로 분기">
+<div class="stage"><strong>CAfMotor 0x52E38</strong><span>동일한 합성 객체·입력 인수<br>원본 능력값 조회<br>분기 전 비트 강제 변경 없음</span></div><div class="arrow" aria-hidden="true">→</div>
+<div class="stage"><strong>bit 6 = 1</strong><span>렌즈 명령 <code>0x8920</code>: 1바이트<br><code>0x8900</code>: 2바이트<br>전송 보조 함수에서 요청 기록</span></div><div class="arrow" aria-hidden="true">／</div>
+<div class="stage"><strong>bit 6 = 0</strong><span>바디 드라이버 <code>0x47D80</code><br>목표값 <code>0x12</code> 전달<br>실제 드라이버 실행 전 중단</span></div></div></figure>
+<div class="table-scroll"><table><thead><tr><th scope="col">응답 / 전송 결과</th><th scope="col">이전 값 → 저장값</th><th scope="col">원본 분기</th></tr></thead><tbody>
+<tr><td><code>00 / 0</code></td><td><code>00 → 00</code></td><td>바디 드라이버</td></tr>
+<tr><td><code>40 / 0</code></td><td><code>00 → 40</code></td><td>렌즈 명령</td></tr>
+<tr><td><code>C0 / 0</code></td><td><code>00 → C0</code></td><td>렌즈 명령</td></tr>
+<tr><td><code>80 / 0</code></td><td><code>00 → 80</code></td><td>바디 드라이버</td></tr>
+<tr><td><code>40 / 7</code></td><td><code>00 → 00</code></td><td>바디 드라이버. 오류 응답 미반영</td></tr>
+<tr><td><code>00 / 7</code></td><td><code>40 → 40</code></td><td>렌즈 명령. 이전 능력값 유지</td></tr>
+</tbody></table></div>
+<p>바디 하위 연결 <code>0x47CD0 → 0x332E8 → 0x33250 → 0xB90B0</code>도 직접 분기로 확인했다. 이 구간의 물리 모터 출력은 실행하지 않았다. 반대편도 렌즈 전송 보조 함수를 대체했으므로 실제 렌즈가 명령을 수락하거나 이동했다는 증거는 아니다.</p>
+</section>
+<p class="note">현재 AF 연구의 목적은 향후 변경을 위한 기본 구조 확보다. 렌즈별 패치나 실제 구동 적용은 이번 범위가 아니다. 실물 렌즈 식별 정보가 없어도 정보 판독·정책·AF 계산·구동 명령의 정적 분석은 계속한다.</p>
+<section aria-labelledby="model"><h2 id="model">3. 서비스의 SDM On과 실제 AF 분기를 구분했다</h2>
+<p>서비스 문자열 <code>SDM On</code>은 <code>0x85B088 → 0x5CA85C → 0x5D7034</code>를 거쳐 명령 <code>0x8601</code>에 값 2를 전달한다. 이번에 확인한 AF 명령 <code>0x8205/0x8900</code>과는 다른 경로다. 서비스 메뉴 이름만으로 촬영 AF의 구동 선택을 설명하지 않았다. <a href="af-drive.json">서비스·AF 명령의 분리 근거</a></p>
+<p>렌즈별 분기 가능성도 조사했다. <code>0x4B9F8</code>은 전송 객체의 인덱스 <code>0x13</code>, 즉 <code>+0xF7</code>의 바이트를 읽는다. 원본 분기 <code>0x4D3F8</code>은 값 <code>F1</code>과 <code>F2</code>를 각각 <code>0x4D1BC</code>와 <code>0x4D2BC</code>로 보낸다. 이는 내부 모델 구분 경로의 증거지만 사용자의 실물 렌즈가 그 값을 보고한다는 증거는 아니다.</p>
+<p>Ricoh는 K-3 II에서 렌즈 내 AF 모터를 갖춘 렌즈를 장착하면 해당 모터로 자동 초점을 맞춘다고 설명한다. 구형 <code>smc DA★ 16–50mm F2.8 ED AL [IF] SDM</code>과 <code>smc DA★ 50–135mm F2.8 ED [IF] SDM</code>은 SDM 비지원 바디에서 바디 모터를 사용할 수 있다는 공식 설명이 있다. 같은 초점거리의 후속 PLM 렌즈나 모든 SDM·DC 렌즈에 이 특성을 일반화하지 않는다. <a href="https://www.ricoh-imaging.co.jp/english/support/qa/k-3-2/index.html">K-3 II 공식 FAQ</a> · <a href="https://www.ricoh-imaging.co.jp/english/products/lens/k/standard/smcpentax-das16-50/">구형 16–50 SDM</a> · <a href="https://www.ricoh-imaging.co.jp/english/products/lens/k/telephoto/smcpentax-das50-135/">구형 50–135 SDM</a></p>
+<p>따라서 공통 능력 비트를 무조건 지우는 수정은 특정 렌즈용 해결책으로 채택하지 않았다. 정확한 대상 모델, 실물 식별 응답, 두 구동 방식의 기계적 지원, 나머지 AF 상태 전이와 오류 복구를 확인해야 변경 범위를 정할 수 있다.</p>
+</section>
+<section aria-labelledby="validation"><h2 id="validation">4. 원본 실행과 미실행 경계</h2>
+<p>조정 에이전트가 독립 작업자의 스크립트·후크를 검토하고 결과 스냅샷을 다시 실행해 일치시켰다. 고정 명령 33개, 직접 분기 36개, 해시 구간 11개, 시작 복사 행 4개를 확인했다. 합성 실행은 구동 사례 6개와 내부 모델 분기 3개다. <a href="../verify_af_drive.py">재현 코드</a> · <a href="af-drive.json">결과</a></p>
+<pre><code>python verify_af_drive.py decoded.bin --emulate --compare analysis/af-drive.json</code></pre>
+<p>렌즈 전송 <code>0x93F94/0x93D24</code>, 바디 준비 <code>0x47E38/0x47E58</code>, 위치 기록 <code>0x41E08</code>은 대체했다. AF 센서 재설정에 관한 합성 상태도 고정했다. 센서의 초점 판단, 전체 AF 상태 기계, 모터 이동과 정지, 렌즈별 시간 제약은 검증하지 않았다. 비트 6으로 선택되는 경로 안에서 SDM·DC·PLM을 구분하는 물리 프로토콜도 미확정이다.</p>
+<p>패치 후보 적용, 카메라 플래시, 렌즈 EEPROM 변경은 하지 않았다. 현재 결과는 렌즈 응답과 원본 구동 요청의 연결이며 동작 가능한 SDM→스크루 전환 펌웨어는 아니다.</p>
+</section></main><footer>K-3 II v1.12 · <a href="../README.md">저장소 안내</a> · <a href="rebuild.html">재포장·업데이트 검사</a></footer></body></html>

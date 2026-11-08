@@ -368,5 +368,29 @@
     "gate": "OK",
     "manual_self_check": "6/6",
     "integrated_excerpt_matches_review": true
+  },
+  "rebuild_and_af_analysis": {
+    "repack_cases": 3,
+    "marker_corruption_cases": 5,
+    "repack_rejection_cases": 6,
+    "command7_original_sender_and_receiver": true,
+    "instruction_hooks_in_repack_replay": 0,
+    "af_drive_cases": 6,
+    "af_native_profile_cases": 3,
+    "af_peripheral_stubs": 5,
+    "unit_tests": 19,
+    "physical_update_or_lens_drive": false
+  },
+  "rebuild_af_language_review": {
+    "scope": "22 extracted prose paragraphs; subsequent AF scope clarification received technical review only",
+    "route": "standard",
+    "change_rate_percent": 0.1,
+    "sentences_touched": 6,
+    "sentences_reviewed": 87,
+    "modality_lost": 0,
+    "golden": "PASS",
+    "gate": "OK",
+    "manual_self_check": "6/6",
+    "integrated_excerpt_matches_review": true
   }
 }

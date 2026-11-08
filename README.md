@@ -1,5 +1,11 @@
 # PENTAX K-3 II v1.12 펌웨어 분석
 
+[무손실 재포장·원본 업데이트 검사](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/rebuild.html) · [렌즈 능력·AF 구동 분기](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/af-drive.html) · [연구 목표별 상태](analysis/hq-status.json)
+
+2026-11-08 재포장 후속: 무수정 파일의 완전 일치와 같은 크기 메뉴 글자 수정 후보를 검증했습니다. 주·보조 이미지의 서로 다른 체크섬과 원본 복호화 전체를 대조하고, 명령 7 송신기·수신기를 함께 실행해 덧셈 결과를 확인했습니다. 실기 설치·부팅·촬영은 미검증입니다. `python verify_repack.py <원본 경로> --compare analysis/repack.json`으로 재현할 수 있습니다.
+
+2026-11-08 AF 후속: 렌즈 명령 `0x8205` 응답의 bit 6 생산·저장·조회와 렌즈 명령/바디 드라이버 분기를 연결했습니다. 합성 구동 6건과 내부 모델 분기 3건을 원본 ARM으로 실행했습니다. 실물 렌즈 식별·구동은 미확인이며 모델별 패치를 적용하지 않았습니다. `python verify_af_drive.py decoded.bin --emulate --compare analysis/af-drive.json`으로 재현할 수 있습니다.
+
 [최신 Pixel Shift·버퍼 수명 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/superresolution-lifecycle.html) · [마스크 CPP·모드 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/masked-cpp-analysis.html) · [백엔드 B·CPP 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/backend-b-cpp-analysis.html) · [SD·대체 버퍼 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/storage-dma-analysis.html) · [버퍼·메뉴 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/output-menu-analysis.html) · [톤·색 처리 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/pipeline-analysis.html) · [심층 분석 보고서](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/deep-analysis.html) · [초기 분석](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/) · [최신 보고서 소스](analysis/superresolution-lifecycle.html)
 
 2026-11-08 Pixel Shift·버퍼 수명 후속: 실제 Pixel Shift Resolution 메뉴의 On/Off→활성 프로필 설정→SuperResolution 종류 11을 연결했습니다. RAW MakerNote의 같은 번호 태그는 별도 저장소임을 검증했습니다. 슬롯 4·17의 할당·해제·재할당과 일반 출력→스케일러→JPEG 디스크립터 연결을 재현했습니다. 공통 스케일러 설정부터 큐 호출 지점까지의 64개 합성 사례는 모두 활성값 0이었으며, 비영 생산자와 실기 촬영별 주소 이력은 미확정입니다.

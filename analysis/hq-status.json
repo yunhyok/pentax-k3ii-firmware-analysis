@@ -1,0 +1,135 @@
+{
+  "model": "PENTAX K-3 II",
+  "firmware_version": "1.12",
+  "baseline_commit": "66c85ea53f52b6e9489d742b5bd63e50e543055e",
+  "updated_at": "2026-11-08T14:50:15+09:00",
+  "goals": [
+    {
+      "id": "firmware_rebuild",
+      "status": "offline_repack_and_original_validation_reproduced; device_installation_unverified",
+      "evidence": [
+        "analysis/repack.json",
+        "analysis/rebuild.html",
+        "repack_firmware.py",
+        "verify_repack.py",
+        "tests/test_repack.py"
+      ],
+      "gaps": [
+        "Only same-size edits; insertion/deletion and relocation are unsupported.",
+        "Whole updater, internal ROM authentication, physical flash, reboot and capture have not been executed."
+      ],
+      "next_actions": [
+        "Trace post-validation installation destinations and error checks.",
+        "Keep physical update outside the current offline scope."
+      ]
+    },
+    {
+      "id": "camera_color_to_lightroom",
+      "status": "original_color_paths_verified; profile_inventory_and_independent_DCP_bridge_owned_by_cross_model_coordinator",
+      "evidence": [
+        "analysis/pipeline-analysis.html",
+        "analysis/tone-numeric.json",
+        "analysis/isp-numeric.json",
+        "analysis/selector-path.json"
+      ],
+      "gaps": [
+        "No measured K-3 II RAW/JPEG pairs or Lightroom pixel comparison.",
+        "Camera ISP curves and matrices are not directly interchangeable with DCP profile stages.",
+        "Firmware LUT redistribution and a portable profile calibration have not been established."
+      ],
+      "next_actions": [
+        "Use the cross-model coordinator profile inventory and bridge validation; avoid duplicate Adobe scanning.",
+        "Preserve the distinction between a firmware-1.10 CC0 reference DNG and validation of this firmware 1.12 color rendering."
+      ]
+    },
+    {
+      "id": "af_and_lens_drive",
+      "status": "basic_research_active; original_capability_to_lens_or_body_drive_branch_verified; patching_deferred",
+      "evidence": [
+        "analysis/af-drive.html",
+        "analysis/af-drive.json",
+        "verify_af_drive.py"
+      ],
+      "gaps": [
+        "General lens-information acquisition, policy conditions, AF calculation and whole control state machine require deeper tracing.",
+        "The traced lens branch does not yet distinguish SDM/DC/PLM physical protocols.",
+        "Real lens responses and actuator behavior are future hardware-validation requirements, not blockers for current foundational research."
+      ],
+      "next_actions": [
+        "Trace lens-information readout and capability policy beyond bit 6.",
+        "Connect phase/contrast AF computation and control state to the proven actuator selection.",
+        "Document future modification boundaries; do not select or apply a lens-specific patch now."
+      ]
+    },
+    {
+      "id": "k3iii_ui_port",
+      "status": "k3ii_menu_resource_event_and_profile_bindings_verified; cross_model_adapter_not_implemented",
+      "evidence": [
+        "analysis/superresolution-menu.json",
+        "analysis/menu-events.json",
+        "analysis/superresolution-lifecycle.html"
+      ],
+      "gaps": [
+        "Binary render ABI and pixel resource format differ or remain unresolved.",
+        "A same-name menu item does not establish equal event IDs or setting enums.",
+        "No transferred UI has run on the K-3 II or Q7."
+      ],
+      "next_actions": [
+        "Choose one common menu semantic from the official correspondence table.",
+        "Trace each model's resource, renderer and apply-event boundaries before an offline semantic adapter."
+      ]
+    }
+  ],
+  "new_findings": [
+    "Unchanged K-3 II decoded bytes repack byte-identically to the original distribution package.",
+    "Primary 16 MiB checksum is little-endian at 0x1f0; secondary 0xf000-byte checksum is big-endian at 0x100007c.",
+    "Original decoder 0x8476cc agrees with the Python transform over the complete two-image package.",
+    "Command-7 sender 0x599fb8 and receiver 0xda078/0xda248 exchange a 32-bit additive sum. Sequential original CPU contexts reproduced the mailbox reply without supplying completion or result values.",
+    "A repaired checksum also accepts intentionally corrupted secondary code, demonstrating that structural acceptance does not prove program correctness.",
+    "Capability response 0x8205 writes CLensKaf2+6 only on transport success; original CAfLens bit-6 predicate drives both CAfMotor branches.",
+    "Six original AF cases distinguish bit 6, bit 7 and retained prior values on failure; three native model-profile dispatch cases also reproduce."
+  ],
+  "validation": {
+    "commands": [
+      "python verify_repack.py fwdc230b.bin",
+      "python -m unittest tests.test_repack -v",
+      "python verify_af_drive.py decoded.bin --emulate --compare analysis/af-drive.json",
+      "python -m unittest discover -s tests -v",
+      "python verify_publication.py"
+    ],
+    "results": [
+      "PASS: unchanged, one-byte menu edit and secondary corruption fixture decode and pass the bounded original validation.",
+      "PASS: uncorrected corruption rejected in both images, five marker corruptions rejected, six tool boundary cases rejected.",
+      "PASS: three unit tests for independent byte orders, input rejection, no overwrite and partial-output cleanup.",
+      "PASS: coordinator independently replayed AF snapshot, 6 drive cases and 3 native profile cases.",
+      "PASS: 19 unit tests.",
+      "PASS: Korean prose gate, 0.1% change, 6 of 87 sentences touched, no numeric or modality loss."
+    ],
+    "limits": [
+      "Unicorn 2.1.4 synthetic memory; no physical device I/O.",
+      "Sequential shared-memory CPU contexts do not establish real cache coherency, multicore timing or receiver core identity.",
+      "First local checkpoint; CI and Pages publication for these new files have not yet run."
+    ]
+  },
+  "artifacts": [
+    "analysis/rebuild.html",
+    "analysis/repack.json",
+    "repack_firmware.py",
+    "verify_repack.py",
+    "tests/test_repack.py",
+    "analysis/af-drive.html",
+    "analysis/af-drive.json",
+    "verify_af_drive.py"
+  ],
+  "blockers": [
+    {
+      "scope": "hardware_acceptance",
+      "detail": "Physical installation, boot and capture require a separate hardware experiment; not performed or authorized here."
+    },
+    {
+      "scope": "color_calibration",
+      "detail": "Matched camera RAW/JPEG and a measured Lightroom render are required for a validated color match."
+    }
+  ],
+  "scope_clarification": "AF changes are future work. Current scope is sufficiently deep foundational research; exact target lens information is not a blocker."
+}
