@@ -501,6 +501,20 @@
       "deterministic_gate": "PASS",
       "modality_lost": 0,
       "subsequent_technical_correction": "Hook-scope prose now also names explicit return-flag perturbation."
+    },
+    "publication": {
+      "commit": "f7c9aa4adcb0a74739fd3fc8033f1f97163789f5",
+      "ci": "success",
+      "pages": "success",
+      "http_files_byte_exact": 12,
+      "fresh_clone_snapshot": "PASS",
+      "fresh_clone_unit_tests": 20,
+      "html_documents": 16,
+      "local_links": 400,
+      "public_files": 105,
+      "two_diagrams_visually_checked": true,
+      "viewport_width": 1882,
+      "document_scroll_width": 1882
     }
   }
 }

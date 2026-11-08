@@ -2,7 +2,7 @@
   "model": "PENTAX K-3 II",
   "firmware_version": "1.12",
   "baseline_commit": "66c85ea53f52b6e9489d742b5bd63e50e543055e",
-  "updated_at": "2026-11-08T16:00:02+09:00",
+  "updated_at": "2026-11-08T16:05:09+09:00",
   "goals": [
     {
       "id": "firmware_rebuild",
@@ -171,7 +171,8 @@
       "PASS: independent review replayed settings storage and found separate metadata/main selectors. Coordinator accepted P2 scope correction and P3 source-distinguishing canaries, added reverse/same AdobeRGB and mixed-selector tests; final29 cases reproduce.",
       "PASS: 8940312 CI and Pages;13 served files byte-identical; fresh clone reproduces color UI/settings storage snapshots and20 unit tests. Four diagrams visually checked at1882px with no horizontal overflow. Prose light gate:18 paragraphs,0% edits,0/81 sentences touched,no numeric/modality loss.",
       "PASS: coordinator independently recompiled the C tone function and reproduced the complete snapshot; one64-byte emulator overlay, no firmware export.",
-      "PASS: independent review recompiled and replayed original and rebuilt snapshots, LF/CRLF normalization, invalid image and short ELF rejection; no P0-P2 findings. Additional per-return NZCV inversion now reproduces in the public verifier for both images."
+      "PASS: independent review recompiled and replayed original and rebuilt snapshots, LF/CRLF normalization, invalid image and short ELF rejection; no P0-P2 findings. Additional per-return NZCV inversion now reproduces in the public verifier for both images.",
+      "PASS: f7c9aa4 CI and Pages;12 served files byte-identical. Fresh clone recompiles and reproduces tone C snapshot,20 unit tests and publication checks (16 HTML,400 local links,105 public files). Two diagrams visually inspected at1882px without horizontal overflow. Light prose gate0.2%,7/55 sentences,modality0; hook-scope technical wording corrected afterwards."
     ],
     "limits": [
       "Unicorn 2.1.4 synthetic memory; no physical device I/O.",
@@ -219,34 +220,28 @@
   ],
   "scope_clarification": "AF changes are future work. Current scope is sufficiently deep foundational research; exact target lens information is not a blocker.",
   "publication": {
-    "analysis_commit": "89403125b108aea9070f0b91d5c4aca6b1ae0a39",
-    "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42455733617",
-    "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42455733447",
+    "analysis_commit": "f7c9aa4adcb0a74739fd3fc8033f1f97163789f5",
+    "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42457152147",
+    "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42457151395",
     "ci": "success",
     "pages": "success",
-    "http_files_byte_exact": 13,
+    "http_files_byte_exact": 12,
     "fresh_clone_repack_and_af_snapshots": "PASS",
     "fresh_clone_unit_tests": 20,
-    "fresh_clone_html_documents": 15,
-    "fresh_clone_local_links": 378,
+    "fresh_clone_html_documents": 16,
+    "fresh_clone_local_links": 400,
     "browser": {
       "surface": "published HTTPS in Chrome",
       "reports": [
-        "color-ui.html",
-        "settings-storage.html"
+        "tone-rebuild.html"
       ],
       "figures_per_report": 2,
       "viewport_width": 1882,
-      "both_document_scroll_widths": 1882,
+      "document_scroll_width": 1882,
       "mobile_layout": "not checked"
     },
     "local_preview": "Unavailable under tool policy; published HTTPS preview verified instead.",
-    "pending_local_artifacts": [
-      "analysis/tone-rebuild.html",
-      "analysis/tone-rebuild.json",
-      "verify_tone_rebuild.py",
-      "rebuild/tone_interpolate.c"
-    ],
+    "pending_local_artifacts": [],
     "checksum_sentinel_fix": {
       "commit": "9521f6881b356429ed0b8b58123c6483e23eddd5",
       "ci": "success",
@@ -255,10 +250,11 @@
       "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42453856476",
       "served_files_byte_exact": 5
     },
-    "previous_analysis_commit": "f9577d502dc84778114d2df83de7a91143259a29",
+    "previous_analysis_commit": "89403125b108aea9070f0b91d5c4aca6b1ae0a39",
     "fresh_clone_installation_ui_af_snapshots": "PASS",
-    "fresh_clone_public_files": 101,
-    "fresh_clone_color_and_settings_snapshots": "PASS"
+    "fresh_clone_public_files": 105,
+    "fresh_clone_color_and_settings_snapshots": "PASS",
+    "fresh_clone_tone_C_snapshot": "PASS"
   },
   "frozen_evidence": {
     "color-ui": {
@@ -280,6 +276,18 @@
       "verifier_path": "verify_settings_storage.py",
       "html_sha256": "50901bb9ba32963ede2ac6965d666f0318394033de45f6ad0d7ed60e847657d8",
       "verifier_sha256": "ef4de15ad437d2300ac838b4547a5793cac160ffecb1dd3d98d65cf16562bd3c"
+    },
+    "tone-rebuild": {
+      "commit": "f7c9aa4adcb0a74739fd3fc8033f1f97163789f5",
+      "replay": "python verify_tone_rebuild.py decoded.bin --zig <Zig0.17.1> --compare analysis/tone-rebuild.json",
+      "path": "analysis/tone-rebuild.json",
+      "html_path": "analysis/tone-rebuild.html",
+      "verifier_path": "verify_tone_rebuild.py",
+      "c_source_path": "rebuild/tone_interpolate.c",
+      "sha256": "b741604ea8f5461861005f9ad072533f4b72b3699b5f651792b342dc0a06a0c5",
+      "html_sha256": "7cc2f09b3759d6b2b0f4d0057dd370a05c8824f127d2194f863396ff50ada685",
+      "verifier_sha256": "67cc65d14058dc6afd8110c414d026ecd25b5073c8457161b67ad88b9d60e41a",
+      "c_source_sha256": "f3f0ab73adf4842b914f532fe240d03e0ae40b66b49b3fed49c5a2be2355eedb"
     }
   }
 }
