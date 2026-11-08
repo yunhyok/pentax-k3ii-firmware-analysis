@@ -7,7 +7,14 @@ This is a checked prefix, not a general F2MC disassembler.
 import argparse
 import json
 from pathlib import Path
-from verify_findings import DECODED_SHA256, literal_offset, require, sha256, u32
+from verify_findings import (
+    DECODED_SHA256,
+    literal_offset,
+    require,
+    require_snapshot,
+    sha256,
+    u32,
+)
 
 MANUAL = "https://www.infineon.com/assets/row/public/documents/10/57/infineon-f2mc-8l-mb89580b-bw-series-hardware-manual-additionaltechnicalinformation-en.pdf"
 SECONDARY = 0x1000000
@@ -97,7 +104,7 @@ def main():
     with args.decoded.open("rb") as stream:
         result = analyze(stream.read(16_838_657))
     if args.compare:
-        require(result, json.loads(args.compare.read_text(encoding="utf-8")), "published hardware evidence")
+        require_snapshot(result, args.compare, "published hardware evidence")
     print(json.dumps(result, indent=2))
 
 

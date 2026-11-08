@@ -8,7 +8,7 @@ from pathlib import Path
 import json
 from struct import unpack_from
 
-from verify_findings import require, u32, sha256
+from verify_findings import require, require_snapshot, u32, sha256
 from verify_pixel_policy import cell
 from verify_tone_path import BASE, check_edge, check_words, load_image
 
@@ -610,15 +610,7 @@ def main():
         ],
     }
     if args.compare:
-        require(
-            json.dumps(result, sort_keys=True, separators=(",", ":")),
-            json.dumps(
-                json.loads(args.compare.read_text(encoding="utf-8")),
-                sort_keys=True,
-                separators=(",", ":"),
-            ),
-            "snapshot replay",
-        )
+        require_snapshot(result, args.compare, "snapshot replay")
     print(json.dumps(result, indent=2))
 
 

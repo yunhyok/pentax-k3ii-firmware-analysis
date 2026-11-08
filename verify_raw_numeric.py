@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 import random
 import struct
-from verify_findings import DECODED_SHA256, require, sha256
+from verify_findings import DECODED_SHA256, require, require_snapshot, sha256
 
 
 def verify(data):
@@ -56,5 +56,5 @@ if __name__ == "__main__":
     with args.decoded.open("rb") as stream:
         result = verify(stream.read(16_838_657))
     if args.compare:
-        require(result, json.loads(args.compare.read_text(encoding="utf-8")), "published numeric evidence")
+        require_snapshot(result, args.compare, "published numeric evidence")
     print(json.dumps(result, indent=2))

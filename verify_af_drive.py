@@ -7,7 +7,7 @@ import argparse
 import json
 from pathlib import Path
 
-from verify_findings import DECODED_SHA256, require, sha256, u32
+from verify_findings import DECODED_SHA256, require, require_snapshot, sha256, u32
 from verify_raw_path import branch_target
 from verify_tone_path import BASE, check_words, load_image
 
@@ -413,11 +413,7 @@ def main():
     if args.emulate:
         result["numeric"] = emulate(data)
     if args.compare:
-        require(
-            result,
-            json.loads(args.compare.read_text(encoding="utf-8")),
-            "AF drive evidence",
-        )
+        require_snapshot(result, args.compare, "AF drive evidence")
         print(f"AF drive evidence matches {args.compare}")
     if args.output:
         args.output.write_text(

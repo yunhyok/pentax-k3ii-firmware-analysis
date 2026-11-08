@@ -6,7 +6,14 @@ import argparse
 import json
 from pathlib import Path
 
-from verify_findings import DECODED_SHA256, literal_offset, require, sha256, u32
+from verify_findings import (
+    DECODED_SHA256,
+    literal_offset,
+    require,
+    require_snapshot,
+    sha256,
+    u32,
+)
 from verify_tone_path import BASE, adr_r0_target, check_edge, check_words, load_image
 
 
@@ -292,7 +299,7 @@ def main():
     result = verify(load_image(args.decoded_image))
     serialized = json.dumps(result, indent=2) + "\n"
     if args.compare:
-        require(result, json.loads(args.compare.read_text(encoding="utf-8")), "ISP path evidence")
+        require_snapshot(result, args.compare, "ISP path evidence")
         print(f"ISP path evidence matches {args.compare}")
     elif args.output:
         args.output.write_text(serialized, encoding="utf-8", newline="\n")

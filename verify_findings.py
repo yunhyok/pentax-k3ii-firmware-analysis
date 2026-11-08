@@ -49,6 +49,15 @@ def require(actual, expected, context):
         raise ValueError(f"{context}: expected {expected!r}, got {actual!r}")
 
 
+def require_snapshot(actual, snapshot, context):
+    """Compare a report to its JSON snapshot without coercing scalar types."""
+    expected = json.loads(snapshot.read_text(encoding="utf-8"))
+    # Normalize tuples and object keys as they appear in the exported JSON.
+    actual = json.loads(json.dumps(actual))
+    if json.dumps(actual, sort_keys=True) != json.dumps(expected, sort_keys=True):
+        raise ValueError(f"{context}: snapshot differs from {snapshot}")
+
+
 def analyze(data):
     require(sha256(data), DECODED_SHA256, "decoded firmware identity")
     require(len(data), 16_838_656, "decoded length")
@@ -136,7 +145,7 @@ def main():
         with args.decoded.open("rb") as stream:
             result = analyze(stream.read(16_838_657))
         if args.compare:
-            require(result, json.loads(args.compare.read_text(encoding="utf-8")), "published evidence")
+            require_snapshot(result, args.compare, "published evidence")
     except (OSError, ValueError) as error:
         parser.exit(1, f"verification failed: {error}\n")
     print(json.dumps(result, indent=2, ensure_ascii=False))

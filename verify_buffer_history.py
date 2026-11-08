@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 from struct import pack, unpack
 
-from verify_findings import DECODED_SHA256, require, sha256
+from verify_findings import DECODED_SHA256, require, require_snapshot, sha256
 from verify_tone_path import BASE, check_edge, check_words, load_image
 
 ORDINARY = (0x2140, 0x21E8, 0x2204)
@@ -554,11 +554,7 @@ def main():
     args = parser.parse_args()
     result = analyze(load_image(args.decoded))
     if args.compare:
-        require(
-            result,
-            json.loads(args.compare.read_text(encoding="utf-8")),
-            "buffer history",
-        )
+        require_snapshot(result, args.compare, "buffer history")
     print(json.dumps(result, indent=2))
 
 

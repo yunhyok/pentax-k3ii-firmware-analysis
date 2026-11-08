@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 import struct
 
-from verify_findings import DECODED_SHA256, require
+from verify_findings import DECODED_SHA256, require, require_snapshot
 from verify_tone_path import BASE, check_edge, check_words, load_image
 
 
@@ -142,7 +142,7 @@ def main():
     if args.emulate:
         result["numeric"] = emulate(data)
     if args.compare:
-        require(result, json.loads(args.compare.read_text(encoding="utf-8")), "saved selector evidence")
+        require_snapshot(result, args.compare, "saved selector evidence")
     text = json.dumps(result, indent=2, ensure_ascii=False) + "\n"
     if args.output:
         args.output.write_text(text, encoding="utf-8")

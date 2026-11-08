@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 import struct
 
-from verify_findings import DECODED_SHA256, require, sha256
+from verify_findings import DECODED_SHA256, require, require_snapshot, sha256
 from verify_tone_path import BASE, branch_target, check_words, load_image
 
 
@@ -390,7 +390,7 @@ def main():
     if args.emulate:
         result["original_code"] = emulate(data)
     if args.compare:
-        require(result, json.loads(args.compare.read_text(encoding="utf-8")), "SD evidence snapshot")
+        require_snapshot(result, args.compare, "SD evidence snapshot")
     if args.json:
         args.json.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     count = len(result.get("original_code", {}).get("cases", []))

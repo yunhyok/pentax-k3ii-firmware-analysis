@@ -9,7 +9,7 @@ import json
 from pathlib import Path
 from struct import pack, unpack_from
 
-from verify_findings import literal_offset, require, sha256, u32
+from verify_findings import literal_offset, require, require_snapshot, sha256, u32
 from verify_preserved_record import SECTOR_BYTES, STAGING
 from verify_raw_path import branch_target
 from verify_tone_path import BASE, adr_r0_target, check_edge, check_words, load_image
@@ -907,11 +907,7 @@ def main():
     }
     output = json.dumps(result, indent=2)
     if args.compare:
-        require(
-            json.loads(output),
-            json.loads(args.compare.read_text(encoding="utf-8")),
-            "snapshot replay",
-        )
+        require_snapshot(result, args.compare, "snapshot replay")
     print(output)
 
 

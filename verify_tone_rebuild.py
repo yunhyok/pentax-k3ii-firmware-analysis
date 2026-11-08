@@ -13,7 +13,7 @@ import struct
 import subprocess
 from tempfile import TemporaryDirectory
 
-from verify_findings import require, sha256, u32
+from verify_findings import require, require_snapshot, sha256, u32
 from verify_raw_path import branch_target
 from verify_tone_numeric import U16, interpolate, synthetic_curves, verify_numeric
 from verify_tone_path import BASE, load_image
@@ -589,11 +589,7 @@ def main():
     try:
         result = verify_rebuild(args.decoded, args.zig)
         if args.compare:
-            require(
-                result,
-                json.loads(args.compare.read_text(encoding="utf-8")),
-                "tone rebuild evidence",
-            )
+            require_snapshot(result, args.compare, "tone rebuild evidence")
     except subprocess.CalledProcessError as error:
         parser.exit(1, f"Zig failed with exit {error.returncode}\n{error.stderr}")
     except (ImportError, OSError, ValueError, subprocess.TimeoutExpired) as error:

@@ -9,7 +9,14 @@ import json
 from pathlib import Path
 from struct import iter_unpack, pack, unpack
 
-from verify_findings import DECODED_SHA256, literal_offset, require, sha256, u32
+from verify_findings import (
+    DECODED_SHA256,
+    literal_offset,
+    require,
+    require_snapshot,
+    sha256,
+    u32,
+)
 from verify_raw_path import branch_target
 from verify_tone_path import BASE, check_words, load_image
 
@@ -525,10 +532,8 @@ def main():
     args = parser.parse_args()
     result = json.dumps(analyze(load_image(args.decoded)), indent=2)
     if args.compare:
-        require(
-            json.loads(result),
-            json.loads(args.compare.read_text(encoding="utf-8")),
-            "published masked scaler evidence",
+        require_snapshot(
+            json.loads(result), args.compare, "published masked scaler evidence"
         )
     print(result)
 

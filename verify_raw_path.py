@@ -6,7 +6,7 @@ Names not present as symbols are analyst labels. All ranges are file offsets.
 import argparse
 import json
 from pathlib import Path
-from verify_findings import DECODED_SHA256, require, sha256, u32
+from verify_findings import DECODED_SHA256, require, require_snapshot, sha256, u32
 
 BASE = 0x02000000
 
@@ -81,7 +81,7 @@ def main():
     with args.decoded.open("rb") as stream:
         result = analyze(stream.read(16_838_657))
     if args.compare:
-        require(result, json.loads(args.compare.read_text(encoding="utf-8")), "published RAW evidence")
+        require_snapshot(result, args.compare, "published RAW evidence")
     print(json.dumps(result, indent=2))
 
 

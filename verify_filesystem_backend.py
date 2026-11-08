@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 import struct
 
-from verify_findings import DECODED_SHA256, require, sha256, u32
+from verify_findings import DECODED_SHA256, require, require_snapshot, sha256, u32
 from verify_raw_path import branch_target
 from verify_tone_path import BASE, load_image
 
@@ -218,7 +218,7 @@ def main():
                   'The 0x04040000 backend threshold is an unsigned device-word comparison. The separate verify_sd_controller.py trace establishes card+0x14 as a CSD-derived count of 512-byte logical sectors.',
               ]}
     if args.compare:
-        require(result, json.loads(args.compare.read_text(encoding='utf-8')), 'filesystem evidence snapshot')
+        require_snapshot(result, args.compare, 'filesystem evidence snapshot')
     print(json.dumps(result, indent=2))
 
 

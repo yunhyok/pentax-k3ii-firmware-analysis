@@ -12,7 +12,14 @@ import tempfile
 
 from inspect_firmware import decode
 from repack_firmware import checksum, repack, write_outputs, SECTIONS, MARKER_OFFSETS
-from verify_findings import INPUT_SHA256, DECODED_SHA256, require, sha256, u32
+from verify_findings import (
+    INPUT_SHA256,
+    DECODED_SHA256,
+    require,
+    require_snapshot,
+    sha256,
+    u32,
+)
 from verify_tone_path import BASE, check_words
 from verify_raw_path import branch_target
 
@@ -321,11 +328,7 @@ def main():
     args = parser.parse_args()
     result = verify(args.original.read_bytes())
     if args.compare:
-        require(
-            result,
-            json.loads(args.compare.read_text(encoding="utf-8")),
-            "repack evidence",
-        )
+        require_snapshot(result, args.compare, "repack evidence")
     print(json.dumps(result, indent=2))
 
 

@@ -8,7 +8,14 @@ import argparse
 import json
 from pathlib import Path
 
-from verify_findings import DECODED_SHA256, literal_offset, require, sha256, u32
+from verify_findings import (
+    DECODED_SHA256,
+    literal_offset,
+    require,
+    require_snapshot,
+    sha256,
+    u32,
+)
 from verify_raw_path import branch_target
 from verify_tone_path import BASE, check_words, load_image
 
@@ -568,11 +575,7 @@ def main():
     if args.emulate:
         result["numeric"] = emulate(data)
     if args.compare:
-        require(
-            result,
-            json.loads(args.compare.read_text(encoding="utf-8")),
-            "Pixel Shift evidence",
-        )
+        require_snapshot(result, args.compare, "Pixel Shift evidence")
         print(f"Pixel Shift evidence matches {args.compare}")
     elif args.output:
         args.output.write_text(

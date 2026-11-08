@@ -10,7 +10,7 @@ import json
 from pathlib import Path
 from struct import pack, unpack
 
-from verify_findings import DECODED_SHA256, require, sha256
+from verify_findings import DECODED_SHA256, require, require_snapshot, sha256
 from verify_masked_scaler import gate_search
 from verify_raw_path import branch_target
 from verify_tone_path import BASE, check_words, load_image
@@ -227,11 +227,7 @@ def main():
     args = parser.parse_args()
     result = json.dumps(analyze(load_image(args.decoded)), indent=2)
     if args.compare:
-        require(
-            json.loads(result),
-            json.loads(args.compare.read_text(encoding="utf-8")),
-            "scaler gate snapshot",
-        )
+        require_snapshot(json.loads(result), args.compare, "scaler gate snapshot")
     print(result)
 
 

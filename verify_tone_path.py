@@ -7,7 +7,14 @@ import json
 from pathlib import Path
 
 from inspect_firmware import FIRMWARE_SIZE
-from verify_findings import DECODED_SHA256, literal_offset, require, sha256, u32
+from verify_findings import (
+    DECODED_SHA256,
+    literal_offset,
+    require,
+    require_snapshot,
+    sha256,
+    u32,
+)
 
 
 BASE = 0x02000000
@@ -226,7 +233,7 @@ def main():
     try:
         result = verify(load_image(args.decoded))
         if args.compare:
-            require(result, json.loads(args.compare.read_text(encoding="utf-8")), "tone path snapshot")
+            require_snapshot(result, args.compare, "tone path snapshot")
     except (OSError, ValueError) as error:
         parser.exit(1, f"tone verification failed: {error}\n")
     print(json.dumps(result, indent=2))

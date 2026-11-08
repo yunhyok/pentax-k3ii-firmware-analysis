@@ -10,7 +10,7 @@ from struct import unpack_from
 
 from verify_color_ui import DETAIL_ID, GROUP, GROUP_ROW, PARENT_VTABLE, PARENT_WIDGET
 
-from verify_findings import require, sha256, u32
+from verify_findings import require, require_snapshot, sha256, u32
 from verify_raw_path import branch_target
 from verify_tone_path import BASE, load_image
 
@@ -857,11 +857,7 @@ def main():
     }
     output = json.dumps(result, indent=2)
     if args.compare:
-        require(
-            json.loads(output),
-            json.loads(args.compare.read_text(encoding="utf-8")),
-            "snapshot replay",
-        )
+        require_snapshot(result, args.compare, "snapshot replay")
     print(output)
 
 

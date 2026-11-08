@@ -10,7 +10,7 @@ import json
 from pathlib import Path
 from struct import pack, unpack_from
 
-from verify_findings import literal_offset, require, sha256, u32
+from verify_findings import literal_offset, require, require_snapshot, sha256, u32
 from verify_pixel_records import (
     BANK_BYTES,
     BANKS,
@@ -795,15 +795,7 @@ def main():
     }
     output = json.dumps(result, indent=2)
     if args.compare:
-        require(
-            json.dumps(result, sort_keys=True, separators=(",", ":")),
-            json.dumps(
-                json.loads(args.compare.read_text(encoding="utf-8")),
-                sort_keys=True,
-                separators=(",", ":"),
-            ),
-            "snapshot replay",
-        )
+        require_snapshot(result, args.compare, "snapshot replay")
     print(output)
 
 

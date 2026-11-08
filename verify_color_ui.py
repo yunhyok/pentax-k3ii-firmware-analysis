@@ -8,7 +8,14 @@ import json
 from pathlib import Path
 from struct import pack, unpack, unpack_from
 
-from verify_findings import DECODED_SHA256, literal_offset, require, sha256, u32
+from verify_findings import (
+    DECODED_SHA256,
+    literal_offset,
+    require,
+    require_snapshot,
+    sha256,
+    u32,
+)
 from verify_tone_path import BASE, check_edge, check_words, load_image
 from verify_ui_resources import RENDERER_VTABLE, glyph_record
 
@@ -555,11 +562,7 @@ def main():
     args = parser.parse_args()
     result = analyze(load_image(args.decoded))
     if args.compare:
-        require(
-            result,
-            json.loads(args.compare.read_text(encoding="utf-8")),
-            "Color Space snapshot",
-        )
+        require_snapshot(result, args.compare, "Color Space snapshot")
     print(json.dumps(result, indent=2))
 
 

@@ -9,7 +9,7 @@ import json
 from pathlib import Path
 from struct import pack, unpack_from
 
-from verify_findings import DECODED_SHA256, require, sha256, u32
+from verify_findings import DECODED_SHA256, require, require_snapshot, sha256, u32
 from verify_tone_path import BASE, check_edge, check_words, load_image
 
 FLASH = (0x021A0000, 0x022C0000)
@@ -368,11 +368,7 @@ def main():
     args = parser.parse_args()
     result = analyze(load_image(args.decoded))
     if args.compare:
-        require(
-            result,
-            json.loads(args.compare.read_text(encoding="utf-8")),
-            "settings storage snapshot",
-        )
+        require_snapshot(result, args.compare, "settings storage snapshot")
     print(json.dumps(result, indent=2))
 
 

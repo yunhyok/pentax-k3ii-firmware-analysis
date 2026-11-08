@@ -9,7 +9,7 @@ from hashlib import shake_256
 from pathlib import Path
 from struct import pack, unpack
 
-from verify_findings import literal_offset, require, sha256, u32
+from verify_findings import literal_offset, require, require_snapshot, sha256, u32
 from verify_tone_path import BASE, a32_immediate, check_edge, check_words, load_image
 
 
@@ -515,11 +515,7 @@ def main():
     }
     output = json.dumps(result, indent=2)
     if args.compare:
-        require(
-            json.loads(output),
-            json.loads(args.compare.read_text(encoding="utf-8")),
-            "snapshot replay",
-        )
+        require_snapshot(result, args.compare, "snapshot replay")
     print(output)
 
 

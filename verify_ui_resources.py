@@ -8,7 +8,14 @@ import json
 from pathlib import Path
 from struct import pack, unpack, unpack_from
 
-from verify_findings import DECODED_SHA256, literal_offset, require, sha256, u32
+from verify_findings import (
+    DECODED_SHA256,
+    literal_offset,
+    require,
+    require_snapshot,
+    sha256,
+    u32,
+)
 from verify_tone_path import BASE, check_edge, check_words, load_image
 
 TABLE, VTABLE, RENDERER_VTABLE = 0x993334, 0xA629E4, 0xA5D1AC
@@ -509,11 +516,7 @@ def main():
     args = parser.parse_args()
     result = analyze(load_image(args.decoded))
     if args.compare:
-        require(
-            result,
-            json.loads(args.compare.read_text(encoding="utf-8")),
-            "UI resource snapshot",
-        )
+        require_snapshot(result, args.compare, "UI resource snapshot")
     print(json.dumps(result, indent=2))
 
 

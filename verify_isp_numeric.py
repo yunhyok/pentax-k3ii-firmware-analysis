@@ -8,7 +8,7 @@ from pathlib import Path
 import random
 import struct
 
-from verify_findings import DECODED_SHA256, require, sha256
+from verify_findings import DECODED_SHA256, require, require_snapshot, sha256
 from verify_isp_paths import B2Y, WB_REGISTER_ORDER
 from verify_tone_path import BASE, load_image
 
@@ -291,7 +291,7 @@ def main():
     result = verify_numeric(load_image(args.decoded_image))
     serialized = json.dumps(result, indent=2) + "\n"
     if args.compare:
-        require(result, json.loads(args.compare.read_text(encoding="utf-8")), "ISP numeric evidence")
+        require_snapshot(result, args.compare, "ISP numeric evidence")
         print(f"ISP numeric evidence matches {args.compare}")
     elif args.output:
         args.output.write_text(serialized, encoding="utf-8", newline="\n")

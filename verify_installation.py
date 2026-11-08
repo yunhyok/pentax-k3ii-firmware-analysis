@@ -9,7 +9,7 @@ import json
 from pathlib import Path
 import struct
 
-from verify_findings import DECODED_SHA256, require, sha256, u32
+from verify_findings import DECODED_SHA256, require, require_snapshot, sha256, u32
 from verify_raw_path import branch_target
 from verify_tone_path import BASE, check_words, load_image
 
@@ -869,11 +869,7 @@ def main():
             "actual_updater": updater_cases(data),
         }
     if args.compare:
-        require(
-            result,
-            json.loads(args.compare.read_text(encoding="utf-8")),
-            "installation snapshot",
-        )
+        require_snapshot(result, args.compare, "installation snapshot")
     text = json.dumps(result, ensure_ascii=False, indent=2) + "\n"
     if args.output:
         args.output.write_text(text, encoding="utf-8")

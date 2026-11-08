@@ -7,7 +7,7 @@ Synthetic metadata, services and read data are explicitly intercepted.
 import argparse, json, struct
 from pathlib import Path
 from verify_tone_path import BASE, load_image
-from verify_findings import require, sha256, DECODED_SHA256, u32
+from verify_findings import require, require_snapshot, sha256, DECODED_SHA256, u32
 from verify_raw_path import branch_target
 import unicorn as u
 from unicorn import arm_const as a
@@ -415,11 +415,7 @@ def main():
         ],
     }
     if args.compare:
-        require(
-            result,
-            json.loads(args.compare.read_text(encoding="utf-8")),
-            "backend B evidence",
-        )
+        require_snapshot(result, args.compare, "backend B evidence")
     print(json.dumps(result, indent=2))
 
 

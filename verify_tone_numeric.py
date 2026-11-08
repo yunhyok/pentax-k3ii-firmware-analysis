@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 import struct
 
-from verify_findings import DECODED_SHA256, require, sha256
+from verify_findings import DECODED_SHA256, require, require_snapshot, sha256
 from verify_tone_path import BASE, load_image
 
 
@@ -197,7 +197,7 @@ def main():
     try:
         result = verify_numeric(load_image(args.decoded))
         if args.compare:
-            require(result, json.loads(args.compare.read_text(encoding="utf-8")), "tone numeric snapshot")
+            require_snapshot(result, args.compare, "tone numeric snapshot")
     except (ImportError, OSError, ValueError) as error:
         parser.exit(1, f"tone numeric verification failed: {error}\n")
     print(json.dumps(result, indent=2))
