@@ -2,7 +2,7 @@
   "model": "PENTAX K-3 II",
   "firmware_version": "1.12",
   "baseline_commit": "66c85ea53f52b6e9489d742b5bd63e50e543055e",
-  "updated_at": "2026-11-08T15:21:46+09:00",
+  "updated_at": "2026-11-08T15:27:25+09:00",
   "goals": [
     {
       "id": "firmware_rebuild",
@@ -138,7 +138,8 @@
       "PASS: 20 unit tests after checksum-sentinel regression; native checksum 6 values x 2 image kinds reproduce.",
       "PASS: coordinator replayed AF acquisition 8, body control 14 and lens control 3 cases with original drive-preparation prefixes.",
       "PASS: independent installation review replayed 43 cases; no P0-P2 findings. Nonzero-vs-one wording and source alignment clarified.",
-      "PASS: light Korean review, installation/UI 22 and AF 10 prose paragraphs, 0% changes; deterministic gates passed. Subsequent installation precision corrections received technical review."
+      "PASS: light Korean review, installation/UI 22 and AF 10 prose paragraphs, 0% changes; deterministic gates passed. Subsequent installation precision corrections received technical review.",
+      "PASS: f9577d5 CI and Pages; 16 served files byte-identical; fresh clone reproduces installation/UI/AF snapshots, 20 unit tests and publication validation (13 HTML documents, 341 local links, 95 public files). Six published diagrams visually checked in Chrome."
     ],
     "limits": [
       "Unicorn 2.1.4 synthetic memory; no physical device I/O.",
@@ -176,36 +177,30 @@
   ],
   "scope_clarification": "AF changes are future work. Current scope is sufficiently deep foundational research; exact target lens information is not a blocker.",
   "publication": {
-    "analysis_commit": "7f91b0b7d6c6786193be964b5c56ef7924f13687",
-    "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42452338338",
-    "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42452337778",
+    "analysis_commit": "f9577d502dc84778114d2df83de7a91143259a29",
+    "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42454444948",
+    "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42454444717",
     "ci": "success",
     "pages": "success",
-    "http_files_byte_exact": 14,
+    "http_files_byte_exact": 16,
     "fresh_clone_repack_and_af_snapshots": "PASS",
-    "fresh_clone_unit_tests": 19,
-    "fresh_clone_html_documents": 10,
-    "fresh_clone_local_links": 280,
+    "fresh_clone_unit_tests": 20,
+    "fresh_clone_html_documents": 13,
+    "fresh_clone_local_links": 341,
     "browser": {
       "surface": "published HTTPS in Chrome",
       "reports": [
-        "rebuild.html",
-        "af-drive.html"
+        "installation.html",
+        "ui-resources.html",
+        "af-control.html"
       ],
       "figures_per_report": 2,
       "viewport_width": 1882,
-      "af_document_scroll_width": 1882
+      "all_three_document_scroll_widths": 1882,
+      "mobile_layout": "not checked"
     },
     "local_preview": "Unavailable under tool policy; published HTTPS preview verified instead.",
-    "subsequent_status_commit": "fa79d693e83329429dc79d8841e3ffbe73965691",
-    "subsequent_status_ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42452542862",
-    "subsequent_status_pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42452542656",
-    "subsequent_status_checks": "success",
-    "pending_local_artifacts": [
-      "installation",
-      "ui-resources",
-      "af-control"
-    ],
+    "pending_local_artifacts": [],
     "checksum_sentinel_fix": {
       "commit": "9521f6881b356429ed0b8b58123c6483e23eddd5",
       "ci": "success",
@@ -213,6 +208,9 @@
       "ci_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42453857624",
       "pages_run": "https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions/runs/42453856476",
       "served_files_byte_exact": 5
-    }
+    },
+    "previous_analysis_commit": "7f91b0b7d6c6786193be964b5c56ef7924f13687",
+    "fresh_clone_installation_ui_af_snapshots": "PASS",
+    "fresh_clone_public_files": 95
   }
 }
