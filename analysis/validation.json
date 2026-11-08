@@ -621,7 +621,20 @@
       "0x599914"
     ],
     "physical_UID_or_flash_writes": false,
-    "publication": "pending",
+    "publication": {
+      "commit": "c3516d0c7e1ac79c119b1629fe23496a41638881",
+      "ci": "success",
+      "pages": "success",
+      "http_files_byte_exact": 9,
+      "fresh_clone_snapshot": "PASS",
+      "unit_tests": 20,
+      "html_documents": 19,
+      "local_links": 468,
+      "public_files": 114,
+      "two_diagrams_visually_checked": true,
+      "inner_width": 1897,
+      "document_scroll_width": 1882
+    },
     "language_review": {
       "route": "light",
       "paragraphs": 9,
