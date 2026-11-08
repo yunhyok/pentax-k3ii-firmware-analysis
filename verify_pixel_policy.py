@@ -796,8 +796,12 @@ def main():
     output = json.dumps(result, indent=2)
     if args.compare:
         require(
-            json.loads(output),
-            json.loads(args.compare.read_text(encoding="utf-8")),
+            json.dumps(result, sort_keys=True, separators=(",", ":")),
+            json.dumps(
+                json.loads(args.compare.read_text(encoding="utf-8")),
+                sort_keys=True,
+                separators=(",", ":"),
+            ),
             "snapshot replay",
         )
     print(output)
