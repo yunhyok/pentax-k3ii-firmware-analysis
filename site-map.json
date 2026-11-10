@@ -40,7 +40,7 @@
       {"file": "analysis/tone-rebuild.html", "label": "톤 보간 함수 C 재구현"}
     ]},
     {"id": "af", "title": "AF와 렌즈 제어", "nav": "AF", "hub": "analysis/guide-af.html", "pages": [
-      {"file": "analysis/guide-af.html", "label": "AF 안내"},
+      {"file": "analysis/guide-af.html", "label": "AF와 렌즈 제어 안내"},
       {"file": "analysis/af-drive.html", "label": "렌즈 능력과 구동 분기"},
       {"file": "analysis/af-control.html", "label": "AF 요청 계산과 구동 준비"},
       {"file": "analysis/af-input.html", "label": "AF 카운터와 보정값"}

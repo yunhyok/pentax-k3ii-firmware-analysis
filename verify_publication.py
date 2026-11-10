@@ -1,4 +1,4 @@
-"""Check offline HTML links, evidence consistency, and the public file boundary.
+"""Check offline HTML links, shared navigation, evidence consistency, and the public file boundary.
 
 SPDX-License-Identifier: GPL-2.0-only
 """
@@ -7,6 +7,7 @@ from hashlib import sha256
 import json
 from pathlib import Path
 import subprocess
+import sys
 from urllib.parse import unquote, urlsplit
 import xml.etree.ElementTree as ET
 
@@ -34,6 +35,9 @@ class Document(HTMLParser):
 
 def main():
     root = Path(__file__).resolve().parent
+    sys.path.insert(0, str(root / "tools"))
+    from site_chrome import Site
+    site = Site()
     files = subprocess.check_output(["git", "ls-files", "--cached", "--others", "--exclude-standard"], cwd=root, text=True).splitlines()
     documents = {root / name: Document((root / name).read_text(encoding="utf-8"))
                  for name in files if name.endswith(".html")}
@@ -43,7 +47,11 @@ def main():
         assert doc.lang == "ko" and doc.tags.count("h1") == 1 and doc.tags.count("main") == 1, source
         assert len(doc.ids) == len(set(doc.ids)), f"duplicate HTML IDs: {source}"
         body = source.read_text(encoding="utf-8")
-        assert "{{" not in body and "<!-- HUMANIZE" not in body, source
+        assert "{{" not in body and "<!-- HUMANIZE" not in body and "STUB-PLACEHOLDER" not in body, source
+        name = source.relative_to(root).as_posix()
+        assert name in site.index, f"{name} is not listed in site-map.json"
+        assert "assets/site.css" in body, f"{name} must link the shared stylesheet"
+        assert site.render(name, body) == body, f"{name}: navigation is stale; run python tools/site_chrome.py"
         for link in doc.links:
             url = urlsplit(link)
             if url.scheme or url.netloc:
@@ -66,7 +74,7 @@ def main():
     assert comparison["matched"] and comparison["bytes"] == findings["decoded_size"]
     assert findings["midr_check"]["part_number"] == 0xC09
     for value in (inventory["input"]["sha256"], findings["decoded_sha256"], "0x02000000", "0xC090", "30,254"):
-        assert "STUB-PLACEHOLDER" in text or value in text, value  # TEMP: stub guard removed at integration
+        assert value in text, value
     for name in ("hardware", "raw-path", "raw-numeric", "tone-path", "tone-numeric", "selector-path", "isp-paths", "isp-numeric", "pipeline-flow", "jpeg-buffers", "menu-events", "exif-output", "filesystem-backend", "sd-controller", "alternate-buffers", "backend-b", "cpp-handoff", "masked-scaler", "mode-reachability", "superresolution-menu", "buffer-history", "scaler-gate", "repack", "af-drive", "installation", "ui-resources", "af-control", "af-input", "ui-dispatch", "preserved-record", "pixel-records", "pixel-policy", "capture-prepare", "store-image-records", "preserved-sector20", "preserved-config", "preserved-dispatch", "color-ui", "settings-storage"):
         evidence = json.loads((root / f"analysis/{name}.json").read_text(encoding="utf-8"))
         assert evidence["decoded_sha256"] == findings["decoded_sha256"], name

@@ -31,9 +31,11 @@
 <dl class="glossary">
 <dt id="machine-code">기계어 <small>machine code</small></dt><dd>CPU가 직접 실행하는 숫자 형태의 명령입니다. 펌웨어 파일에는 소스 코드가 아니라 기계어가 들어 있습니다.</dd>
 <dt id="disassembly">디스어셈블 <small>disassembly</small></dt><dd>기계어를 사람이 읽을 수 있는 명령 이름(어셈블리)으로 한 줄씩 바꿔 적는 일입니다. 정보가 바뀌지 않는 일대일 변환입니다.</dd>
+<dt id="descriptor">디스크립터 · 설명자 <small>descriptor</small></dt><dd>다른 데이터의 위치·크기·종류를 적어 둔 작은 기록입니다. 문서마다 가리키는 대상이 다르므로(버퍼, 저장 위치, 화면 항목, 아이콘) 각 문서의 설명을 따릅니다.</dd>
 <dt id="decompile">디컴파일 <small>decompilation</small></dt><dd>기계어를 C와 비슷한 형태의 코드로 되돌려 보는 일입니다. 도구가 추정해서 만들기 때문에 원래 소스와 다르고 틀릴 수도 있어, 이 연구에서는 기계어와 대조해 확인합니다.</dd>
 <dt id="reverse-engineering">리버스 엔지니어링 <small>reverse engineering</small></dt><dd>설계 문서나 소스 코드 없이, 완성된 프로그램을 관찰하고 분석해 동작 원리를 알아내는 일입니다.</dd>
 <dt id="little-endian">리틀엔디언 <small>little-endian</small></dt><dd>여러 바이트로 된 수를 낮은 자리 바이트부터 저장하는 방식입니다. 세 기종의 CPU 모두 이 방식을 씁니다.</dd>
+<dt id="marker">마커 · 표식 <small>marker</small></dt><dd>데이터가 들어 있음을 알리려고 정해진 자리에 적어 두는 고정 값입니다. 두 K-3 기종 모두 0xA55A5AA5 꼴의 값을 씁니다. 내용이 옳다는 보증이나 서명은 아닙니다.</dd>
 <dt id="leaf-function">말단 함수 <small>leaf function</small></dt><dd>다른 함수를 부르지 않는 함수입니다. 입력과 출력이 분명해서 따로 떼어 실행해 비교하기 쉽습니다.</dd>
 <dt id="model">모델 · 스텁 <small>model, stub</small></dt><dd>에뮬레이터 안에는 센서나 저장장치 같은 하드웨어가 없습니다. 그래서 그 부분을 부르는 호출은 연구자가 정한 값을 돌려주는 대역으로 바꿉니다. 이 대역이 모델(스텁)이며, 모델을 쓴 결과는 그 조건에서만 성립합니다.</dd>
 <dt id="symbol">심볼 <small>symbol</small></dt><dd>함수나 변수의 이름과 위치를 적어 둔 정보입니다. 남아 있으면 어디를 조사할지 알려 주지만, 이름이 그 함수의 실제 동작을 보증하지는 않습니다.</dd>
@@ -54,6 +56,7 @@
 <dt id="arm">ARM · Cortex-A <small>ARM</small></dt><dd>스마트폰과 카메라에 널리 쓰이는 CPU 계열입니다. K-3 Mark III의 Linux 장치 트리에는 Cortex-A7이 적혀 있고, K-3 II의 시작 코드는 Cortex-A9의 부품 번호를 검사합니다.</dd>
 <dt id="midr">MIDR <small>Main ID Register</small></dt><dd>ARM CPU가 자기 종류를 알려 주는 식별 레지스터입니다. 부품 번호 0xC09는 Cortex-A9입니다.</dd>
 <dt id="mmio">MMIO <small>memory-mapped I/O</small></dt><dd>하드웨어의 설정 칸을 메모리 주소처럼 읽고 쓰는 방식입니다. 프로그램이 특정 주소에 값을 쓰면 영상 처리 회로나 저장장치 제어기의 동작이 바뀝니다.</dd>
+<dt id="rtti">RTTI <small>run-time type information</small></dt><dd>C++ 프로그램에 남아 있는 클래스 이름 정보입니다. 객체가 어떤 종류인지 이름으로 확인하는 근거가 됩니다.</dd>
 <dt id="thumb">Thumb <small>Thumb</small></dt><dd>ARM CPU가 쓰는 더 짧은 명령 형식입니다. 같은 CPU가 ARM 명령과 Thumb 명령을 바꿔 가며 실행할 수 있습니다.</dd>
 <dt id="vtable">가상 함수 표 <small>vtable</small></dt><dd>C++ 객체가 자기 종류에 맞는 함수를 찾을 때 쓰는 주소 표입니다. 호출 대상이 실행 중에 정해지기 때문에 코드를 읽는 것만으로는 어디가 불리는지 알기 어렵습니다.</dd>
 <dt id="fixed-point">고정소수점 · Q13 <small>fixed point</small></dt><dd>소수를 정수로 나타내는 방식입니다. Q13은 실수 1.0을 정수 8,192(2의 13제곱)로 적습니다. 곱한 뒤에는 13비트만큼 내려야 원래 자릿수로 돌아옵니다.</dd>
@@ -68,6 +71,7 @@
 <dl class="glossary">
 <dt id="rtos">RTOS <small>real-time operating system</small></dt><dd>정해진 시간 안에 반응해야 하는 기기를 위한 작은 운영체제입니다. 카메라의 촬영·AF·영상 처리는 RTOS 위에서 돕니다.</dd>
 <dt id="t-kernel">T-Kernel <small>T-Kernel</small></dt><dd>일본의 TRON 프로젝트에서 나온 RTOS입니다. K-3 II 펌웨어에 이 이름이 든 진단 문자열이 남아 있습니다.</dd>
+<dt id="mailbox">메일박스 <small>mailbox</small></dt><dd>정해진 메모리 칸에 명령과 인수를 적어 두면 다른 쪽이 읽고 응답을 적는 통신 방식입니다. K-3 II의 업데이트 코드가 합계 계산, 비교, 지우기, 기록 명령을 이 방식으로 넘깁니다.</dd>
 <dt id="mutex">뮤텍스 <small>mutex</small></dt><dd>여러 태스크가 같은 자원을 동시에 쓰지 못하게 막는 잠금 장치입니다.</dd>
 <dt id="bootloader">부트로더 <small>bootloader</small></dt><dd>전원이 켜진 직후 실행되어 메모리와 저장장치를 준비하고 본 프로그램을 올리는 작은 프로그램입니다.</dd>
 <dt id="queue">큐 · 메시지 <small>queue, message</small></dt><dd>태스크끼리 요청을 주고받는 줄입니다. 한쪽이 메시지를 넣으면 다른 쪽이 차례로 꺼내 처리합니다.</dd>
@@ -80,22 +84,33 @@
 <dt id="dma">DMA · ADMA2 <small>DMA</small></dt><dd>CPU를 거치지 않고 장치가 메모리와 직접 데이터를 주고받는 방식입니다. ADMA2는 SD 제어기가 쓰는 DMA 방식으로, 전송할 메모리 조각의 목록을 표로 넘깁니다.</dd>
 <dt id="fat">FAT 파일시스템 <small>FAT</small></dt><dd>SD 카드에 널리 쓰이는 파일 보관 방식입니다. Q7은 펌웨어 안에도 FAT16 구조를 두고 글꼴 같은 자원 파일을 넣어 두었습니다.</dd>
 <dt id="sd-commands">SD 명령 (CMD17·18·24·25) <small>SD commands</small></dt><dd>SD 카드에 내리는 표준 명령 번호입니다. CMD17과 CMD18은 한 블록과 여러 블록 읽기, CMD24와 CMD25는 한 블록과 여러 블록 쓰기입니다.</dd>
+<dt id="provider">공급자 <small>provider</small></dt><dd>K-3 II의 보존 구역 한 조각을 맡는 객체입니다. 번호(ID)로 찾으며 플래시의 위치, RAM 사본의 위치, 크기를 알려 줍니다.</dd>
+<dt id="backend-ab">백엔드 A · B <small>back end A, B</small></dt><dd>K-3 II의 파일시스템 객체에 등록된 두 가지 저장 구현입니다. 카드의 섹터 수가 기준값보다 작으면 A, 크면 B가 쓰입니다. 분석하면서 붙인 이름입니다.</dd>
 <dt id="preserved-sector">보존 섹터 <small>preserved sector</small></dt><dd>K-3 II에서 펌웨어 업데이트가 덮어쓰지 않고 남겨 두는 플래시 구역입니다. 기기마다 다른 보정 값이나 설정 사본이 들어 있습니다.</dd>
 <dt id="sector">섹터 · 블록 <small>sector, block</small></dt><dd>저장장치를 읽고 쓰는 기본 단위입니다. SD 카드와 eMMC에서는 보통 512바이트입니다.</dd>
+<dt id="staging-buffer">준비 버퍼 <small>staging buffer</small></dt><dd>K-3 II가 플래시에 쓰기 전에 섹터 하나(128KiB) 분량을 통째로 모아 두는 RAM 영역입니다.</dd>
 </dl>
 </section>
 <section id="image">
 <h2>영상 처리와 색</h2>
 <dl class="glossary">
+<dt id="b2y-cpp">B2Y · CPP <small>B2Y, CPP</small></dt><dd>K-3 II 분석에 나오는 영상 처리 단계의 이름입니다. B2Y는 펌웨어 진단 문자열에 나오는 레지스터 묶음의 이름이고, CPP는 색 처리 단계를 부르는 이름입니다. 두 약어의 뜻은 확인하지 못했습니다.</dd>
 <dt id="dcp">DCP · 카메라 프로파일 <small>DNG Camera Profile</small></dt><dd>Adobe Lightroom과 Camera Raw가 RAW의 색을 해석할 때 쓰는 프로파일 파일입니다. 색 행렬, 색상·채도 보정 표, 톤 곡선이 들어 있습니다.</dd>
 <dt id="isp">ISP · 영상 처리 파이프라인 <small>image signal processor</small></dt><dd>센서 값을 사진으로 바꾸는 처리 단계의 묶음입니다. 화이트밸런스, 색 변환, 톤 곡선, 압축이 차례로 이어집니다.</dd>
 <dt id="jpeg">JPEG <small>JPEG</small></dt><dd>사진을 압축해 저장하는 표준 형식입니다. 카메라 안에서는 전용 회로가 압축하고, 끝나면 완료 신호와 길이를 알려 줍니다.</dd>
 <dt id="pixel-shift">Pixel Shift Resolution <small>Pixel Shift Resolution</small></dt><dd>K-3 II의 기능으로, 센서를 한 픽셀씩 옮겨 가며 네 장을 찍어 합칩니다. 펌웨어 안에서는 SuperResolution이라는 이름으로 나옵니다.</dd>
 <dt id="raw">RAW · DNG · PEF <small>RAW</small></dt><dd>센서가 받은 값을 거의 그대로 담은 파일입니다. PEF는 펜탁스 고유 형식, DNG는 Adobe가 공개한 형식입니다.</dd>
+<dt id="storeimage">StoreImage <small>StoreImage</small></dt><dd>K-3 II 펌웨어에서 압축이 끝난 영상의 저장 요청을 만드는 작업의 이름입니다.</dd>
 <dt id="ycbcr">YCbCr <small>YCbCr</small></dt><dd>밝기(Y)와 두 색차(Cb, Cr)로 색을 나타내는 방식입니다. JPEG는 이 형태로 압축합니다.</dd>
 <dt id="gamma">감마 · 톤 곡선 <small>gamma, tone curve</small></dt><dd>밝기 값을 사람 눈에 맞게 휘어 주는 곡선입니다. 대비와 암부·명부의 표현이 여기서 정해집니다.</dd>
+<dt id="gain">게인 <small>gain</small></dt><dd>값에 곱하는 배율입니다. 화이트밸런스의 결과는 색 채널마다의 게인으로 전달됩니다.</dd>
+<dt id="recipe">레시피 <small>recipe</small></dt><dd>K-3 II에서 작업마다 붙는 단계 목록입니다. 어떤 처리 모듈을 어떤 순서로 부를지 적혀 있습니다.</dd>
+<dt id="module">모듈 <small>module</small></dt><dd>K-3 II의 레시피가 번호로 부르는 처리 단위입니다. 색 처리, 스케일러, JPEG 압축, 저장 요청 등이 각각 번호를 갖습니다.</dd>
+<dt id="buffer-slot">버퍼 슬롯 <small>buffer slot</small></dt><dd>K-3 II의 작업 객체가 영상 버퍼를 붙잡아 두는 번호 붙은 자리입니다.</dd>
 <dt id="color-matrix">색 행렬 <small>color matrix</small></dt><dd>빨강·초록·파랑 세 값을 섞어 새 세 값을 만드는 3×3 숫자 표입니다. 센서 고유의 색을 표준 색공간으로 옮기고 색 모드의 분위기를 만드는 데 씁니다.</dd>
 <dt id="color-space">색공간 (sRGB · AdobeRGB) <small>color space</small></dt><dd>숫자와 실제 색의 대응을 정한 기준입니다. AdobeRGB는 sRGB보다 넓은 범위의 색을 담습니다. 카메라 메뉴에서 둘 중 하나를 고릅니다.</dd>
+<dt id="lut">조회표 (LUT) <small>lookup table</small></dt><dd>입력값마다 출력값을 미리 적어 둔 표입니다. 감마와 톤 곡선은 이 형태로 하드웨어에 전달됩니다.</dd>
+<dt id="capture-context">촬영 객체 (CAP) <small>capture context</small></dt><dd>K-3 II에서 촬영 작업 하나의 상태를 담는 구조체입니다. 문서에서는 그 안의 위치를 CAP+0x… 꼴로 적습니다.</dd>
 <dt id="custom-image">커스텀 이미지 · 색 모드 <small>Custom Image</small></dt><dd>펜탁스 카메라에서 사진의 분위기를 고르는 메뉴입니다. Natural, Bright, Reversal Film 같은 모드마다 색 행렬과 곡선 설정이 달라집니다.</dd>
 <dt id="clipping">클리핑 <small>clipping</small></dt><dd>계산 결과가 표현 범위를 넘으면 최댓값이나 최솟값으로 잘라 내는 처리입니다.</dd>
 <dt id="pixel-correction">픽셀 보정 <small>pixel correction</small></dt><dd>센서의 결함 픽셀 값을 주변 픽셀로 메우는 처리입니다. 결함 위치 기록은 기기마다 다릅니다.</dd>
@@ -105,9 +120,12 @@
 <section id="af">
 <h2>AF와 렌즈</h2>
 <dl class="glossary">
+<dt id="af-coupler">AF 커플러 <small>AF coupler</small></dt><dd>바디 모터의 회전을 렌즈로 전달하는 마운트의 축입니다. 렌즈 안에 모터가 있는 렌즈는 이 축을 쓰지 않습니다.</dd>
+<dt id="capability-byte">능력 바이트 <small>capability byte</small></dt><dd>렌즈가 알려 준 정보 가운데 구동 방식을 고르는 데 쓰이는 바이트입니다. 두 K-3 기종 모두 이 바이트의 비트 6에 따라 경로가 갈립니다.</dd>
 <dt id="defocus">디포커스 <small>defocus</small></dt><dd>초점이 맞는 위치에서 벗어난 정도입니다. AF는 이 값을 렌즈 구동량으로 바꿉니다.</dd>
 <dt id="lens-command">렌즈 명령과 응답 <small>lens command</small></dt><dd>바디가 렌즈에 보내는 요청과 렌즈가 돌려주는 답입니다. 이 연구는 펌웨어가 명령을 만들고 응답을 해석하는 코드를 다루며, 실제 통신 신호는 관측하지 않았습니다.</dd>
 <dt id="lens-drive">바디 구동과 렌즈 내 모터 <small>screw drive, in-lens motor</small></dt><dd>펜탁스 K 마운트 렌즈는 바디의 모터가 축을 돌려 초점을 움직이는 것과 렌즈 안의 모터로 움직이는 것이 있습니다. 카메라는 렌즈가 알려 주는 정보를 보고 방식을 고릅니다.</dd>
+<dt id="request-value">요청값 <small>request value</small></dt><dd>K-3 II의 AF 코드가 계산해 구동 준비 함수에 넘기는 16비트 값입니다. 물리 단위는 확인하지 못했습니다.</dd>
 <dt id="phase-af">위상차 AF <small>phase-detection AF</small></dt><dd>DSLR이 뷰파인더로 찍을 때 쓰는 방식입니다. 전용 센서가 받은 두 신호가 얼마나 어긋났는지를 재서, 초점이 어느 방향으로 얼마나 벗어났는지 한 번에 계산합니다.</dd>
 <dt id="contrast-af">콘트라스트 AF <small>contrast-detection AF</small></dt><dd>촬상 센서의 화면에서 대비가 가장 높아지는 렌즈 위치를 찾는 방식입니다. 렌즈를 조금씩 움직여 가며 최고점을 찾습니다.</dd>
 </dl>
@@ -115,6 +133,9 @@
 <section id="ui">
 <h2>화면</h2>
 <dl class="glossary">
+<dt id="pending-value">보류값 · 임시값 <small>pending value</small></dt><dd>메뉴에서 고르는 중이라 아직 설정에 반영되지 않은 값입니다. 확정하면 설정에 쓰이고 취소하면 버려집니다. Q7은 고르는 즉시 쓰고 취소할 때 되돌리는 방식이라 다릅니다.</dd>
+<dt id="widget">위젯 <small>widget</small></dt><dd>화면을 이루는 부품(제목, 선택 항목, 도움말)에 붙은 내부 번호 또는 그 부품입니다.</dd>
+<dt id="focus">포커스 <small>focus</small></dt><dd>지금 고르고 있는 항목을 가리키는 표시입니다.</dd>
 <dt id="frame-buffer">프레임 버퍼 <small>frame buffer</small></dt><dd>화면에 내보낼 그림을 담아 두는 메모리 영역입니다.</dd>
 <dt id="resource">화면 자원 <small>resource</small></dt><dd>아이콘, 글꼴, 문자열처럼 프로그램 코드가 아닌 화면용 데이터입니다.</dd>
 </dl>
