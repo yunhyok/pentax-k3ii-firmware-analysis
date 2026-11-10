@@ -1,47 +1,400 @@
 <!doctype html>
 <html lang="ko">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="K-3 II AF 카운터의 드라이버 연결, 보정값 생산자와 후속 구동 요청을 원본 ARM 실행으로 검증.">
-<title>K-3 II — AF 카운터와 보정값 생산자</title><link rel="stylesheet" href="../assets/report.css"></head>
-<body><header><div class="eyebrow">PENTAX K-3 II · firmware 1.12 · 2026-11-08</div>
-<h1>AF 카운터에서<br>보정값과 구동 요청까지</h1>
-<p class="lead">앞서 입력으로 주었던 AF 보정값의 생산자를 찾았다. 원본 드라이버 생성자와 레지스트리 연결을 실행해 두 카운터 주소를 확인했고, 같은 모터 객체의 보정값 생산·후속 계산·구동 준비 전달을 이어 검증했다. 두 시점의 카운터 값은 각각 주입했으며 실제 하드웨어가 값을 바꾸는 과정은 실행하지 않았다.</p>
-<nav aria-label="보고서 탐색"><a href="af-control.html">앞선 AF 계산</a><a href="#binding">카운터 연결</a><a href="#producer">보정값 생산</a><a href="#handoff">후속 전달</a><a href="#limits">재현과 한계</a><a href="hq-status.json">연구 상태</a></nav></header>
-<main><p class="note">기본 주소 표기는 해제 파일 오프셋이다. 실행 주소에는 <code>VA</code>를 붙였다. CAfMotor·CAfDriver·CUdcDriver·C32bitReloadTimerDriver의 이름은 펌웨어 RTTI에서 확인했다. 내부 요청값의 물리 단위는 아직 확인하지 않았다.</p>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AF 카운터가 보정값과 요청값이 되기까지 — PENTAX K-3 II 펌웨어 연구</title>
+<meta name="description" content="K-3 II 펌웨어 1.12의 바디 AF 경로에서 카운터가 어느 레지스터에서 읽히는지, 그 값으로 보정값이 만들어져 요청값 계산과 구동 준비 입구까지 전달되는 과정을 원본 ARM 실행으로 확인한 기록입니다.">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body data-camera="k3ii">
+<!-- chrome:top -->
+<a class="skip" href="#main">본문 바로가기</a>
+<div class="topbar"><div class="topbar-in"><a class="brand" href="../index.html">PENTAX <b>펌웨어 연구</b></a><div class="cams" aria-label="기종 선택"><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/">K-3 III</a><a href="../index.html" aria-current="true">K-3 II</a><a href="https://yunhyok.github.io/pentax-q7-firmware-analysis/">Q7</a></div><nav class="topnav" aria-label="주제"><a href="../index.html">개요</a><a href="guide-pipeline.html">영상 처리</a><a href="guide-capture.html">촬영·보존 레코드</a><a href="guide-rebuild.html">재구축·업데이트</a><a href="guide-af.html" aria-current="true">AF</a><a href="guide-ui.html">UI</a></nav></div></div>
+<nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../index.html">PENTAX K-3 II</a></li><li><a href="guide-af.html">AF와 렌즈 제어</a></li><li aria-current="page">AF 카운터와 보정값</li></ol></nav>
+<!-- /chrome:top -->
+<header class="page-head">
+<p class="eyebrow">AF와 렌즈 제어 · 3단계 입력 카운터와 보정값</p>
+<h1>AF 카운터가 보정값과 요청값이 되기까지</h1>
+<p class="lead">앞 문서에서는 요청값 계산에 들어가는 “입력”과 “보정값”을 연구자가 직접 넣었습니다. 이 문서는 두 값이 펌웨어 안에서 실제로 어디서 오는지 거슬러 올라갑니다.</p>
+</header>
+<div class="layout">
+<!-- chrome:toc -->
+<nav class="toc" aria-label="이 문서의 목차"><h2 data-toc="no">이 문서에서</h2><ol><li><a href="#background">배경: 앞 문서에서 남은 두 가지 물음</a></li><li><a href="#binding">입력의 출처: 타이머 드라이버의 카운터 레지스터</a></li><li><a href="#producer">보정값의 출처: 조건을 통과하면 그 시점의 카운터로 만듭니다</a></li><li><a href="#handoff">이어 붙이기: 저장된 보정값이 요청값이 되어 구동 준비 입구에 도착합니다</a></li><li><a href="#limits">한계와 남은 과제</a></li><li><a href="#reproduce">재현 방법</a></li><li><a href="#refs">근거 파일과 참고 자료</a></li></ol></nav>
+<!-- /chrome:toc -->
+<main class="doc" id="main">
 
-<section aria-labelledby="binding"><h2 id="binding">1. 선택 인수 0은 타이머 0xD1을 읽는다</h2>
-<figure><figcaption>도식 1. 원본 생성자·레지스트리 조회로 연결한 카운터</figcaption><div class="flow" role="group" aria-label="모터가 드라이버를 참조하고 선택 인수에 따라 타이머 또는 UDC 레지스터의 하위 16비트를 읽는 경로">
-<div class="stage"><strong>CAfMotor+8</strong><span>composite+0x20에서 연결<br>CAfDriver singleton<br>VA 0x4000B25C</span></div><div class="arrow" aria-hidden="true">→</div>
-<div class="stage"><strong>VA 0x26E4 · 선택</strong><span>r1 = 0 → driver+4 → ID 0xD1<br>r1 ≠ 0 → driver+0x18 → ID 0x117<br>레지스트리 항목 12바이트</span></div><div class="arrow" aria-hidden="true">→</div>
-<div class="stage"><strong>32비트 읽기 → 하위 16비트</strong><span>타이머: VA 0x30011024<br>UDC: VA 0x30014060<br>이번 생산자·계산기는 r1 = 0</span></div></div>
-<p class="caption">카운터 레지스터는 에뮬레이터 RAM으로 구성했다. 생성자와 레지스트리 기록·조회는 원본 명령이며, 선택 0·1·2에서 실제 메모리 읽기 주소와 폭을 관찰했다.</p></figure>
-<p>타이머 팩터리 <code>0x3221C…0x322AC</code>는 ID <code>0xD1</code>과 이벤트 슬롯 <code>0x82</code>를 지정한다. 생성자 <code>0x32DE0</code>가 기술자에 담긴 <code>VA 0x30011024</code>를 <code>timer+0x24</code>에 기록한다. UDC 팩터리 <code>0x3391C…0x339B4</code>는 ID <code>0x117</code>·슬롯 <code>0x5F</code>를 사용하며 생성자 <code>0x33BF8</code>가 <code>VA 0x30014060</code>을 <code>UDC+0x1C</code>에 연결한다. <a href="af-input.json">counter_binding·classes·branches</a></p>
-<p><code>VA 0x26E4</code>는 선택 인수 0에서 타이머 경로를, 그 외에는 UDC 경로를 호출한다. 주입한 <code>0xAAAA1234</code>와 <code>0xBBBB5678</code>에서 각각 <code>0x1234</code>와 <code>0x5678</code>이 나왔다. 레지스트리 항목과 이벤트 슬롯의 객체 포인터도 원본 생성자가 기록했다. 이벤트 슬롯 등록이 실제 인터럽트 전달을 증명하지는 않는다. <a href="../verify_af_input.py">생성자 실행과 getter_cases</a></p>
+<section class="summary">
+<h2 data-toc="no">핵심 요약</h2>
+<ul>
+<li>요청값 계산의 입력은 <strong>타이머 드라이버가 가리키는 카운터 레지스터</strong>에서 읽습니다. 원본 드라이버 생성 코드와 등록·조회 코드를 실행해 레지스터 주소 두 개를 확인했습니다.</li>
+<li>보정값은 AF 코드가 스스로 만듭니다. 조건을 통과하면 그 시점의 카운터에서 40을 뺀 값(분기에 따라서는 카운터 그대로)을 공유 메모리에 저장합니다.</li>
+<li>같은 객체에서 “보정값 저장 → 다음 카운터로 요청값 계산 → 구동 준비 함수 입구”까지 이어서 실행했습니다. 두 사례에서 요청값 367과 40이 입구까지 전달됐습니다.</li>
+<li>카운터 값은 두 시점 모두 연구자가 넣었습니다. 실제 하드웨어가 이 값을 어떻게 바꾸는지, 값의 단위가 무엇인지는 확인하지 않았습니다.</li>
+</ul>
 </section>
 
-<section aria-labelledby="producer"><h2 id="producer">2. 조건을 통과하면 최초 카운터에서 보정값을 만든다</h2>
-<p>애플리케이션의 ITCM 호출 <code>VA 0x2140</code>은 <code>0x54284</code>로 이어진다. 렌즈 능력 비트 6이 꺼진 경로에서 초기 카운터를 읽고, 전역 <code>VA 0x001030AB = 0</code>·상태 판정 참·<code>motor+0x4D = 0</code>·카운터가 40보다 큰 조건을 확인한다. 이번 실행은 부모 상태 분기 이후인 <code>VA 0x213C</code>에서 시작한다. 전체 AF 작업의 도달 조건을 검증한 것은 아니다. <a href="af-input.json">additive_and_request·numeric.limits</a></p>
-<div class="table-scroll"><table><thead><tr><th scope="col">조건을 통과한 뒤의 분기</th><th scope="col">0x5234C에 전달한 원본 인수</th><th scope="col">보정값</th></tr></thead><tbody>
-<tr><td>VA 0x00103120 ≠ 0, VA 0x0010311A ≠ 2</td><td>(방향, 목표) = (0, 40), (1, 80)</td><td>초기 카운터 − 40</td></tr>
-<tr><td>VA 0x00103120 = 0 또는 VA 0x0010311A = 2</td><td>(0, 0xFFFF), (1, 0)</td><td>초기 카운터</td></tr>
+<div class="scope">
+<div class="ok"><h3><span class="badge ok">확인</span> 원본 코드 실행으로 확인</h3>
+<ul>
+<li>드라이버 생성과 등록, 조회로 연결되는 레지스터 주소 2개</li>
+<li>카운터 선택 3건, 보정값 분기 14건</li>
+<li>뒤따르는 요청값 계산 12건</li>
+<li>구동 준비 함수 입구까지의 전달 2건</li>
+</ul></div>
+<div class="static"><h3><span class="badge static">정적 분석</span> 코드를 읽어 판단</h3>
+<ul>
+<li>함수들이 서로를 부르는 관계(분기 59개)</li>
+<li>명령어·상수 59개와 클래스 이름 6개의 대조</li>
+</ul></div>
+<div class="model"><h3><span class="badge model">모델</span> 시험 조건으로 정한 것</h3>
+<ul>
+<li>카운터 레지스터는 평범한 RAM. 두 시점의 값은 따로 넣음</li>
+<li>드라이버 생성 코드에 들어갈 때의 스택, 객체, 초기화 표시</li>
+<li>메모리 할당, 바디 구동 준비, 완료 리셋 함수 3개는 대체</li>
+</ul></div>
+<div class="open"><h3><span class="badge open">미확인</span> 확인하지 않은 것</h3>
+<ul>
+<li>카운터가 세는 물리 신호와 단위</li>
+<li>호출 사이의 스케줄링과 카운터 변화</li>
+<li>AF 센서가 초점 오차를 만드는 과정</li>
+<li>실제 모터의 움직임</li>
+</ul></div>
+</div>
+
+<section id="background">
+<h2>배경: 앞 문서에서 남은 두 가지 물음</h2>
+<p><a href="af-control.html#body">AF 요청 계산 문서</a>에서 바디 경로의 요청값은 “정규화한 입력 − 차감값 + 보정값”이었습니다. 그 문서의 시험에서는 입력 반워드와 보정값을 연구자가 정해서 넣었습니다. 남은 물음은 둘입니다.</p>
+<ul>
+<li><strong>입력은 어디서 읽는가</strong> — 모터 객체에서 포인터를 세 번 따라간 곳이라는 것만 알았습니다.</li>
+<li><strong>보정값은 누가 쓰는가</strong> — 공유 메모리의 한 칸(VA <code>0x0010316E</code>)에 들어 있다는 것만 알았습니다.</li>
+</ul>
+<p>이 문서에서 “카운터”는 32비트 레지스터의 값을 가리킵니다. AF 코드는 그 하위 16비트만 씁니다. 카운터가 실제로 무엇을 세는지는 이 연구에서 알아내지 못했습니다.</p>
+<div class="callout"><strong class="label">주소와 이름</strong>
+<p>기본 주소 표기는 복호화한 파일의 오프셋이고, 실행 주소에는 VA를 붙였습니다. <code>VA 0x26E4</code>처럼 작은 주소는 펌웨어가 시작할 때 주소 0번지 근처로 복사해 실행하는 코드입니다(원문 표기는 ITCM). <code>CAfMotor</code>, <code>CAfDriver</code>, <code>CUdcDriver</code>, <code>C32bitReloadTimerDriver</code>는 펌웨어의 RTTI 문자열에서 확인한 클래스 이름입니다. UDC가 무엇의 약어인지는 펌웨어에서 확인하지 못했습니다.</p></div>
+</section>
+
+<section id="binding">
+<h2>입력의 출처: 타이머 드라이버의 카운터 레지스터</h2>
+<p class="takeaway">카운터 읽기 함수는 선택 인수가 0이면 타이머 드라이버의 레지스터를, 그 밖이면 UDC 드라이버의 레지스터를 읽습니다. 이 문서의 보정값 생산과 요청값 계산은 인수 0을 씁니다.</p>
+
+<figure class="diagram">
+<figcaption>모터 객체에서 카운터 레지스터까지의 연결</figcaption>
+<div class="dg-scroll">
+<svg class="dg" viewBox="0 0 800 256" role="img" aria-labelledby="dg-bind-title dg-bind-desc">
+<title id="dg-bind-title">CAfMotor에서 타이머와 UDC의 카운터 레지스터로 이어지는 포인터 연결</title>
+<desc id="dg-bind-desc">CAfMotor 객체의 +8에 CAfDriver 객체의 포인터가 있습니다. CAfDriver는 VA 0x4000B25C에 있는 단일 객체입니다. CAfDriver의 +4는 등록 ID 0xD1인 타이머 드라이버를 가리키고, 타이머 드라이버의 +0x24는 카운터 레지스터 VA 0x30011024를 가리킵니다. CAfDriver의 +0x18은 등록 ID 0x117인 UDC 드라이버를 가리키고, UDC 드라이버의 +0x1C는 카운터 레지스터 VA 0x30014060을 가리킵니다. 읽기 함수 VA 0x26E4는 선택 인수가 0이면 타이머 쪽을, 그 밖이면 UDC 쪽을 읽어 하위 16비트를 돌려줍니다.</desc>
+<defs><marker id="dg-bind-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="b ok" x="8" y="88" width="150" height="66" rx="8"/>
+<text class="t" x="20" y="115">CAfMotor</text>
+<text class="s" x="20" y="135">+8에 드라이버 포인터</text>
+<rect class="b ok" x="194" y="88" width="170" height="66" rx="8"/>
+<text class="t" x="206" y="115">CAfDriver</text>
+<text class="s mono" x="206" y="135">VA 0x4000B25C</text>
+<rect class="b ok" x="404" y="18" width="196" height="66" rx="8"/>
+<text class="t" x="416" y="45">타이머 드라이버</text>
+<text class="s" x="416" y="65">등록 ID 0xD1 · 선택 인수 0</text>
+<rect class="b ok" x="404" y="158" width="196" height="66" rx="8"/>
+<text class="t" x="416" y="185">UDC 드라이버</text>
+<text class="s" x="416" y="205">등록 ID 0x117 · 그 밖의 인수</text>
+<rect class="b model" x="648" y="18" width="144" height="66" rx="8"/>
+<text class="t" x="660" y="45">카운터 레지스터</text>
+<text class="s mono" x="660" y="65">VA 0x30011024</text>
+<rect class="b model" x="648" y="158" width="144" height="66" rx="8"/>
+<text class="t" x="660" y="185">카운터 레지스터</text>
+<text class="s mono" x="660" y="205">VA 0x30014060</text>
+<path class="e" d="M158 121H192" marker-end="url(#dg-bind-ah)"/>
+<path class="e" d="M364 108H384V51H402" marker-end="url(#dg-bind-ah)"/>
+<text class="n" x="390" y="102">+4</text>
+<path class="e" d="M364 134H384V191H402" marker-end="url(#dg-bind-ah)"/>
+<text class="n" x="390" y="150">+0x18</text>
+<path class="e" d="M600 51H646" marker-end="url(#dg-bind-ah)"/>
+<text class="n mid" x="622" y="42">+0x24</text>
+<path class="e" d="M600 191H646" marker-end="url(#dg-bind-ah)"/>
+<text class="n mid" x="622" y="182">+0x1C</text>
+<text class="n" x="8" y="248">읽기 함수 VA 0x26E4는 레지스터 32비트를 읽어 하위 16비트만 돌려줍니다.</text>
+</svg>
+</div>
+<ul class="dg-legend"><li><i class="ok"></i>원본 생성·등록·조회 코드를 실행해 확인한 연결</li><li><i class="model"></i>에뮬레이터에서는 RAM으로 대신한 레지스터</li></ul>
+</figure>
+
+<p>이 연결은 연구자가 포인터를 손으로 이어 붙인 것이 아닙니다. 펌웨어의 드라이버 생성 코드와 등록 코드, 조회 코드를 실행해서 원본 명령이 직접 포인터를 채우게 했습니다.</p>
+<ul>
+<li><strong>타이머</strong> — 생성 코드 <code>0x3221C</code>…<code>0x322AC</code>가 등록 ID <code>0xD1</code>과 이벤트 슬롯 <code>0x82</code>를 지정합니다. 생성자 <code>0x32DE0</code>이 레지스터 주소 VA <code>0x30011024</code>를 타이머 객체의 <code>+0x24</code>에 적습니다.</li>
+<li><strong>UDC</strong> — 생성 코드 <code>0x3391C</code>…<code>0x339B4</code>가 등록 ID <code>0x117</code>과 이벤트 슬롯 <code>0x5F</code>를 씁니다. 생성자 <code>0x33BF8</code>이 VA <code>0x30014060</code>을 UDC 객체의 <code>+0x1C</code>에 연결합니다.</li>
+<li><strong>읽기 함수</strong> — <code>VA 0x26E4</code>는 선택 인수가 0이면 타이머 쪽을, 그 밖이면 UDC 쪽을 부릅니다.</li>
+</ul>
+
+<div class="table-wrap"><table>
+<caption>카운터 읽기 3건</caption>
+<thead><tr><th>선택 인수</th><th>실제로 읽은 레지스터</th><th>넣어 둔 값</th><th>돌려준 값</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>VA <code>0x30011024</code> (4바이트)</td><td><code>0xAAAA1234</code></td><td><code>0x1234</code></td></tr>
+<tr><td>1</td><td>VA <code>0x30014060</code> (4바이트)</td><td><code>0xBBBB5678</code></td><td><code>0x5678</code></td></tr>
+<tr><td>2</td><td>VA <code>0x30014060</code> (4바이트)</td><td><code>0xBBBB5678</code></td><td><code>0x5678</code></td></tr>
 </tbody></table></div>
-<p><code>0x54330…0x54340</code>은 <code>pulse+0xBA</code>에서 이 보정값을 뺀 하위 16비트를 준비한다. 호출 위치 <code>0x54344</code>가 넘긴 값은 <code>0xB97FC</code>의 실제 <code>STRH</code> 명령이 저장한다. 이어 <code>0x54358</code>이 ITCM setter <code>VA 0x397C</code>를 호출한다. 실제 <code>STRH</code> 명령 <code>VA 0x3980</code>이 공유 반워드 <code>VA 0x0010316E</code>에 보정값을 쓴다. 초기화 호출 <code>VA 0x19F4</code>도 같은 setter에 0을 전달했다. <a href="af-input.json">native_reset_writes·native_additive_writes</a></p>
-<p>경계값 40에서는 저장하지 않아 이전 보정값 12가 남았고, 41에서는 새 보정값 1을 기록했다. 상태 판정 실패·모터 플래그 설정·모드 플래그 설정·렌즈 능력 비트 6 설정 사례에서도 새 보정값을 쓰지 않았다. 호출을 생략하는 분기와 값을 지우는 동작을 구분해야 한다. 추가 대조에서는 잔량의 16비트 순환, 요청 32767 유지와 32768의 signed 해석에 따른 0 처리를 확인했다. <a href="af-input.json">threshold_40·threshold_41 및 나머지 조건 사례</a></p>
+<p>등록 표의 항목과 이벤트 슬롯에 들어가는 객체 포인터도 원본 생성 코드가 기록했습니다. 다만 이벤트 슬롯에 등록됐다는 사실이 실제로 인터럽트가 전달된다는 증거는 아닙니다.</p>
+
+<details class="evidence"><summary>생성·등록·조회 코드의 세부</summary>
+<ul>
+<li><code>CAfDriver</code>는 VA <code>0x4000B25C</code>의 단일 객체입니다. 상위 객체의 <code>+0x20</code>에 이 포인터가 들어가고(<code>0x48EE8</code>), 모터 객체의 <code>+8</code>로 복사됩니다(<code>0x51E08</code>…<code>0x51E14</code>).</li>
+<li>등록 표는 VA <code>0x40006944</code>에 있고 항목 하나가 12바이트입니다. 항목에는 사용 표시 1, 등록 ID, 객체 포인터가 차례로 들어갑니다. 조회 코드 <code>0x46BC4</code>…<code>0x46BD4</code>가 ID <code>0xD1</code>의 객체를 <code>CAfDriver+4</code>에, <code>0x46C04</code>…<code>0x46C14</code>가 ID <code>0x117</code>의 객체를 <code>CAfDriver+0x18</code>에 적습니다.</li>
+<li>타이머 객체에는 레지스터 포인터가 네 개 들어갑니다: <code>+0x18</code>에 VA <code>0x30011020</code>, <code>+0x1C</code>에 <code>0x30011028</code>, <code>+0x20</code>에 <code>0x3001102C</code>, <code>+0x24</code>에 <code>0x30011024</code>.</li>
+<li>이벤트 표는 VA <code>0x40007820</code>부터이고 슬롯 하나가 4바이트입니다. 슬롯 <code>0x82</code>와 <code>0x5F</code>에는 각 드라이버 객체의 <code>+8</code> 주소가 들어갑니다.</li>
+<li>생성자가 요청하는 메모리 크기는 타이머 <code>0x2C</code>바이트, UDC <code>0x30</code>바이트입니다. 할당 함수 <code>0xAB71C</code>는 대체했습니다.</li>
+<li>근거는 <a href="af-input.json">af-input.json</a>의 <code>counter_binding</code>, <code>classes</code>, <code>branches</code>, <code>getter_cases</code>입니다.</li>
+</ul>
+</details>
 </section>
 
-<section aria-labelledby="handoff"><h2 id="handoff">3. 같은 객체가 보정값을 다시 읽고 요청을 전달한다</h2>
-<figure><figcaption>도식 2. 원본 상태를 이어 사용한 두 사례</figcaption><div class="flow" role="group" aria-label="최초 카운터로 보정값을 저장한 뒤 별도로 주입한 다음 카운터와 합산하여 구동 준비 함수 입구까지 전달">
-<div class="stage"><strong>원본 생산자 전체 꼬리</strong><span>일반: 초기 400 → 보정 360<br>대체: 초기 50 → 보정 50<br>두 사례 모두 상태 2 기록</span></div><div class="arrow" aria-hidden="true">→</div>
-<div class="stage"><strong>다음 카운터 별도 주입</strong><span>일반: 7, 방향 0 → 7 + 360<br>대체: 65525, 방향 1 → −10 + 50<br>원본 계산: 367 / 40</span></div><div class="arrow" aria-hidden="true">→</div>
-<div class="stage"><strong>0x52E38 입구 도달</strong><span>같은 CAfMotor, 인수 8<br>pulse+0x9E = 367 / 40<br>position+0x166 = 367 / 40</span></div></div>
-<p class="caption">각 실행 구간 사이의 스케줄러와 하드웨어 카운터 변화는 실행하지 않았다. 대체 분기의 완료 리셋 함수는 대체했으며 그 뒤 방향 플래그 1을 쓰는 명령은 원본으로 실행했다.</p></figure>
-<p>일반 사례와 상태값 2의 대체 사례는 생산자 복귀까지 실행했다. 대체 사례는 <code>0x54414</code>에서 방향 플래그 <code>VA 0x00103116</code>에 1을 쓴다. 일반 사례는 준비해 둔 0을 유지했다. 두 사례 모두 <code>0x54424 → 0xB7130</code>을 거쳐 상태 <code>VA 0x001030E2 = 2</code>를 기록했고, 이 방향·상태를 후속 계산에 그대로 사용했다. <a href="af-input.json">normal·alternate_state_2</a></p>
-<p>후속 호출 <code>VA 0x2258 → 0x5455C</code>는 같은 모터 객체와 타이머 ID <code>0xD1</code>을 사용한다. <code>0x544EC</code>가 새 카운터를 방향에 따라 정규화하고 <code>0x54640 → 0xB7530</code>이 앞서 저장한 보정값을 읽는다. 계산 플래그와 모드 조건을 고정한 12건에서 요청값을 확인했다. 앞부분만 실행한 사례는 후속 방향·상태를 따로 준비했으므로 위 두 전체 꼬리 사례와 구분했다. <a href="../verify_af_input.py">동일 객체 재사용과 후속 입력 조건</a></p>
-<p>두 전체 꼬리 사례는 <code>VA 0x2348</code>부터 원본 소비자를 추가 실행해 <code>0x52E38</code> 입구에 도달했다. 요청 367과 40이 <code>pulse+0x9E</code>·<code>position+0x166</code>에 남았고 호출 인수는 같은 모터 객체와 8이었다. 이번 검사는 이 함수 입구에서 멈춘다. 함수 내부의 바디·렌즈 분기는 <a href="af-control.html#body">앞선 별도 검증</a>에서 다뤘다.</p>
+<section id="producer">
+<h2>보정값의 출처: 조건을 통과하면 그 시점의 카운터로 만듭니다</h2>
+<p class="takeaway">보정값을 쓰는 코드는 AF 모터 객체의 함수 <code>0x54284</code>입니다. 조건을 모두 통과했을 때만 새 값을 저장하고, 그렇지 않으면 이전 값이 남습니다.</p>
+
+<figure class="diagram">
+<figcaption>보정값 생산 함수 0x54284의 판단</figcaption>
+<div class="dg-scroll">
+<svg class="dg" viewBox="0 0 800 276" role="img" aria-labelledby="dg-prod-title dg-prod-desc">
+<title id="dg-prod-title">보정값을 저장하는 조건과 두 분기</title>
+<desc id="dg-prod-desc">초기 카운터와 상태값은 연구자가 넣은 값입니다. 함수는 먼저 조건을 확인합니다. 모드 플래그, 상태 판정, 모터 플래그가 모두 통과하고 카운터가 40보다 커야 합니다. 조건을 만족하지 못하면 저장하지 않아 이전 보정값이 남습니다. 조건을 만족하면 두 분기 중 하나로 갑니다. 일반 분기는 보정값을 초기 카운터에서 40을 뺀 값으로 하고 바디 준비 함수를 인수 (0, 40)과 (1, 80)으로 부릅니다. 대체 분기는 보정값을 초기 카운터 그대로 하고 바디 준비 함수를 인수 (0, 0xFFFF)와 (1, 0)으로 부릅니다. 두 분기 모두 보정값을 공유 반워드 VA 0x0010316E에 저장하며, 저장 명령은 VA 0x3980에 있습니다.</desc>
+<defs><marker id="dg-prod-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker>
+<marker id="dg-prod-am" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah model" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="b model" x="8" y="8" width="196" height="54" rx="8"/>
+<text class="t" x="20" y="31">초기 카운터와 상태값</text>
+<text class="s" x="20" y="50">연구자가 넣은 값</text>
+<rect class="b ok" x="8" y="96" width="196" height="78" rx="8"/>
+<text class="t" x="20" y="122">조건 확인</text>
+<text class="s" x="20" y="142">모드·상태·모터 플래그</text>
+<text class="s" x="20" y="160">카운터가 40보다 큼</text>
+<rect class="b" x="8" y="212" width="196" height="56" rx="8"/>
+<text class="t" x="20" y="236">저장하지 않음</text>
+<text class="s" x="20" y="255">이전 보정값이 남음</text>
+
+<rect class="b ok" x="256" y="30" width="250" height="78" rx="8"/>
+<text class="t" x="268" y="56">일반 분기</text>
+<text class="s" x="268" y="76">보정값 = 초기 카운터 − 40</text>
+<text class="s" x="268" y="94">바디 준비 호출 (0, 40), (1, 80)</text>
+<rect class="b ok" x="256" y="150" width="250" height="78" rx="8"/>
+<text class="t" x="268" y="176">대체 분기</text>
+<text class="s" x="268" y="196">보정값 = 초기 카운터</text>
+<text class="s" x="268" y="214">바디 준비 호출 (0, 0xFFFF), (1, 0)</text>
+<rect class="b key" x="558" y="90" width="234" height="78" rx="8"/>
+<text class="t" x="570" y="116">보정값 저장</text>
+<text class="s" x="570" y="136">공유 반워드 VA 0x0010316E</text>
+<text class="s" x="570" y="154">저장 명령은 VA 0x3980</text>
+
+<path class="e model" d="M106 62V94" marker-end="url(#dg-prod-am)"/>
+<path class="e" d="M106 174V210" marker-end="url(#dg-prod-ah)"/>
+<text class="n" x="114" y="197">조건 불충족</text>
+<path class="e" d="M204 122H230V69H254" marker-end="url(#dg-prod-ah)"/>
+<path class="e" d="M204 148H230V189H254" marker-end="url(#dg-prod-ah)"/>
+<path class="e" d="M506 69H532V116H556" marker-end="url(#dg-prod-ah)"/>
+<path class="e" d="M506 189H532V142H556" marker-end="url(#dg-prod-ah)"/>
+</svg>
+</div>
+<ul class="dg-legend"><li><i class="ok"></i>원본 코드 실행으로 확인한 판단</li><li><i class="key"></i>이 문서가 찾던 쓰기 지점</li><li><i class="model"></i>연구자가 넣은 값</li><li><i></i>확인한 결과</li></ul>
+</figure>
+
+<p>상위 루틴의 호출 <code>VA 0x2140</code>이 함수 <code>0x54284</code>로 이어집니다. 렌즈 능력 비트 6이 꺼진 경로에서 이 함수는 먼저 카운터를 읽고, 다음 네 가지를 확인합니다.</p>
+<ul>
+<li>전역 모드 플래그 VA <code>0x001030AB</code>가 0일 것</li>
+<li>상태 판정이 참일 것(시험에서는 상태값 1과 2가 통과, 0과 5는 통과하지 못함)</li>
+<li>모터 플래그 <code>motor+0x4D</code>가 0일 것</li>
+<li>카운터가 40보다 클 것</li>
+</ul>
+
+<div class="table-wrap"><table>
+<caption>조건을 통과한 뒤의 두 분기</caption>
+<thead><tr><th>분기 조건</th><th>바디 준비 함수 <code>0x5234C</code>에 넘긴 인수(방향, 목표)</th><th>보정값</th></tr></thead>
+<tbody>
+<tr><th scope="row">VA <code>0x00103120</code> ≠ 0 이고 VA <code>0x0010311A</code> ≠ 2</th><td>(0, 40), (1, 80)</td><td>초기 카운터 − 40</td></tr>
+<tr><th scope="row">VA <code>0x00103120</code> = 0 또는 VA <code>0x0010311A</code> = 2</th><td>(0, <code>0xFFFF</code>), (1, 0)</td><td>초기 카운터</td></tr>
+</tbody></table></div>
+
+<p>보정값은 두 곳에 반영됩니다. 먼저 <code>pulse+0xBA</code>의 값에서 보정값을 뺀 하위 16비트가 다시 저장됩니다. 이어서 저장 함수 <code>VA 0x397C</code>가 호출되고, 그 안의 저장 명령 <code>VA 0x3980</code>이 공유 반워드 VA <code>0x0010316E</code>에 보정값을 씁니다. 초기화 단계의 호출 <code>VA 0x19F4</code>도 같은 저장 함수에 0을 넘깁니다.</p>
+
+<h3>경계와 조건을 하나씩 바꿔 본 결과</h3>
+<ul>
+<li><strong>경계값</strong> — 카운터가 40이면 저장하지 않아 이전 보정값 12가 남았습니다. 41이면 새 보정값 1을 기록했습니다.</li>
+<li><strong>조건 불충족</strong> — 상태 판정 실패, 모터 플래그가 켜진 경우, 모드 플래그가 켜진 경우, 렌즈 능력 비트 6이 켜진 경우 모두 새 보정값을 쓰지 않았습니다. 값을 지우는 것이 아니라 쓰기 호출 자체를 건너뜁니다.</li>
+<li><strong>16비트 순환</strong> — 카운터 65,535에서 보정값은 65,495가 됩니다. 여기에 다음 카운터 42를 더하면 16비트를 넘어 요청값은 1이 됩니다.</li>
+<li><strong>부호 경계</strong> — 요청값 32,767은 그대로 유지되고, 32,768은 음수로 해석되어 0이 됩니다.</li>
+</ul>
+<p>이 실행은 상위 루틴의 상태 분기를 지난 지점인 <code>VA 0x213C</code>에서 시작합니다. AF 작업 전체가 어떤 조건에서 이 지점에 도달하는지는 확인하지 않았습니다.</p>
+
+<details class="evidence"><summary>보정값 분기 14건과 뒤따르는 계산 12건</summary>
+<div class="table-wrap"><table class="compact">
+<thead><tr><th>사례</th><th class="n">초기 카운터</th><th>바꾼 조건</th><th class="n">보정값(이전 12)</th><th class="n">다음 카운터</th><th class="n">방향</th><th class="n">요청값</th></tr></thead>
+<tbody>
+<tr><td>일반(끝까지 실행)</td><td class="n">400</td><td>—</td><td class="n">360</td><td class="n">7</td><td class="n">0</td><td class="n">367</td></tr>
+<tr><td>대체, 상태 2(끝까지 실행)</td><td class="n">50</td><td>VA <code>0x0010311A</code> = 2</td><td class="n">50</td><td class="n">65,525</td><td class="n">1</td><td class="n">40</td></tr>
+<tr><td>일반, 카운터 변화 없음</td><td class="n">50</td><td>—</td><td class="n">10</td><td class="n">50</td><td class="n">0</td><td class="n">60</td></tr>
+<tr><td>대체, 제어값 0</td><td class="n">50</td><td>VA <code>0x00103120</code> = 0</td><td class="n">50</td><td class="n">65,525</td><td class="n">1</td><td class="n">40</td></tr>
+<tr><td>경계 40</td><td class="n">40</td><td>—</td><td class="n">12 (저장 안 함)</td><td class="n">5</td><td class="n">0</td><td class="n">17</td></tr>
+<tr><td>경계 41</td><td class="n">41</td><td>—</td><td class="n">1</td><td class="n">5</td><td class="n">0</td><td class="n">6</td></tr>
+<tr><td>16비트 순환</td><td class="n">65,535</td><td>—</td><td class="n">65,495</td><td class="n">42</td><td class="n">0</td><td class="n">1</td></tr>
+<tr><td>부호 경계의 최댓값</td><td class="n">41</td><td>—</td><td class="n">1</td><td class="n">32,766</td><td class="n">0</td><td class="n">32,767</td></tr>
+<tr><td>부호 경계를 넘음</td><td class="n">41</td><td>—</td><td class="n">1</td><td class="n">32,767</td><td class="n">0</td><td class="n">0</td></tr>
+<tr><td>상태값 5</td><td class="n">400</td><td>VA <code>0x0010311A</code> = 5</td><td class="n">12 (저장 안 함)</td><td class="n">5</td><td class="n">0</td><td class="n">17</td></tr>
+<tr><td>상태값 0</td><td class="n">400</td><td>VA <code>0x0010311A</code> = 0</td><td class="n">12 (저장 안 함)</td><td class="n">5</td><td class="n">0</td><td class="n">17</td></tr>
+<tr><td>모터 플래그 켜짐</td><td class="n">400</td><td><code>motor+0x4D</code> = 1</td><td class="n">12 (저장 안 함)</td><td class="n">5</td><td class="n">0</td><td class="n">17</td></tr>
+<tr><td>모드 플래그 켜짐</td><td class="n">400</td><td>VA <code>0x001030AB</code> = 1</td><td class="n">12 (저장 안 함)</td><td class="n">—</td><td class="n">—</td><td class="n">—</td></tr>
+<tr><td>렌즈 능력 비트 6 켜짐</td><td class="n">400</td><td>능력 바이트 <code>0x40</code></td><td class="n">12 (저장 안 함)</td><td class="n">—</td><td class="n">—</td><td class="n">—</td></tr>
+</tbody></table></div>
+<ul>
+<li>초기 카운터는 32비트 값으로 넣었습니다. 예를 들어 일반 사례는 <code>0xA5A50190</code>과 <code>0xFEED0007</code>, 대체 사례의 다음 카운터는 <code>0xA5A5FFF5</code>입니다. 결과는 하위 16비트만 따랐습니다.</li>
+<li>렌즈 능력 비트 6이 켜진 사례에서는 카운터를 읽지도 않았습니다.</li>
+<li>보정값을 쓴 사례에서는 <code>pulse+0xBA</code>가 1,024에서 보정값만큼 줄었습니다(16비트 순환 포함).</li>
+<li>호출 연결: <code>0x54344</code> → <code>0xB97FC</code>(<code>pulse+0xBA</code> 저장), <code>0x54358</code> → 연결 코드 → <code>VA 0x397C</code>(보정값 저장). 앞 구간 <code>0x54330</code>…<code>0x54340</code>이 뺄셈을 준비합니다.</li>
+<li>끝까지 실행한 두 사례는 <code>VA 0x2144</code>에서, 나머지는 판단 직후인 파일 <code>0x5435C</code> 또는 <code>0x543CC</code>에서 멈췄습니다.</li>
+<li>근거는 <a href="af-input.json">af-input.json</a>의 <code>additive_and_request</code>, <code>native_reset_writes</code>, <code>native_additive_writes</code>, <code>threshold_40</code>, <code>threshold_41</code>과 <code>numeric.limits</code>입니다.</li>
+</ul>
+</details>
 </section>
 
-<section aria-labelledby="limits"><h2 id="limits">4. 원본 실행 범위와 재현 방법</h2>
+<section id="handoff">
+<h2>이어 붙이기: 저장된 보정값이 요청값이 되어 구동 준비 입구에 도착합니다</h2>
+<p class="takeaway">보정값을 만든 실행의 결과(방향 플래그, 상태, 보정값)를 그대로 둔 채 다음 단계를 실행했더니, 같은 모터 객체에서 요청값이 계산되어 구동 준비 함수의 입구까지 전달됐습니다.</p>
+
+<figure class="diagram">
+<figcaption>앞 단계의 상태를 그대로 이어서 실행한 두 사례</figcaption>
+<div class="dg-scroll">
+<svg class="dg" viewBox="0 0 800 246" role="img" aria-labelledby="dg-hand-title dg-hand-desc">
+<title id="dg-hand-title">보정값 생산, 요청값 계산, 구동 준비 입구 도달의 세 단계</title>
+<desc id="dg-hand-desc">일반 사례에서는 초기 카운터 400에서 보정값 360을 저장하고 방향 0을 유지하며 상태 2를 기록합니다. 호출 사이의 구간은 실행하지 않았습니다. 다음 카운터 7을 넣으면 방향 0에서 7 더하기 360으로 요청값 367이 계산되고, 구동 준비 함수 0x52E38의 입구에 요청 367과 인수 8로 도달합니다. 대체 사례에서는 초기 카운터 50에서 보정값 50을 저장하고 방향 1과 상태 2를 기록합니다. 다음 카운터 65,525를 넣으면 방향 1에서 음수 10 더하기 50으로 요청값 40이 계산되고, 구동 준비 함수 입구에 요청 40과 인수 8로 도달합니다.</desc>
+<defs><marker id="dg-hand-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker>
+<marker id="dg-hand-ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah open" d="M0 0L10 5L0 10z"/></marker></defs>
+<text class="h" x="8" y="20">① 보정값 생산</text>
+<text class="h" x="362" y="20">② 요청값 계산</text>
+<text class="h" x="606" y="20">③ 구동 준비 입구</text>
+
+<rect class="b ok" x="8" y="30" width="230" height="80" rx="8"/>
+<text class="t" x="20" y="56">일반 사례 · 카운터 400</text>
+<text class="s" x="20" y="76">보정값 360을 저장</text>
+<text class="s" x="20" y="94">방향 0 유지, 상태 2 기록</text>
+<rect class="b ok" x="8" y="126" width="230" height="80" rx="8"/>
+<text class="t" x="20" y="152">대체 사례 · 카운터 50</text>
+<text class="s" x="20" y="172">보정값 50을 저장</text>
+<text class="s" x="20" y="190">방향 1 기록, 상태 2 기록</text>
+
+<rect class="b open" x="266" y="30" width="68" height="176" rx="8"/>
+<text class="s mid" x="300" y="96">호출</text>
+<text class="s mid" x="300" y="114">사이</text>
+<text class="s mid" x="300" y="132">실행</text>
+<text class="s mid" x="300" y="150">안 함</text>
+
+<rect class="b ok" x="362" y="30" width="212" height="80" rx="8"/>
+<text class="t" x="374" y="56">다음 카운터 7</text>
+<text class="s" x="374" y="76">방향 0: 7 + 360</text>
+<text class="s" x="374" y="94">요청값 367</text>
+<rect class="b ok" x="362" y="126" width="212" height="80" rx="8"/>
+<text class="t" x="374" y="152">다음 카운터 65,525</text>
+<text class="s" x="374" y="172">방향 1: −10 + 50</text>
+<text class="s" x="374" y="190">요청값 40</text>
+
+<rect class="b ok" x="606" y="30" width="186" height="80" rx="8"/>
+<text class="t" x="618" y="56">0x52E38 도달</text>
+<text class="s" x="618" y="76">요청 367, 인수 8</text>
+<rect class="b ok" x="606" y="126" width="186" height="80" rx="8"/>
+<text class="t" x="618" y="152">0x52E38 도달</text>
+<text class="s" x="618" y="172">요청 40, 인수 8</text>
+
+<path class="e open" d="M238 70H264" marker-end="url(#dg-hand-ao)"/>
+<path class="e open" d="M334 70H360" marker-end="url(#dg-hand-ao)"/>
+<path class="e" d="M574 70H604" marker-end="url(#dg-hand-ah)"/>
+<path class="e open" d="M238 166H264" marker-end="url(#dg-hand-ao)"/>
+<path class="e open" d="M334 166H360" marker-end="url(#dg-hand-ao)"/>
+<path class="e" d="M574 166H604" marker-end="url(#dg-hand-ah)"/>
+<text class="n" x="8" y="236">두 시점의 카운터 값은 따로 넣어 준 값입니다. 카운터가 실제로 변하는 과정은 실행하지 않았습니다.</text>
+</svg>
+</div>
+<ul class="dg-legend"><li><i class="ok"></i>원본 코드를 실행한 단계</li><li><i class="open"></i>실행하지 않은 구간</li></ul>
+</figure>
+
+<p>두 사례는 보정값 생산 함수가 복귀할 때까지 실행했습니다. 대체 사례에서는 원본 명령(<code>0x54414</code>)이 방향 플래그 VA <code>0x00103116</code>에 1을 썼고, 일반 사례에서는 미리 넣어 둔 0이 유지됐습니다. 두 사례 모두 <code>0x54424</code>에서 <code>0xB7130</code>을 거쳐 상태 VA <code>0x001030E2</code>에 2를 기록했습니다. 뒤따르는 계산은 이 방향과 상태를 그대로 썼습니다.</p>
+<p>요청값 계산은 <code>VA 0x2258</code>의 호출로 함수 <code>0x5455C</code>에 들어가며, 같은 모터 객체와 타이머(ID <code>0xD1</code>)를 씁니다. 함수 <code>0x544EC</code>가 새 카운터를 방향에 따라 정규화하고, <code>0x54640</code>의 호출이 읽기 함수 <code>0xB7530</code>으로 앞서 저장된 보정값을 읽습니다. 계산 플래그와 모드 조건을 고정한 12건에서 요청값을 확인했습니다. 앞부분만 실행한 사례는 방향과 상태를 따로 넣었으므로 위의 두 사례와 구분했습니다.</p>
+<p>두 사례는 <code>VA 0x2348</code>부터 원본 소비자 코드를 더 실행해 구동 준비 함수 <code>0x52E38</code>의 입구에 도달했습니다. 요청값 367과 40이 <code>pulse+0x9E</code>와 <code>position+0x166</code>에 남았고, 호출 인수는 같은 모터 객체와 8이었습니다. 이 문서의 실행은 함수 입구에서 멈춥니다. 함수 안의 바디·렌즈 분기는 <a href="af-control.html#body">AF 요청 계산 문서</a>에서 따로 확인했습니다.</p>
+
+<details class="evidence"><summary>이어 붙인 실행의 세부</summary>
+<ul>
+<li>대체 사례에서는 완료 리셋 함수(<code>VA 0x2A60</code>, 파일 <code>0xD7E7C</code>)가 인수 0으로 한 번 호출됐습니다. 이 함수는 대체했고, 그 뒤 방향 플래그에 1을 쓰는 명령은 원본으로 실행했습니다.</li>
+<li>끝까지 실행한 두 사례에서는 position 객체의 <code>+0x40</code>에 <code>0x400</code>이 기록됐습니다.</li>
+<li>요청값 계산 뒤 방향 플래그는 12건 모두 0이었고, 보정값은 계산 중에 바뀌지 않았습니다.</li>
+<li>소비자 쪽 호출은 <code>VA 0x234C</code>이고, 구동 준비 호출은 파일 <code>0x5493C</code>에서 일어납니다.</li>
+<li>근거는 <a href="af-input.json">af-input.json</a>의 <code>normal</code>과 <code>alternate_state_2</code> 사례입니다.</li>
+</ul>
+</details>
+</section>
+
+<section id="limits">
+<h2>한계와 남은 과제</h2>
+<ul>
+<li><strong>카운터의 정체</strong> — 레지스터 주소와 드라이버 연결은 확인했지만, 이 카운터가 어떤 물리 신호를 세는지와 값의 단위는 알지 못합니다. 요청값의 물리 단위도 마찬가지입니다.</li>
+<li><strong>시간의 흐름</strong> — 두 시점의 카운터 값은 각각 넣어 준 것입니다. 하드웨어가 값을 바꾸는 과정, 실행 구간 사이의 스케줄링은 실행하지 않았습니다.</li>
+<li><strong>대체한 함수</strong> — 메모리 할당 <code>0xAB71C</code>, 바디 구동 준비 <code>0x5234C</code>, 대체 분기의 완료 리셋 <code>VA 0x2A60</code> 세 곳입니다. 바디 구동 준비는 인수만 기록하고 돌아오게 했으므로 하드웨어 준비 동작은 실행되지 않았습니다.</li>
+<li><strong>합성 상태</strong> — 드라이버 생성 코드에 들어갈 때의 스택과 객체, 등록 표의 초기화 표시, 카운터 입력은 검증기에 적어 둔 합성 값입니다.</li>
+<li><strong>다루지 않은 것</strong> — 광학 센서에서 초점 오차를 만드는 과정과 실제 모터의 움직임.</li>
+</ul>
+<p>미해결 항목은 <a href="hq-status.json">hq-status.json</a>의 <code>af_and_lens_drive</code>에 정리되어 있습니다.</p>
+</section>
+
+<section id="reproduce">
+<h2>재현 방법</h2>
+<p>입력은 <a href="../inspect_firmware.py">복호화 도구</a>가 만든 <code>decoded.bin</code>입니다. 검증기는 실행 전에 파일의 SHA-256을 확인합니다. 에뮬레이터는 Unicorn 2.1.4, CPU 모델은 Cortex-A9입니다.</p>
 <pre><code>python verify_af_input.py decoded.bin --compare analysis/af-input.json</code></pre>
-<p>Unicorn 2.1.4에서 카운터 선택 3건, 보정값 분기 14건, 후속 계산 12건, 준비 함수 입구 전달 2건을 재현했다. 59개 명령·상수, 59개 분기 목적지, RTTI 6개와 코드 범위 9개의 해시를 대조한다. 해제 파일의 SHA-256도 실행 전에 확인한다. <a href="af-input.json">재현 가능한 결과 전체</a> · <a href="../verify_af_input.py">검증기</a></p>
-<p>실행을 대체한 함수는 할당 <code>0xAB71C</code>, 바디 구동 준비 <code>0x5234C</code>, 대체 경로의 완료 리셋 <code>VA 0x2A60</code> 세 곳이다. 팩터리 진입 시의 스택·객체, 레지스트리 초기화 가드와 카운터 입력은 검증기에 명시한 합성 상태다. 광학 센서에서 초점 오차를 만드는 과정, 물리 카운터의 발생원과 단위, 호출 사이의 스케줄링 및 실제 모터 움직임은 미검증이다. <a href="af-input.json">execution_replacements·limits</a></p>
-</section></main><footer>K-3 II v1.12 · <a href="af-control.html">AF 요청 계산 보고서</a> · <a href="../README.md">저장소 안내</a></footer></body></html>
+<dl class="kv">
+<dt>실행 사례</dt><dd>카운터 선택 3건, 보정값 분기 14건, 뒤따르는 계산 12건, 구동 준비 입구 전달 2건</dd>
+<dt>정적 대조</dt><dd>명령어·상수 59개, 분기 59개, 클래스 이름 6개, 코드 구간 해시 9개</dd>
+<dt>복호화한 이미지 SHA-256</dt><dd><code class="wrap">1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc</code></dd>
+</dl>
+
+<details class="evidence"><summary>클래스 이름과 코드 구간 해시</summary>
+<div class="table-wrap"><table class="compact">
+<caption>RTTI에서 확인한 클래스 이름 6개</caption>
+<thead><tr><th>이름 문자열</th><th>이름 위치</th><th>형식 정보</th><th>가상 함수 표</th></tr></thead>
+<tbody>
+<tr><td><code>8CAfMotor</code></td><td><code>0xD2610</code></td><td><code>0xD0F90</code></td><td><code>0xD4F9C</code></td></tr>
+<tr><td><code>9CAfDriver</code></td><td><code>0xD2657</code></td><td><code>0xD0FEC</code></td><td><code>0xD5084</code></td></tr>
+<tr><td><code>10CUdcDriver</code></td><td><code>0xD112A</code></td><td><code>0xD038C</code></td><td><code>0xD2930</code></td></tr>
+<tr><td><code>17CUdcDriverFactory</code></td><td><code>0xD18C4</code></td><td><code>0xD090C</code></td><td><code>0xD3C04</code></td></tr>
+<tr><td><code>19CTimerDriverFactory</code></td><td><code>0xD1ADE</code></td><td><code>0xD0A38</code></td><td><code>0xD3FA8</code></td></tr>
+<tr><td><code>23C32bitReloadTimerDriver</code></td><td><code>0xD1E3B</code></td><td><code>0xD0C00</code></td><td><code>0xD44E4</code></td></tr>
+</tbody></table></div>
+<div class="table-wrap"><table class="compact">
+<caption>해시로 고정한 코드 구간 9개(끝 주소 제외)</caption>
+<thead><tr><th>구간</th><th>범위</th><th>SHA-256</th></tr></thead>
+<tbody>
+<tr><td>타이머 생성 코드(ID 0xD1)</td><td><code>0x3221C</code>–<code>0x322AC</code></td><td><code class="wrap">5abfa88307e77d11765f4a177190db3f48b311d7ea034f8bec022c38915dbb16</code></td></tr>
+<tr><td>타이머 생성자</td><td><code>0x32DE0</code>–<code>0x32E84</code></td><td><code class="wrap">da585242f2afda1a11d13f10d67d3779cb3cb5e39278534eeec209d0b066a139</code></td></tr>
+<tr><td>UDC 생성 코드(ID 0x117)</td><td><code>0x3391C</code>–<code>0x339B4</code></td><td><code class="wrap">df3a22243e84947fca635bbcb2a4a4b4169806f0ce1625b5b84977c1e5d81310</code></td></tr>
+<tr><td>UDC 생성자</td><td><code>0x33BF8</code>–<code>0x33CA8</code></td><td><code class="wrap">d60fdd53b19492562b6d329abc3deddf6791efa1567184b6f5e64d868a953d6d</code></td></tr>
+<tr><td>등록 표 조회</td><td><code>0x46BC4</code>–<code>0x46C14</code></td><td><code class="wrap">ab6eaf0d739f40d469437331bd853ff6569f73a370a88b1162e99407c15464ed</code></td></tr>
+<tr><td>카운터 선택(VA 0x26E4)</td><td><code>0xD7B00</code>–<code>0xD7B2C</code></td><td><code class="wrap">133b73701c7743c7605fa0b601023e02155509dab39127d5c448caf4907a5301</code></td></tr>
+<tr><td>보정값 저장(VA 0x397C)</td><td><code>0xD8D98</code>–<code>0xD8DA8</code></td><td><code class="wrap">ead92509dfbe0ff4df2f1aac863c014cf12da5f7b4b8774b2d32328216e2318f</code></td></tr>
+<tr><td>보정값 생산</td><td><code>0x54284</code>–<code>0x54428</code></td><td><code class="wrap">2e62ed18127d849d85e8613196e9b7b4f5927db6cf3c10631b0d2de3491ae9f7</code></td></tr>
+<tr><td>요청값 계산</td><td><code>0x544EC</code>–<code>0x547CC</code></td><td><code class="wrap">ce75f3161920717b6375022102709de3c2b4bf1ab871638a2ae7a4faf125b8c9</code></td></tr>
+</tbody></table></div>
+</details>
+</section>
+
+<section id="refs">
+<h2>근거 파일과 참고 자료</h2>
+<ul class="refs">
+<li><a href="af-input.json">af-input.json</a> — 카운터 연결, 보정값 분기 14건, 뒤따르는 계산과 전달 결과, <code>execution_replacements</code>와 <code>limits</code></li>
+<li><a href="../verify_af_input.py">verify_af_input.py</a> — 생성 코드 실행, 카운터 읽기, 보정값·요청값 실행</li>
+<li><a href="af-control.html">AF 요청 계산과 구동 준비</a> · <a href="af-control.json">af-control.json</a> — 요청값의 계산식과 구동 준비 함수 안의 분기</li>
+<li><a href="hq-status.json">hq-status.json</a> — 연구 목표별 근거와 미해결 항목</li>
+<li>외부 자료: <a href="https://itanium-cxx-abi.github.io/cxx-abi/abi.html">Itanium C++ ABI</a>(클래스 이름 앞 숫자의 뜻) · <a href="https://github.com/unicorn-engine/unicorn">Unicorn CPU 에뮬레이터</a></li>
+</ul>
+<p class="small muted">이 문서의 근거 스냅샷은 2026-11-08 기준입니다.</p>
+</section>
+
+</main>
+</div>
+<!-- chrome:bottom -->
+<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">AF와 렌즈 제어 — 이 주제의 문서</h2><ol><li><a href="guide-af.html">AF 안내</a></li><li><a href="af-drive.html">렌즈 능력과 구동 분기</a></li><li><a href="af-control.html">AF 요청 계산과 구동 준비</a></li><li><a href="af-input.html" aria-current="page">AF 카운터와 보정값</a></li></ol></nav>
+<nav class="pager" aria-label="이전·다음 문서"><a class="prev" href="af-control.html"><small>← 이전</small>AF 요청 계산과 구동 준비</a><a class="next" href="guide-ui.html"><small>다음 →</small>메뉴·UI 안내</a></nav>
+<footer class="sitefoot"><div class="sitefoot-in"><nav aria-label="사이트"><a href="../index.html#map">문서 지도</a><a href="../index.html#levels">검증 수준 읽는 법</a><a href="../glossary.html">용어집</a><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/research-program.html">세 기종 연구 본부</a><a href="https://github.com/yunhyok/pentax-k3ii-firmware-analysis">GitHub 저장소</a></nav><p>PENTAX K-3 II 펌웨어 1.12 분석 문서. PC에서 수행한 정적 분석과 에뮬레이션 결과이며, 카메라 실기에서 검증한 내용이 아닙니다. 원본 펌웨어와 복호화한 바이너리는 포함하지 않습니다.</p></div></footer>
+<!-- /chrome:bottom -->
+</body>
+</html>

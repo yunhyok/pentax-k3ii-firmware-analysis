@@ -1,0 +1,55 @@
+{
+  "camera": "k3ii",
+  "name": "PENTAX K-3 II",
+  "firmware": "펌웨어 1.12",
+  "home": "index.html",
+  "glossary": "glossary.html",
+  "footer": "PC에서 수행한 정적 분석과 에뮬레이션 결과이며, 카메라 실기에서 검증한 내용이 아닙니다. 원본 펌웨어와 복호화한 바이너리는 포함하지 않습니다.",
+  "sections": [
+    {"id": "start", "title": "시작하기", "nav": "개요", "hub": "index.html", "pages": [
+      {"file": "index.html", "label": "개요"},
+      {"file": "analysis/firmware-structure.html", "label": "펌웨어 파일 구조와 복호화", "note": "XOR 해제, 코드·주소 검증, 재현 절차"},
+      {"file": "analysis/deep-analysis.html", "label": "하드웨어 식별과 RAW 현상 개관", "note": "CPU 근거, 톤 곡선 생성"},
+      {"file": "glossary.html", "label": "용어집"}
+    ]},
+    {"id": "pipeline", "title": "영상 처리와 저장 경로", "nav": "영상 처리", "hub": "analysis/guide-pipeline.html", "pages": [
+      {"file": "analysis/guide-pipeline.html", "label": "영상 처리 경로 안내"},
+      {"file": "analysis/pipeline-analysis.html", "label": "RAW 이후의 톤·WB·색 행렬"},
+      {"file": "analysis/output-menu-analysis.html", "label": "JPEG 출력 버퍼와 Reversal Film 메뉴"},
+      {"file": "analysis/storage-dma-analysis.html", "label": "파일시스템에서 SD·DMA까지"},
+      {"file": "analysis/backend-b-cpp-analysis.html", "label": "백엔드 B와 두 번째 CPP 출력"},
+      {"file": "analysis/masked-cpp-analysis.html", "label": "마스크 CPP와 보조 JPEG 입력"},
+      {"file": "analysis/superresolution-lifecycle.html", "label": "Pixel Shift 메뉴와 버퍼 수명"}
+    ]},
+    {"id": "capture", "title": "촬영 준비와 보존 레코드", "nav": "촬영·보존 레코드", "hub": "analysis/guide-capture.html", "pages": [
+      {"file": "analysis/guide-capture.html", "label": "촬영 준비·보존 레코드 안내"},
+      {"file": "analysis/pixel-records.html", "label": "보존 픽셀 레코드와 촬영 패킷"},
+      {"file": "analysis/pixel-policy.html", "label": "픽셀 보정 활성값과 준비 분기"},
+      {"file": "analysis/capture-prepare.html", "label": "촬영 준비의 연속 호출"},
+      {"file": "analysis/store-image-records.html", "label": "JPEG 완료값과 저장 레코드"},
+      {"file": "analysis/preserved-sector20.html", "label": "보존 섹터 20·21과 정책 입력"},
+      {"file": "analysis/preserved-config.html", "label": "정책 플래그의 생산자"},
+      {"file": "analysis/preserved-dispatch.html", "label": "보존 레코드의 상위 명령 경로"},
+      {"file": "analysis/preserved-record.html", "label": "보존 섹터 14의 진단 레코드"},
+      {"file": "analysis/settings-storage.html", "label": "보존 섹터의 설정 저장"}
+    ]},
+    {"id": "rebuild", "title": "재구축과 업데이트", "nav": "재구축·업데이트", "hub": "analysis/guide-rebuild.html", "pages": [
+      {"file": "analysis/guide-rebuild.html", "label": "재구축·업데이트 안내"},
+      {"file": "analysis/rebuild.html", "label": "무손실 재포장과 업데이트 검사"},
+      {"file": "analysis/installation.html", "label": "업데이트 전송과 기록 오류"},
+      {"file": "analysis/tone-rebuild.html", "label": "톤 보간 함수 C 재구현"}
+    ]},
+    {"id": "af", "title": "AF와 렌즈 제어", "nav": "AF", "hub": "analysis/guide-af.html", "pages": [
+      {"file": "analysis/guide-af.html", "label": "AF 안내"},
+      {"file": "analysis/af-drive.html", "label": "렌즈 능력과 구동 분기"},
+      {"file": "analysis/af-control.html", "label": "AF 요청 계산과 구동 준비"},
+      {"file": "analysis/af-input.html", "label": "AF 카운터와 보정값"}
+    ]},
+    {"id": "ui", "title": "메뉴와 UI", "nav": "UI", "hub": "analysis/guide-ui.html", "pages": [
+      {"file": "analysis/guide-ui.html", "label": "메뉴·UI 안내"},
+      {"file": "analysis/color-ui.html", "label": "색공간 메뉴와 표시"},
+      {"file": "analysis/ui-resources.html", "label": "RAW 형식 메뉴와 텍스트"},
+      {"file": "analysis/ui-dispatch.html", "label": "색공간 메뉴 알림과 화면 전환"}
+    ]}
+  ]
+}

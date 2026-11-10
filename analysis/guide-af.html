@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AF와 렌즈 제어 안내 — PENTAX K-3 II 펌웨어 연구</title>
+<meta name="description" content="K-3 II 펌웨어에서 AF 구동 방식의 선택, 구동 요청값의 계산, 입력 카운터와 보정값의 출처를 조사한 문서 세 편의 지도입니다. 확인한 범위와 남은 물음을 한곳에 정리했습니다.">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body data-camera="k3ii">
+<!-- chrome:top -->
+<a class="skip" href="#main">본문 바로가기</a>
+<div class="topbar"><div class="topbar-in"><a class="brand" href="../index.html">PENTAX <b>펌웨어 연구</b></a><div class="cams" aria-label="기종 선택"><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/">K-3 III</a><a href="../index.html" aria-current="true">K-3 II</a><a href="https://yunhyok.github.io/pentax-q7-firmware-analysis/">Q7</a></div><nav class="topnav" aria-label="주제"><a href="../index.html">개요</a><a href="guide-pipeline.html">영상 처리</a><a href="guide-capture.html">촬영·보존 레코드</a><a href="guide-rebuild.html">재구축·업데이트</a><a href="guide-af.html" aria-current="true">AF</a><a href="guide-ui.html">UI</a></nav></div></div>
+<nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../index.html">PENTAX K-3 II</a></li><li aria-current="page">AF 안내</li></ol></nav>
+<!-- /chrome:top -->
+<header class="page-head">
+<p class="eyebrow">AF와 렌즈 제어 · 안내</p>
+<h1>AF와 렌즈 제어 안내</h1>
+<p class="lead">이 주제는 카메라가 초점을 맞추려고 렌즈를 움직이기 직전까지의 과정을 다룹니다. 바디 모터와 렌즈 안 모터 중 어느 쪽을 쓸지 고르는 코드와, “얼마나 움직일지”를 담은 값이 만들어지는 경로를 펌웨어에서 찾았습니다.</p>
+</header>
+<div class="layout">
+<!-- chrome:toc -->
+<nav class="toc" aria-label="이 문서의 목차"><h2 data-toc="no">이 문서에서</h2><ol><li><a href="#map">한눈에 보기</a></li><li><a href="#basics">배경 지식</a></li><li><a href="#status">지금까지 알아낸 것과 아직 모르는 것</a></li><li><a href="#order">읽는 순서</a></li><li><a href="#refs">근거 파일과 참고 자료</a></li></ol></nav>
+<!-- /chrome:toc -->
+<main class="doc" id="main">
+
+<section class="summary">
+<h2 data-toc="no">핵심 요약</h2>
+<ul>
+<li>카메라는 렌즈가 응답한 1바이트의 <strong>비트 6</strong>을 보고 AF 구동 준비를 렌즈 명령 경로와 바디 드라이버 경로로 나눕니다.</li>
+<li>구동 준비 함수는 <strong>16비트 요청값</strong>을 받습니다. 바디 경로에서는 카운터와 보정값으로 계산하고, 렌즈 경로에서는 렌즈가 돌려준 값을 씁니다. 카운터를 읽는 레지스터와 보정값을 쓰는 코드까지 찾았습니다.</li>
+<li>확인한 것은 구동 준비 함수에 값이 도착하는 데까지입니다. <strong>실물 렌즈를 붙이거나 모터를 움직여 본 결과가 아닙니다.</strong> AF 센서가 초점 오차를 구하는 알고리즘도 아직 다루지 못했습니다.</li>
+<li>이 연구의 목적은 나중에 AF 동작의 변경을 검토할 때 필요한 기본 구조를 확보하는 것입니다. 특정 렌즈용 수정 펌웨어를 만든 것이 아닙니다.</li>
+</ul>
+</section>
+
+<section id="map">
+<h2>한눈에 보기</h2>
+<p>세 문서가 다루는 범위를 한 장에 모았습니다. 위 두 줄이 만나는 “구동 준비 함수”가 이 주제의 중심입니다.</p>
+
+<figure class="diagram">
+<figcaption>AF 구동 준비까지의 흐름과 담당 문서</figcaption>
+<div class="dg-scroll">
+<svg class="dg" viewBox="0 0 800 372" role="img" aria-labelledby="dg-afmap-title dg-afmap-desc">
+<title id="dg-afmap-title">AF와 렌즈 제어 주제의 전체 흐름</title>
+<desc id="dg-afmap-desc">첫 줄은 바디 경로에서 요청값이 만들어지는 과정입니다. 타이머 드라이버의 레지스터에서 카운터를 읽고, 조건을 통과하면 보정값을 저장하고, 입력에서 차감값을 빼고 보정값을 더해 요청값을 계산합니다. AF 센서 신호로 초점 오차를 계산하는 부분은 이 연구에서 확인하지 못했습니다. 둘째 줄은 구동 방식을 정하는 과정입니다. 렌즈 명령 0x8205로 능력을 조회하고, 저장된 능력 바이트의 비트 6이 경로를 정하며, 구동 준비 함수 0x52E38이 요청값과 능력 비트를 받아 분기합니다. 셋째 줄은 분기 결과입니다. 비트 6이 0이면 바디 드라이버 경로로 가서 드라이버 입구까지 실행했고, 1이면 렌즈 명령 경로로 가서 명령 준비까지 실행했습니다. 두 경로 모두 실제 모터 구동은 확인하지 않았습니다.</desc>
+<defs><marker id="dg-afmap-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker>
+<marker id="dg-afmap-ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah open" d="M0 0L10 5L0 10z"/></marker></defs>
+<text class="h" x="8" y="18">요청값이 만들어지는 과정 · 바디 경로</text>
+<rect class="b ok" x="8" y="28" width="180" height="80" rx="8"/>
+<text class="t" x="20" y="54">카운터 읽기</text>
+<text class="s" x="20" y="74">타이머 드라이버의 레지스터</text>
+<a href="af-input.html"><text class="s" x="20" y="92">③ 카운터와 보정값</text></a>
+<rect class="b ok" x="214" y="28" width="180" height="80" rx="8"/>
+<text class="t" x="226" y="54">보정값 생산</text>
+<text class="s" x="226" y="74">조건을 통과하면 저장</text>
+<a href="af-input.html"><text class="s" x="226" y="92">③ 카운터와 보정값</text></a>
+<rect class="b ok" x="420" y="28" width="180" height="80" rx="8"/>
+<text class="t" x="432" y="54">요청값 계산</text>
+<text class="s" x="432" y="74">입력 − 차감값 + 보정값</text>
+<a href="af-control.html"><text class="s" x="432" y="92">② 요청 계산과 전달</text></a>
+<rect class="b open" x="626" y="28" width="166" height="80" rx="8"/>
+<text class="t" x="638" y="54">초점 오차 계산</text>
+<text class="s" x="638" y="74">AF 센서 신호 처리</text>
+<text class="s" x="638" y="92">이 연구에서 미확인</text>
+
+<text class="h" x="8" y="150">구동 방식을 정하는 과정</text>
+<rect class="b ok" x="8" y="160" width="180" height="80" rx="8"/>
+<text class="t" x="20" y="186">렌즈 능력 조회</text>
+<text class="s" x="20" y="206">렌즈 명령 0x8205</text>
+<a href="af-control.html"><text class="s" x="20" y="224">② 요청 계산과 전달</text></a>
+<rect class="b ok" x="214" y="160" width="180" height="80" rx="8"/>
+<text class="t" x="226" y="186">능력 바이트</text>
+<text class="s" x="226" y="206">비트 6이 경로를 정함</text>
+<a href="af-drive.html"><text class="s" x="226" y="224">① 구동 분기</text></a>
+<rect class="b key" x="420" y="160" width="180" height="80" rx="8"/>
+<text class="t" x="432" y="186">구동 준비 함수</text>
+<text class="s" x="432" y="206">CAfMotor 0x52E38</text>
+<a href="af-drive.html"><text class="s" x="432" y="224">① 구동 분기</text></a>
+
+<rect class="b ok" x="214" y="282" width="180" height="80" rx="8"/>
+<text class="t" x="226" y="308">바디 드라이버 경로</text>
+<text class="s" x="226" y="328">비트 6 = 0</text>
+<text class="s" x="226" y="346">드라이버 입구까지 실행</text>
+<rect class="b ok" x="420" y="282" width="180" height="80" rx="8"/>
+<text class="t" x="432" y="308">렌즈 명령 경로</text>
+<text class="s" x="432" y="328">비트 6 = 1</text>
+<text class="s" x="432" y="346">명령 준비까지 실행</text>
+<rect class="b open" x="626" y="282" width="166" height="80" rx="8"/>
+<text class="t" x="638" y="308">실제 모터 구동</text>
+<text class="s" x="638" y="328">두 경로 모두</text>
+<text class="s" x="638" y="346">확인하지 않음</text>
+
+<path class="e" d="M188 68H212" marker-end="url(#dg-afmap-ah)"/>
+<path class="e" d="M394 68H418" marker-end="url(#dg-afmap-ah)"/>
+<path class="e" d="M510 108V158" marker-end="url(#dg-afmap-ah)"/>
+<path class="e" d="M188 200H212" marker-end="url(#dg-afmap-ah)"/>
+<path class="e" d="M394 200H418" marker-end="url(#dg-afmap-ah)"/>
+<path class="e" d="M450 240V262H304V280" marker-end="url(#dg-afmap-ah)"/>
+<path class="e" d="M510 240V280" marker-end="url(#dg-afmap-ah)"/>
+<path class="e open" d="M600 322H624" marker-end="url(#dg-afmap-ao)"/>
+</svg>
+</div>
+<ul class="dg-legend"><li><i class="ok"></i>원본 코드 실행으로 확인(입력은 연구자가 넣음)</li><li><i class="key"></i>두 흐름이 만나는 함수</li><li><i class="open"></i>확인하지 않은 부분</li></ul>
+</figure>
+<p class="small muted">렌즈 명령 경로에서는 요청값을 카운터로 계산하지 않고 렌즈에 물어서 받습니다. 이 차이는 <a href="af-control.html#lens">둘째 문서</a>에서 다룹니다.</p>
+</section>
+
+<section id="basics">
+<h2>배경 지식</h2>
+
+<h3>K-3 II의 AF 하드웨어</h3>
+<p>리코의 <a href="https://www.ricoh-imaging.co.jp/english/products/k-3-2/spec/">제품 사양</a>에 따르면 K-3 II의 초점 센서는 SAFOX 11(측거점 27개)이고, 마운트는 KAF2입니다. KAF2 마운트에는 AF 커플러, 렌즈 정보 접점, 전원 접점이 있습니다. 이 주제의 문서는 센서가 초점 오차를 구하는 계산은 다루지 못했고, 그 뒤의 구동 준비 단계를 다룹니다.</p>
+
+<h3>바디 구동과 렌즈 구동</h3>
+<p>K 마운트 렌즈의 AF는 두 방식으로 구동됩니다. 바디 안의 모터가 마운트의 회전축(AF 커플러)을 돌리는 방식과, 렌즈 안의 모터(SDM·DC·PLM)가 직접 초점 기구를 움직이는 방식입니다. 리코의 <a href="https://www.ricoh-imaging.co.jp/english/products/lens/suit_mount.html">마운트별 호환표</a>가 이 구분을 보여 줍니다. 이후 마운트인 KAF3은 KAF2에서 AF 커플러를 뺀 것이어서, KAF3 렌즈는 렌즈 구동만 됩니다.</p>
+
+<h3>렌즈 명령</h3>
+<p>카메라는 전기 접점으로 렌즈와 바이트를 주고받습니다. 펌웨어에서는 이 통신이 16비트 번호가 붙은 명령으로 나타납니다. 이 문서들에 나오는 명령은 넷입니다. 번호에 붙인 뜻은 코드에서 쓰이는 맥락으로 판단한 것입니다.</p>
+<div class="table-wrap"><table class="fit">
+<caption>문서에 나오는 렌즈 명령</caption>
+<thead><tr><th>명령</th><th>쓰이는 곳</th><th>주고받는 크기</th></tr></thead>
+<tbody>
+<tr><td><code>0x8205</code></td><td>렌즈 능력 조회</td><td>응답 1바이트</td></tr>
+<tr><td><code>0x8211</code></td><td>렌즈 경로의 요청값 조회</td><td>응답 2바이트</td></tr>
+<tr><td><code>0x8920</code>, <code>0x8900</code></td><td>렌즈 경로의 구동 준비</td><td>보내는 값 1바이트, 2바이트</td></tr>
+<tr><td><code>0x8601</code></td><td>서비스 문자열 “SDM On”</td><td>값 2를 보냄</td></tr>
+</tbody></table></div>
+
+<h3>클래스 이름과 코드가 놓이는 주소</h3>
+<p>펌웨어에는 <code>CAfMotor</code>, <code>CLensKaf2</code> 같은 C++ 클래스 이름이 문자열로 남아 있습니다(RTTI). 문서의 객체 이름은 여기서 가져왔습니다. 또 펌웨어는 시작할 때 일부 코드를 RAM의 다른 주소로 복사해 실행합니다. 그래서 문서에는 파일 오프셋과 실행 주소(VA) 두 가지 표기가 함께 나옵니다. 원문이 ITCM이라고 부른 영역은 주소 0번지 근처로 복사되는 코드입니다.</p>
+
+<h3>펌웨어 1.12와 PLM 렌즈</h3>
+<p>분석한 펌웨어 1.12의 <a href="https://www.ricoh-imaging.co.jp/english/support/digital/k3_2.html">공식 변경 내용</a>은 HD PENTAX-DA★16-50mmF2.8ED PLM AW 렌즈의 초점 동작 최적화입니다. 이 렌즈는 리코가 <a href="https://news.ricoh-imaging.co.jp/rim_info2/2021/20210715_021095.html">PLM(펄스 모터)</a>을 넣었다고 발표한 렌즈입니다. 이 변경이 코드의 어느 부분에 해당하는지는 조사하지 않았습니다.</p>
+
+<h3>“원본 코드 실행으로 확인”의 뜻</h3>
+<p>검증은 펌웨어의 ARM 기계어를 PC의 CPU 에뮬레이터(<a href="https://github.com/unicorn-engine/unicorn">Unicorn</a>)에서 실행하는 방식입니다. 판단과 계산은 원본 코드가 합니다. 렌즈의 응답, 카운터 값, 객체의 초기 상태는 연구자가 정해서 넣었습니다. 따라서 결과는 “이런 입력이 주어지면 코드가 이렇게 움직인다”는 뜻이며, 실제 카메라에서 그런 입력이 생기는지는 별개의 물음입니다.</p>
+</section>
+
+<section id="status">
+<h2>지금까지 알아낸 것과 아직 모르는 것</h2>
+<div class="table-wrap"><table>
+<caption>주제 전체의 확인 상태</caption>
+<thead><tr><th>항목</th><th>상태</th><th>근거 문서</th></tr></thead>
+<tbody>
+<tr><th scope="row">렌즈 명령 <code>0x8205</code>의 응답은 전송이 성공했을 때만 능력 바이트로 저장됨</th><td><span class="badge ok">확인</span> <span class="badge model">모델</span></td><td><a href="af-drive.html#capability">구동 분기</a></td></tr>
+<tr><th scope="row">능력 바이트의 비트 6에 따라 구동 준비가 렌즈 명령 경로와 바디 드라이버 경로로 갈림</th><td><span class="badge ok">확인</span> <span class="badge model">모델</span></td><td><a href="af-drive.html#drive">구동 분기</a></td></tr>
+<tr><th scope="row">능력 조회는 상태 비트가 켜져 있고 저장된 값이 0일 때만 실행됨</th><td><span class="badge ok">확인</span> <span class="badge model">모델</span></td><td><a href="af-control.html#capability">요청 계산과 전달</a></td></tr>
+<tr><th scope="row">바디 경로의 요청값은 “정규화한 입력 − 차감값 + 보정값”. 0이나 음수면 전달하지 않고, 크기에 따라 구간 0·1·2를 기록</th><td><span class="badge ok">확인</span> <span class="badge model">모델</span></td><td><a href="af-control.html#body">요청 계산과 전달</a></td></tr>
+<tr><th scope="row">렌즈 경로의 요청값은 렌즈 명령 <code>0x8211</code>의 2바이트 응답</th><td><span class="badge ok">확인</span> <span class="badge model">모델</span></td><td><a href="af-control.html#lens">요청 계산과 전달</a></td></tr>
+<tr><th scope="row">입력 카운터는 타이머 드라이버가 가리키는 레지스터에서 읽음</th><td><span class="badge ok">확인</span></td><td><a href="af-input.html#binding">카운터와 보정값</a></td></tr>
+<tr><th scope="row">보정값은 조건을 통과하면 카운터에서 40을 뺀 값(분기에 따라 카운터 그대로)으로 저장됨</th><td><span class="badge ok">확인</span> <span class="badge model">모델</span></td><td><a href="af-input.html#producer">카운터와 보정값</a></td></tr>
+<tr><th scope="row">보정값 저장, 요청값 계산, 구동 준비 입구 도달이 같은 객체에서 이어짐</th><td><span class="badge ok">확인</span> <span class="badge model">모델</span></td><td><a href="af-input.html#handoff">카운터와 보정값</a></td></tr>
+<tr><th scope="row">렌즈 모델 바이트 <code>F1</code>·<code>F2</code>에 따른 내부 분기가 있음</th><td><span class="badge ok">확인</span> <span class="badge model">모델</span></td><td><a href="af-drive.html#model">구동 분기</a></td></tr>
+<tr><th scope="row">서비스 문자열 “SDM On”은 촬영 AF와 다른 명령 <code>0x8601</code>을 씀</th><td><span class="badge static">정적 분석</span></td><td><a href="af-drive.html#model">구동 분기</a></td></tr>
+<tr><th scope="row">바디 드라이버 입구 아래의 호출 연결</th><td><span class="badge static">정적 분석</span></td><td><a href="af-drive.html#drive">구동 분기</a></td></tr>
+<tr><th scope="row">카운터가 세는 물리 신호와 단위, 요청값과 구간 번호의 물리적 의미</th><td><span class="badge open">미확인</span></td><td><a href="af-input.html#limits">카운터와 보정값</a></td></tr>
+<tr><th scope="row">AF 센서 신호에서 초점 오차를 구하는 알고리즘</th><td><span class="badge open">미확인</span></td><td><a href="af-control.html#limits">요청 계산과 전달</a></td></tr>
+<tr><th scope="row">호출 사이의 스케줄링과 AF 전체의 상태 전이</th><td><span class="badge open">미확인</span></td><td><a href="af-control.html#limits">요청 계산과 전달</a></td></tr>
+<tr><th scope="row">SDM·DC·PLM을 구분하는 통신 규약</th><td><span class="badge open">미확인</span></td><td><a href="af-drive.html#validation">구동 분기</a></td></tr>
+<tr><th scope="row">실물 렌즈의 응답값, 모터의 실제 움직임과 AF 성능</th><td><span class="badge open">미확인</span></td><td>세 문서 모두</td></tr>
+</tbody></table></div>
+<p class="small muted">“확인”과 “모델”이 함께 붙은 항목은 원본 코드를 실행했지만 입력이나 장치 응답은 연구자가 넣었다는 뜻입니다. 네 가지 표시의 정의는 <a href="../index.html#levels">개요의 검증 수준 읽는 법</a>에 있습니다.</p>
+</section>
+
+<section id="order">
+<h2>읽는 순서</h2>
+<p>조사한 순서가 곧 이해하기 쉬운 순서입니다. 구동 방식의 선택에서 시작해 값의 출처로 거슬러 올라갑니다.</p>
+<ul class="cards">
+<li class="card"><span class="tag">1단계</span><h3><a href="af-drive.html">렌즈 능력과 구동 분기</a></h3><p class="q">카메라는 바디 모터와 렌즈 안 모터 중 어느 쪽으로 구동할지를 무엇으로 정하는가.</p><p>렌즈가 응답한 능력 바이트의 비트 6이 두 경로를 가릅니다.</p></li>
+<li class="card"><span class="tag">2단계</span><h3><a href="af-control.html">AF 요청 계산과 구동 준비</a></h3><p class="q">능력 조회는 언제 실행되고, 구동 준비 함수가 받는 요청값은 어떻게 계산되는가.</p><p>한 호출이 계산해 적어 둔 16비트 값을 다음 호출이 읽어 전달합니다.</p></li>
+<li class="card"><span class="tag">3단계</span><h3><a href="af-input.html">AF 카운터와 보정값</a></h3><p class="q">요청값 계산에 들어가는 입력과 보정값은 펌웨어 안의 어디서 오는가.</p><p>입력은 타이머 드라이버의 카운터 레지스터에서, 보정값은 AF 모터 객체의 함수에서 나옵니다.</p></li>
+</ul>
+</section>
+
+<section id="refs">
+<h2>근거 파일과 참고 자료</h2>
+<ul class="refs">
+<li><a href="af-drive.json">af-drive.json</a> · <a href="../verify_af_drive.py">verify_af_drive.py</a> — 능력 바이트와 구동 분기</li>
+<li><a href="af-control.json">af-control.json</a> · <a href="../verify_af_control.py">verify_af_control.py</a> — 능력 조회 조건, 요청값 계산과 전달</li>
+<li><a href="af-input.json">af-input.json</a> · <a href="../verify_af_input.py">verify_af_input.py</a> — 카운터 연결과 보정값</li>
+<li><a href="hq-status.json">hq-status.json</a> — 연구 목표별 근거와 미해결 항목(<code>af_and_lens_drive</code>)</li>
+<li>리코 공식 자료: <a href="https://www.ricoh-imaging.co.jp/english/products/k-3-2/spec/">K-3 II 제품 사양</a> · <a href="https://www.ricoh-imaging.co.jp/english/products/lens/suit_mount.html">마운트별 호환표</a> · <a href="https://www.ricoh-imaging.co.jp/english/support/qa/k-3-2/index.html">K-3 II FAQ</a> · <a href="https://www.ricoh-imaging.co.jp/english/support/digital/k3_2.html">펌웨어 1.12 배포 안내</a> · <a href="https://news.ricoh-imaging.co.jp/rim_info2/2021/20210715_021095.html">HD PENTAX-DA★16-50mmF2.8ED PLM AW 발표</a></li>
+<li>그 밖의 외부 자료: <a href="https://github.com/unicorn-engine/unicorn">Unicorn CPU 에뮬레이터</a> · <a href="https://itanium-cxx-abi.github.io/cxx-abi/abi.html">Itanium C++ ABI</a>(클래스 이름 표기)</li>
+</ul>
+</section>
+
+</main>
+</div>
+<!-- chrome:bottom -->
+<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">AF와 렌즈 제어 — 이 주제의 문서</h2><ol><li><a href="guide-af.html" aria-current="page">AF 안내</a></li><li><a href="af-drive.html">렌즈 능력과 구동 분기</a></li><li><a href="af-control.html">AF 요청 계산과 구동 준비</a></li><li><a href="af-input.html">AF 카운터와 보정값</a></li></ol></nav>
+<nav class="pager" aria-label="이전·다음 문서"><a class="prev" href="tone-rebuild.html"><small>← 이전</small>톤 보간 함수 C 재구현</a><a class="next" href="af-drive.html"><small>다음 →</small>렌즈 능력과 구동 분기</a></nav>
+<footer class="sitefoot"><div class="sitefoot-in"><nav aria-label="사이트"><a href="../index.html#map">문서 지도</a><a href="../index.html#levels">검증 수준 읽는 법</a><a href="../glossary.html">용어집</a><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/research-program.html">세 기종 연구 본부</a><a href="https://github.com/yunhyok/pentax-k3ii-firmware-analysis">GitHub 저장소</a></nav><p>PENTAX K-3 II 펌웨어 1.12 분석 문서. PC에서 수행한 정적 분석과 에뮬레이션 결과이며, 카메라 실기에서 검증한 내용이 아닙니다. 원본 펌웨어와 복호화한 바이너리는 포함하지 않습니다.</p></div></footer>
+<!-- /chrome:bottom -->
+</body>
+</html>

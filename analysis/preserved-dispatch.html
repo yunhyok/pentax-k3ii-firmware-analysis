@@ -1,25 +1,372 @@
 <!doctype html>
-<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="K-3 II 보존 레코드의 명령 계획, 작업자 개수 갱신과 ID63 패킷 전달을 원본 코드로 추적."><title>K-3 II — 보존 레코드의 상위 명령 경로</title><link rel="stylesheet" href="../assets/report.css"></head><body>
-<header><div class="eyebrow">PENTAX K-3 II · firmware 1.12 · 2026-11-08</div><h1>보존 레코드의<br>상위 명령과 작업자 연결</h1><p class="lead">원본 명령 처리기가 만든 작업 목록을 같은 설정 객체의 갱신까지 연결했다. 별도 패킷 처리기에서는 공급자 선택과 블록 번호를 구분했다. 계산 결과·대기 반환값을 준비하거나 상태 검사·동기화 구간을 생략한 경계를 아래에 표시했다.</p><nav aria-label="보고서 탐색"><a href="preserved-config.html">정책 생산자</a><a href="#plan">작업 계획</a><a href="#worker">갱신 조건</a><a href="#packet">패킷 전달</a><a href="#scope">실행 한계</a></nav></header><main>
-<p class="note">코드 주소는 해제 파일 오프셋, RAM 주소는 가상 주소다. 명령 객체는 합성 입력이며 실제 통신 도착이나 카메라 메뉴 이벤트를 재현한 것은 아니다. 도식의 점선은 별도로 준비하거나 건너뛴 실행 경계다.</p>
-<section aria-labelledby="plan"><h2 id="plan">1. 유형 2·하위 코드 4가 작업 목록을 만든다</h2>
-<p>원본 0x7B5954는 명령 객체의 +0x858·+0x859를 읽는다. 유형 2, 하위 코드 4이면 0x7B5A00·0x7B5A9C를 거쳐 0x7B4EB4로 들어간다. 이 함수는 서비스에서 설정 객체를 조회해 스택 +0x11C에 보관하고 입력 첫 워드로 작업 계획을 고른다. 아래 일곱 입력에서 요청 필드와 포인터를 대조했다. 하위 코드 7은 0x81을 반환했으며 작업 목록을 제출하지 않았다. <a href="preserved-dispatch.json">명령 분기·계획 7건·거부 대조</a></p>
-<table><caption>계획 입력과 원본 descriptor 인덱스 쌍</caption><thead><tr><th>입력 첫 워드</th><th>인덱스 쌍</th><th>요청 종류 바이트</th></tr></thead><tbody><tr><td>0</td><td>0/1, 2/3, 4/5</td><td>0, 0, 0</td></tr><tr><td>1</td><td>6/7, 8/9</td><td>2, 3</td></tr><tr><td>2</td><td>10/11, 12/13</td><td>4, 5</td></tr><tr><td>3</td><td>14/15, 16/17</td><td>6, 7</td></tr><tr><td>4</td><td>24/25</td><td>8</td></tr><tr><td>5 · 0xFFFFFFFF · 각각 대조</td><td>0/0 · 기본 경로</td><td>0</td></tr></tbody></table>
-<figure><figcaption>도식 1. 원본 계획의 포인터가 작업자에 전달된다</figcaption><div class="flow" role="group" aria-label="명령이 만든 스택 요청의 포인터 목록을 원본 복사하고 별도 준비한 작업자 실행으로 소비">
-<div class="stage"><strong>0x7B4EB4 · 작업 계획</strong><span>요청 하나당 0x1C바이트<br>스택 +0xC4의 포인터 목록<br>같은 설정 포인터도 보관</span></div><div class="arrow" aria-hidden="true">→</div><div class="stage"><strong>0x7B5124 → 0x632CC4</strong><span>원본 0x712898 복사<br>작업자 +0x28C에 0x40바이트<br>0x632CD8 직전에 정지</span></div><div class="arrow" aria-hidden="true">⇢</div><div class="stage"><strong>0x636694 · 별도 작업자 실행</strong><span>후술한 원본 플래그 저장 구간<br>복사한 목록의 첫 요청 사용<br>0x6352A0에서 같은 설정 조회</span></div></div><p class="caption">작업자의 스택과 잠금 이후 플래그 저장 구간의 레지스터는 준비한다. 실제 스케줄링·깨우기·대기는 실행하지 않는다. 연결 사례는 계획 0의 첫 쌍 0/1이며 모든 계획의 완료를 뜻하지 않는다.</p></figure>
-<p>원본 0x632CD4가 포인터 목록 0x40바이트를 작업자 +0x28C로 복사한다. 요청 자체는 원래 계획 스택에 남으며 각 포인터가 그 주소를 가리키는지 확인했다. 요청 +0x14는 입력 워드에 0x1000을 더한 하위 16비트이고 계획 0의 두 번째·세 번째 요청만 +0x18이 1이다. 잠금 이후 원본 0x630DC4…0x630DD4에 값 2와 작업자 포인터를 주면 +0x380에 OR 저장하며 0x6366D0이 이 비트를 검사한다. 비트가 없는 대조에서는 작업 목록 호출을 건너뛰었다. <a href="preserved-dispatch.json">원본 복사·주소 별칭·작업자 플래그</a></p>
-</section><section aria-labelledby="worker"><h2 id="worker">2. 계산 결과의 유효 바이트와 완료 마스크를 구분한다</h2>
-<figure><figcaption>도식 2. 준비한 계산 결과를 원본 호출자가 갱신에 사용한다</figcaption><div class="flow" role="group" aria-label="원본 요청 조회 후 계산은 생략하고 준비한 결과를 setter가 읽으며 별도 대기 반환 프레임에서 같은 설정을 갱신">
-<div class="stage"><strong>원본 요청·설정 조회</strong><span>0x6352A0 → 0x6352D4 전<br>인덱스 워드 → 하위 8비트<br>계산 함수 0x63495C 미실행</span></div><div class="arrow" aria-hidden="true">⇢</div><div class="stage"><strong>준비한 SP+0xF8 결과</strong><span>0x635534…0x6355B4<br>첫 바이트가 켜지면 개수 갱신<br>길이 갱신은 항상 호출</span></div><div class="arrow" aria-hidden="true">⇢</div><div class="stage"><strong>준비한 대기 반환 → 갱신</strong><span>같은 계획 스택의 설정 포인터<br>0x7B5130 → 0x74ED98<br>동일 RAM과 C/D 재검사</span></div></div><p class="caption">첫 점선에서는 계산 결과, 둘째 점선에서는 대기 반환값과 호출 프레임을 준비한다. 계산·대기의 실제 결과를 관측한 실험은 아니다.</p></figure>
-<p>원본 작업자는 요청의 두 인덱스 워드를 8비트로 줄이고 같은 설정 객체를 조회한다. 계산을 건너뛰고 실제 스택 위치 +0xF8에 결과를 넣어 후속 호출자를 실행했다. 결과의 첫 바이트가 0이면 개수 setter 두 번을 생략하지만 길이 setter는 호출한다. 비제로이면 둘 다 갱신한다. 세 연결 사례에서 개수 유지, C만 무효화, 복구를 재현했으며 전체 ID 0x63·0x64 RAM도 대조했다. 별도 잘못된 요청 0x101/26은 1/26으로 줄었고 원본 setter의 인덱스 &lt;26 조건이 26의 저장을 막았다. 이 요청은 앞의 계획이 생산한 값이 아니다. <a href="preserved-dispatch.json">결과 대조 3건과 별도 인덱스 경계</a></p>
-<p>명령 호출자의 0x7B5128…0x7B5150은 준비한 대기 반환값이 0이어도 같은 설정으로 0x74ED98을 호출했다. 이어 명령 +4에 0x19, +8에 반환값을 기록했다. 다른 호출자의 0x635F4C 이후는 열 개의 비트표를 합친 값과 결과 마스크가 정확히 같아야 갱신한다. 0x3FF는 통과했지만 0x1FF와 0x7FF는 복원 함수 진입 직전으로 갔다. 이 대조는 앞선 계산과 복원 본문, 이후 플래시 저장을 실행하지 않았다. <a href="preserved-dispatch.json">서로 다른 두 갱신 조건</a></p>
-</section><section aria-labelledby="packet"><h2 id="packet">3. 공급자 선택과 레코드 블록 번호는 별개다</h2>
-<p class="note">용어 정정: 앞선 판본의 패킷 “잠금” 표기는 철회했다. 0x6EB310은 상태 사본 생성자, 0x6EB44C → 0x50F550은 13바이트 상태 복사, 0x6EB620은 표 기반 필드 조회이며 0x6EB60C의 소멸자는 0x520500으로 이어져 바로 반환한다. 바깥 조건은 필드 2가 2 또는 3인지, 쓰기 내부 조건은 필드 0이 1인지 검사한다. 이 구간은 이번 실행에서 생략됐다.</p>
-<table><caption>별도 패킷 처리기의 원본 하위 코드</caption><thead><tr><th>하위 코드</th><th>공급자 선택</th><th>전달</th></tr></thead><tbody><tr><td>6 / 7</td><td>입력 첫 워드 0x63 · 직접 선택</td><td>쓰기 / 읽기</td></tr><tr><td>10 / 11</td><td>입력 첫 워드 3 → ID 0x63 변환</td><td>쓰기 / 읽기</td></tr></tbody></table>
-<figure><figcaption>도식 3. 같은 명령 버퍼를 원본 공급자 가상 함수로 전달</figcaption><div class="flow" role="group" aria-label="명령 접두부 이후 상태 사본과 검사를 생략하고 선택한 공급자의 가상함수로 패킷을 전달">
-<div class="stage"><strong>0x83DC2C · 원본 앞부분</strong><span>+0x859 하위 코드 읽기<br>출력 길이 +4 초기화<br>0x83DC5C 직전에 정지</span></div><div class="arrow" aria-hidden="true">⇢</div><div class="stage"><strong>0x83DC98 · 분기와 선택</strong><span>직접 0x63 / 변환 입력 3<br>쓰기 +0x2C / 읽기 +0x30<br>쓰기 내부 상태 검사도 생략</span></div><div class="arrow" aria-hidden="true">⇢</div><div class="stage"><strong>원본 ID 0x63 패킷 함수</strong><span>쓰기 0x72E1F8 → 0x72E0EC<br>읽기 0x72E200 → 0x72E130<br>고정 RAM 0x80000000 사용</span></div></div><p class="caption">바깥 상태 사본 생성·복사·검사와 쓰기 내부의 같은 검사·정리 구간을 건너뛴다. 마지막 점선은 쓰기 경로의 내부 생략을 나타내며 읽기는 선택 이후 패킷 함수까지 연속 실행한다. 두 경로 모두 바깥 정리·반환 전 0x83E434에서 멈춘다.</p></figure>
-<p>쓰기 호출자는 명령 +0xC를, 읽기 호출자는 +8을 패킷 인수로 넘긴다. 읽기 함수가 패킷 +4에서 블록 번호를 얻기 때문에 두 배치가 다르다. 직접·변환 선택에서 블록 0·1·31을 각각 왕복시켜 전체 레코드와 인접 RAM, 명령 응답과 남은 바이트를 대조했다. 반환 워드 수는 513·512·508이었다. 잘못된 직접 선택 0x66과 변환 입력 16은 쓰기·읽기 모두 정지점 0x83E434에서 상태 레지스터 R4가 0x83이었고 ID 0x63 함수에는 도달하지 않았다. 이는 공급자 선택 검사이며 블록 번호 검사와는 다르다. <a href="preserved-dispatch.json">왕복 6쌍과 공급자 거부 4건</a></p>
-<p>별도로 하위 코드 10·변환 입력 3에 블록 번호 32를 주면 위 생략 경계를 통과한 경로에서 첫 저장 예정 주소가 0x80010010이 됐다. 0x72E08C 저장 명령 직전에 멈췄고 RAM은 바뀌지 않았다. 이 결과는 준비한 명령 객체와 생략한 상태 검사 조건 아래의 주소 계산을 보여 준다. 실제 통신 입력으로 그 상태에 도달할 수 있는지나 장치의 취약성은 확인하지 않았다. <a href="preserved-dispatch.json">저장 전 정지 대조와 한계</a></p>
-</section><section aria-labelledby="scope"><h2 id="scope">4. 재현 범위</h2>
-<p>실행 명령을 대체하지 않았지만 각 실험에는 명시한 시작 상태와 생략 구간이 있다. 명령 객체의 실제 생산자, 잠금·스케줄러·계산의 완료, 원격 전달과 실물 기록은 남아 있다. 이 명령의 선택값을 SuperResolution이나 일반 촬영 메뉴의 값으로 동일시하지 않는다. <a href="preserved-config.html">설정 검사 바이트의 생산자</a>와 <a href="preserved-sector20.html">RAM 적재·저장 준비</a>는 별도 검증으로 연결된다.</p>
-<pre><code>python verify_preserved_dispatch.py decoded.bin --compare analysis/preserved-dispatch.json</code></pre><p><a href="../verify_preserved_dispatch.py">원본 명령·실행 검증기</a> · <a href="preserved-dispatch.json">전체 결과</a> · <a href="hq-status.json">후속 과제</a></p></section></main><footer>K-3 II v1.12 · <a href="../index.html">전체 분석</a></footer></body></html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>보존 레코드를 고치는 상위 명령: 작업 계획, 개수 갱신, ID 0x63 패킷 — PENTAX K-3 II 펌웨어 연구</title>
+<meta name="description" content="K-3 II 보존 레코드의 개수를 갱신하게 만드는 명령과 ID 0x63 레코드를 블록 단위로 읽고 쓰는 패킷 명령을 명령 처리기에서부터 원본 ARM 코드로 따라간 기록입니다. 실행한 구간, 값을 준비해 넣은 구간, 건너뛴 구간을 구분했습니다.">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body data-camera="k3ii">
+<!-- chrome:top -->
+<a class="skip" href="#main">본문 바로가기</a>
+<div class="topbar"><div class="topbar-in"><a class="brand" href="../index.html">PENTAX <b>펌웨어 연구</b></a><div class="cams" aria-label="기종 선택"><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/">K-3 III</a><a href="../index.html" aria-current="true">K-3 II</a><a href="https://yunhyok.github.io/pentax-q7-firmware-analysis/">Q7</a></div><nav class="topnav" aria-label="주제"><a href="../index.html">개요</a><a href="guide-pipeline.html">영상 처리</a><a href="guide-capture.html" aria-current="true">촬영·보존 레코드</a><a href="guide-rebuild.html">재구축·업데이트</a><a href="guide-af.html">AF</a><a href="guide-ui.html">UI</a></nav></div></div>
+<nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../index.html">PENTAX K-3 II</a></li><li><a href="guide-capture.html">촬영 준비와 보존 레코드</a></li><li aria-current="page">보존 레코드의 상위 명령 경로</li></ol></nav>
+<!-- /chrome:top -->
+<header class="page-head">
+<p class="eyebrow">촬영 준비와 보존 레코드 · 상위 명령</p>
+<h1>보존 레코드를 고치는 상위 명령: 작업 계획, 개수 갱신, ID 0x63 패킷</h1>
+<p class="lead">보존 레코드의 검사 바이트를 다시 계산하게 만드는 호출과, 레코드를 블록 단위로 읽고 쓰는 호출이 어디서 시작되는지 명령 처리기에서부터 따라갔습니다. 실제로 실행한 곳과 값을 준비해 넣은 곳, 건너뛴 곳을 나눠 적었습니다.</p>
+</header>
+<div class="layout">
+<!-- chrome:toc -->
+<nav class="toc" aria-label="이 문서의 목차"><h2 data-toc="no">이 문서에서</h2><ol><li><a href="#background">배경: 누가 레코드를 고치라고 시키는가</a></li><li><a href="#plan">유형 2·하위 코드 4 명령이 작업 계획을 만듭니다</a></li><li><a href="#worker">작업자의 결과가 개수를 바꾸고, 갱신 함수가 검사 바이트를 다시 계산합니다</a></li><li><a href="#packet">패킷 처리기는 공급자를 고른 뒤 명령 버퍼를 블록 함수로 넘깁니다</a></li><li><a href="#limits">한계와 남은 과제</a></li><li><a href="#reproduce">재현 방법</a></li><li><a href="#refs">근거 파일과 참고 자료</a></li></ol></nav>
+<!-- /chrome:toc -->
+<main class="doc" id="main">
+
+<section class="summary">
+<h2 data-toc="no">핵심 요약</h2>
+<ul>
+<li>명령 처리기는 특정 유형의 명령을 받으면 입력 첫 워드에 따라 <strong>작업 계획</strong>을 만듭니다. 계획은 “어느 디스크립터 쌍을 다룰지”를 적은 요청 목록이고, 그 포인터 목록이 작업자에게 복사됩니다. 입력 일곱 가지에서 확인했습니다.</li>
+<li>작업자가 낸 결과에 따라 <strong>개수를 바꾸는 함수</strong>가 불리고, 명령 처리기는 대기에서 돌아온 뒤 <strong>갱신 함수</strong>를 불러 검사 바이트를 다시 계산합니다. 계산과 대기 자체는 실행하지 않았고, 그 결과와 반환값을 준비해 넣었습니다.</li>
+<li>갱신 함수를 부르는 호출자는 둘입니다. 하나는 대기 반환값과 무관하게 부르고, 다른 하나는 완료 표시 열 개가 정확히 모두 켜졌을 때만 부릅니다.</li>
+<li>별도의 <strong>패킷 처리기</strong>는 공급자를 고른 뒤 명령 버퍼를 ID 0x63의 블록 읽기·쓰기 함수로 넘깁니다. 공급자 선택이 틀리면 거부합니다. 이 시험은 처리기 안의 상태 검사 구간을 건너뛰고 실행했습니다.</li>
+<li>명령 객체는 합성 입력입니다. 명령이 실제로 통신이나 메뉴에서 오는지는 확인하지 않았습니다.</li>
+</ul>
+</section>
+
+<div class="scope">
+<div class="ok"><h3><span class="badge ok">확인</span> 원본 코드 실행으로 확인</h3>
+<ul>
+<li>명령 분기와 작업 계획 7건, 다른 하위 코드의 거부 1건</li>
+<li>포인터 목록의 복사, 작업자의 플래그 검사와 요청 조회</li>
+<li>결과에 따른 개수·길이 함수 호출과 갱신 3건, 인덱스 경계 1건, 완료 마스크 3건</li>
+<li>패킷 왕복 6쌍, 잘못된 공급자 선택의 거부 4건</li>
+</ul></div>
+<div class="static"><h3><span class="badge static">정적 분석</span> 코드를 읽어 판단</h3>
+<ul>
+<li>패킷 처리기가 건너뛴 구간의 성격: 상태 사본을 만들고 필드를 검사하는 코드</li>
+</ul></div>
+<div class="model"><h3><span class="badge model">모델</span> 시험 조건으로 정한 것</h3>
+<ul>
+<li>명령 객체와 그 입력 워드</li>
+<li>계산 결과와 대기 반환값</li>
+<li>작업자의 스택·레지스터, 플래그에 넣은 값 2</li>
+</ul></div>
+<div class="open"><h3><span class="badge open">미확인</span> 실행·확인하지 않은 것</h3>
+<ul>
+<li>스케줄링·깨우기·대기와 계산 함수의 실제 결과</li>
+<li>패킷 처리기의 상태 검사 구간이 실제로 내는 판정</li>
+<li>명령의 실제 생산자, 블록 번호 32의 도달 가능성, 물리 기록</li>
+</ul></div>
+</div>
+
+<section id="background">
+<h2>배경: 누가 레코드를 고치라고 시키는가</h2>
+<p><a href="preserved-config.html">정책 플래그의 생산자</a>는 디스크립터의 개수를 바꾸고 갱신 함수를 부르면 검사 바이트가 다시 계산된다는 것을 보였습니다. <a href="preserved-sector20.html#chunks">섹터 20·21 문서</a>는 ID 0x63 레코드를 블록 단위로 읽고 쓰는 패킷 함수를 보였습니다. 두 문서 모두 그 함수들에 인수를 직접 넣었습니다. 이 문서는 한 단계 위로 올라가, 펌웨어 안에서 그 함수들을 부르는 명령 처리기를 봅니다.</p>
+<dl class="kv">
+<dt>명령 객체</dt><dd>명령 하나를 담는 버퍼입니다. <code>+0x858</code>에 유형, <code>+0x859</code>에 하위 코드가 있고, 입력 워드는 <code>+8</code>부터, 응답은 <code>+4</code>와 <code>+8</code>에 기록됩니다.</dd>
+<dt>작업 계획 · 요청</dt><dd>명령 처리기가 스택에 만드는 요청 목록입니다. 요청 하나는 디스크립터 인덱스 한 쌍과 요청 종류를 담습니다.</dd>
+<dt>작업자</dt><dd>요청 목록을 받아 처리하는 객체입니다. 명령 처리기는 목록을 넘긴 뒤 작업자의 처리를 기다리고, 작업자는 계산 결과를 자기 스택의 결과 구조에 둡니다.</dd>
+<dt>설정 객체 · 디스크립터</dt><dd><a href="preserved-config.html#background">앞 문서</a>에서 설명한, 검사 바이트 <code>+0xC</code>·<code>+0xD</code>와 인덱스 0~25의 디스크립터를 가진 객체입니다.</dd>
+</dl>
+
+<figure class="diagram">
+<figcaption>개수 갱신 경로 전체와 실행 경계</figcaption>
+<div class="dg-scroll">
+<svg class="dg" viewBox="0 0 800 340" role="img" aria-labelledby="dg-cmd-title dg-cmd-desc">
+<title id="dg-cmd-title">명령에서 검사 바이트 재계산까지의 경로와 실행하지 않은 구간</title>
+<desc id="dg-cmd-desc">첫 줄은 명령 처리기입니다. 합성 명령 객체에서 출발해 작업 계획을 만들고 포인터 목록을 작업자에 복사하는 데까지 실행했습니다. 그다음의 깨우기와 대기는 실행하지 않았습니다. 둘째 줄은 작업자입니다. 요청과 설정을 조회하는 데까지 실행했고, 계산 함수는 실행하지 않았으며, 계산 결과는 스택에 준비해 넣었습니다. 그 결과를 읽어 개수와 길이 함수를 부르는 부분은 실행했습니다. 셋째 줄은 대기에서 돌아온 명령 처리기입니다. 대기 반환값을 준비해 넣고, 갱신 함수 호출과 검사 바이트 재계산, 응답 기록을 실행했습니다.</desc>
+<defs><marker id="dg-cmd-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker>
+<marker id="dg-cmd-aho" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah open" d="M0 0L10 5L0 10z"/></marker>
+<marker id="dg-cmd-ahm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah model" d="M0 0L10 5L0 10z"/></marker></defs>
+
+<text class="h" x="8" y="20">명령 처리기</text>
+<rect class="b model" x="8" y="28" width="176" height="64" rx="8"/>
+<text class="t" x="20" y="55">합성 명령 객체</text>
+<text class="s" x="20" y="75">유형 2 · 하위 코드 4</text>
+<rect class="b ok" x="208" y="28" width="176" height="64" rx="8"/>
+<text class="t" x="220" y="55">작업 계획 작성</text>
+<text class="s mono" x="220" y="75">0x7B5954 → 0x7B4EB4</text>
+<rect class="b ok" x="408" y="28" width="176" height="64" rx="8"/>
+<text class="t" x="420" y="55">목록을 작업자에 복사</text>
+<text class="s mono" x="420" y="75">0x632CC4 · 0x40바이트</text>
+<rect class="b open" x="608" y="28" width="176" height="64" rx="8"/>
+<text class="t" x="620" y="55">깨우기 · 대기</text>
+<text class="s" x="620" y="75">실행하지 않음</text>
+<path class="e" d="M184 60H206" marker-end="url(#dg-cmd-ah)"/>
+<path class="e" d="M384 60H406" marker-end="url(#dg-cmd-ah)"/>
+<path class="e open" d="M584 60H606" marker-end="url(#dg-cmd-aho)"/>
+
+<path class="e model" d="M496 92V116H96V142" marker-end="url(#dg-cmd-ahm)"/>
+<text class="h" x="112" y="134">작업자</text>
+<rect class="b ok" x="8" y="144" width="176" height="64" rx="8"/>
+<text class="t" x="20" y="171">요청과 설정 조회</text>
+<text class="s mono" x="20" y="191">0x636694 → 0x6352A0</text>
+<rect class="b open" x="208" y="144" width="176" height="64" rx="8"/>
+<text class="t" x="220" y="171">계산 0x63495C</text>
+<text class="s" x="220" y="191">실행하지 않음</text>
+<rect class="b model" x="408" y="144" width="176" height="64" rx="8"/>
+<text class="t" x="420" y="171">계산 결과</text>
+<text class="s" x="420" y="191">스택 +0xF8에 준비한 값</text>
+<rect class="b ok" x="608" y="144" width="176" height="64" rx="8"/>
+<text class="t" x="620" y="171">개수 · 길이 setter</text>
+<text class="s mono" x="620" y="191">0x74F974 · 0x74F944</text>
+<path class="e open" d="M184 176H206" marker-end="url(#dg-cmd-aho)"/>
+<path class="e open" d="M384 176H406" marker-end="url(#dg-cmd-aho)"/>
+<path class="e" d="M584 176H606" marker-end="url(#dg-cmd-ah)"/>
+
+<path class="e" d="M696 208V232H296V258" marker-end="url(#dg-cmd-ah)"/>
+<text class="h" x="8" y="250">명령 처리기 (대기 뒤)</text>
+<rect class="b model" x="8" y="260" width="176" height="64" rx="8"/>
+<text class="t" x="20" y="287">대기 반환값</text>
+<text class="s" x="20" y="307">준비한 값 0 또는 0x3FF</text>
+<rect class="b ok" x="208" y="260" width="176" height="64" rx="8"/>
+<text class="t" x="220" y="287">갱신 함수 0x74ED98</text>
+<text class="s" x="220" y="307">RAM 헤더 반영 · 재검사</text>
+<rect class="b key" x="408" y="260" width="176" height="64" rx="8"/>
+<text class="t" x="420" y="287">검사 바이트 재계산</text>
+<text class="s" x="420" y="307">설정 +0xC · +0xD</text>
+<rect class="b ok" x="608" y="260" width="176" height="64" rx="8"/>
+<text class="t" x="620" y="287">응답 기록</text>
+<text class="s" x="620" y="307">명령 +4에 0x19</text>
+<path class="e model" d="M184 292H206" marker-end="url(#dg-cmd-ahm)"/>
+<path class="e" d="M384 292H406" marker-end="url(#dg-cmd-ah)"/>
+<path class="e" d="M584 292H606" marker-end="url(#dg-cmd-ah)"/>
+</svg>
+</div>
+<ul class="dg-legend"><li><i class="ok"></i>원본 코드 실행으로 확인</li><li><i class="model"></i>준비해 넣은 값·프레임</li><li><i class="open"></i>실행하지 않은 구간</li><li><i class="key"></i>최종 결과</li></ul>
+<p>파선 화살표는 호출 프레임이나 값을 따로 준비해 이어 붙인 경계입니다. 줄 사이의 연결은 계획 0의 첫 요청(인덱스 0과 1) 하나로 확인했습니다. 모든 계획이 끝까지 완료된다는 뜻이 아닙니다.</p>
+</figure>
+
+<div class="callout"><strong class="label">읽는 법</strong>
+<p>코드 주소는 복호화한 펌웨어 파일 안의 오프셋으로, RAM 주소는 실행 주소(VA)로 적었습니다. 명령 객체는 합성 입력입니다. 실제 통신으로 명령이 도착하거나 카메라 메뉴에서 이벤트가 일어나는 과정을 재현한 것이 아닙니다.</p></div>
+</section>
+
+<section id="plan">
+<h2>유형 2·하위 코드 4 명령이 작업 계획을 만듭니다</h2>
+<p class="takeaway">명령 처리기는 입력 첫 워드(0~4)에 따라 다룰 디스크립터 인덱스 쌍을 정하고, 요청을 스택에 만든 뒤 그 포인터 목록을 작업자에게 복사합니다.</p>
+
+<div class="table-wrap"><table class="fit">
+<caption>입력 첫 워드별 작업 계획 <span class="badge ok">확인</span></caption>
+<thead><tr><th>입력 첫 워드</th><th>디스크립터 인덱스 쌍</th><th>요청 종류 바이트</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>0/1, 2/3, 4/5</td><td>0, 0, 0</td></tr>
+<tr><td>1</td><td>6/7, 8/9</td><td>2, 3</td></tr>
+<tr><td>2</td><td>10/11, 12/13</td><td>4, 5</td></tr>
+<tr><td>3</td><td>14/15, 16/17</td><td>6, 7</td></tr>
+<tr><td>4</td><td>24/25</td><td>8</td></tr>
+<tr><td>5, <code>0xFFFFFFFF</code> (각각 대조)</td><td>0/0 (기본 경로)</td><td>0</td></tr>
+</tbody></table></div>
+<p>계획에 나오는 인덱스는 0~17과 24, 25입니다. <a href="preserved-config.html#validation">검사 바이트를 만드는 두 그룹</a>의 인덱스와 같은 집합입니다. 입력 0은 그룹 1(인덱스 0~5)을, 입력 1~4는 그룹 2를 다룹니다.</p>
+
+<p>명령 처리기는 명령 객체에서 유형과 하위 코드를 읽습니다. 유형 2, 하위 코드 4이면 계획 함수로 들어갑니다. 계획 함수는 촬영 서비스에서 설정 객체를 조회해 스택에 보관해 두고, 입력 첫 워드로 계획을 고릅니다. 하위 코드 7을 넣은 대조에서는 <code>0x81</code>을 반환했고 작업 목록을 넘기지 않았습니다.</p>
+
+<h3>요청이 작업자에게 넘어가는 방식</h3>
+<p>요청 자체는 계획 함수의 스택에 그대로 남습니다. 작업자에게 복사되는 것은 요청을 가리키는 포인터 목록(<code>0x40</code>바이트)입니다. 각 포인터가 실제로 스택의 요청 주소를 가리키는지 확인했습니다.</p>
+<p>작업자는 자기 플래그의 비트 하나가 켜져 있을 때만 목록을 처리합니다. 잠금 뒤의 원본 구간에 값 2를 주면 플래그에 그 비트가 더해졌고, 비트가 없는 대조에서는 작업자가 목록 처리를 건너뛰었습니다.</p>
+<p class="small muted">작업자의 스택과, 잠금 이후 플래그 저장 구간의 레지스터는 준비한 값입니다. 실제 스케줄링·깨우기·대기는 실행하지 않았습니다.</p>
+
+<details class="evidence"><summary>명령 분기, 요청 필드, 복사 구간의 주소</summary>
+<dl class="kv">
+<dt>명령 처리기</dt><dd><code>0x7B5954</code>. 명령 <code>+0x858</code>(유형), <code>+0x859</code>(하위 코드)를 읽고 <code>0x7B5A00</code>·<code>0x7B5A9C</code>를 거쳐 계획 함수 <code>0x7B4EB4</code>로</dd>
+<dt>설정 객체 보관</dt><dd>계획 함수 스택 <code>+0x11C</code></dd>
+<dt>요청 크기와 목록</dt><dd>요청 하나 <code>0x1C</code>바이트. 포인터 목록은 스택 <code>+0xC4</code>, 끝은 0으로 표시</dd>
+<dt>목록 복사</dt><dd><code>0x7B5124</code> → <code>0x632CC4</code>. <code>0x632CD4</code>의 복사 함수 <code>0x712898</code>이 작업자 <code>+0x28C</code>에 <code>0x40</code>바이트를 복사. 실행은 <code>0x632CD8</code> 직전에서 정지</dd>
+<dt>작업자 플래그</dt><dd>구간 <code>0x630DC4</code>…<code>0x630DD4</code>가 작업자 <code>+0x380</code>에 값을 OR로 저장. <code>0x6366D0</code>이 값 2의 비트를 검사. 비트가 없으면 <code>0x6366FC</code>까지 목록 호출 없이 진행</dd>
+<dt>정적 대조</dt><dd>분기 35곳, 워드 28개, 완료 마스크 표의 16비트 값 10개. 실행 중 대체한 명령 없음</dd>
+</dl>
+<div class="table-wrap"><table class="compact fit">
+<caption>요청 한 개의 필드 (시험 입력에서 대조한 값)</caption>
+<thead><tr><th>요청 안 위치</th><th>내용</th></tr></thead>
+<tbody>
+<tr><td><code>+0</code> (1바이트)</td><td>항상 1</td></tr>
+<tr><td><code>+1</code> (1바이트)</td><td>요청 종류</td></tr>
+<tr><td><code>+4</code>, <code>+8</code></td><td>디스크립터 인덱스 쌍</td></tr>
+<tr><td><code>+0xC</code>, <code>+0x10</code></td><td>명령의 입력 워드 두 개를 그대로</td></tr>
+<tr><td><code>+0x14</code> (16비트)</td><td>명령의 입력 워드에 <code>0x1000</code>을 더한 값의 하위 16비트</td></tr>
+<tr><td><code>+0x18</code> (1바이트)</td><td>계획 0의 둘째·셋째 요청만 1, 나머지는 0</td></tr>
+</tbody></table></div>
+</details>
+</section>
+
+<section id="worker">
+<h2>작업자의 결과가 개수를 바꾸고, 갱신 함수가 검사 바이트를 다시 계산합니다</h2>
+<p class="takeaway">결과의 첫 바이트가 0이면 개수는 그대로 두고 길이만 갱신합니다. 0이 아니면 개수와 길이를 모두 갱신합니다. 그 뒤 갱신 함수를 부르는 조건은 호출자마다 다릅니다.</p>
+
+<p>작업자는 요청의 두 인덱스 워드를 8비트로 줄이고, 촬영 서비스에서 같은 설정 객체를 조회합니다. 여기까지 원본 코드로 실행했습니다. 계산 함수는 실행하지 않고, 원본이 결과를 읽는 스택 위치에 값을 직접 넣은 뒤 그다음 호출자 코드를 실행했습니다.</p>
+
+<div class="table-wrap"><table>
+<caption>준비한 결과와 그 뒤의 관찰 3건 <span class="badge ok">확인</span> <span class="badge model">모델</span> (인덱스 0과 1)</caption>
+<thead><tr><th class="n">결과의 첫 바이트</th><th>결과에 넣은 개수</th><th>호출된 함수</th><th>갱신 뒤 개수</th><th>설정 +0xC / +0xD</th><th>준비한 대기 반환값</th></tr></thead>
+<tbody>
+<tr><td class="n">0</td><td>2, 3</td><td>길이 2회</td><td>1, 1 (유지)</td><td>1 / 1</td><td>0</td></tr>
+<tr><td class="n">1</td><td>2, 1</td><td>개수 2회, 길이 2회</td><td>2, 1</td><td>0 / 1</td><td>0</td></tr>
+<tr><td class="n">1</td><td>1, 1</td><td>개수 2회, 길이 2회</td><td>1, 1</td><td>1 / 1</td><td><code>0x3FF</code></td></tr>
+</tbody></table></div>
+<p>세 사례는 차례로 “개수 유지”, “<code>+0xC</code>만 무효화”, “복구”입니다. 사례마다 ID 0x63과 0x64의 RAM 전체를 비교해, 요청한 개수 워드만 바뀌었는지 확인했습니다.</p>
+
+<h3>갱신 함수를 부르는 두 호출자</h3>
+<div class="table-wrap"><table>
+<caption>호출 조건의 차이 <span class="badge ok">확인</span></caption>
+<thead><tr><th>호출자</th><th>갱신 함수를 부르는 조건</th><th>관찰</th></tr></thead>
+<tbody>
+<tr><th scope="row">명령 처리기 (대기 뒤)</th><td>조건 없음. 준비한 대기 반환값이 0이어도 호출</td><td>같은 설정 객체로 호출한 뒤 명령 <code>+4</code>에 <code>0x19</code>, <code>+8</code>에 반환값을 기록</td></tr>
+<tr><th scope="row">다른 호출자</th><td>결과 마스크가, 표의 비트 열 개를 모두 합친 값과 정확히 같을 때만</td><td><code>0x3FF</code>는 호출. <code>0x1FF</code>와 <code>0x7FF</code>는 호출 없이 복원 함수 진입 직전으로 진행</td></tr>
+</tbody></table></div>
+<p class="small muted">둘째 호출자의 시험은 작업자가 돌아온 직후에서 시작했습니다. 앞선 계산, 복원 함수의 본문, 이후의 플래시 저장은 실행하지 않았습니다.</p>
+
+<h3>인덱스 범위 밖의 요청</h3>
+<p>계획 함수가 만들지 않는 요청을 따로 넣어 보았습니다. 인덱스 워드 <code>0x101</code>과 26을 주면 작업자는 이를 1과 26으로 줄였습니다. 개수 함수는 인덱스가 26보다 작을 때만 저장하므로 26에 대한 저장은 일어나지 않았고, 설정 객체에서 바뀐 것은 인덱스 1의 개수뿐이었습니다. 이 요청은 앞의 계획이 만든 값이 아니라 경계 동작을 보려고 넣은 값입니다.</p>
+
+<details class="evidence"><summary>작업자와 갱신 호출자의 주소</summary>
+<dl class="kv">
+<dt>작업자 진입과 요청 조회</dt><dd><code>0x636694</code> → <code>0x6355D0</code> → <code>0x6352A0</code>. 실행은 <code>0x6352D4</code> 직전에서 정지</dd>
+<dt>계산 함수</dt><dd><code>0x63495C</code> (실행하지 않음)</dd>
+<dt>결과 구조</dt><dd>작업자 스택 <code>+0xF8</code>. 첫 바이트, 개수 둘, 길이 둘의 순서</dd>
+<dt>결과를 읽는 호출자</dt><dd><code>0x635534</code>…<code>0x6355B4</code>. 개수 함수 <code>0x74F974</code>를 <code>0x635568</code>·<code>0x635580</code>에서, 길이 함수 <code>0x74F944</code>를 <code>0x635598</code>·<code>0x6355B0</code>에서 호출</dd>
+<dt>명령 처리기의 갱신 호출</dt><dd><code>0x7B5128</code>…<code>0x7B5150</code>. 스택 <code>+0x11C</code>의 설정 객체로 <code>0x7B5130</code> → <code>0x74ED98</code></dd>
+<dt>다른 호출자</dt><dd><code>0x635F4C</code>부터. 마스크 표 <code>0xA49110</code>의 16비트 값 10개(비트 0~9). 일치하면 <code>0x635F80</code> → <code>0x74ED98</code>, 아니면 복원 함수 <code>0x74FA8C</code>를 부르는 <code>0x635FB4</code>로</dd>
+<dt>범위 밖 요청의 호출 기록</dt><dd>개수 함수 (인덱스 1, 값 3), (26, 9). 길이 함수 (1, 4), (26, <code>0xAABBCCDD</code>). 설정 객체의 변화는 인덱스 1의 개수 한 워드</dd>
+</dl>
+</details>
+</section>
+
+<section id="packet">
+<h2>패킷 처리기는 공급자를 고른 뒤 명령 버퍼를 블록 함수로 넘깁니다</h2>
+<p class="takeaway">공급자 선택과 블록 번호는 따로 다뤄집니다. 선택이 틀리면 상태 <code>0x83</code>으로 거부됩니다. 블록 번호는 명령 버퍼에 실린 채 ID 0x63의 패킷 함수까지 전달됩니다.</p>
+
+<div class="table-wrap"><table class="fit">
+<caption>패킷 처리기의 하위 코드 <span class="badge ok">확인</span></caption>
+<thead><tr><th>하위 코드</th><th>공급자 선택</th><th>동작</th></tr></thead>
+<tbody>
+<tr><td>6 / 7</td><td>입력 첫 워드 <code>0x63</code>을 그대로 ID로 사용</td><td>쓰기 / 읽기</td></tr>
+<tr><td>10 / 11</td><td>입력 첫 워드 3을 ID <code>0x63</code>으로 변환</td><td>쓰기 / 읽기</td></tr>
+</tbody></table></div>
+
+<figure class="diagram">
+<figcaption>패킷 명령이 RAM 사본에 닿기까지와 건너뛴 구간</figcaption>
+<div class="dg-scroll">
+<svg class="dg" viewBox="0 0 800 244" role="img" aria-labelledby="dg-pkt-title dg-pkt-desc">
+<title id="dg-pkt-title">패킷 처리기의 실행 경로와 생략한 구간</title>
+<desc id="dg-pkt-desc">합성 명령 버퍼에서 출발해 처리기 앞부분이 하위 코드를 읽는 데까지 실행했습니다. 그다음의 상태 사본 생성과 검사는 건너뛰었습니다. 공급자 선택부터 다시 실행해 공급자의 가상 함수, ID 0x63의 패킷 함수, RAM 사본의 블록까지 이어졌습니다. 바깥의 정리와 반환은 실행하지 않고 그 직전에서 멈췄습니다. 잘못된 공급자 선택은 패킷 함수에 가지 않고 상태 0x83으로 정지점에 이릅니다.</desc>
+<defs><marker id="dg-pkt-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker>
+<marker id="dg-pkt-aho" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah open" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="b model" x="8" y="16" width="176" height="64" rx="8"/>
+<text class="t" x="20" y="43">합성 명령 버퍼</text>
+<text class="s" x="20" y="63">하위 코드 · 선택값 · 블록</text>
+<rect class="b ok" x="208" y="16" width="176" height="64" rx="8"/>
+<text class="t" x="220" y="43">앞부분 0x83DC2C</text>
+<text class="s" x="220" y="63">하위 코드 읽기</text>
+<rect class="b open" x="408" y="16" width="176" height="64" rx="8"/>
+<text class="t" x="420" y="43">상태 사본 검사</text>
+<text class="s" x="420" y="63">건너뜀</text>
+<rect class="b ok" x="608" y="16" width="176" height="64" rx="8"/>
+<text class="t" x="620" y="43">공급자 선택</text>
+<text class="s" x="620" y="63">직접 0x63 · 입력 3 변환</text>
+<path class="e" d="M184 48H206" marker-end="url(#dg-pkt-ah)"/>
+<path class="e open" d="M384 48H406" marker-end="url(#dg-pkt-aho)"/>
+<path class="e open" d="M584 48H606" marker-end="url(#dg-pkt-aho)"/>
+<path class="e" d="M696 80V106H96V132" marker-end="url(#dg-pkt-ah)"/>
+
+<rect class="b ok" x="8" y="134" width="176" height="64" rx="8"/>
+<text class="t" x="20" y="161">공급자 가상 함수</text>
+<text class="s" x="20" y="181">쓰기 +0x2C · 읽기 +0x30</text>
+<rect class="b ok" x="208" y="134" width="176" height="64" rx="8"/>
+<text class="t" x="220" y="161">ID 0x63 패킷 함수</text>
+<text class="s mono" x="220" y="181">0x72E0EC · 0x72E130</text>
+<rect class="b key" x="408" y="134" width="176" height="64" rx="8"/>
+<text class="t" x="420" y="161">RAM 사본의 블록</text>
+<text class="s mono" x="420" y="181">0x80000000</text>
+<rect class="b open" x="608" y="134" width="176" height="64" rx="8"/>
+<text class="t" x="620" y="161">바깥 정리 · 반환</text>
+<text class="s" x="620" y="181">0x83E434에서 정지</text>
+<path class="e" d="M184 166H206" marker-end="url(#dg-pkt-ah)"/>
+<path class="e" d="M384 166H406" marker-end="url(#dg-pkt-ah)"/>
+<path class="e open" d="M584 166H606" marker-end="url(#dg-pkt-aho)"/>
+<text class="n" x="8" y="228">잘못된 공급자 선택(직접 0x66, 변환 입력 16)은 패킷 함수에 가지 않고 상태 0x83으로 정지점에 이릅니다.</text>
+</svg>
+</div>
+<ul class="dg-legend"><li><i class="ok"></i>원본 코드 실행으로 확인</li><li><i class="model"></i>합성 입력</li><li><i class="open"></i>건너뛰거나 실행하지 않은 구간</li><li><i class="key"></i>읽고 쓰는 대상</li></ul>
+<p>쓰기 경로는 공급자 가상 함수로 가는 중간에도 같은 종류의 상태 검사와 정리 구간이 있어, 그 부분도 건너뛰었습니다. 읽기 경로는 공급자 선택부터 패킷 함수까지 끊지 않고 실행했습니다.</p>
+</figure>
+
+<div class="callout fix"><strong class="label">정정</strong>
+<p>이 문서의 이전 판은 건너뛴 구간을 패킷 “잠금”이라고 적었습니다. 그 표기는 철회했습니다. 이 구간은 잠금이 아니라 상태 사본을 만들고 그 필드를 검사하는 코드입니다. 바깥 조건은 필드 2가 2 또는 3인지, 쓰기 안쪽 조건은 필드 0이 1인지를 봅니다. 시험에서는 이 구간을 실행하지 않았으므로, 그 판정이 어떻게 나오는지는 말할 수 없습니다.</p></div>
+
+<h3>명령 버퍼의 배치</h3>
+<div class="table-wrap"><table class="fit">
+<caption>쓰기와 읽기에서 명령 버퍼를 쓰는 방식</caption>
+<thead><tr><th>명령 버퍼 위치</th><th>쓰기 요청</th><th>읽기 요청</th></tr></thead>
+<tbody>
+<tr><td><code>+4</code></td><td>출력 길이(0으로 초기화)</td><td>응답: 돌려준 워드 수</td></tr>
+<tr><td><code>+8</code></td><td>공급자 선택값</td><td>공급자 선택값. 응답 본문이 여기부터 기록됨</td></tr>
+<tr><td><code>+0xC</code></td><td>블록 번호. 패킷 인수가 여기를 가리킴</td><td>블록 번호</td></tr>
+<tr><td><code>+0x10</code>부터</td><td>블록 0이면 헤더 워드, 이어서 본문</td><td>—</td></tr>
+</tbody></table></div>
+<p>쓰기 호출자는 명령 <code>+0xC</code>를, 읽기 호출자는 <code>+8</code>을 패킷 인수로 넘깁니다. 읽기 함수는 패킷 인수의 <code>+4</code>에서 블록 번호를 얻기 때문에 두 배치가 다릅니다.</p>
+
+<h3>왕복 시험과 거부 시험</h3>
+<p>직접 선택(하위 코드 6·7)과 변환 선택(10·11) 각각에서 블록 0·1·31을 써 넣고 다시 읽었습니다. 여섯 쌍 모두에서 레코드 전체와 이웃 RAM, 명령의 응답과 그 뒤에 남은 바이트를 대조했습니다. 돌려준 워드 수는 블록 0·1·31에서 513·512·508이었습니다.</p>
+<p>잘못된 직접 선택 <code>0x66</code>과 변환 입력 16은 쓰기·읽기 모두 정지점에서 상태 레지스터가 <code>0x83</code>이었고, ID 0x63의 함수에는 닿지 않았습니다. 이것은 공급자 선택에 대한 검사입니다. 블록 번호에 대한 검사가 아닙니다.</p>
+
+<div class="callout warn"><strong class="label">블록 번호 32에 대해</strong>
+<p>하위 코드 10, 변환 입력 3에 블록 번호 32를 주면, 위의 생략 구간을 지난 경로에서 첫 저장 예정 주소가 <code>0x80010010</code>이 됐습니다. 이 주소는 ID 0x63 구역 밖입니다(<a href="preserved-sector20.html#chunks">블록 배치</a>). 실행은 저장 명령 직전에 멈췄고 RAM은 바뀌지 않았습니다. 이 결과는 준비한 명령 객체와, 상태 검사를 건너뛴 조건에서의 주소 계산만 보여 줍니다. 실제 통신 입력으로 그 상태에 이를 수 있는지, 장치에 취약성이 있는지는 확인하지 않았습니다.</p></div>
+
+<details class="evidence"><summary>패킷 처리기의 주소와 생략 경계</summary>
+<dl class="kv">
+<dt>처리기 앞부분</dt><dd><code>0x83DC2C</code>…<code>0x83DC5C</code> 직전. 명령 <code>+0x859</code>의 하위 코드를 읽고 출력 길이 <code>+4</code>를 0으로 초기화</dd>
+<dt>다시 진입한 곳</dt><dd><code>0x83DC98</code>(분기와 공급자 선택). 쓰기 경로는 <code>0x83DB0C</code>에서 멈춘 뒤 <code>0x83DB4C</code>와 <code>0x83DB40</code>에서 이어 실행</dd>
+<dt>공급자 가상 함수</dt><dd>쓰기는 슬롯 <code>+0x2C</code> → <code>0x72E1F8</code> → <code>0x72E0EC</code>, 읽기는 슬롯 <code>+0x30</code> → <code>0x72E200</code> → <code>0x72E130</code>. 두 패킷 함수의 첫 인수는 고정 RAM <code>0x80000000</code></dd>
+<dt>정지점</dt><dd><code>0x83E434</code> (바깥 정리·반환 전). 상태 레지스터는 R4</dd>
+<dt>블록 번호 32</dt><dd>저장 명령 <code>0x72E08C</code> 직전에서 정지</dd>
+<dt>건너뛴 구간의 구성 (정적 분석)</dt><dd><code>0x6EB310</code> 상태 사본 생성자, <code>0x6EB44C</code> → <code>0x50F550</code> 13바이트 상태 복사, <code>0x6EB620</code> 표를 이용한 필드 조회, <code>0x6EB60C</code> 소멸자(<code>0x520500</code>으로 이어져 바로 반환)</dd>
+</dl>
+<p class="small">왕복 6쌍의 호출 순서와 레코드 해시, 거부 4건은 <a href="preserved-dispatch.json">preserved-dispatch.json</a>의 <code>packets</code>에 있습니다.</p>
+</details>
+</section>
+
+<section id="limits">
+<h2>한계와 남은 과제</h2>
+<p id="scope">실행 중 다른 코드로 바꾼 명령은 없습니다. 다만 시험마다 시작 상태를 준비했고 건너뛴 구간이 있습니다.</p>
+<ul>
+<li><strong>명령의 출처</strong> — 명령 객체를 실제로 만드는 쪽(통신 수신, 메뉴 이벤트)은 추적하지 않았습니다. 이 명령의 선택값을 SuperResolution이나 일반 촬영 메뉴의 값과 같다고 보지 않습니다.</li>
+<li><strong>계산과 대기</strong> — 잠금, 스케줄러, 계산의 완료는 실행하지 않았습니다. 계산 결과와 대기 반환값은 준비한 값입니다.</li>
+<li><strong>연결의 범위</strong> — 계획과 작업자, 갱신을 이어 본 것은 계획 0의 첫 요청 하나입니다. 일곱 입력의 계획 내용은 각각 따로 확인했습니다.</li>
+<li><strong>패킷 처리기의 상태 검사</strong> — 건너뛴 구간의 실제 판정과, 그 판정이 블록 번호 32 같은 입력을 막는지는 모릅니다.</li>
+<li><strong>기록</strong> — 원격 전달과 물리 플래시 기록은 실행하지 않았습니다.</li>
+</ul>
+<p>설정 객체의 검사 바이트가 만들어지는 과정은 <a href="preserved-config.html">정책 플래그의 생산자</a>에서, RAM 적재와 저장 준비는 <a href="preserved-sector20.html">보존 섹터 20·21과 정책 입력</a>에서 따로 확인했습니다.</p>
+</section>
+
+<section id="reproduce">
+<h2>재현 방법</h2>
+<p>검증기는 복호화한 펌웨어(<a href="firmware-structure.html">펌웨어 파일 구조와 복호화</a>)를 입력으로 받습니다. 원본 해시와 명령을 대조한 뒤 Unicorn 에뮬레이터의 Cortex-A9 모델에서 정해 둔 구간을 실행합니다.</p>
+<dl class="kv">
+<dt>복호화 파일 SHA-256</dt><dd><code class="wrap">1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc</code></dd>
+<dt>Python 패키지</dt><dd><code>unicorn==2.1.4</code></dd>
+</dl>
+<pre><code>python inspect_firmware.py &lt;fwdc230b.bin 경로&gt; --output-dir .private/decoded
+python verify_preserved_dispatch.py .private/decoded/decoded.bin --compare analysis/preserved-dispatch.json</code></pre>
+</section>
+
+<section id="refs">
+<h2>근거 파일과 참고 자료</h2>
+<ul class="refs">
+<li><a href="preserved-dispatch.json">preserved-dispatch.json</a> — 계획 7건과 거부 1건, 연결 3건, 인덱스 경계, 완료 마스크 3건, 패킷 왕복 6쌍과 거부 4건, 블록 번호 32</li>
+<li><a href="../verify_preserved_dispatch.py">verify_preserved_dispatch.py</a> — 원본 명령 대조와 실행 코드, 준비한 값과 정지점의 정의</li>
+<li><a href="hq-status.json">hq-status.json</a> — 연구 목표별 상태와 남은 과제 기록</li>
+<li>관련 문서: <a href="preserved-config.html">정책 플래그의 생산자</a> · <a href="preserved-sector20.html">보존 섹터 20·21과 정책 입력</a> · <a href="pixel-policy.html">픽셀 보정 활성값과 준비 분기</a></li>
+<li>외부 자료: <a href="https://github.com/unicorn-engine/unicorn">Unicorn CPU 에뮬레이터</a></li>
+</ul>
+</section>
+
+</main>
+</div>
+<!-- chrome:bottom -->
+<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">촬영 준비와 보존 레코드 — 이 주제의 문서</h2><ol><li><a href="guide-capture.html">촬영 준비·보존 레코드 안내</a></li><li><a href="capture-prepare.html">촬영 준비의 연속 호출</a></li><li><a href="store-image-records.html">JPEG 완료값과 저장 레코드</a></li><li><a href="pixel-policy.html">픽셀 보정 활성값과 준비 분기</a></li><li><a href="pixel-records.html">보존 픽셀 레코드와 촬영 패킷</a></li><li><a href="preserved-record.html">보존 섹터 14의 진단 레코드</a></li><li><a href="preserved-sector20.html">보존 섹터 20·21과 정책 입력</a></li><li><a href="preserved-config.html">정책 플래그의 생산자</a></li><li><a href="preserved-dispatch.html" aria-current="page">보존 레코드의 상위 명령 경로</a></li><li><a href="settings-storage.html">보존 섹터의 설정 저장</a></li></ol></nav>
+<nav class="pager" aria-label="이전·다음 문서"><a class="prev" href="preserved-config.html"><small>← 이전</small>정책 플래그의 생산자</a><a class="next" href="settings-storage.html"><small>다음 →</small>보존 섹터의 설정 저장</a></nav>
+<footer class="sitefoot"><div class="sitefoot-in"><nav aria-label="사이트"><a href="../index.html#map">문서 지도</a><a href="../index.html#levels">검증 수준 읽는 법</a><a href="../glossary.html">용어집</a><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/research-program.html">세 기종 연구 본부</a><a href="https://github.com/yunhyok/pentax-k3ii-firmware-analysis">GitHub 저장소</a></nav><p>PENTAX K-3 II 펌웨어 1.12 분석 문서. PC에서 수행한 정적 분석과 에뮬레이션 결과이며, 카메라 실기에서 검증한 내용이 아닙니다. 원본 펌웨어와 복호화한 바이너리는 포함하지 않습니다.</p></div></footer>
+<!-- /chrome:bottom -->
+</body>
+</html>

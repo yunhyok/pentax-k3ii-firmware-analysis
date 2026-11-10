@@ -1,43 +1,514 @@
 <!doctype html>
-<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="K-3 II 원본 촬영 준비 함수의 아홉 가상 호출과 픽셀 정책 입력 생산을 연속 실행으로 검증."><title>K-3 II — 촬영 준비의 입력 생산과 버퍼 보존</title><link rel="stylesheet" href="../assets/report.css"></head>
-<body><header><div class="eyebrow">PENTAX K-3 II · firmware 1.12 · 2026-11-08</div><h1>촬영 준비의 입력 생산과<br>원본 함수 반환까지의 버퍼 보존</h1><p class="lead">앞선 분할 실험에서 생략했던 중간 호출을 원본 코드로 실행했다. 같은 작업 객체에서 정책 입력을 생산하고, 별도 대조에서는 준비 함수가 호출자에게 반환할 때까지 포인터와 메모리의 변화를 확인했다. 실제 촬영 작업의 실행 이력은 검증 범위에 포함하지 않았다.</p><nav aria-label="보고서 탐색"><a href="pixel-policy.html">정책 본문</a><a href="#chain">연속 호출</a><a href="#inputs">입력 생산</a><a href="#threshold">활성 조건</a><a href="#return">반환·버퍼 보존</a><a href="#scope">실행 범위</a></nav></header><main>
-<p class="note">코드 주소는 해제 파일 오프셋이다. 컨텍스트는 같은 촬영 작업 객체이며 A·B·C는 앞선 정책 보고서의 입력 이름이다. 이 값의 물리 단위나 메뉴 이름은 아직 확정하지 않았다.</p>
-<p class="note">후속: <a href="store-image-records.html">같은 내장 레코드를 저장 이벤트와 요청에 다시 사용하는 경로</a>를 별도 원본 실행으로 검증했다.</p>
-<section aria-labelledby="chain"><h2 id="chain">1. 첫 세 호출 뒤 분기하고, 통과하면 정책까지 여섯 호출이 이어진다</h2>
-<figure><figcaption>도식 1. 중간 실행을 생략하지 않은 준비 경로</figcaption><div class="flow" role="group" aria-label="준비함수가 세 호출로 입력을 만든 후 작업종류에 따라 건너뛰거나 나머지 다섯 생산자와 정책을 호출">
-<div class="stage"><strong>0x6552B0 · 종류와 초기 입력</strong><span>+0x2084에 내부 작업 종류 기록<br>슬롯 0x1C → 0x70 → 0x30<br>+0x5F · +0x4F · +0x52 생산</span></div><div class="arrow" aria-hidden="true">→</div>
-<div class="stage"><strong>0x65537C · 원본 분기</strong><span>종류 5·7·8·11 → 0x655400<br>나머지 시험 종류 → 0x655380<br>21개 앞부분 대조로 확인</span></div><div class="arrow" aria-hidden="true">→</div>
-<div class="stage"><strong>슬롯 다섯 개 → 정책 +0x28</strong><span>+0x240와 +0x3C 등을 원본 생산<br>0x65EA68이 같은 객체를 소비<br>정책 반환 뒤 0x6553E0에서 정지</span></div></div><p class="caption">연속 대조 21건에는 실행 함수 대체가 없다. 0x6553E0은 이번 실험의 정지점이며 준비 함수 자체의 반환점이 아니다.</p></figure>
-<p>원본 가상 함수 표 <code>0xA684E0</code>을 컨텍스트에 연결했다. 앞부분 대조 21건은 종류 0~11의 기본 조건 12건과 입력을 바꾼 9건이다. 세 호출을 거친 뒤에도 종류 5·7·8·11은 정책 블록을 건너뛰었다. 별도 연속 대조 21건에서는 같은 객체로 아홉 호출에 모두 진입하고 정책이 반환하는 것을 확인했다. <a href="capture-prepare.json">호출 주소·슬롯·전체 실행 결과</a></p>
-<table><caption>원본 준비 코드의 호출 순서</caption><thead><tr><th>호출 위치</th><th>가상 슬롯 → 대상</th><th>확인한 역할</th></tr></thead><tbody>
-<tr><td>0x655350</td><td>0x1C → 0x65E5A8</td><td>루트 키 0 → +0x5F</td></tr><tr><td>0x655360</td><td>0x70 → 0x65FE58</td><td>루트 키 0x2F → +0x4F, 설정 F1/F2 → +0x20B8</td></tr><tr><td>0x655370</td><td>0x30 → 0x65ED80</td><td>자식 키 0x22·디버그 0x66 → +0x52</td></tr><tr><td>0x65538C</td><td>0x38 → 0x65EED0</td><td>정책 입력 A, +0x240 생산</td></tr><tr><td>0x65539C</td><td>0x34 → 0x65ED98</td><td>+0x7E/+0x288과 태그 0xE/0xF 갱신</td></tr><tr><td>0x6553AC</td><td>0x20 → 0x65E5E4</td><td>설정 0x95·임계값·디버그 → +0x3C</td></tr><tr><td>0x6553BC</td><td>0x7C → 0x6601B8</td><td>+0x68/+0x2BC 갱신</td></tr><tr><td>0x6553CC</td><td>0x24 → 0x65E7B0</td><td>ID 0x62 조회 후 고정 미러 소비, +0x3D·태그 생산</td></tr><tr><td>0x6553DC</td><td>0x28 → 0x65EA68</td><td>픽셀 정책, 최종 +0x47…+0x4A 생산</td></tr>
-</tbody></table>
-<p>이 결과는 <a href="pixel-policy.html#prepare">앞선 분할 준비 실험</a>에서 남겨 둔 중간 호출의 상태 보존 가정을 해당 입력들에서 해소한다. 종류 11과 Pixel Shift Resolution의 메뉴 연결은 <a href="superresolution-lifecycle.html">별도 메뉴·수명 분석</a>에 근거한다. 여기서는 작업 종류를 입력으로 주었으므로 메뉴 조작부터 준비 함수까지를 한 번에 실행한 것은 아니다.</p>
-</section><section aria-labelledby="inputs"><h2 id="inputs">2. 조회 키의 비트와 고정 미러가 정책 입력을 만든다</h2>
-<p>루트 리더는 원본 <code>0x6EBF5C</code>, 자식 리더는 <code>0x6EAD78</code>로 생성했다. 루트 키 0의 바이트가 0x09 또는 0x0C이면 <code>+0x5F=1</code>이 된다. 키 0x2F는 <code>+0x322</code>의 비트 1이며 <code>+0x4F</code>로 전달된다. 이 비트가 켜지면 설정 F1/F2의 0x12·0x34를 원본 <code>0x82E6F4</code>가 합쳐 <code>+0x20B8=0x1234</code>로 쓴다. 꺼진 대조에서는 두 필드 모두 0이었다. <a href="capture-prepare.json">리더 입력과 보존된 출력</a></p>
-<figure><figcaption>도식 2. 같은 키 0x38에서 정책 입력 A가 바뀌는 대조</figcaption><div class="flow" role="group" aria-label="자식키22가 만든플래그52에 따라 키6인덱스를8낮추며 디버그66은플래그를지워결과를바꿈">
-<div class="stage"><strong>자식 키 0x22 = 1</strong><span>컨텍스트+0x35B의 비트 3<br>원본 0x65ED80 → +0x52=1<br>디버그 0x66은 이 값을 해제</span></div><div class="arrow" aria-hidden="true">→</div>
-<div class="stage"><strong>자식 키 6 = 0x38</strong><span>+0x52=1 → 인덱스에서 8을 뺌<br>0x38 → 0x30, 하위 8비트 사용<br>파일 0x9E651C의 워드 조회</span></div><div class="arrow" aria-hidden="true">→</div>
-<div class="stage"><strong>원본 +0x240 저장</strong><span>일반 대조 A=0x8000<br>디버그 0x66 대조 A=0x10000<br>정책 조회 인수에서 같은 값 확인</span></div></div><p class="caption">고정 미러 등 다른 입력은 준비한 값으로 유지했다. 실제 감도·노출 시간 등의 단위를 부여한 도식이 아니다.</p></figure>
-<p>A 생산 함수는 기본 배율 0x2000으로 시작한다. ID 8 조회 뒤의 <code>0x73E760</code>은 고정 RAM <code>0x4041F420</code>을 돌려준다. 무효 마커에서는 기본 배율을 유지했고 유효 마커와 다음 halfword 0x4000을 준비하면 키 6=0x30의 A가 0x8000에서 0x10000으로 바뀌었다. 자식 키 0x22와 디버그 0x66 대조에서는 실제 표 인덱스 보정이 A의 차이를 만들었다. <a href="capture-prepare.json">A 생산자 대조</a></p>
-<p>정책의 강제 조건에 쓰이는 <code>+0x20B6</code>은 앞서 생산한 <code>+0x20B8</code>과 다른 필드다. 루트 키 0x2F와 설정 F5를 1로 두고 <code>+0x20B8=0x1234</code>가 유지되는 상태에서, 준비한 <code>+0x20B6</code>만 1에서 2로 바꾸자 표 조회에서 강제 결과 4로 전환됐다. <code>+0x20B6</code>의 상위 생산자까지 확인한 실험은 아니다. <a href="capture-prepare.json">두 halfword를 분리한 대조</a></p>
-</section><section aria-labelledby="threshold"><h2 id="threshold">3. 설정 0x95와 별도 임계표가 +0x3C를 만든다</h2>
-<p>설정 키 0x95는 이 객체 배치에서 <code>+0x15ED</code>에 있다. 값 0은 <code>+0x60</code> 경로를 켜며 B=0x44에서는 <code>+0x3C=1</code>, B=0x45에서는 0이 됐다. 값 1은 기본 대조에서 <code>+0x3C/+0x60/+0x61</code>을 모두 0으로 남겼다. 값 2는 <code>+0x61</code>을 켜고 원본 <code>0x739A38</code>의 별도 4×8 임계표를 호출했다. <a href="capture-prepare.json">설정별 입력·출력</a></p>
-<p>임계표는 파일 <code>0x9E6202</code>에 있으며 정책의 7개 표와 다르다. A=0x2000, B=0x24에서 준비한 signed16 C 원값 599·600은 10으로 나눈 뒤 59·60이 되고 <code>+0x3C</code>가 0·1로 갈렸다. B=0x44의 임계값 셀은 0이어서 C 원값 32767에서도 꺼졌다. 반면 루트 키 0=9가 만든 별도 플래그를 전달하면 C 원값 −32768에서도 표 검사를 우회해 켜졌다. 디버그 0x25의 설정은 뒤의 0x26이 다시 해제했다. <a href="capture-prepare.json">임계값·0 셀·우회·디버그 우선순위</a></p>
-<p>같은 준비 실행에서 A=0x8000, B=0, C=0, 설정 0x95=1이면 정책 표 결과는 4였다. 내부 작업 종류 0은 최종 <code>+0x47…+0x4A=[1,1,1,1]</code>, 종류 6은 <code>[0,0,0,1]</code>을 만들었다. 앞서 주입했던 A와 강제 플래그 일부를 이번에는 원본 준비 코드가 만들었다. 이 실행을 픽셀 소비자나 JPEG 출력까지 이어 간 것은 아니다. <a href="pixel-policy.html#connected">별도 정책→패킷→이미지 대조</a></p>
-</section><section aria-labelledby="return"><h2 id="return">4. 추가 상태를 준비하면 함수 반환까지 원본으로 실행된다</h2>
-<figure><figcaption>도식 3. 실제 반환 대조에서 유지된 이미지와 초기화된 메타데이터</figcaption><div class="flow" role="group" aria-label="원본슬롯설정이이미지포인터를연결하고 준비함수가이미지는유지하며 여섯객체의메타데이터만초기화한뒤호출자에게반환">
-<div class="stage"><strong>원본 0x654218 · 슬롯 1</strong><span>직접 별칭 인수 r3=1<br>+0x98와 +0x13C에 같은 포인터<br>512바이트 합성 이미지 준비</span></div><div class="arrow" aria-hidden="true">→</div>
-<div class="stage"><strong>0x6552B0 · 준비 실행</strong><span>+0x13C와 이미지에 쓰기 없음<br>내장 레코드 여섯 개 +0x3F0/+0x3F2=0<br>각 0x3FC바이트의 다른 값은 유지</span></div><div class="arrow" aria-hidden="true">→</div>
-<div class="stage"><strong>0x65557C → 0x654EB8</strong><span>BX LR로 호출자 정지 주소에 도달<br>R0=입력 컨텍스트, SP 복원<br>할당·센서·후속 제출은 미실행</span></div></div></figure>
-<table><caption>반환까지의 세 대조 · 배치 입력 +0x20B2=0 · 플래그 순서 +0x47…+0x4A</caption><thead><tr><th>내부 종류</th><th>가상 호출</th><th>초기 → 최종 플래그</th><th>최종 +0x20B4</th></tr></thead><tbody><tr><td>0</td><td>25개</td><td>[0,0,0,0] → [1,1,1,1]</td><td>0x01</td></tr><tr><td>6</td><td>25개</td><td>[0,0,0,0] → [0,0,0,1]</td><td>0x01</td></tr><tr><td>11</td><td>16개</td><td>[0xA1,0xB2,0xC3,0xD4] 유지</td><td>0x40</td></tr></tbody></table>
-<p>별도 반환 대조는 원본 세 번째 리더 생성자 <code>0x6EB764</code>, 싱글턴 생성자 <code>0x4D5F28</code>을 추가로 실행했다. 싱글턴 초기화 가드와 RAM <code>0x4041D51C</code>의 포인터 표를 준비하고 이번 입력에서 선택하는 12번 행의 바이트를 1로 두었다. 별도 원본 생성 구간에서 내장 레코드 여섯 개를 만들고 <code>0x653D74…0x653DC8</code>의 저장 명령으로 컨텍스트 <code>+0xC2C4…+0xC2D8</code>에 연결했다. 이 상태에서 내부 종류 0·6·11은 준비 함수의 실제 반환 명령까지 실행됐다. <a href="capture-prepare.json">반환 대조와 관찰 진입점</a></p>
-<p>종류 0·6은 가상 호출 25개, 종류 11은 16개를 거쳤다. 종류 11은 앞선 정책 블록과 뒤의 슬롯 0x78을 건너뛴다. 이 대조에서 미리 넣은 <code>+0x47…+0x4A</code>의 0xA1·0xB2·0xC3·0xD4는 반환까지 남았다. 원본이 이 네 플래그를 0으로 초기화한 것이 아니다. 마지막 <code>0x6554F4…0x655550</code> 반복문은 포인터 여섯 개가 가리키는 객체의 <code>+0x3F0/+0x3F2</code>만 0으로 썼다. 각 레코드 전체 0x3FC바이트와 인접 대조값으로 바뀐 범위를 확인했다. 이 포인터들은 컨텍스트 <code>+0xA850</code> 안의 내부 주소이며 여섯 번의 별도 할당으로 생성되지 않았다. <a href="../verify_capture_prepare.py">반환 경로·정확한 변경 바이트 검사</a></p>
-<p>생성 구간은 원본 호출 <code>0x653BAC</code>에서 시작해 <code>0x5AA434</code> 직전에 멈췄다. 원본 Thumb 배열 생성 보조 함수가 <code>0x73DD60</code>을 여섯 번 호출하는 부분까지 실행한 것이다. 뒤의 다른 컨테이너 필드 초기화는 할당·RTOS 의존 호출에 도달하므로 생략했다. 전체 컨테이너 생성자를 완료했다고 주장하지 않는다. 이후의 포인터 저장과 준비 함수는 별도 원본 구간으로 실행했다. <a href="capture-prepare.json">생성 경계·레코드 내부 주소</a></p>
-<table><caption>원본 getter가 계산해 저장한 내장 레코드 주소 · 모두 컨텍스트 기준</caption><thead><tr><th>포인터 필드 두 개</th><th>대상 레코드 두 개</th><th>원본 getter</th></tr></thead><tbody><tr><td>+0xC2C4 / +0xC2C8</td><td>+0xA860 / +0xAC5C</td><td>0x72D808</td></tr><tr><td>+0xC2CC / +0xC2D0</td><td>+0xB058 / +0xB454</td><td>0x72D7F4</td></tr><tr><td>+0xC2D4 / +0xC2D8</td><td>+0xB850 / +0xBC4C</td><td>0x72D818</td></tr></tbody></table>
-<p>원본 슬롯 설정 함수의 직접 별칭 분기로 연결한 <code>+0x98/+0x13C</code>는 반환까지 유지됐다. 준비 중 <code>+0x13C</code>와 이미지 영역의 쓰기 관찰은 0회였고 512바이트 전체가 같았다. 별도로 넣은 <code>+0x160/+0x204</code>도 유지됐지만 이 둘의 생산자는 실행하지 않았다. 이 대조는 준비 함수 안의 포인터 보존을 입증하며 연속 촬영 중 할당·재사용, 이미지 처리, 스케일러·CPP 제출을 입증하지 않는다. <a href="superresolution-lifecycle.html">앞선 슬롯·메뉴·작업 수명 분석</a></p>
-</section><section aria-labelledby="scope"><h2 id="scope">5. 고정 미러의 읽기와 공급자 등록은 구분한다</h2>
-<p>ID 8·9·0x62 조회는 빈 레지스트리에서 실행됐다. 뒤의 getter는 조회 결과와 무관하게 고정 RAM 주소를 반환하므로 이 실험이 공급자 등록을 입증하지는 않는다. ID 0x62 뒤의 <code>0x73EF20</code>은 <code>0x40106980</code>을 반환한다. 무효 마커는 짧은 경로를, 유효 마커와 B≥0x7C는 준비한 필드에서 태그를 만드는 경로를 실행했다. 루트 키 0=9를 더한 별도 대조에서는 <code>+0x3D=1</code>도 확인했다. 유효 마커와 낮은 B가 함께 들어가는 부동소수점 경로는 이번 범위 밖이다. <a href="capture-prepare.json">미러·태그·분기 대조</a></p>
-<table><caption>실행한 것과 준비한 것</caption><thead><tr><th>구분</th><th>범위</th></tr></thead><tbody><tr><td>원본 실행</td><td>관리자·싱글턴·중첩 리더 생성자, 내장 레코드 생성 구간·포인터 저장, 슬롯 1 직접 별칭 설정, 준비 함수와 정책 본문</td></tr><tr><td>합성 상태</td><td>컨텍스트, 가상 함수 표 포인터, 초기화 가드, 설정 슬롯, 입력 필드, 미러·마커, 디버그·태그 메모리, 포인터 표 행, 레코드의 두 halfword·인접 대조값</td></tr><tr><td>실행 대체</td><td>없음. 훅은 진입 주소·인수·메모리 쓰기를 관찰</td></tr><tr><td>실행하지 않은 범위</td><td>전체 초기화·컨텍스트 생성자, 컨테이너 생성자의 나머지 부분·외부 할당, RTOS 전달, 센서·JPEG·실물 촬영</td></tr></tbody></table>
-<pre><code>python verify_capture_prepare.py decoded.bin --compare analysis/capture-prepare.json</code></pre><p><a href="../verify_capture_prepare.py">원본 해시 확인과 재현 검증기</a> · <a href="capture-prepare.json">전체 결과</a> · <a href="hq-status.json">후속 과제</a></p>
-</section></main><footer>K-3 II v1.12 · <a href="pixel-policy.html">픽셀 정책</a> · <a href="pixel-records.html">픽셀 레코드</a> · <a href="../index.html">전체 분석</a></footer></body></html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>촬영 준비 함수가 픽셀 보정 정책의 입력을 만드는 순서 — PENTAX K-3 II 펌웨어 연구</title>
+<meta name="description" content="K-3 II 펌웨어의 촬영 준비 함수를 원본 코드 그대로 에뮬레이터에서 실행해, 픽셀 보정 정책의 입력이 어느 호출에서 만들어지는지와 함수가 끝날 때까지 이미지 포인터·내장 레코드가 어떻게 남는지 확인한 기록입니다.">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body data-camera="k3ii">
+<!-- chrome:top -->
+<a class="skip" href="#main">본문 바로가기</a>
+<div class="topbar"><div class="topbar-in"><a class="brand" href="../index.html">PENTAX <b>펌웨어 연구</b></a><div class="cams" aria-label="기종 선택"><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/">K-3 III</a><a href="../index.html" aria-current="true">K-3 II</a><a href="https://yunhyok.github.io/pentax-q7-firmware-analysis/">Q7</a></div><nav class="topnav" aria-label="주제"><a href="../index.html">개요</a><a href="guide-pipeline.html">영상 처리</a><a href="guide-capture.html" aria-current="true">촬영·보존 레코드</a><a href="guide-rebuild.html">재구축·업데이트</a><a href="guide-af.html">AF</a><a href="guide-ui.html">UI</a></nav></div></div>
+<nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../index.html">PENTAX K-3 II</a></li><li><a href="guide-capture.html">촬영 준비와 보존 레코드</a></li><li aria-current="page">촬영 준비의 연속 호출</li></ol></nav>
+<!-- /chrome:top -->
+<header class="page-head">
+<p class="eyebrow">촬영 준비와 보존 레코드 · 촬영 준비 함수</p>
+<h1>촬영 준비 함수가 픽셀 보정 정책의 입력을 만드는 순서</h1>
+<p class="lead">펌웨어에는 촬영 작업 하나를 시작하기 전에 상태를 채워 넣는 준비 함수가 있습니다. 이 함수가 내부에서 부르는 함수들을 건너뛰지 않고 원본 코드로 이어 실행해, 픽셀 보정을 켤지 정하는 값이 어디서 만들어지는지 확인했습니다.</p>
+</header>
+<div class="layout">
+<!-- chrome:toc -->
+<nav class="toc" aria-label="이 문서의 목차"><h2 data-toc="no">이 문서에서</h2><ol><li><a href="#background">배경: 준비 함수와 세 가지 실험</a></li><li><a href="#chain">준비 함수는 가상 호출 25개를 순서대로 부릅니다</a></li><li><a href="#inputs">정책 입력은 조회 키와 고정 RAM 값에서 만들어집니다</a></li><li><a href="#threshold">설정 0x95가 강제 플래그 CAP+0x3C를 정하는 방식</a></li><li><a href="#return">함수가 끝날 때까지 이미지 포인터는 그대로이고 레코드 필드 두 개만 0이 됩니다</a></li><li><a href="#limits">한계와 남은 과제</a></li><li><a href="#reproduce">재현 방법</a></li><li><a href="#refs">근거 파일과 참고 자료</a></li></ol></nav>
+<!-- /chrome:toc -->
+<main class="doc" id="main">
+
+<section class="summary">
+<h2 data-toc="no">핵심 요약</h2>
+<ul>
+<li>준비 함수는 가상 호출 25개를 정해진 순서로 실행합니다. 앞의 여덟 개가 값을 만들고 <strong>아홉 번째가 픽셀 보정 정책 함수</strong>입니다. 이 아홉 개를 원본 코드로 연속 실행한 21개 사례에서, 앞 호출이 만든 값을 정책 함수가 그대로 읽었습니다.</li>
+<li>내부 작업 종류가 5·7·8·11이면 첫 세 호출 뒤에 <strong>정책 함수가 들어 있는 구간을 건너뜁니다</strong>. 다른 21개 사례로 이 분기를 확인했습니다.</li>
+<li>별도의 세 사례는 준비 함수가 호출자에게 돌아올 때까지 실행했습니다. <strong>이미지 포인터와 512바이트 이미지는 그대로</strong>였고, 촬영 객체에 내장된 레코드 여섯 개는 16비트 필드 두 개만 0으로 바뀌었습니다.</li>
+<li>입력값은 모두 시험용으로 넣은 값입니다. 실제 촬영에서 이 값들이 어떻게 정해지는지, 값의 물리 단위나 메뉴 이름이 무엇인지는 확인하지 않았습니다.</li>
+</ul>
+</section>
+
+<div class="scope">
+<div class="ok"><h3><span class="badge ok">확인</span> 원본 코드 실행으로 확인</h3>
+<ul>
+<li>아홉 호출의 순서와 대상 함수, 정책 반환까지 21개 사례</li>
+<li>작업 종류 분기 21개 사례(종류 0~11 포함)</li>
+<li>함수의 실제 반환까지 3개 사례: 호출 25개 또는 16개</li>
+<li>실행을 다른 코드로 바꾼 곳 없음</li>
+</ul></div>
+<div class="static"><h3><span class="badge static">정적 분석</span> 코드를 읽어 판단</h3>
+<ul>
+<li>고정 RAM 주소를 돌려주는 조회 함수의 위치</li>
+<li>다섯 번째·일곱 번째 호출이 갱신하는 필드</li>
+</ul></div>
+<div class="model"><h3><span class="badge model">모델</span> 시험 조건으로 정한 것</h3>
+<ul>
+<li>촬영 객체, 설정값, 조회 키, 디버그 바이트</li>
+<li>고정 RAM의 마커와 값, 초기화 가드</li>
+<li>512바이트 합성 이미지와 레코드 대조값</li>
+</ul></div>
+<div class="open"><h3><span class="badge open">미확인</span> 확인하지 않은 것</h3>
+<ul>
+<li>촬영 객체 전체 생성자와 메모리 할당</li>
+<li>입력 A·B·C의 물리 단위와 메뉴 대응</li>
+<li>센서 입력, 이미지 처리, JPEG, 실물 촬영</li>
+</ul></div>
+</div>
+
+<section id="background">
+<h2>배경: 준비 함수와 세 가지 실험</h2>
+<p>이 펌웨어는 촬영 작업 하나의 상태를 큰 구조체 하나에 모아 둡니다. 이 문서에서는 이것을 <dfn title="촬영 작업 하나의 설정, 버퍼 주소, 플래그를 담는 구조체. 문서에서는 시작 주소 기준 오프셋을 CAP+0x… 로 적습니다.">촬영 객체</dfn>라고 부르고, 그 안의 위치를 <code>CAP+0x49</code>처럼 적습니다. 준비 함수는 촬영 객체와 <dfn title="펌웨어가 촬영 작업을 구분하는 내부 번호. 이 문서의 실험에서는 0부터 11까지 넣었습니다.">내부 작업 종류</dfn> 번호를 받아, 객체 안의 플래그와 입력값을 채웁니다.</p>
+<p>채우는 일은 준비 함수가 직접 하지 않고 <dfn title="객체에 딸린 함수 주소 표(가상 함수 표)의 칸 번호로 함수를 골라 부르는 간접 호출">가상 호출</dfn>로 나눠 맡깁니다. 그중 하나가 <a href="pixel-policy.html">픽셀 보정 정책 함수</a>입니다. 정책 함수는 세 입력 A·B·C와 몇 개의 플래그를 보고 보정 플래그 네 개(<code>CAP+0x47</code>~<code>+0x4A</code>)를 정합니다.</p>
+<p><a href="pixel-policy.html#prepare">정책 함수 문서의 준비 분기 실험</a>은 중간 호출 여덟 개를 실행하지 않고 구간을 나눠 확인했습니다. 여기서는 그 중간 호출을 모두 원본 코드로 실행했습니다. 실험은 세 묶음입니다.</p>
+
+<div class="table-wrap"><table>
+<caption>이 문서의 세 실험</caption>
+<thead><tr><th>실험</th><th class="n">사례</th><th>시작 → 정지</th><th>확인한 것</th></tr></thead>
+<tbody>
+<tr><th scope="row">앞부분</th><td class="n">21개</td><td><code>0x6552B0</code> → <code>0x655380</code> 또는 <code>0x655400</code></td><td>첫 세 호출이 만든 값, 작업 종류 분기</td></tr>
+<tr><th scope="row">정책까지</th><td class="n">21개</td><td><code>0x6552B0</code> → <code>0x6553E0</code></td><td>아홉 호출의 연속 실행, 정책 입력과 결과</td></tr>
+<tr><th scope="row">반환까지</th><td class="n">3개</td><td><code>0x6552B0</code> → 호출자 복귀</td><td>전체 호출 순서, 이미지와 내장 레코드의 변화</td></tr>
+</tbody></table></div>
+
+<div class="callout"><strong class="label">표기 규칙</strong>
+<p>코드 주소는 복호화한 펌웨어 파일 안의 위치(파일 오프셋)입니다. 실행 주소는 여기에 <code>0x02000000</code>을 더한 값입니다. RAM 주소는 실행 주소로 적습니다. A·B·C는 정책 함수 문서에서 붙인 입력 이름이며 물리 단위는 정해지지 않았습니다.</p></div>
+<div class="callout model"><strong class="label">시험 조건</strong>
+<p>모든 실행은 PC의 Unicorn 에뮬레이터(Cortex-A9 모델)에서 했습니다. 촬영 객체는 0으로 채운 메모리에 원본 가상 함수 표 주소와 시험값을 넣어 만들었습니다. 훅은 진입 주소·인수·메모리 쓰기를 기록하기만 했고 실행을 바꾸지 않았습니다.</p></div>
+</section>
+
+<section id="chain">
+<h2>준비 함수는 가상 호출 25개를 순서대로 부릅니다</h2>
+<p class="takeaway">첫 세 호출 뒤에 작업 종류 분기가 있고, 통과하면 여섯 호출이 이어져 아홉 번째에서 정책 함수가 실행됩니다.</p>
+
+<figure class="diagram">
+<figcaption>준비 함수의 호출 순서와 세 실험이 실행한 범위</figcaption>
+<div class="dg-scroll">
+<svg class="dg" viewBox="0 0 800 632" role="img" aria-labelledby="dg-chain-title dg-chain-desc">
+<title id="dg-chain-title">촬영 준비 함수의 호출 순서, 작업 종류 분기, 세 실험의 실행 범위</title>
+<desc id="dg-chain-desc">준비 함수는 입구에서 작업 종류를 기록하고 호출 1~3으로 초기 플래그를 만든 뒤 작업 종류를 검사합니다. 종류 5, 7, 8, 11이면 호출 4~11이 있는 구간을 건너뛰어 호출 12로 갑니다. 그 밖의 종류는 호출 4~8로 정책 입력을 만들고 호출 9에서 픽셀 보정 정책 함수를 실행한 다음 호출 10~11, 12~25를 거쳐 마무리하고 반환합니다. 오른쪽 세 막대는 실험 범위입니다. 앞부분 21건은 분기 직후에서, 정책까지 21건은 정책 함수 반환 직후에서 멈췄고, 반환까지 3건은 호출자 복귀까지 실행했습니다.</desc>
+<defs><marker id="dg-chain-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker></defs>
+
+<rect class="b" x="150" y="40" width="330" height="52" rx="8"/>
+<text class="t" x="162" y="62">준비 함수 입구</text>
+<text class="s" x="162" y="81">작업 종류를 CAP+0x2084에 기록</text>
+
+<rect class="b" x="150" y="112" width="330" height="52" rx="8"/>
+<text class="t" x="162" y="134">호출 1~3 · 초기 플래그</text>
+<text class="s" x="162" y="153">CAP+0x5F, +0x4F, +0x52, +0x20B8 생산</text>
+
+<rect class="b" x="150" y="184" width="330" height="52" rx="8"/>
+<text class="t" x="162" y="206">분기 · 작업 종류 검사</text>
+<text class="s" x="162" y="225">5·7·8·11이면 0x655400으로 건너뜀</text>
+
+<rect class="b" x="150" y="256" width="330" height="52" rx="8"/>
+<text class="t" x="162" y="278">호출 4~8 · 정책 입력</text>
+<text class="s" x="162" y="297">A(CAP+0x240), +0x3C, +0x3D 생산</text>
+
+<rect class="b key" x="150" y="328" width="330" height="52" rx="8"/>
+<text class="t" x="162" y="350">호출 9 · 픽셀 보정 정책 함수</text>
+<text class="s" x="162" y="369">CAP+0x47…+0x4A 네 플래그 결정</text>
+
+<rect class="b mute" x="150" y="400" width="330" height="52" rx="8"/>
+<text class="t" x="162" y="422">호출 10~11</text>
+<text class="s" x="162" y="441">역할은 이 문서에서 분석하지 않음</text>
+
+<rect class="b mute" x="150" y="472" width="330" height="52" rx="8"/>
+<text class="t" x="162" y="494">호출 12~25</text>
+<text class="s" x="162" y="513">종류 11은 마지막 호출 25도 생략</text>
+
+<rect class="b" x="150" y="544" width="330" height="52" rx="8"/>
+<text class="t" x="162" y="566">마무리와 반환</text>
+<text class="s" x="162" y="585">레코드 6개의 두 필드를 0으로 쓴 뒤 복귀</text>
+
+<path class="e" d="M315 92V110" marker-end="url(#dg-chain-ah)"/>
+<path class="e" d="M315 164V182" marker-end="url(#dg-chain-ah)"/>
+<path class="e" d="M315 236V254" marker-end="url(#dg-chain-ah)"/>
+<path class="e" d="M315 308V326" marker-end="url(#dg-chain-ah)"/>
+<path class="e" d="M315 380V398" marker-end="url(#dg-chain-ah)"/>
+<path class="e" d="M315 452V470" marker-end="url(#dg-chain-ah)"/>
+<path class="e" d="M315 524V542" marker-end="url(#dg-chain-ah)"/>
+<path class="e key" d="M150 210H104V498H148" marker-end="url(#dg-chain-ah)"/>
+<text class="s mid" x="52" y="346">종류</text>
+<text class="s mid" x="52" y="364">5·7·8·11</text>
+
+<text class="s mid" x="556" y="26">앞부분 21건</text>
+<rect class="b ok" x="518" y="40" width="76" height="196" rx="8"/>
+<text class="mono mid" x="556" y="256">0x655380</text>
+<text class="mono mid" x="556" y="273">0x655400</text>
+<text class="n mid" x="556" y="290">에서 정지</text>
+
+<text class="s mid" x="652" y="26">정책까지 21건</text>
+<rect class="b ok" x="614" y="40" width="76" height="340" rx="8"/>
+<text class="mono mid" x="652" y="400">0x6553E0</text>
+<text class="n mid" x="652" y="417">에서 정지</text>
+
+<text class="s mid" x="748" y="26">반환까지 3건</text>
+<rect class="b ok" x="710" y="40" width="76" height="556" rx="8"/>
+<text class="n mid" x="748" y="616">호출자로 복귀</text>
+</svg>
+</div>
+<ul class="dg-legend"><li><i class="key"></i>이 문서의 중심: 정책 함수와 건너뛰는 경로</li><li><i class="ok"></i>원본 코드로 실행한 범위</li><li><i></i>실행해 출력까지 대조한 단계</li><li><i class="mute"></i>실행했지만 역할은 분석하지 않은 호출</li></ul>
+</figure>
+
+<p>준비 함수는 촬영 객체의 가상 함수 표(파일 <code>0xA684E0</code>)에서 칸 번호로 함수를 고릅니다. 아래 아홉 호출은 호출 명령과 표의 내용을 파일에서 직접 확인했고, 실행 중에도 같은 순서로 진입했습니다.</p>
+
+<div class="table-wrap"><table>
+<caption>정책 함수까지의 아홉 호출</caption>
+<thead><tr><th class="n">순서</th><th>호출 위치</th><th>표의 칸 → 대상 함수</th><th>하는 일</th><th>상태</th></tr></thead>
+<tbody>
+<tr><td class="n">1</td><td><code>0x655350</code></td><td><code>0x1C</code> → <code>0x65E5A8</code></td><td>루트 키 0을 읽어 <code>CAP+0x5F</code>를 정함</td><td><span class="badge ok">확인</span></td></tr>
+<tr><td class="n">2</td><td><code>0x655360</code></td><td><code>0x70</code> → <code>0x65FE58</code></td><td>루트 키 0x2F → <code>CAP+0x4F</code>, 설정 0xF1·0xF2 → <code>CAP+0x20B8</code></td><td><span class="badge ok">확인</span></td></tr>
+<tr><td class="n">3</td><td><code>0x655370</code></td><td><code>0x30</code> → <code>0x65ED80</code></td><td>자식 키 0x22와 디버그 0x66 → <code>CAP+0x52</code></td><td><span class="badge ok">확인</span></td></tr>
+<tr><td class="n">4</td><td><code>0x65538C</code></td><td><code>0x38</code> → <code>0x65EED0</code></td><td>정책 입력 A를 <code>CAP+0x240</code>에 기록</td><td><span class="badge ok">확인</span></td></tr>
+<tr><td class="n">5</td><td><code>0x65539C</code></td><td><code>0x34</code> → <code>0x65ED98</code></td><td><code>CAP+0x7E</code>·<code>+0x288</code>과 태그 0xE·0xF 갱신</td><td><span class="badge static">정적 분석</span></td></tr>
+<tr><td class="n">6</td><td><code>0x6553AC</code></td><td><code>0x20</code> → <code>0x65E5E4</code></td><td>설정 0x95, 임계값, 디버그 → <code>CAP+0x3C</code></td><td><span class="badge ok">확인</span></td></tr>
+<tr><td class="n">7</td><td><code>0x6553BC</code></td><td><code>0x7C</code> → <code>0x6601B8</code></td><td><code>CAP+0x68</code>·<code>+0x2BC</code> 갱신</td><td><span class="badge static">정적 분석</span></td></tr>
+<tr><td class="n">8</td><td><code>0x6553CC</code></td><td><code>0x24</code> → <code>0x65E7B0</code></td><td>ID 0x62 조회 뒤 고정 RAM을 읽어 <code>CAP+0x3D</code>와 태그 생산</td><td><span class="badge ok">확인</span></td></tr>
+<tr><td class="n">9</td><td><code>0x6553DC</code></td><td><code>0x28</code> → <code>0x65EA68</code></td><td>픽셀 보정 정책: 최종 <code>CAP+0x47</code>~<code>+0x4A</code></td><td><span class="badge ok">확인</span></td></tr>
+</tbody></table></div>
+<p class="small muted">5번과 7번은 실행 중 진입한 것까지 관측했습니다. 두 함수가 바꾸는 필드는 코드를 읽어 적은 것이며, 검증기는 그 값을 대조하지 않습니다.</p>
+
+<h3>작업 종류에 따른 분기</h3>
+<p>준비 함수는 입구에서 작업 종류를 <code>CAP+0x2084</code>에 적고, 종류가 5·7·8·11이면 <code>CAP+0x2080</code>을 1로 만듭니다. 첫 세 호출이 끝난 뒤 <code>0x65537C</code>의 분기가 이 바이트를 봅니다. 1이면 <code>0x655400</code>으로 건너뛰고, 0이면 <code>0x655380</code>으로 이어집니다.</p>
+<ul>
+<li><strong>앞부분 21건</strong> — 종류 0~11을 기본 입력으로 한 12건과 입력을 바꾼 9건입니다. 종류 5·7·8·11은 세 호출을 거친 뒤에도 <code>0x655400</code>에 도달했고, 나머지는 <code>0x655380</code>에 도달했습니다.</li>
+<li><strong>정책까지 21건</strong> — 종류 0과 6으로, 같은 촬영 객체에서 아홉 호출에 모두 진입하고 정책 함수가 반환했습니다. 정지점 <code>0x6553E0</code>은 실험의 경계이며 준비 함수의 반환점이 아닙니다.</li>
+</ul>
+<div class="callout warn"><strong class="label">주의</strong>
+<p>작업 종류는 시험 입력으로 넣었습니다. 메뉴 조작에서 준비 함수까지를 한 번에 실행한 것이 아닙니다. 종류 11을 Pixel Shift Resolution과 연결하는 근거는 <a href="superresolution-lifecycle.html">Pixel Shift 메뉴와 버퍼 수명</a> 문서에 따로 있습니다.</p></div>
+
+<details class="evidence"><summary>앞부분 21건의 입력과 출력</summary>
+<p class="small">1~12번은 루트 키 0, 루트 키 0x2F, 자식 키 0x22, 디버그 0x66을 모두 0으로 두고 작업 종류만 0부터 11까지 바꿨습니다. 출력 네 필드는 모두 0이었고, 종류 5·7·8·11만 <code>0x655400</code>에서, 나머지는 <code>0x655380</code>에서 멈췄습니다. 아래는 입력을 바꾼 13~21번입니다.</p>
+<div class="table-wrap"><table class="compact">
+<thead><tr><th class="n">#</th><th>루트 키 0</th><th class="n">키 0x2F</th><th class="n">키 0x22</th><th class="n">디버그 0x66</th><th class="n">종류</th><th class="n">+0x5F</th><th class="n">+0x4F</th><th>+0x20B8</th><th class="n">+0x52</th><th>정지점</th></tr></thead>
+<tbody>
+<tr><td class="n">13</td><td><code>0x08</code></td><td class="n">1</td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td class="n">1</td><td><code>0x1234</code></td><td class="n">0</td><td><code>0x655380</code></td></tr>
+<tr><td class="n">14</td><td><code>0x09</code></td><td class="n">0</td><td class="n">1</td><td class="n">0</td><td class="n">6</td><td class="n">1</td><td class="n">0</td><td><code>0x0000</code></td><td class="n">1</td><td><code>0x655380</code></td></tr>
+<tr><td class="n">15</td><td><code>0x0A</code></td><td class="n">1</td><td class="n">1</td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td class="n">1</td><td><code>0x1234</code></td><td class="n">1</td><td><code>0x655380</code></td></tr>
+<tr><td class="n">16</td><td><code>0x0C</code></td><td class="n">1</td><td class="n">1</td><td class="n">1</td><td class="n">6</td><td class="n">1</td><td class="n">1</td><td><code>0x1234</code></td><td class="n">0</td><td><code>0x655380</code></td></tr>
+<tr><td class="n">17</td><td><code>0x0D</code></td><td class="n">0</td><td class="n">1</td><td class="n">0</td><td class="n">6</td><td class="n">0</td><td class="n">0</td><td><code>0x0000</code></td><td class="n">1</td><td><code>0x655380</code></td></tr>
+<tr><td class="n">18</td><td><code>0x00</code></td><td class="n">0</td><td class="n">1</td><td class="n">1</td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td><code>0x0000</code></td><td class="n">0</td><td><code>0x655380</code></td></tr>
+<tr><td class="n">19</td><td><code>0x00</code></td><td class="n">0</td><td class="n">1</td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td><code>0x0000</code></td><td class="n">1</td><td><code>0x655380</code></td></tr>
+<tr><td class="n">20</td><td><code>0x09</code></td><td class="n">1</td><td class="n">1</td><td class="n">0</td><td class="n">5</td><td class="n">1</td><td class="n">1</td><td><code>0x1234</code></td><td class="n">1</td><td><code>0x655400</code></td></tr>
+<tr><td class="n">21</td><td><code>0x0C</code></td><td class="n">1</td><td class="n">1</td><td class="n">0</td><td class="n">11</td><td class="n">1</td><td class="n">1</td><td><code>0x1234</code></td><td class="n">1</td><td><code>0x655400</code></td></tr>
+</tbody></table></div>
+<p class="small">모든 사례에서 <code>CAP+0x2080</code>·<code>+0x2081</code>·<code>+0x2082</code>도 대조했습니다. 차례로 종류 5·7·8·11, 종류 7·8, 종류 11일 때만 1입니다.</p>
+</details>
+</section>
+
+<section id="inputs">
+<h2>정책 입력은 조회 키와 고정 RAM 값에서 만들어집니다</h2>
+<p class="takeaway">정책 함수가 읽는 플래그와 입력 A는 앞쪽 호출이 조회 키의 비트, 설정값, 고정 RAM의 값을 읽어 만든 것입니다.</p>
+<p>촬영 객체 안에는 <dfn title="번호(키)를 주면 객체 안의 정해진 바이트나 비트를 돌려주는 작은 조회 객체">키 리더</dfn>가 두 개 있습니다. 루트 리더는 원본 생성자 <code>0x6EBF5C</code>로, 자식 리더는 <code>0x6EAD78</code>로 만들었습니다. 준비 함수의 앞쪽 호출은 이 리더와 설정 바이트에서 값을 읽어 아래 필드를 채웁니다.</p>
+
+<div class="table-wrap"><table>
+<caption>앞쪽 호출이 만드는 값</caption>
+<thead><tr><th>만들어지는 값</th><th>읽는 곳</th><th>확인한 규칙</th></tr></thead>
+<tbody>
+<tr><th scope="row"><code>CAP+0x5F</code></th><td>루트 키 0 (<code>CAP+0x310</code>의 바이트)</td><td>값이 <code>0x09</code> 또는 <code>0x0C</code>이면 1. <code>0x08</code>·<code>0x0A</code>·<code>0x0D</code>에서는 0</td></tr>
+<tr><th scope="row"><code>CAP+0x4F</code></th><td>루트 키 0x2F (<code>CAP+0x322</code>의 비트 1)</td><td>비트 값을 그대로 전달</td></tr>
+<tr><th scope="row"><code>CAP+0x20B8</code></th><td>설정 0xF1·0xF2의 두 바이트</td><td>키 0x2F가 켜졌을 때만 원본 <code>0x82E6F4</code>가 두 바이트를 합쳐 기록. <code>0x12</code>·<code>0x34</code> → <code>0x1234</code>. 꺼졌으면 0</td></tr>
+<tr><th scope="row"><code>CAP+0x52</code></th><td>자식 키 0x22 (<code>CAP+0x35B</code>의 비트 3)</td><td>비트가 1이면 1. 디버그 0x66이 켜져 있으면 0으로 되돌림</td></tr>
+<tr><th scope="row">A = <code>CAP+0x240</code></th><td>자식 키 6 (<code>CAP+0x34A</code>), 표 <code>0x9E651C</code>, 고정 RAM</td><td>아래 그림과 표</td></tr>
+</tbody></table></div>
+
+<h3>입력 A를 만드는 네 번째 호출</h3>
+<figure class="diagram">
+<figcaption>입력 A에 영향을 주는 세 가지</figcaption>
+<div class="dg-scroll">
+<svg class="dg" viewBox="0 0 800 244" role="img" aria-labelledby="dg-aprod-title dg-aprod-desc">
+<title id="dg-aprod-title">입력 A를 만드는 함수와 그 입력</title>
+<desc id="dg-aprod-desc">A 생산 함수 0x65EED0은 세 가지를 읽습니다. 자식 키 6의 값은 표 인덱스가 됩니다. 자식 키 0x22가 만든 CAP+0x52 플래그가 1이면 인덱스에서 8을 뺍니다. 고정 RAM 0x4041F420에 유효 마커가 있으면 기본 배율 0x2000 대신 그다음 16비트 값을 배율로 씁니다. 결과 A는 CAP+0x240에 저장되고, 같은 실행에서 정책 함수가 조회 인수로 읽습니다.</desc>
+<defs><marker id="dg-aprod-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="b model" x="8" y="14" width="236" height="60" rx="8"/>
+<text class="t" x="20" y="38">자식 키 6</text>
+<text class="s" x="20" y="58">CAP+0x34A · 표 인덱스</text>
+<rect class="b model" x="8" y="92" width="236" height="60" rx="8"/>
+<text class="t" x="20" y="116">자식 키 0x22 · 디버그 0x66</text>
+<text class="s" x="20" y="136">CAP+0x52가 1이면 인덱스 −8</text>
+<rect class="b model" x="8" y="170" width="236" height="60" rx="8"/>
+<text class="t" x="20" y="194">고정 RAM 0x4041F420</text>
+<text class="s" x="20" y="214">유효 마커이면 배율을 바꿈</text>
+
+<rect class="b ok" x="304" y="72" width="216" height="100" rx="8"/>
+<text class="t" x="316" y="98">A 생산 함수 0x65EED0</text>
+<text class="s" x="316" y="120">표 0x9E651C에서 값을 읽고</text>
+<text class="s" x="316" y="140">배율(기본 0x2000)을 적용</text>
+<text class="s" x="316" y="160">네 번째 호출</text>
+
+<rect class="b ok" x="580" y="36" width="212" height="62" rx="8"/>
+<text class="t" x="592" y="60">A = CAP+0x240</text>
+<text class="s" x="592" y="80">원본 저장 명령이 기록</text>
+<rect class="b key" x="580" y="146" width="212" height="62" rx="8"/>
+<text class="t" x="592" y="170">정책 함수의 조회 인수</text>
+<text class="s" x="592" y="190">같은 실행에서 같은 값 확인</text>
+
+<path class="e model" d="M244 44H274V100H302" marker-end="url(#dg-aprod-ah)"/>
+<path class="e model" d="M244 122H302" marker-end="url(#dg-aprod-ah)"/>
+<path class="e model" d="M244 200H274V144H302" marker-end="url(#dg-aprod-ah)"/>
+<path class="e" d="M520 122H550V67H578" marker-end="url(#dg-aprod-ah)"/>
+<path class="e" d="M686 98V144" marker-end="url(#dg-aprod-ah)"/>
+</svg>
+</div>
+<ul class="dg-legend"><li><i class="model"></i>시험값으로 넣은 입력</li><li><i class="ok"></i>원본 코드가 실행하고 기록</li><li><i class="key"></i>값을 쓰는 곳</li></ul>
+</figure>
+
+<div class="table-wrap"><table class="fit">
+<caption>입력을 바꿨을 때의 A</caption>
+<thead><tr><th>자식 키 6</th><th>CAP+0x52</th><th>고정 RAM <code>0x4041F420</code></th><th>A</th></tr></thead>
+<tbody>
+<tr><td><code>0x20</code></td><td>0</td><td>마커 무효</td><td><code>0x2000</code></td></tr>
+<tr><td><code>0x30</code></td><td>0</td><td>마커 무효</td><td><code>0x8000</code></td></tr>
+<tr><td><code>0x38</code></td><td>1 (자식 키 0x22)</td><td>마커 무효</td><td><code>0x8000</code> — 인덱스가 <code>0x30</code>으로 낮아짐</td></tr>
+<tr><td><code>0x38</code></td><td>0 (디버그 0x66이 해제)</td><td>마커 무효</td><td><code>0x10000</code></td></tr>
+<tr><td><code>0x30</code></td><td>0</td><td>유효 마커, 다음 16비트 값 <code>0x4000</code></td><td><code>0x10000</code></td></tr>
+</tbody></table></div>
+<p>A 생산 함수는 배율 <code>0x2000</code>으로 시작합니다. 고정 RAM의 마커가 무효이면 이 배율을 유지했고, 유효 마커(<code>0xA55A5AA5</code>)와 값 <code>0x4000</code>을 넣으면 같은 인덱스의 A가 두 배가 됐습니다. 인덱스 보정은 하위 8비트에서 이루어집니다. 이 표는 감도나 노출 시간 같은 단위를 붙인 것이 아닙니다.</p>
+
+<h3>강제 조건에 쓰이는 두 16비트 필드는 서로 다릅니다</h3>
+<p><code>CAP+0x20B8</code>은 두 번째 호출이 만들지만, 정책 함수의 강제 조건이 보는 값은 그 옆의 <code>CAP+0x20B6</code>입니다. 루트 키 0x2F와 설정 0xF5를 1로 둔 채 <code>+0x20B8</code>이 <code>0x1234</code>로 유지되는 상태에서, 시험값으로 넣은 <code>+0x20B6</code>만 1에서 2로 바꾸자 정책이 표 조회 대신 강제 결과 4를 썼습니다. <code>+0x20B6</code>을 만드는 상위 코드는 실행하지 않았습니다.</p>
+</section>
+
+<section id="threshold">
+<h2>설정 0x95가 강제 플래그 CAP+0x3C를 정하는 방식</h2>
+<p class="takeaway">여섯 번째 호출은 설정 0x95의 값에 따라 세 가지 경로 중 하나로 <code>CAP+0x3C</code>를 정합니다. 이 플래그가 1이면 정책 함수는 표를 보지 않고 결과 4를 씁니다.</p>
+<p>설정 0x95는 이 객체 배치에서 <code>CAP+0x15ED</code>에 있습니다.</p>
+
+<div class="table-wrap"><table>
+<caption>설정 0x95의 값과 CAP+0x3C</caption>
+<thead><tr><th>설정 0x95</th><th>함께 켜지는 플래그</th><th>CAP+0x3C가 1이 된 조건</th></tr></thead>
+<tbody>
+<tr><th scope="row">0</th><td><code>CAP+0x60</code> = 1</td><td>B = <code>0x44</code>에서 1, B = <code>0x45</code>와 <code>0x7C</code>에서 0</td></tr>
+<tr><th scope="row">1</th><td>없음</td><td>기본 입력에서는 <code>+0x3C</code>·<code>+0x60</code>·<code>+0x61</code> 모두 0. 디버그 0x25를 켜면 1, 뒤의 디버그 0x26을 함께 켜면 다시 0</td></tr>
+<tr><th scope="row">2</th><td><code>CAP+0x61</code> = 1</td><td>원본 <code>0x739A38</code>이 별도의 4×8 임계표로 판정 (아래)</td></tr>
+</tbody></table></div>
+
+<h3>설정 0x95 = 2일 때의 임계표</h3>
+<p>임계표는 파일 <code>0x9E6202</code>의 64바이트이며, 정책 함수가 쓰는 표 일곱 개와는 다른 표입니다. 인수는 A, B, 그리고 16비트 부호 있는 C를 10으로 나눈 값입니다.</p>
+<ul>
+<li><strong>경계</strong> — A = <code>0x2000</code>, B = <code>0x24</code>에서 C 원값 599와 600은 59와 60이 되고, <code>CAP+0x3C</code>는 0과 1로 갈렸습니다.</li>
+<li><strong>값이 0인 칸</strong> — B = <code>0x44</code>의 임계값은 0이어서 C 원값이 32,767이어도 꺼진 채였습니다.</li>
+<li><strong>우회</strong> — 루트 키 0 = 9로 <code>CAP+0x5F</code>가 켜지면 이 플래그가 네 번째 인수로 전달되고, C 원값이 −32,768이어도 표 검사를 거치지 않고 켜졌습니다.</li>
+</ul>
+<p>같은 실행에서 A = <code>0x8000</code>, B = 0, C = 0, 설정 0x95 = 1이면 정책의 표 조회 결과는 4였습니다. 작업 종류 0은 최종 플래그 <code>[1, 1, 1, 1]</code>을, 종류 6은 <code>[0, 0, 0, 1]</code>을 만들었습니다. 플래그 순서는 <code>CAP+0x47</code>, <code>+0x48</code>, <code>+0x49</code>, <code>+0x4A</code>입니다. 이 문서의 실행은 정책 함수가 반환한 곳에서 멈추며, 픽셀 보정이나 JPEG 출력까지 이어 가지 않았습니다. 정책 결과가 패킷과 이미지 버퍼로 이어지는 부분은 <a href="pixel-policy.html#connected">정책 → 패킷 → 보정 연결 실험</a>에서 따로 확인했습니다.</p>
+
+<details class="evidence"><summary>정책까지 실행한 21건의 전체 결과</summary>
+<p class="small">기본값은 B = <code>0x7C</code>, 키 6 = <code>0x20</code>, C = 0, 나머지 0입니다. “임계 함수”는 <code>0x739A38</code>에 진입한 횟수입니다.</p>
+<div class="table-wrap"><table class="compact">
+<thead><tr><th class="n">#</th><th class="n">종류</th><th>기본값에서 바꾼 입력</th><th>A</th><th class="n">+0x3C</th><th class="n">+0x3D</th><th>정책 경로</th><th class="n">결과</th><th>최종 플래그</th><th class="n">임계 함수</th></tr></thead>
+<tbody>
+<tr><td class="n">1</td><td class="n">0</td><td>없음</td><td><code>0x2000</code></td><td class="n">0</td><td class="n">0</td><td>표 조회</td><td class="n">1</td><td><code>[1, 1, 0, 0]</code></td><td class="n">1</td></tr>
+<tr><td class="n">2</td><td class="n">6</td><td>없음</td><td><code>0x2000</code></td><td class="n">0</td><td class="n">0</td><td>표 조회</td><td class="n">1</td><td><code>[0, 0, 0, 0]</code></td><td class="n">1</td></tr>
+<tr><td class="n">3</td><td class="n">0</td><td>B=<code>0x00</code>, 키 6=<code>0x30</code>, 설정 0x95=1</td><td><code>0x8000</code></td><td class="n">0</td><td class="n">0</td><td>표 조회</td><td class="n">4</td><td><code>[1, 1, 1, 1]</code></td><td class="n">1</td></tr>
+<tr><td class="n">4</td><td class="n">6</td><td>B=<code>0x00</code>, 키 6=<code>0x30</code>, 설정 0x95=1</td><td><code>0x8000</code></td><td class="n">0</td><td class="n">0</td><td>표 조회</td><td class="n">4</td><td><code>[0, 0, 0, 1]</code></td><td class="n">1</td></tr>
+<tr><td class="n">5</td><td class="n">0</td><td>B=<code>0x44</code></td><td><code>0x2000</code></td><td class="n">1</td><td class="n">0</td><td>강제</td><td class="n">4</td><td><code>[1, 1, 1, 1]</code></td><td class="n">1</td></tr>
+<tr><td class="n">6</td><td class="n">0</td><td>B=<code>0x45</code></td><td><code>0x2000</code></td><td class="n">0</td><td class="n">0</td><td>표 조회</td><td class="n">2</td><td><code>[1, 1, 0, 0]</code></td><td class="n">1</td></tr>
+<tr><td class="n">7</td><td class="n">0</td><td>B=<code>0x24</code>, 설정 0x95=2, C 원값=599</td><td><code>0x2000</code></td><td class="n">0</td><td class="n">0</td><td>표 조회</td><td class="n">4</td><td><code>[1, 1, 1, 1]</code></td><td class="n">2</td></tr>
+<tr><td class="n">8</td><td class="n">0</td><td>B=<code>0x24</code>, 설정 0x95=2, C 원값=600</td><td><code>0x2000</code></td><td class="n">1</td><td class="n">0</td><td>강제</td><td class="n">4</td><td><code>[1, 1, 1, 1]</code></td><td class="n">2</td></tr>
+<tr><td class="n">9</td><td class="n">0</td><td>설정 0x95=1, 디버그 0x25=1</td><td><code>0x2000</code></td><td class="n">1</td><td class="n">0</td><td>강제</td><td class="n">4</td><td><code>[1, 1, 1, 1]</code></td><td class="n">1</td></tr>
+<tr><td class="n">10</td><td class="n">0</td><td>설정 0x95=1, 디버그 0x25=1, 디버그 0x26=1</td><td><code>0x2000</code></td><td class="n">0</td><td class="n">0</td><td>표 조회</td><td class="n">1</td><td><code>[1, 1, 0, 0]</code></td><td class="n">1</td></tr>
+<tr><td class="n">11</td><td class="n">0</td><td>루트 키 0=<code>0x09</code>, 설정 0x95=1</td><td><code>0x2000</code></td><td class="n">0</td><td class="n">0</td><td>강제</td><td class="n">4</td><td><code>[1, 1, 1, 1]</code></td><td class="n">0</td></tr>
+<tr><td class="n">12</td><td class="n">6</td><td>루트 키 0=<code>0x0C</code>, 설정 0x95=1</td><td><code>0x2000</code></td><td class="n">0</td><td class="n">0</td><td>강제</td><td class="n">4</td><td><code>[0, 0, 0, 1]</code></td><td class="n">0</td></tr>
+<tr><td class="n">13</td><td class="n">0</td><td>루트 키 0x2F=1, 설정 0xF5=1, +0x20B6=1</td><td><code>0x2000</code></td><td class="n">0</td><td class="n">0</td><td>표 조회</td><td class="n">1</td><td><code>[1, 1, 0, 0]</code></td><td class="n">1</td></tr>
+<tr><td class="n">14</td><td class="n">0</td><td>루트 키 0x2F=1, 설정 0xF5=1, +0x20B6=2</td><td><code>0x2000</code></td><td class="n">0</td><td class="n">0</td><td>강제</td><td class="n">4</td><td><code>[1, 1, 1, 1]</code></td><td class="n">1</td></tr>
+<tr><td class="n">15</td><td class="n">0</td><td>자식 키 0x22=1, 키 6=<code>0x38</code></td><td><code>0x8000</code></td><td class="n">0</td><td class="n">0</td><td>표 조회</td><td class="n">1</td><td><code>[1, 1, 0, 0]</code></td><td class="n">1</td></tr>
+<tr><td class="n">16</td><td class="n">0</td><td>자식 키 0x22=1, 디버그 0x66=1, 키 6=<code>0x38</code></td><td><code>0x10000</code></td><td class="n">0</td><td class="n">0</td><td>표 조회</td><td class="n">1</td><td><code>[1, 1, 0, 0]</code></td><td class="n">1</td></tr>
+<tr><td class="n">17</td><td class="n">0</td><td>ID 8 고정 RAM 유효·<code>0x4000</code>, 키 6=<code>0x30</code></td><td><code>0x10000</code></td><td class="n">0</td><td class="n">0</td><td>표 조회</td><td class="n">1</td><td><code>[1, 1, 0, 0]</code></td><td class="n">1</td></tr>
+<tr><td class="n">18</td><td class="n">0</td><td>ID 0x62 고정 RAM 유효</td><td><code>0x2000</code></td><td class="n">0</td><td class="n">0</td><td>표 조회</td><td class="n">1</td><td><code>[1, 1, 0, 0]</code></td><td class="n">1</td></tr>
+<tr><td class="n">19</td><td class="n">0</td><td>ID 0x62 고정 RAM 유효, 루트 키 0=<code>0x09</code>, 설정 0x95=1</td><td><code>0x2000</code></td><td class="n">0</td><td class="n">1</td><td>강제</td><td class="n">4</td><td><code>[1, 1, 1, 1]</code></td><td class="n">0</td></tr>
+<tr><td class="n">20</td><td class="n">0</td><td>B=<code>0x44</code>, 설정 0x95=2, C 원값=32767</td><td><code>0x2000</code></td><td class="n">0</td><td class="n">0</td><td>표 조회</td><td class="n">3</td><td><code>[1, 1, 0, 0]</code></td><td class="n">2</td></tr>
+<tr><td class="n">21</td><td class="n">0</td><td>B=<code>0x44</code>, 설정 0x95=2, C 원값=−32768, 루트 키 0=<code>0x09</code></td><td><code>0x2000</code></td><td class="n">1</td><td class="n">0</td><td>강제</td><td class="n">4</td><td><code>[1, 1, 1, 1]</code></td><td class="n">1</td></tr>
+</tbody></table></div>
+<p class="small">임계 함수 진입 횟수를 보면, 설정 0x95 = 2인 경로 말고도 <code>CAP+0x5F</code>가 0인 사례에서는 한 번씩 더 진입했습니다. 이 두 번째 호출 지점이 어디인지는 검증기에 기록되어 있지 않습니다. 7번은 <code>CAP+0x3C</code>가 0이지만 정책의 표 조회 결과가 4여서 보정 플래그가 켜진 사례입니다.</p>
+<dl class="kv">
+<dt>임계표 SHA-256</dt><dd><code class="wrap">df06f02c8d320eeadee4a785a6c85930106541251b3e600ccc307d1b07fb462c</code> (파일 <code>0x9E6202</code>~<code>0x9E6242</code>)</dd>
+<dt>준비 함수 앞부분 SHA-256</dt><dd><code class="wrap">d13282817fce2a65fef45e1efad0e587db89747ed8a83fc1b147e80ee707f0ba</code> (파일 <code>0x6552B0</code>~<code>0x6553E0</code>)</dd>
+<dt>설정 바이트 위치</dt><dd>0x95 → <code>CAP+0x15ED</code>, 0xF1 → <code>+0x1649</code>, 0xF2 → <code>+0x164A</code>, 0xF5 → <code>+0x164D</code></dd>
+</dl>
+</details>
+</section>
+
+<section id="return">
+<h2>함수가 끝날 때까지 이미지 포인터는 그대로이고 레코드 필드 두 개만 0이 됩니다</h2>
+<p class="takeaway">상태를 조금 더 준비하면 준비 함수는 실제 반환 명령까지 원본 코드로 실행됩니다. 그동안 이미지 포인터와 이미지 내용에는 쓰기가 없었습니다.</p>
+
+<figure class="diagram">
+<figcaption>반환까지 실행한 세 사례에서 유지된 것과 바뀐 것</figcaption>
+<div class="dg-scroll">
+<svg class="dg" viewBox="0 0 800 414" role="img" aria-labelledby="dg-ret-title dg-ret-desc">
+<title id="dg-ret-title">준비 함수 실행 전후의 촬영 객체, 이미지, 내장 레코드</title>
+<desc id="dg-ret-desc">촬영 객체 안의 다섯 영역을 보여 줍니다. 보정 플래그 네 개는 작업 종류 0과 6에서 정책이 정하고 종류 11에서는 미리 넣은 값이 그대로 남습니다. 이미지 포인터 두 개는 원본 슬롯 설정 함수가 같은 주소를 기록한 것이며, 가리키는 512바이트 합성 이미지에는 준비 함수 실행 중 쓰기가 없었습니다. 시험값으로 넣은 다른 포인터 두 개도 유지됐습니다. 컨테이너 안의 내장 레코드 여섯 개는 레코드 포인터 여섯 개가 가리키며, 각 레코드 1,020바이트 가운데 오프셋 0x3F0과 0x3F2의 16비트 필드 두 개만 0으로 바뀌었습니다.</desc>
+<defs><marker id="dg-ret-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="gf" x="8" y="8" width="388" height="398" rx="12"/>
+<text class="h" x="32" y="30">촬영 객체 (CAP)</text>
+
+<rect class="b" x="32" y="42" width="348" height="54" rx="8"/>
+<text class="t" x="44" y="65">CAP+0x47…+0x4A 보정 플래그</text>
+<text class="s" x="44" y="84">종류 0·6은 정책이 결정, 종류 11은 그대로</text>
+
+<rect class="b ok" x="32" y="108" width="348" height="54" rx="8"/>
+<text class="t" x="44" y="131">CAP+0x98, +0x13C 이미지 포인터</text>
+<text class="s" x="44" y="150">원본 슬롯 설정 함수가 같은 주소를 기록</text>
+
+<rect class="b model" x="32" y="174" width="348" height="54" rx="8"/>
+<text class="t" x="44" y="197">CAP+0x160, +0x204</text>
+<text class="s" x="44" y="216">시험값으로 넣은 다른 포인터 · 유지됨</text>
+
+<rect class="b key" x="32" y="240" width="348" height="74" rx="8"/>
+<text class="t" x="44" y="263">CAP+0xA850 컨테이너</text>
+<text class="s" x="44" y="283">내장 레코드 6개 × 0x3FC(1,020)바이트</text>
+<text class="s" x="44" y="301">CAP+0xA860부터 연속 배치</text>
+
+<rect class="b" x="32" y="326" width="348" height="64" rx="8"/>
+<text class="t" x="44" y="350">CAP+0xC2C4…+0xC2D8</text>
+<text class="s" x="44" y="370">레코드 포인터 6개 · 객체 내부 주소</text>
+<path class="e" d="M32 358H18V277H30" marker-end="url(#dg-ret-ah)"/>
+
+<rect class="b ok" x="470" y="100" width="322" height="70" rx="8"/>
+<text class="t" x="482" y="126">합성 이미지 512바이트</text>
+<text class="s" x="482" y="148">실행 중 쓰기 0회 · 내용 동일</text>
+<path class="e" d="M380 135H468" marker-end="url(#dg-ret-ah)"/>
+
+<text class="h" x="470" y="232">레코드 하나 (0x3FC바이트)</text>
+<rect class="b" x="470" y="244" width="170" height="62" rx="8"/>
+<text class="mono" x="482" y="270">+0x000…+0x3EF</text>
+<text class="s" x="482" y="290">그대로</text>
+<rect class="b key" x="640" y="244" width="76" height="62" rx="8"/>
+<text class="mono mid" x="678" y="270">+0x3F0</text>
+<text class="mono mid" x="678" y="290">+0x3F2</text>
+<rect class="b" x="716" y="244" width="76" height="62" rx="8"/>
+<text class="mono mid" x="754" y="270">+0x3F4…</text>
+<text class="s mid" x="754" y="290">그대로</text>
+<path class="e" d="M380 275H468" marker-end="url(#dg-ret-ah)"/>
+<text class="s" x="470" y="330">여섯 레코드 모두 16비트 필드 두 개만 0이 됨</text>
+<text class="s" x="470" y="350">쓰기 순서: 레코드 0·2·4, 이어서 1·3·5</text>
+</svg>
+</div>
+<ul class="dg-legend"><li><i class="ok"></i>원본 코드 실행 뒤에도 그대로임을 확인</li><li><i class="key"></i>준비 함수가 바꾼 곳</li><li><i class="model"></i>시험값으로 넣은 것</li></ul>
+</figure>
+
+<div class="table-wrap"><table>
+<caption>반환까지 실행한 세 사례</caption>
+<thead><tr><th>내부 작업 종류</th><th class="n">가상 호출</th><th>보정 플래그: 실행 전 → 실행 후</th><th>반환 시 <code>CAP+0x20B4</code></th></tr></thead>
+<tbody>
+<tr><th scope="row">0</th><td class="n">25개</td><td><code>[0, 0, 0, 0]</code> → <code>[1, 1, 1, 1]</code></td><td><code>0x01</code></td></tr>
+<tr><th scope="row">6</th><td class="n">25개</td><td><code>[0, 0, 0, 0]</code> → <code>[0, 0, 0, 1]</code></td><td><code>0x01</code></td></tr>
+<tr><th scope="row">11</th><td class="n">16개</td><td><code>[0xA1, 0xB2, 0xC3, 0xD4]</code> 그대로</td><td><code>0x40</code></td></tr>
+</tbody></table></div>
+<p class="small muted">세 사례의 입력은 B = 0, 자식 키 6 = <code>0x30</code>, 설정 0x95 = 1입니다. <code>CAP+0x20B2</code>는 0이었습니다. 플래그 순서는 <code>CAP+0x47</code>, <code>+0x48</code>, <code>+0x49</code>, <code>+0x4A</code>입니다.</p>
+
+<h3>종류 11이 건너뛰는 호출</h3>
+<p>종류 0과 6은 가상 호출 25개를 모두 거쳤습니다. 종류 11은 16개만 거쳤습니다. 빠진 것은 호출 4~11 여덟 개(정책 함수 포함)와 마지막 호출 25(표의 칸 <code>0x78</code>)입니다.</p>
+<p>종류 11 사례에서는 보정 플래그 네 바이트에 <code>0xA1</code>·<code>0xB2</code>·<code>0xC3</code>·<code>0xD4</code>를 미리 넣었고, 반환할 때까지 그대로 남았습니다. 준비 함수가 이 경로에서 네 플래그를 0으로 초기화하지 않는다는 뜻입니다.</p>
+
+<h3>내장 레코드 여섯 개와 이미지</h3>
+<p>준비 함수의 마지막 반복문(<code>0x6554F4</code>~<code>0x655550</code>)은 포인터 여섯 개가 가리키는 객체의 <code>+0x3F0</code>과 <code>+0x3F2</code>에만 0을 썼습니다. 각 레코드의 <code>0x3FC</code>바이트 전체와 미리 넣어 둔 인접 대조값을 비교해, 바뀐 범위가 이 4바이트뿐임을 확인했습니다. 이 포인터들은 컨테이너 <code>CAP+0xA850</code> 안을 가리키는 내부 주소입니다. 레코드를 여섯 번 따로 할당해 만든 것이 아닙니다.</p>
+<p>이미지 쪽은 원본 슬롯 설정 함수 <code>0x654218</code>을 슬롯 1, 직접 별칭 인수 1로 불러 <code>CAP+0x98</code>과 <code>CAP+0x13C</code>에 같은 주소를 넣었습니다. 준비 함수 실행 중 <code>CAP+0x13C</code>와 이미지 영역에 쓴 횟수는 0회였고, 512바이트 전체가 같았습니다. 시험값으로 넣은 <code>CAP+0x160</code>·<code>+0x204</code>도 유지됐지만, 이 두 값을 만드는 코드는 실행하지 않았습니다.</p>
+<div class="callout warn"><strong class="label">주의</strong>
+<p>이 결과는 준비 함수 한 번의 실행 안에서 포인터와 이미지가 보존된다는 것까지입니다. 연속 촬영 중의 버퍼 할당·재사용, 이미지 처리, 스케일러·CPP 제출은 다루지 않습니다. 슬롯·메뉴·작업 수명은 <a href="superresolution-lifecycle.html">Pixel Shift 메뉴와 버퍼 수명</a> 문서를 보십시오. 같은 내장 레코드가 저장 단계에서 다시 쓰이는 과정은 <a href="store-image-records.html">JPEG 완료값과 저장 레코드</a>에서 이어집니다.</p></div>
+
+<details class="evidence"><summary>반환 실험의 준비 과정과 주소</summary>
+<h4>추가로 실행한 원본 코드</h4>
+<ul>
+<li>세 번째 키 리더 생성자 <code>0x6EB764</code>(<code>CAP+0x368</code>)와 싱글턴 생성자 <code>0x4D5F28</code></li>
+<li>내장 레코드 생성: 원본 호출 <code>0x653BAC</code>에서 시작해 <code>0x5AA3DC</code> 안의 <code>0x5AA434</code> 직전에 정지. 원본 Thumb 배열 생성 보조 함수가 요소 생성자 <code>0x73DD60</code>을 여섯 번 부르는 부분까지입니다. 뒤따르는 다른 컨테이너 필드 초기화는 할당·RTOS 의존 호출에 닿기 때문에 실행하지 않았습니다. 컨테이너 생성자 전체를 완료한 것이 아닙니다.</li>
+<li>포인터 저장: <code>0x653D74</code>~<code>0x653DC8</code>의 저장 명령으로 <code>CAP+0xC2C4</code>~<code>+0xC2D8</code>에 레코드 주소를 연결</li>
+<li>레코드 필드 준비: 원본 setter <code>0x754518</code>·<code>0x75450C</code>로 두 16비트 필드에 0이 아닌 값을 넣음</li>
+</ul>
+<h4>시험값으로 준비한 상태</h4>
+<ul>
+<li>싱글턴 초기화 가드(<code>0x4040B9A4</code>)와 RAM <code>0x4041D51C</code>의 포인터 표. 이 입력에서 선택되는 12번 행의 바이트를 1로 둠</li>
+<li>레코드마다 <code>+0x3EE</code>, <code>+0x3F4</code>, <code>+0x3FA</code>의 대조값 2바이트씩</li>
+</ul>
+<div class="table-wrap"><table class="compact">
+<caption>원본 getter가 계산해 저장한 내장 레코드 주소 (모두 CAP 기준)</caption>
+<thead><tr><th>포인터 필드 두 개</th><th>가리키는 레코드 두 개</th><th>원본 getter</th><th>0이 된 필드</th></tr></thead>
+<tbody>
+<tr><td><code>+0xC2C4</code> / <code>+0xC2C8</code></td><td><code>+0xA860</code> / <code>+0xAC5C</code></td><td><code>0x72D808</code></td><td><code>+0xAC50</code>·<code>+0xAC52</code> / <code>+0xB04C</code>·<code>+0xB04E</code></td></tr>
+<tr><td><code>+0xC2CC</code> / <code>+0xC2D0</code></td><td><code>+0xB058</code> / <code>+0xB454</code></td><td><code>0x72D7F4</code></td><td><code>+0xB448</code>·<code>+0xB44A</code> / <code>+0xB844</code>·<code>+0xB846</code></td></tr>
+<tr><td><code>+0xC2D4</code> / <code>+0xC2D8</code></td><td><code>+0xB850</code> / <code>+0xBC4C</code></td><td><code>0x72D818</code></td><td><code>+0xBC40</code>·<code>+0xBC42</code> / <code>+0xC03C</code>·<code>+0xC03E</code></td></tr>
+</tbody></table></div>
+<h4>반환 확인</h4>
+<p class="small">마지막 분기 <code>0x65557C</code>에서 <code>0x654EB8</code>의 <code>BX LR</code>로 이어져, 호출자 자리로 둔 정지 주소(실행 주소 <code>0x100F1000</code>)에 도달했습니다. 그 직전에 <code>0x654EBC</code>에도 한 번 진입했습니다. 반환값 R0은 입력으로 준 촬영 객체 주소였고 스택 포인터도 복원됐습니다. 반환 시 <code>CAP+0x5A</code>와 <code>+0x8E</code>는 1이었습니다.</p>
+<div class="table-wrap"><table class="compact">
+<caption>전체 25개 호출: 표의 칸과 대상 함수</caption>
+<thead><tr><th class="n">순서</th><th>칸 → 대상</th><th class="n">순서</th><th>칸 → 대상</th><th class="n">순서</th><th>칸 → 대상</th></tr></thead>
+<tbody>
+<tr><td class="n">1</td><td><code>0x1C</code> → <code>0x65E5A8</code></td><td class="n">10</td><td><code>0x3C</code> → <code>0x65F2E0</code></td><td class="n">19</td><td><code>0x60</code> → <code>0x65FB2C</code></td></tr>
+<tr><td class="n">2</td><td><code>0x70</code> → <code>0x65FE58</code></td><td class="n">11</td><td><code>0x2C</code> → <code>0x65ED18</code></td><td class="n">20</td><td><code>0x50</code> → <code>0x65F8F8</code></td></tr>
+<tr><td class="n">3</td><td><code>0x30</code> → <code>0x65ED80</code></td><td class="n">12</td><td><code>0x40</code> → <code>0x65F340</code></td><td class="n">21</td><td><code>0x64</code> → <code>0x65FB64</code></td></tr>
+<tr><td class="n">4</td><td><code>0x38</code> → <code>0x65EED0</code></td><td class="n">13</td><td><code>0x44</code> → <code>0x65F4B0</code></td><td class="n">22</td><td><code>0x74</code> → <code>0x65FEA8</code></td></tr>
+<tr><td class="n">5</td><td><code>0x34</code> → <code>0x65ED98</code></td><td class="n">14</td><td><code>0x48</code> → <code>0x65F82C</code></td><td class="n">23</td><td><code>0x68</code> → <code>0x65FC48</code></td></tr>
+<tr><td class="n">6</td><td><code>0x20</code> → <code>0x65E5E4</code></td><td class="n">15</td><td><code>0x4C</code> → <code>0x65F88C</code></td><td class="n">24</td><td><code>0x6C</code> → <code>0x65FD88</code></td></tr>
+<tr><td class="n">7</td><td><code>0x7C</code> → <code>0x6601B8</code></td><td class="n">16</td><td><code>0x54</code> → <code>0x65F9D8</code></td><td class="n">25</td><td><code>0x78</code> → <code>0x65FFA0</code></td></tr>
+<tr><td class="n">8</td><td><code>0x24</code> → <code>0x65E7B0</code></td><td class="n">17</td><td><code>0x58</code> → <code>0x65FA30</code></td><td></td><td></td></tr>
+<tr><td class="n">9</td><td><code>0x28</code> → <code>0x65EA68</code></td><td class="n">18</td><td><code>0x5C</code> → <code>0x65FAE0</code></td><td></td><td></td></tr>
+</tbody></table></div>
+<p class="small">합성 이미지 SHA-256: <code class="wrap">110009dcee21620b166f3abfecb5eff7a873be729d1c2d53822e7acc5f34eb9b</code></p>
+</details>
+</section>
+
+<section id="limits">
+<h2>한계와 남은 과제</h2>
+<h3 id="scope">고정 RAM을 읽은 것과 공급자가 등록된 것은 다릅니다</h3>
+<p>준비 함수는 ID 8·9·0x62로 등록 객체를 조회합니다. 이 실험에서는 등록표가 비어 있는 상태로 조회가 실행됐습니다. 조회 뒤에 불리는 함수는 조회 결과와 관계없이 정해진 RAM 주소를 돌려주므로, 이 실험은 해당 ID의 공급자가 실제로 등록된다는 것을 보여 주지 않습니다.</p>
+<div class="table-wrap"><table>
+<caption>조회 뒤에 읽는 고정 RAM</caption>
+<thead><tr><th>조회 ID</th><th>고정 RAM (실행 주소)</th><th>시험한 것</th><th>시험하지 않은 것</th></tr></thead>
+<tbody>
+<tr><th scope="row">8</th><td><code>0x4041F420</code></td><td>마커 무효 → 기본 배율 유지. 유효 마커 + <code>0x4000</code> → A가 두 배</td><td>—</td></tr>
+<tr><th scope="row">0x62</th><td><code>0x40106980</code></td><td>마커 무효 → 짧은 경로. 유효 마커이고 B ≥ <code>0x7C</code> → 준비한 필드로 태그 생산. 루트 키 0 = 9를 더하면 <code>CAP+0x3D</code> = 1</td><td>유효 마커와 낮은 B가 함께 들어가는 부동소수점 경로</td></tr>
+</tbody></table></div>
+<p class="small muted">개편 전 문서는 이 주소를 돌려주는 함수를 ID 8 뒤의 <code>0x73E760</code>, ID 0x62 뒤의 <code>0x73EF20</code>으로 적었습니다. 검증기가 파일에서 직접 확인하는 호출 관계는 <code>0x65EF88</code> → <code>0x72D894</code>, <code>0x65E7E8</code> → <code>0x6E7E9C</code>(등록 조회), <code>0x65E7F4</code> → <code>0x73EA94</code>입니다. 두 표기의 관계는 원본 파일로 다시 확인해야 합니다. ID 0x62 유효 사례에서 태그 0x31~0x35, 0x4E, 0x4F에는 <code>0x12</code>, 5, 10, 15, 20, <code>0x34</code>, 7이 기록됐습니다.</p>
+
+<h3>실행한 것과 준비한 것</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>구분</th><th>범위</th></tr></thead>
+<tbody>
+<tr><th scope="row"><span class="badge ok">확인</span> 원본 실행</th><td>관리자·싱글턴·중첩 키 리더 생성자, 내장 레코드 생성 구간과 포인터 저장, 슬롯 1 직접 별칭 설정, 준비 함수와 정책 함수 본문</td></tr>
+<tr><th scope="row"><span class="badge model">모델</span> 준비한 상태</th><td>촬영 객체, 가상 함수 표 포인터, 초기화 가드, 설정 슬롯, 입력 필드, 고정 RAM의 마커와 값, 디버그·태그 메모리, 포인터 표 행, 레코드의 두 16비트 필드와 인접 대조값</td></tr>
+<tr><th scope="row">실행 대체</th><td>없음. 훅은 진입 주소·인수·메모리 쓰기를 관찰만 함</td></tr>
+<tr><th scope="row"><span class="badge open">미확인</span> 실행하지 않은 범위</th><td>전체 초기화와 촬영 객체 생성자, 컨테이너 생성자의 나머지 부분과 외부 할당, RTOS 전달, 센서·JPEG·실물 촬영</td></tr>
+</tbody></table></div>
+<p>남은 과제는 세 가지입니다. 입력 A·B·C와 설정 0x95가 실제 촬영에서 무엇에 대응하는지, <code>CAP+0x20B6</code>을 만드는 상위 코드가 무엇인지, 그리고 준비 함수를 부르는 쪽의 실제 실행 이력입니다.</p>
+</section>
+
+<section id="reproduce">
+<h2>재현 방법</h2>
+<p>검증기는 복호화한 펌웨어 이미지의 SHA-256이 아래 값과 같을 때만 실행합니다. 이미지를 얻는 방법은 <a href="firmware-structure.html">펌웨어 파일 구조와 복호화</a>에 있습니다.</p>
+<dl class="kv">
+<dt>복호화 이미지 SHA-256</dt><dd><code class="wrap">1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc</code></dd>
+<dt>코드 적재 기준 주소</dt><dd><code>0x02000000</code></dd>
+<dt>에뮬레이터</dt><dd>Unicorn 2.1.4, Cortex-A9 모델</dd>
+</dl>
+<pre><code>python verify_capture_prepare.py decoded.bin --compare analysis/capture-prepare.json</code></pre>
+<p>검증기는 먼저 원본 명령어와 호출 대상, 조회 키의 필드 배치를 파일에서 확인합니다. 그다음 세 실험을 실행하고 결과를 저장된 JSON과 비교합니다.</p>
+</section>
+
+<section id="refs">
+<h2>근거 파일과 참고 자료</h2>
+<ul class="refs">
+<li><a href="capture-prepare.json">capture-prepare.json</a> — 호출 주소와 칸, 앞부분 21건, 정책까지 21건, 반환까지 3건의 전체 결과</li>
+<li><a href="../verify_capture_prepare.py">verify_capture_prepare.py</a> — 원본 해시 확인, 실행 경계, 바뀐 바이트 검사 코드</li>
+<li><a href="pixel-policy.html">픽셀 보정 활성값과 준비 분기</a> — 정책 함수 자체의 표 조회와 덮어쓰기 순서</li>
+<li><a href="store-image-records.html">JPEG 완료값과 저장 레코드</a> — 같은 내장 레코드가 저장 요청에 쓰이는 과정</li>
+<li><a href="hq-status.json">hq-status.json</a> — 연구 목표별 진행 상태와 남은 과제 목록</li>
+<li>외부 자료: <a href="https://github.com/unicorn-engine/unicorn">Unicorn CPU 에뮬레이터</a></li>
+</ul>
+</section>
+
+</main>
+</div>
+<!-- chrome:bottom -->
+<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">촬영 준비와 보존 레코드 — 이 주제의 문서</h2><ol><li><a href="guide-capture.html">촬영 준비·보존 레코드 안내</a></li><li><a href="capture-prepare.html" aria-current="page">촬영 준비의 연속 호출</a></li><li><a href="store-image-records.html">JPEG 완료값과 저장 레코드</a></li><li><a href="pixel-policy.html">픽셀 보정 활성값과 준비 분기</a></li><li><a href="pixel-records.html">보존 픽셀 레코드와 촬영 패킷</a></li><li><a href="preserved-record.html">보존 섹터 14의 진단 레코드</a></li><li><a href="preserved-sector20.html">보존 섹터 20·21과 정책 입력</a></li><li><a href="preserved-config.html">정책 플래그의 생산자</a></li><li><a href="preserved-dispatch.html">보존 레코드의 상위 명령 경로</a></li><li><a href="settings-storage.html">보존 섹터의 설정 저장</a></li></ol></nav>
+<nav class="pager" aria-label="이전·다음 문서"><a class="prev" href="guide-capture.html"><small>← 이전</small>촬영 준비·보존 레코드 안내</a><a class="next" href="store-image-records.html"><small>다음 →</small>JPEG 완료값과 저장 레코드</a></nav>
+<footer class="sitefoot"><div class="sitefoot-in"><nav aria-label="사이트"><a href="../index.html#map">문서 지도</a><a href="../index.html#levels">검증 수준 읽는 법</a><a href="../glossary.html">용어집</a><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/research-program.html">세 기종 연구 본부</a><a href="https://github.com/yunhyok/pentax-k3ii-firmware-analysis">GitHub 저장소</a></nav><p>PENTAX K-3 II 펌웨어 1.12 분석 문서. PC에서 수행한 정적 분석과 에뮬레이션 결과이며, 카메라 실기에서 검증한 내용이 아닙니다. 원본 펌웨어와 복호화한 바이너리는 포함하지 않습니다.</p></div></footer>
+<!-- /chrome:bottom -->
+</body>
+</html>

@@ -1,49 +1,409 @@
 <!doctype html>
 <html lang="ko">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="K-3 II 렌즈 능력 조회 조건, AF 요청 계산과 바디·렌즈 구동 준비 전달을 원본 ARM으로 검증.">
-<title>K-3 II — AF 요청 계산과 구동 준비</title><link rel="stylesheet" href="../assets/report.css"></head>
-<body><header><div class="eyebrow">PENTAX K-3 II · firmware 1.12 · 2026-11-08</div>
-<h1>렌즈 능력 조회에서<br>AF 요청 계산과 구동 준비까지</h1>
-<p class="lead">렌즈 능력 조회의 실행 조건과 16비트 구동 요청의 생산자·소비자를 연결했다. 계산한 값은 원본 CAfMotor 준비 함수의 바디·렌즈 분기까지 전달됐다. 입력 센서의 계산과 호출 사이의 스케줄링은 아직 분석 범위 밖이며, 이번 결과는 향후 AF 변경에 필요한 기본 구조를 확인한 것이다.</p>
-<nav aria-label="보고서 탐색"><a href="af-drive.html">앞선 구동 분기</a><a href="#capability">능력 조회</a><a href="#body">바디 요청</a><a href="#lens">렌즈 응답</a><a href="#limits">검증 범위</a><a href="hq-status.json">연구 상태</a></nav></header>
-<main><p class="note"><strong>후속 검증:</strong> <a href="af-input.html">타이머 카운터와 보정값 생산자</a>를 원본 생성자부터 연결했다. 하드웨어 카운터 변화와 전체 스케줄링은 여전히 미검증이다.</p>
-<p class="note">코드 위치는 해제 파일 오프셋이다. ITCM 실행 주소는 <code>VA</code>로 구분했다. CAfMotor·CAfPulse·CAfPosition의 명칭은 펌웨어 RTTI에 근거한다. 내부 요청값을 물리 이동 거리나 초점 오차 단위로 단정하지 않았다.</p>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AF 요청값이 계산되어 구동 준비로 넘어가는 과정 — PENTAX K-3 II 펌웨어 연구</title>
+<meta name="description" content="K-3 II 펌웨어 1.12에서 렌즈 능력 조회가 실행되는 조건, 16비트 AF 구동 요청값이 계산되는 식, 그 값이 구동 준비 함수의 바디·렌즈 분기까지 전달되는 과정을 원본 ARM 실행 25건으로 확인한 기록입니다.">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body data-camera="k3ii">
+<!-- chrome:top -->
+<a class="skip" href="#main">본문 바로가기</a>
+<div class="topbar"><div class="topbar-in"><a class="brand" href="../index.html">PENTAX <b>펌웨어 연구</b></a><div class="cams" aria-label="기종 선택"><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/">K-3 III</a><a href="../index.html" aria-current="true">K-3 II</a><a href="https://yunhyok.github.io/pentax-q7-firmware-analysis/">Q7</a></div><nav class="topnav" aria-label="주제"><a href="../index.html">개요</a><a href="guide-pipeline.html">영상 처리</a><a href="guide-capture.html">촬영·보존 레코드</a><a href="guide-rebuild.html">재구축·업데이트</a><a href="guide-af.html" aria-current="true">AF</a><a href="guide-ui.html">UI</a></nav></div></div>
+<nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../index.html">PENTAX K-3 II</a></li><li><a href="guide-af.html">AF와 렌즈 제어</a></li><li aria-current="page">AF 요청 계산과 구동 준비</li></ol></nav>
+<!-- /chrome:top -->
+<header class="page-head">
+<p class="eyebrow">AF와 렌즈 제어 · 2단계 요청 계산과 전달</p>
+<h1>AF 요청값이 계산되어 구동 준비로 넘어가는 과정</h1>
+<p class="lead">구동 방식이 정해진 다음에는 “얼마나 움직일지”를 담은 값이 필요합니다. 이 값이 어디서 계산되고 어떤 조건을 거쳐 구동 준비 함수에 도착하는지 원본 코드로 따라갔습니다.</p>
+</header>
+<div class="layout">
+<!-- chrome:toc -->
+<nav class="toc" aria-label="이 문서의 목차"><h2 data-toc="no">이 문서에서</h2><ol><li><a href="#background">배경: 이 문서가 따라가는 값</a></li><li><a href="#capability">능력 조회는 상태 비트와 저장된 값을 보고 결정합니다</a></li><li><a href="#body">바디 경로: 한 호출이 계산한 값을 다음 호출이 읽습니다</a></li><li><a href="#lens">렌즈 경로: 요청값은 렌즈 명령 0x8211의 응답에서 나옵니다</a></li><li><a href="#limits">한계와 남은 과제</a></li><li><a href="#reproduce">재현 방법</a></li><li><a href="#refs">근거 파일과 참고 자료</a></li></ol></nav>
+<!-- /chrome:toc -->
+<main class="doc" id="main">
 
-<section aria-labelledby="capability"><h2 id="capability">1. 능력 조회는 상태 비트와 캐시값으로 결정한다</h2>
-<p><code>0x94DC4</code>는 <code>[VA 0x40006064] + 1</code> 바이트의 비트 6을 확인한다. 비트가 꺼져 있으면 조회하지 않고 돌아간다. 켜져 있어도 <code>CLensKaf2+6</code>이 0이 아니면 기존 값을 사용해 <code>0x94E78</code>로 이어진다. 캐시가 0일 때만 명령 <code>0x8205</code>로 1바이트 응답을 요청한다. <a href="af-control.json">acquisition 조건과 사례 8건</a></p>
-<p>전송 상태가 0일 때만 응답을 능력 캐시에 기록한다. 응답 비트 0은 후속 초기화 분기를, 비트 6은 <a href="af-drive.html">앞서 확인한 바디·렌즈 구동 선택</a>을 가른다. 이번 구동 계산 검사는 원본 조회가 캐시에 기록한 <code>0x80</code>과 <code>0x40</code>을 이어 사용했다. 능력 판정 함수를 결과 상수로 대체하지 않았다. <a href="../verify_af_control.py">조회와 후속 객체 연결</a></p>
+<section class="summary">
+<h2 data-toc="no">핵심 요약</h2>
+<ul>
+<li>렌즈 능력 조회는 항상 실행되지 않습니다. 상태 비트가 켜져 있고 저장된 능력 바이트가 0일 때만 렌즈에 묻고, 그렇지 않으면 저장된 값을 그대로 씁니다.</li>
+<li>AF 코드는 <strong>16비트 요청값</strong>을 계산해 객체에 적어 두고, 다음 호출이 그 값을 읽어 구동 준비 함수에 넘깁니다. 바디 경로에서는 입력값에서 차감값을 빼고 보정값을 더합니다. 렌즈 경로에서는 렌즈가 돌려준 2바이트 응답을 그대로 씁니다.</li>
+<li>요청값이 0이거나 음수로 해석되면 구동 준비를 부르지 않습니다. 값의 크기에 따라 구간 번호 0·1·2가 정해집니다.</li>
+<li>원본 코드 실행 25건으로 확인했습니다. 입력은 모두 연구자가 넣었고, AF 센서가 이 입력을 만드는 과정과 실제 렌즈 움직임은 다루지 않았습니다.</li>
+</ul>
 </section>
 
-<section aria-labelledby="body"><h2 id="body">2. 같은 객체의 계산값을 다음 호출이 읽는다</h2>
-<figure><figcaption>도식 1. AF 애플리케이션의 두 호출 사이에서 전달되는 값</figcaption><div class="flow" role="group" aria-label="AF 애플리케이션이 모터의 계산 함수를 호출해 펄스 객체에 요청을 기록하고 다음 소비자가 구동 준비 함수로 전달">
-<div class="stage"><strong>생산자 0x5455C</strong><span>ITCM 호출 0xD7674<br>application+0x20의 모터<br>입력 정규화와 계산</span></div><div class="arrow" aria-hidden="true">→</div>
-<div class="stage"><strong>CAfPulse+0xBC</strong><span>계산한 16비트 요청<br>0이면 일반 전달 생략<br>같은 객체를 두 호출에서 사용</span></div><div class="arrow" aria-hidden="true">→</div>
-<div class="stage"><strong>소비자 0x547CC</strong><span>ITCM 호출 0xD7768<br>준비 조건·크기 구간 확인<br>0x52E38에 인수 8로 전달</span></div></div>
-<p class="caption">실행한 ITCM 구간은 VA 0x2248…0x225C와 VA 0x2348부터의 소비 호출이다. 그 사이의 펌웨어 스케줄링은 실행하지 않았다. 구동 준비 함수는 실제 분기점까지 실행했다.</p></figure>
-<p>능력 비트 6이 꺼진 바디 분기에서는 <code>0x544EC</code>가 입력을 정규화한다. 방향 플래그 <code>VA 0x00103116</code>이 0이면 입력을 <code>pulse+0xC2</code>에 복사하고 차감값 <code>VA 0x00103168</code>을 0으로 만든다. 플래그가 0이 아니면 입력의 비트 반전 하위 16비트를 차감값으로 저장하고 <code>pulse+0xC2</code>를 0으로 만든다. <a href="af-control.json">body_calculation_input과 원본 실행</a></p>
-<p>검사한 상태에서는 <code>pulse+0xC2 − [0x00103168] + [0x0010316E]</code>의 하위 16비트를 사용한다. 계산 플래그 <code>accessor+0xC5F</code>가 1이 아니거나 결과를 signed 16비트로 해석했을 때 음수이면 요청을 0으로 만든다. 전역 <code>0x001030AB = 0</code>, 준비 상태 3 등의 입력 조건을 고정한 검사다. 다른 상태의 전체 계산식으로 일반화하지 않았다. <a href="../verify_af_control.py">계산 조건과 14개 대조 입력</a></p>
-<div class="table-scroll"><table><thead><tr><th scope="col">합성 입력·계산 결과</th><th scope="col">원본 소비자의 동작</th></tr></thead><tbody>
-<tr><td>계산 플래그 0 또는 2, 계산값의 signed 해석이 음수</td><td>요청 0. 구동 준비 호출 없음</td></tr>
-<tr><td>요청 230, 준비 바이트 0 / 1</td><td>각각 전달 생략 / 구동 준비 호출</td></tr>
-<tr><td>요청 231…365</td><td><code>motor+0x60 = 0</code></td></tr>
-<tr><td>요청 366…400 / 401 이상</td><td><code>motor+0x60 = 1 / 2</code></td></tr>
+<div class="scope">
+<div class="ok"><h3><span class="badge ok">확인</span> 원본 코드 실행으로 확인</h3>
+<ul>
+<li>능력 조회의 실행 조건과 저장(8건)</li>
+<li>바디 경로의 요청값 계산과 전달(14건)</li>
+<li>렌즈 경로의 요청값과 전달(3건)</li>
+<li>구동 준비 함수의 바디·렌즈 분기점까지 실제 호출</li>
+</ul></div>
+<div class="static"><h3><span class="badge static">정적 분석</span> 코드를 읽어 판단</h3>
+<ul>
+<li>함수들이 서로를 부르는 관계(분기 61개)</li>
+<li>바디 계산을 허용하는 설정값 목록</li>
+</ul></div>
+<div class="model"><h3><span class="badge model">모델</span> 시험 조건으로 정한 것</h3>
+<ul>
+<li>렌즈 응답과 전송 상태(렌즈 전송 함수 하나를 대체)</li>
+<li>입력 반워드, 방향 플래그, 보정값, 계산 플래그</li>
+<li>준비해 넣은 객체, 공유 메모리, 상태값</li>
+</ul></div>
+<div class="open"><h3><span class="badge open">미확인</span> 확인하지 않은 것</h3>
+<ul>
+<li>AF 센서 신호에서 초점 오차를 구하는 알고리즘</li>
+<li>두 호출 사이의 상태 전이와 스케줄링</li>
+<li>요청값의 물리 단위, 구간 번호의 의미</li>
+<li>분기 뒤의 구동 제어와 실제 렌즈 움직임</li>
+</ul></div>
+</div>
+
+<section id="background">
+<h2>배경: 이 문서가 따라가는 값</h2>
+<p><a href="af-drive.html">앞 문서</a>에서 렌즈가 알려 준 능력 바이트의 비트 6이 AF 구동 경로를 가른다는 것을 보았습니다. 이 문서는 그 앞뒤를 채웁니다. 능력 조회가 언제 실행되는지, 그리고 구동 준비 함수가 받는 요청값이 어디서 오는지입니다.</p>
+<p>등장하는 객체는 셋입니다. 이름은 펌웨어에 남은 C++ 클래스 이름에서 가져왔습니다.</p>
+<div class="table-wrap"><table>
+<caption>이 문서에 나오는 객체</caption>
+<thead><tr><th>이름</th><th>이 문서에서의 역할</th><th>이름의 근거</th></tr></thead>
+<tbody>
+<tr><th scope="row"><code>CAfApplication</code></th><td>AF 처리를 차례로 부르는 상위 객체. <code>+0x20</code>에 모터 객체의 포인터가 있습니다.</td><td>RTTI 문자열</td></tr>
+<tr><th scope="row"><code>CAfMotor</code></th><td>요청값을 계산하고 구동 준비를 하는 객체</td><td>RTTI 문자열</td></tr>
+<tr><th scope="row"><code>CAfPulse</code></th><td>요청값과 관련 값이 저장되는 객체. 아래에서 <code>pulse</code>로 적습니다.</td><td>RTTI 문자열</td></tr>
+<tr><th scope="row">position 객체</th><td>전달된 요청값이 한 번 더 기록되는 객체</td><td>검증기가 붙인 이름</td></tr>
 </tbody></table></div>
-<p>전달되는 사례에서는 요청값이 <code>pulse+0x9E</code>와 <code>position+0x166</code>에 기록된다. 이어 <code>0x52E38</code>을 실제 호출했고, 비트 6이 꺼진 객체는 파일 <code>0x52ED4</code>의 바디 분기에 도달했다. 구간 번호 0·1·2의 속도나 토크 같은 물리 의미는 아직 확인하지 않았다. <a href="af-control.json">body_control_cases의 전달 인수·도착 주소</a></p>
+<div class="callout fix"><strong class="label">정정</strong>
+<p>이전 판은 <code>CAfMotor</code>·<code>CAfPulse</code>·<code>CAfPosition</code>의 이름이 RTTI에 근거한다고 적었습니다. 검증기가 실제로 RTTI를 대조하는 클래스는 <code>CAfApplication</code>, <code>CAfMotor</code>, <code>CAfPulse</code> 세 개입니다. <code>CAfPosition</code>이라는 이름은 근거 파일에서 확인되지 않으므로 이 문서에서는 “position 객체”라고만 부릅니다.</p></div>
+<div class="callout"><strong class="label">주소 표기</strong>
+<p>코드 위치는 복호화한 파일의 오프셋입니다. VA를 붙인 값은 실행·데이터 주소입니다. 펌웨어는 시작할 때 일부 코드를 주소 0번지 근처로 복사해 실행하는데, 원문은 이 영역을 ITCM이라고 불렀습니다. 이 문서의 <code>VA 0x2248</code> 같은 작은 주소가 그 영역입니다. 요청값을 물리적인 이동 거리나 초점 오차 단위로 단정하지 않았습니다.</p></div>
 </section>
 
-<section aria-labelledby="lens"><h2 id="lens">3. 렌즈 분기의 요청값은 0x8211 응답에서 나온다</h2>
-<figure><figcaption>도식 2. 렌즈 응답을 요청값으로 쓰는 조건</figcaption><div class="flow" role="group" aria-label="렌즈 명령 0x8211의 두 바이트 응답을 빅엔디언 값으로 읽어 부호와 계산 플래그를 확인하고 구동 준비로 전달">
-<div class="stage"><strong>0x4E684 · 렌즈 조회</strong><span>명령 0x8211<br>2바이트 응답 요청<br>0x94204 → 전송 함수</span></div><div class="arrow" aria-hidden="true">→</div>
-<div class="stage"><strong>0xB995C · 값 읽기</strong><span>응답[0] × 256 + 응답[1]<br>부호·계산 플래그 확인<br>음수이면 요청 0</span></div><div class="arrow" aria-hidden="true">→</div>
-<div class="stage"><strong>렌즈 구동 준비</strong><span>0x0102 응답 → 요청 258<br>0x52E38의 실제 호출<br>파일 0x52E98 분기에 도달</span></div></div></figure>
-<p>원본 <code>0x4E684</code>는 전송 호출의 반환 상태를 검사하지 않고 응답 버퍼를 읽는다. 전송 상태 7을 주면서 버퍼를 갱신하지 않은 대조에서는 이전 값 <code>0x0201</code>이 요청 513으로 재사용됐다. 이는 지정한 전송 경계에서의 호출자 동작이다. 실제 통신 실패가 항상 버퍼를 그대로 두는지는 확인하지 않았다. <a href="af-control.json">lens_error_without_reply_write</a></p>
-<p>반대로 정상 응답 <code>0xFFFF</code>는 음수로 처리돼 요청 0이 됐고 구동 준비를 호출하지 않았다. 정상 양수 <code>0x0102</code>는 요청 258과 잔량 필드 갱신을 거쳐 렌즈 분기에 도달했다. 이 분기는 능력 비트에 따른 제어 경로이며 SDM·DC·PLM의 물리 프로토콜을 각각 식별한 결과는 아니다. <a href="af-control.json">렌즈 계산 사례 3건</a></p>
+<section id="capability">
+<h2>능력 조회는 상태 비트와 저장된 값을 보고 결정합니다</h2>
+<p class="takeaway">렌즈에 능력을 묻는 것은 상태 비트가 켜져 있고 저장된 능력 바이트가 0일 때뿐입니다.</p>
+
+<figure class="diagram">
+<figcaption>능력 조회 함수 0x94DC4의 판단 순서</figcaption>
+<div class="dg-scroll">
+<svg class="dg" viewBox="0 0 800 234" role="img" aria-labelledby="dg-acq-title dg-acq-desc">
+<title id="dg-acq-title">능력 조회가 실행되는 조건과 결과</title>
+<desc id="dg-acq-desc">진입점 0x94DC4는 먼저 상태 바이트의 비트 6을 확인합니다. 꺼져 있으면 조회 없이 복귀합니다. 켜져 있으면 저장된 능력 바이트가 0인지 봅니다. 0이 아니면 기존 값을 쓰고 0x94E78로 이어집니다. 0이면 렌즈에 명령 0x8205로 1바이트를 요청합니다. 렌즈의 응답과 전송 상태는 연구자가 넣은 값입니다. 전송 상태가 0일 때만 응답을 저장하고, 그 뒤 응답의 비트 0에 따라 0x94E0C 또는 0x94E70으로 분기합니다.</desc>
+<defs><marker id="dg-acq-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker>
+<marker id="dg-acq-am" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah model" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="b ok" x="8" y="30" width="160" height="66" rx="8"/>
+<text class="t" x="20" y="57">진입 0x94DC4</text>
+<text class="s" x="20" y="77">상태 바이트의 비트 6</text>
+<rect class="b ok" x="204" y="30" width="170" height="66" rx="8"/>
+<text class="t" x="216" y="57">저장된 값 확인</text>
+<text class="s" x="216" y="77">능력 바이트가 0인가</text>
+<rect class="b ok" x="410" y="30" width="170" height="66" rx="8"/>
+<text class="t" x="422" y="57">렌즈에 조회</text>
+<text class="s" x="422" y="77">명령 0x8205 · 1바이트</text>
+<rect class="b ok" x="616" y="30" width="176" height="66" rx="8"/>
+<text class="t" x="628" y="57">성공하면 저장</text>
+<text class="s" x="628" y="77">전송 상태가 0일 때만</text>
+
+<rect class="b" x="8" y="156" width="160" height="66" rx="8"/>
+<text class="t" x="20" y="183">조회 없이 복귀</text>
+<text class="s" x="20" y="203">비트 6이 꺼져 있음</text>
+<rect class="b" x="204" y="156" width="170" height="66" rx="8"/>
+<text class="t" x="216" y="183">기존 값을 사용</text>
+<text class="s" x="216" y="203">0x94E78로 이어짐</text>
+<rect class="b model" x="410" y="156" width="170" height="66" rx="8"/>
+<text class="t" x="422" y="183">응답과 전송 상태</text>
+<text class="s" x="422" y="203">연구자가 넣은 값</text>
+<rect class="b" x="616" y="156" width="176" height="66" rx="8"/>
+<text class="t" x="628" y="183">응답 비트 0으로 분기</text>
+<text class="s" x="628" y="203">0x94E0C 또는 0x94E70</text>
+
+<path class="e" d="M168 63H202" marker-end="url(#dg-acq-ah)"/>
+<text class="n mid" x="185" y="54">켜짐</text>
+<path class="e" d="M374 63H408" marker-end="url(#dg-acq-ah)"/>
+<text class="n mid" x="391" y="54">0</text>
+<path class="e" d="M580 63H614" marker-end="url(#dg-acq-ah)"/>
+<path class="e" d="M88 96V154" marker-end="url(#dg-acq-ah)"/>
+<text class="n" x="96" y="130">꺼짐</text>
+<path class="e" d="M289 96V154" marker-end="url(#dg-acq-ah)"/>
+<text class="n" x="297" y="130">0이 아님</text>
+<path class="e model" d="M495 156V98" marker-end="url(#dg-acq-am)"/>
+<path class="e" d="M704 96V154" marker-end="url(#dg-acq-ah)"/>
+</svg>
+</div>
+<ul class="dg-legend"><li><i class="ok"></i>원본 코드 실행으로 확인한 판단</li><li><i></i>확인한 결과</li><li><i class="model"></i>연구자가 넣은 값</li></ul>
+</figure>
+
+<p>함수 <code>0x94DC4</code>는 VA <code>0x40006064</code>가 가리키는 기록의 둘째 바이트에서 비트 6을 봅니다. 꺼져 있으면 아무것도 하지 않고 돌아갑니다. 켜져 있어도 <code>CLensKaf2+6</code>에 저장된 능력 바이트가 0이 아니면 그 값을 그대로 씁니다. 저장된 값이 0일 때만 명령 <code>0x8205</code>로 1바이트를 요청합니다.</p>
+<p>전송 상태가 0일 때만 응답을 능력 바이트에 기록합니다. 응답의 비트 0은 그 뒤의 초기화 분기를 가르고, 비트 6은 <a href="af-drive.html#drive">바디·렌즈 구동 선택</a>을 가릅니다. 이 문서의 요청값 시험은 원본 조회 코드가 직접 기록한 능력 바이트 <code>0x80</code>(바디 경로)과 <code>0x40</code>(렌즈 경로)을 이어서 썼습니다. 능력 판정을 결과 상수로 바꿔치기하지 않았습니다.</p>
+
+<div class="table-wrap"><table>
+<caption>능력 조회 8건</caption>
+<thead><tr><th>상태 바이트</th><th>이전 값</th><th>렌즈 응답 / 전송 상태</th><th>렌즈 조회</th><th>저장된 값</th><th>비트 6 판정</th><th>도달한 곳</th></tr></thead>
+<tbody>
+<tr><td><code>80</code> (비트 6 꺼짐)</td><td><code>00</code></td><td>—</td><td>없음</td><td><code>00</code></td><td>0</td><td>복귀</td></tr>
+<tr><td><code>40</code></td><td><code>80</code></td><td>—</td><td>없음</td><td><code>80</code></td><td>0</td><td><code>0x94E78</code></td></tr>
+<tr><td><code>40</code></td><td><code>40</code></td><td>—</td><td>없음</td><td><code>40</code></td><td>1</td><td><code>0x94E78</code></td></tr>
+<tr><td><code>40</code></td><td><code>00</code></td><td><code>00</code> / 0</td><td>1회</td><td><code>00</code></td><td>0</td><td><code>0x94E70</code></td></tr>
+<tr><td><code>40</code></td><td><code>00</code></td><td><code>40</code> / 0</td><td>1회</td><td><code>40</code></td><td>1</td><td><code>0x94E70</code></td></tr>
+<tr><td><code>40</code></td><td><code>00</code></td><td><code>41</code> / 0</td><td>1회</td><td><code>41</code></td><td>1</td><td><code>0x94E0C</code> (비트 0 켜짐)</td></tr>
+<tr><td><code>40</code></td><td><code>00</code></td><td><code>41</code> / 7 (오류)</td><td>1회</td><td><code>00</code></td><td>0</td><td><code>0x94E70</code></td></tr>
+<tr><td><code>40</code></td><td><code>00</code></td><td><code>80</code> / 0</td><td>1회</td><td><code>80</code></td><td>0</td><td><code>0x94E70</code></td></tr>
+</tbody></table></div>
 </section>
 
-<section aria-labelledby="limits"><h2 id="limits">4. 원본 제어 25건을 재현했고, 센서 계산은 남아 있다</h2>
+<section id="body">
+<h2>바디 경로: 한 호출이 계산한 값을 다음 호출이 읽습니다</h2>
+<p class="takeaway">요청값은 한 번에 전달되지 않습니다. 먼저 계산해서 객체에 적어 두고, 뒤따르는 다른 호출이 그 값을 읽어 조건을 확인한 뒤 구동 준비 함수에 넘깁니다.</p>
+
+<figure class="diagram">
+<figcaption>두 호출이 같은 객체를 사이에 두고 값을 주고받는 구조</figcaption>
+<div class="dg-scroll">
+<svg class="dg" viewBox="0 0 800 304" role="img" aria-labelledby="dg-two-title dg-two-desc">
+<title id="dg-two-title">요청값의 생산자 호출과 소비자 호출</title>
+<desc id="dg-two-desc">왼쪽의 생산자 함수 0x5455C는 연구자가 넣어 준 입력 반워드, 방향 플래그, 보정값, 계산 플래그를 받아 입력을 방향에 따라 정규화하고 요청값을 계산합니다. 가운데는 두 호출이 함께 쓰는 객체와 공유 메모리입니다. 생산자는 pulse+0xC2에 정규화한 입력을, 0x00103168에 차감값을, pulse+0xBC에 계산한 요청값을 적습니다. 0x0010316E에는 보정값이 있습니다. 두 호출 사이의 펌웨어 동작은 실행하지 않았습니다. 오른쪽의 소비자 함수 0x547CC는 요청값을 읽어 준비 조건을 확인하고 구간 번호를 정한 뒤 pulse+0x9E, position+0x166, motor+0x60에 기록하고, 구동 준비 함수 0x52E38을 인수 8로 호출합니다.</desc>
+<defs><marker id="dg-two-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker>
+<marker id="dg-two-am" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah model" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="gf" x="250" y="8" width="300" height="288" rx="12"/>
+<text class="h mid" x="400" y="30">같은 객체와 공유 메모리</text>
+<rect class="b" x="264" y="42" width="272" height="28" rx="6"/>
+<text class="mono" x="276" y="61">pulse+0xC2</text><text class="s" x="392" y="61">정규화한 입력</text>
+<rect class="b" x="264" y="74" width="272" height="28" rx="6"/>
+<text class="mono" x="276" y="93">0x00103168</text><text class="s" x="392" y="93">차감값</text>
+<rect class="b" x="264" y="106" width="272" height="28" rx="6"/>
+<text class="mono" x="276" y="125">0x0010316E</text><text class="s" x="392" y="125">보정값(더하는 값)</text>
+<rect class="b key" x="264" y="138" width="272" height="28" rx="6"/>
+<text class="mono" x="276" y="157">pulse+0xBC</text><text class="s" x="392" y="157">계산한 요청값</text>
+<text class="n topen mid" x="400" y="187">두 호출 사이는 실행하지 않음</text>
+<rect class="b" x="264" y="198" width="272" height="28" rx="6"/>
+<text class="mono" x="276" y="217">pulse+0x9E</text><text class="s" x="392" y="217">전달한 요청값</text>
+<rect class="b" x="264" y="230" width="272" height="28" rx="6"/>
+<text class="mono" x="276" y="249">position+0x166</text><text class="s" x="392" y="249">전달한 요청값</text>
+<rect class="b" x="264" y="262" width="272" height="28" rx="6"/>
+<text class="mono" x="276" y="281">motor+0x60</text><text class="s" x="392" y="281">구간 번호 0·1·2</text>
+
+<rect class="b ok" x="8" y="62" width="206" height="84" rx="8"/>
+<text class="t" x="20" y="88">생산자 0x5455C</text>
+<text class="s" x="20" y="108">입력을 방향에 따라 정규화</text>
+<text class="s" x="20" y="126">요청값을 계산해 기록</text>
+<rect class="b model" x="8" y="198" width="206" height="84" rx="8"/>
+<text class="t" x="20" y="224">넣어 준 값</text>
+<text class="s" x="20" y="244">입력 반워드, 방향 플래그</text>
+<text class="s" x="20" y="262">보정값, 계산 플래그</text>
+<rect class="b ok" x="586" y="62" width="206" height="84" rx="8"/>
+<text class="t" x="598" y="88">소비자 0x547CC</text>
+<text class="s" x="598" y="108">요청값과 준비 조건 확인</text>
+<text class="s" x="598" y="126">구간 번호를 정함</text>
+<rect class="b ok" x="586" y="198" width="206" height="84" rx="8"/>
+<text class="t" x="598" y="224">구동 준비 0x52E38</text>
+<text class="s" x="598" y="244">인수 8로 호출</text>
+<text class="s" x="598" y="262">바디·렌즈 분기점까지 실행</text>
+
+<path class="e" d="M214 104H262" marker-end="url(#dg-two-ah)"/>
+<path class="e model" d="M111 198V148" marker-end="url(#dg-two-am)"/>
+<path class="e" d="M536 152H558V94H584" marker-end="url(#dg-two-ah)"/>
+<path class="e" d="M586 126H570V244H538" marker-end="url(#dg-two-ah)"/>
+<path class="e" d="M689 146V196" marker-end="url(#dg-two-ah)"/>
+</svg>
+</div>
+<ul class="dg-legend"><li><i class="ok"></i>원본 코드를 실행한 함수</li><li><i class="key"></i>두 호출을 잇는 값</li><li><i></i>객체와 공유 메모리의 칸</li><li><i class="model"></i>연구자가 넣은 값</li></ul>
+</figure>
+
+<p>두 호출은 주소 0번지 영역의 같은 루틴 안에 있습니다. 생산자 호출은 <code>VA 0x2258</code>(파일 <code>0xD7674</code>)에서, 소비자 호출은 <code>VA 0x234C</code>(파일 <code>0xD7768</code>)에서 일어납니다. 실행한 구간은 <code>VA 0x2248</code>부터 <code>0x225C</code>까지와 <code>VA 0x2348</code>부터입니다. 두 구간 사이에서 펌웨어가 하는 일(스케줄링)은 실행하지 않았습니다.</p>
+
+<h3>입력을 방향에 따라 정규화합니다</h3>
+<p>능력 비트 6이 꺼진 바디 경로에서는 함수 <code>0x544EC</code>가 입력 반워드를 먼저 다듬습니다. 방향 플래그(VA <code>0x00103116</code>)에 따라 두 가지로 처리합니다.</p>
+<div class="table-wrap"><table>
+<caption>방향 플래그에 따른 정규화</caption>
+<thead><tr><th>방향 플래그</th><th><code>pulse+0xC2</code>(정규화한 입력)</th><th>차감값(VA <code>0x00103168</code>)</th></tr></thead>
+<tbody>
+<tr><th scope="row">0</th><td>입력을 그대로 복사</td><td>0</td></tr>
+<tr><th scope="row">0이 아님</th><td>0</td><td>입력의 비트를 뒤집은 값의 하위 16비트</td></tr>
+</tbody></table></div>
+<p class="small muted">실행이 끝난 뒤 방향 플래그는 두 경우 모두 0이었습니다. 예를 들어 방향 1에서 입력 65,435(<code>0xFF9B</code>)를 넣으면 차감값은 100이 됩니다.</p>
+
+<h3>요청값의 계산식</h3>
+<p>시험한 상태에서 요청값은 아래 식의 하위 16비트입니다.</p>
+<pre><code>요청값 = 정규화한 입력(pulse+0xC2) − 차감값[0x00103168] + 보정값[0x0010316E]</code></pre>
+<ul>
+<li><strong>0이 되는 경우</strong> — 계산 플래그(<code>accessor+0xC5F</code>)가 1이 아니면 요청값은 0입니다. 계산 결과를 부호 있는 16비트로 읽었을 때 음수여도 0입니다.</li>
+<li><strong>설정값 조건</strong> — 설정 키 <code>0x2C7</code>의 값이 허용 목록(1, 11, 12, 13, 19)에 없으면 정규화와 계산을 하지 않습니다. 시험에서는 허용되는 값 1과 허용되지 않는 값 0을 넣어 실행했고, 나머지 값은 비교 명령을 읽어 확인했습니다.</li>
+<li><strong>고정한 조건</strong> — 전역 플래그 VA <code>0x001030AB</code>는 0, 준비 상태(VA <code>0x001030E2</code>)는 3으로 두었습니다. 다른 상태에서도 같은 식이 쓰인다고 일반화하지 않았습니다.</li>
+</ul>
+<p>보정값이 어디서 만들어지는지는 <a href="af-input.html">다음 문서</a>에서 다룹니다.</p>
+
+<h3>소비자는 요청값의 크기에 따라 다르게 움직입니다</h3>
+<figure class="diagram">
+<figcaption>소비자 함수가 읽은 요청값과 그 결과</figcaption>
+<div class="dg-scroll">
+<svg class="dg" viewBox="0 0 800 104" role="img" aria-labelledby="dg-band-title dg-band-desc">
+<title id="dg-band-title">요청값의 크기에 따른 소비자 함수의 동작</title>
+<desc id="dg-band-desc">요청값이 0이면 구동 준비를 부르지 않습니다. 230 이하이면 준비 바이트가 1일 때만 전달합니다. 231부터 365까지는 전달하면서 구간 번호 0을, 366부터 400까지는 구간 번호 1을, 401 이상은 구간 번호 2를 기록합니다.</desc>
+<rect class="b" x="8" y="14" width="110" height="64" rx="8"/>
+<text class="t" x="20" y="40">0</text>
+<text class="s" x="20" y="60">전달하지 않음</text>
+<rect class="b" x="118" y="14" width="200" height="64" rx="8"/>
+<text class="t" x="130" y="40">230 이하</text>
+<text class="s" x="130" y="60">준비 바이트가 1일 때만 전달</text>
+<rect class="b ok" x="318" y="14" width="160" height="64" rx="8"/>
+<text class="t" x="330" y="40">231 – 365</text>
+<text class="s" x="330" y="60">전달 · 구간 0</text>
+<rect class="b ok" x="478" y="14" width="150" height="64" rx="8"/>
+<text class="t" x="490" y="40">366 – 400</text>
+<text class="s" x="490" y="60">전달 · 구간 1</text>
+<rect class="b ok" x="628" y="14" width="164" height="64" rx="8"/>
+<text class="t" x="640" y="40">401 이상</text>
+<text class="s" x="640" y="60">전달 · 구간 2</text>
+<text class="n" x="8" y="98">경계값 230, 231, 365, 366, 400, 401과 32,767에서 실행해 확인했습니다. 크기 비율은 실제와 다릅니다.</text>
+</svg>
+</div>
+<ul class="dg-legend"><li><i class="ok"></i>항상 구동 준비로 전달</li><li><i></i>조건에 따라 전달하지 않음</li></ul>
+</figure>
+
+<p>전달되는 경우 요청값은 <code>pulse+0x9E</code>와 <code>position+0x166</code>에 기록되고, 구간 번호는 <code>motor+0x60</code>에 기록됩니다. 이어서 구동 준비 함수 <code>0x52E38</code>이 인수 8로 실제 호출됐습니다. 능력 비트 6이 꺼진 객체에서는 이 함수 안의 바디 분기점(파일 <code>0x52ED4</code>)에 도달했습니다. 구간 번호 0·1·2가 속도나 토크 같은 물리량과 어떤 관계인지는 확인하지 않았습니다.</p>
+
+<div class="table-wrap"><table>
+<caption>넣어 준 조건과 소비자의 동작(요약)</caption>
+<thead><tr><th>조건</th><th>소비자 함수의 동작</th></tr></thead>
+<tbody>
+<tr><th scope="row">계산 플래그가 0 또는 2, 또는 계산값이 음수로 해석됨</th><td>요청값 0. 구동 준비를 부르지 않음</td></tr>
+<tr><th scope="row">요청값 230, 준비 바이트 0</th><td>전달하지 않음</td></tr>
+<tr><th scope="row">요청값 230, 준비 바이트 1</th><td>구동 준비 호출. 구간 번호는 기록하지 않음</td></tr>
+<tr><th scope="row">요청값 231…365</th><td>구동 준비 호출, <code>motor+0x60 = 0</code></td></tr>
+<tr><th scope="row">요청값 366…400</th><td>구동 준비 호출, <code>motor+0x60 = 1</code></td></tr>
+<tr><th scope="row">요청값 401 이상</th><td>구동 준비 호출, <code>motor+0x60 = 2</code></td></tr>
+</tbody></table></div>
+
+<details class="evidence"><summary>바디 경로 14건의 입력과 결과</summary>
+<div class="table-wrap"><table class="compact">
+<thead><tr><th>사례</th><th class="n">입력</th><th class="n">방향</th><th class="n">보정값</th><th class="n">설정값</th><th class="n">계산 플래그</th><th class="n">준비 바이트</th><th class="n">요청값</th><th>결과</th></tr></thead>
+<tbody>
+<tr><td>역방향, 결과가 0 미만</td><td class="n">65,435</td><td class="n">1</td><td class="n">90</td><td class="n">1</td><td class="n">1</td><td class="n">1</td><td class="n">0</td><td>호출 없음</td></tr>
+<tr><td>역방향, 결과가 양수</td><td class="n">65,435</td><td class="n">1</td><td class="n">331</td><td class="n">1</td><td class="n">1</td><td class="n">0</td><td class="n">231</td><td>호출, 구간 0</td></tr>
+<tr><td>부호 경계를 넘음</td><td class="n">32,767</td><td class="n">0</td><td class="n">1</td><td class="n">1</td><td class="n">1</td><td class="n">1</td><td class="n">0</td><td>호출 없음</td></tr>
+<tr><td>부호 경계의 최댓값</td><td class="n">32,767</td><td class="n">0</td><td class="n">0</td><td class="n">1</td><td class="n">1</td><td class="n">0</td><td class="n">32,767</td><td>호출, 구간 2</td></tr>
+<tr><td>계산 플래그 0</td><td class="n">225</td><td class="n">0</td><td class="n">5</td><td class="n">1</td><td class="n">0</td><td class="n">1</td><td class="n">0</td><td>호출 없음</td></tr>
+<tr><td>계산 플래그 2</td><td class="n">225</td><td class="n">0</td><td class="n">5</td><td class="n">1</td><td class="n">2</td><td class="n">1</td><td class="n">0</td><td>호출 없음</td></tr>
+<tr><td>설정값이 허용 목록 밖</td><td class="n">225</td><td class="n">0</td><td class="n">5</td><td class="n">0</td><td class="n">1</td><td class="n">1</td><td class="n">0</td><td>정규화 없음, 호출 없음</td></tr>
+<tr><td>작은 요청, 준비 안 됨</td><td class="n">225</td><td class="n">0</td><td class="n">5</td><td class="n">1</td><td class="n">1</td><td class="n">0</td><td class="n">230</td><td>호출 없음</td></tr>
+<tr><td>작은 요청, 준비됨</td><td class="n">225</td><td class="n">0</td><td class="n">5</td><td class="n">1</td><td class="n">1</td><td class="n">1</td><td class="n">230</td><td>호출, 구간 기록 없음</td></tr>
+<tr><td>첫 구간 하한</td><td class="n">226</td><td class="n">0</td><td class="n">5</td><td class="n">1</td><td class="n">1</td><td class="n">0</td><td class="n">231</td><td>호출, 구간 0</td></tr>
+<tr><td>첫 구간 상한</td><td class="n">360</td><td class="n">0</td><td class="n">5</td><td class="n">1</td><td class="n">1</td><td class="n">0</td><td class="n">365</td><td>호출, 구간 0</td></tr>
+<tr><td>둘째 구간 하한</td><td class="n">361</td><td class="n">0</td><td class="n">5</td><td class="n">1</td><td class="n">1</td><td class="n">0</td><td class="n">366</td><td>호출, 구간 1</td></tr>
+<tr><td>둘째 구간 상한</td><td class="n">395</td><td class="n">0</td><td class="n">5</td><td class="n">1</td><td class="n">1</td><td class="n">0</td><td class="n">400</td><td>호출, 구간 1</td></tr>
+<tr><td>셋째 구간 하한</td><td class="n">396</td><td class="n">0</td><td class="n">5</td><td class="n">1</td><td class="n">1</td><td class="n">0</td><td class="n">401</td><td>호출, 구간 2</td></tr>
+</tbody></table></div>
+<ul>
+<li>호출이 없는 사례는 <code>VA 0x2350</code>으로 돌아갑니다. 이때 처리 함수의 반환값은 요청값이 0이면 1, 0이 아니면(작은 요청, 준비 안 됨) 0이었습니다.</li>
+<li>검증기가 함께 확인한 기록: 요청값이 0이 아니면 <code>accessor</code>가 가리키는 기록의 <code>+0xB0</code> 값이 <code>position+0x164</code>에 복사됩니다. 요청값이 0이면 <code>pulse+0x168</code>과 <code>pulse+0x16C</code>가 0으로 지워집니다. 구간 번호를 기록할 때 <code>accessor+0x3FD</code>에 1이 함께 기록됩니다.</li>
+<li>입력 반워드는 모터 객체에서 <code>+8</code>, <code>+4</code>, <code>+0x24</code>를 차례로 따라간 곳에서 읽습니다(읽기 함수 <code>0xB9E80</code>). 설정값은 VA <code>0x4008124B</code>에서 읽습니다.</li>
+<li>소비자의 비교 상수: 230(<code>0x548D4</code>), 365와 400(<code>0x54DD4</code>, <code>0x548E8</code>). 구동 준비 호출은 <code>0x5493C</code>와 <code>0x54A1C</code>에서 일어납니다.</li>
+<li>근거는 <a href="af-control.json">af-control.json</a>의 <code>body_calculation_input</code>과 <code>body_control_cases</code>입니다.</li>
+</ul>
+</details>
+</section>
+
+<section id="lens">
+<h2>렌즈 경로: 요청값은 렌즈 명령 0x8211의 응답에서 나옵니다</h2>
+<p class="takeaway">능력 비트 6이 켜진 경로에서는 카메라가 계산하지 않습니다. 렌즈에 물어서 받은 2바이트 값을 요청값으로 씁니다.</p>
+<ol class="flow">
+<li class="model"><strong>렌즈에 조회</strong><span>함수 0x4E684가 명령 0x8211로 2바이트를 요청. 응답은 넣어 준 값</span></li>
+<li class="ok"><strong>값 읽기</strong><span>함수 0xB995C가 첫 바이트 × 256 + 둘째 바이트로 읽음</span></li>
+<li class="ok"><strong>부호와 플래그 확인</strong><span>부호와 계산 플래그를 확인. 음수이면 요청값 0</span></li>
+<li class="ok"><strong>구동 준비</strong><span>0x52E38을 인수 8로 호출. 렌즈 분기점 0x52E98에 도달</span></li>
+</ol>
+
+<div class="table-wrap"><table>
+<caption>렌즈 경로 3건</caption>
+<thead><tr><th>넣어 준 조건</th><th class="n">요청값</th><th class="n">잔량 필드(<code>pulse+0xBA</code>)</th><th>구동 준비</th></tr></thead>
+<tbody>
+<tr><th scope="row">정상 응답 <code>0x0102</code></th><td class="n">258</td><td class="n">1,024 → 766</td><td>호출, 렌즈 분기점 도달</td></tr>
+<tr><th scope="row">정상 응답 <code>0xFFFF</code></th><td class="n">0</td><td class="n">1,024 그대로</td><td>호출 없음</td></tr>
+<tr><th scope="row">전송 상태 7, 응답 버퍼는 갱신하지 않음(이전 값 <code>0x0201</code>)</th><td class="n">513</td><td class="n">1,024 → 511</td><td>호출, 렌즈 분기점 도달</td></tr>
+</tbody></table></div>
+
+<p>셋째 사례는 설명이 필요합니다. 원본 함수 <code>0x4E684</code>는 전송 호출이 돌려준 상태를 검사하지 않고 응답 버퍼를 읽습니다. 그래서 전송이 실패했다고 알려 주면서 버퍼를 건드리지 않으면, 버퍼에 남아 있던 이전 값 <code>0x0201</code>이 요청값 513으로 다시 쓰였습니다.</p>
+<div class="callout warn"><strong class="label">주의</strong>
+<p>이 결과는 “전송 함수가 실패를 알리면서 버퍼를 그대로 둔다”는 조건을 연구자가 정했을 때의 호출자 동작입니다. 실제 통신이 실패할 때 버퍼가 항상 그대로 남는지는 확인하지 않았습니다. 또한 이 분기는 능력 비트에 따른 제어 경로일 뿐이며, SDM·DC·PLM 각각의 통신 규약을 식별한 결과가 아닙니다.</p></div>
+
+<details class="evidence"><summary>렌즈 경로의 함수와 시험 조건</summary>
+<ul>
+<li>호출 연결: <code>0x54688</code> → <code>0x4E684</code>(조회), <code>0x4E694</code> → 디스패처 <code>0x94204</code>, <code>0x4E6A0</code> → <code>0xB995C</code>(값 읽기). 음수가 아닌 결과는 <code>0x546CC</code>에서 저장합니다.</li>
+<li>시험 조건: <code>CLensKaf2+0x1A</code>의 비트 0은 0, 계산 플래그 <code>accessor+0xC5F</code>는 1, 잔량 필드의 초기값은 1,024(<code>0x400</code>)로 두었습니다.</li>
+<li>세 사례 모두 렌즈 조회는 명령 <code>0x8211</code> 한 번뿐이었습니다. 호출이 없는 사례는 <code>VA 0x2350</code>으로 돌아갔습니다.</li>
+<li>근거는 <a href="af-control.json">af-control.json</a>의 <code>lens_control_cases</code>와 <code>lens_error_without_reply_write</code>입니다.</li>
+</ul>
+</details>
+</section>
+
+<section id="limits">
+<h2>한계와 남은 과제</h2>
+<ul>
+<li><strong>입력의 출처</strong> — 위상차·콘트라스트 AF가 센서 신호에서 초점 오차를 만드는 알고리즘은 분석하지 않았습니다. 입력 반워드와 보정값의 출처는 <a href="af-input.html">AF 카운터와 보정값</a>에서 일부 이어집니다.</li>
+<li><strong>호출 사이</strong> — 두 호출 사이의 상태 전이와 스케줄링은 실행하지 않았습니다.</li>
+<li><strong>분기 이후</strong> — 구동 준비 함수의 분기점 뒤에 이어지는 제어 전체와 실제 렌즈 움직임은 확인하지 않았습니다.</li>
+<li><strong>대체와 합성</strong> — 실행을 대체한 함수는 렌즈 전송 <code>0x93F94</code> 하나입니다. 나머지 객체, 공유 메모리, 상태값은 검증기에 적어 둔 합성 입력입니다.</li>
+</ul>
+<p>정확한 렌즈 모델 정보가 없어도 이 기본 구조의 분석은 이어 갈 수 있습니다. 모델별 수정이나 렌즈 EEPROM 변경은 적용하지 않았습니다. 미해결 항목은 <a href="hq-status.json">hq-status.json</a>에 정리되어 있습니다.</p>
+</section>
+
+<section id="reproduce">
+<h2>재현 방법</h2>
+<p>입력은 <a href="../inspect_firmware.py">복호화 도구</a>가 만든 <code>decoded.bin</code>이고, 에뮬레이터는 Unicorn 2.1.4입니다. 둘째 명령은 앞 문서의 구동 분기 검증입니다.</p>
 <pre><code>python verify_af_control.py decoded.bin --emulate --compare analysis/af-control.json
 python verify_af_drive.py decoded.bin --emulate --compare analysis/af-drive.json</code></pre>
-<p>Unicorn 2.1.4에서 능력 조회 8건, 바디 요청 계산·전달 14건, 렌즈 요청 3건을 실행했다. 55개 명령·상수, 61개 분기 목적지, RTTI 3개를 대조했고 코디네이터가 스냅샷을 다시 실행해 일치를 확인했다. 실행을 대체한 함수는 렌즈 전송 <code>0x93F94</code> 하나다. 나머지 객체·공유 메모리·상태값은 공개 검증기에 명시한 합성 입력이다. <a href="../verify_af_control.py">검증기</a></p>
-<p>위상차·콘트라스트 AF가 센서 신호에서 초점 오차를 만드는 알고리즘, 두 ITCM 호출 사이의 상태 전이, 구동 분기 이후 전체 제어와 실제 렌즈 움직임은 미검증이다. 정확한 렌즈 모델 정보가 없어도 이 기본 구조 분석은 계속할 수 있다. 모델별 패치나 렌즈 EEPROM 변경은 적용하지 않았다. <a href="hq-status.json">미해결 항목과 다음 작업</a></p>
-</section></main><footer>K-3 II v1.12 · <a href="af-drive.html">능력·구동 분기 보고서</a> · <a href="../README.md">저장소 안내</a></footer></body></html>
+<dl class="kv">
+<dt>실행 사례</dt><dd>능력 조회 8건 + 바디 요청 계산·전달 14건 + 렌즈 요청 3건 = 25건</dd>
+<dt>정적 대조</dt><dd>명령어·상수 55개, 분기 61개, 클래스 이름 3개, 코드 구간 해시 8개</dd>
+<dt>복호화한 이미지 SHA-256</dt><dd><code class="wrap">1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc</code></dd>
+</dl>
+<p>결과 스냅샷은 다시 실행해 일치를 확인한 것입니다.</p>
+
+<details class="evidence"><summary>클래스 이름과 코드 구간 해시</summary>
+<div class="table-wrap"><table class="compact">
+<caption>RTTI에서 확인한 클래스 이름 3개</caption>
+<thead><tr><th>이름 문자열</th><th>이름 위치</th><th>형식 정보</th><th>가상 함수 표</th></tr></thead>
+<tbody>
+<tr><td><code>14CAfApplication</code></td><td><code>0xD13BB</code></td><td><code>0xD0570</code></td><td><code>0xD2EE0</code></td></tr>
+<tr><td><code>8CAfMotor</code></td><td><code>0xD2610</code></td><td><code>0xD0F90</code></td><td><code>0xD4F9C</code></td></tr>
+<tr><td><code>8CAfPulse</code></td><td><code>0xD261A</code></td><td><code>0xD0FB0</code></td><td><code>0xD4FD8</code></td></tr>
+</tbody></table></div>
+<div class="table-wrap"><table class="compact">
+<caption>해시로 고정한 코드 구간 8개(끝 주소 제외)</caption>
+<thead><tr><th>구간</th><th>범위</th><th>SHA-256</th></tr></thead>
+<tbody>
+<tr><td>상위 호출 루틴(주소 0번지 영역)</td><td><code>0xD7664</code>–<code>0xD7774</code></td><td><code class="wrap">1342eb2446e2233672a46a344decad4c92ce125eeff8559477bbf4f250d66f6a</code></td></tr>
+<tr><td>모터 함수로 가는 연결 코드</td><td><code>0xE7F68</code>–<code>0xE7F74</code></td><td><code class="wrap">3c3010a1e68be6590a6398f795f58b1c624ff21d9823ba93b89c00e4555f52ce</code></td></tr>
+<tr><td>요청값 계산</td><td><code>0x544EC</code>–<code>0x547CC</code></td><td><code class="wrap">ce75f3161920717b6375022102709de3c2b4bf1ab871638a2ae7a4faf125b8c9</code></td></tr>
+<tr><td>요청값 전달</td><td><code>0x547CC</code>–<code>0x54AF8</code></td><td><code class="wrap">16b0394c853f9e1f8fd036628e45b1271f26a042e93db89c376b353ecb86f1ce</code></td></tr>
+<tr><td>구동 준비 앞부분</td><td><code>0x52E38</code>–<code>0x52EF4</code></td><td><code class="wrap">5fe28cf4a9b8ea52662e67063a4db65ce5419395a5d7c300b3204ba3ac2c0da5</code></td></tr>
+<tr><td>능력 조회 앞부분</td><td><code>0x94DC4</code>–<code>0x94E18</code></td><td><code class="wrap">c1186b69b6ad0334045f38eff556eb25f8c0dd412db0707591f351ef3b885e93</code></td></tr>
+<tr><td>렌즈 응답 저장</td><td><code>0x94844</code>–<code>0x94870</code></td><td><code class="wrap">4b151d3d998ea59e7ccf9e61e787b54b8daea1e4cf31d08412e2b485486c2b4d</code></td></tr>
+<tr><td>렌즈 요청값 조회</td><td><code>0x4E684</code>–<code>0x4E6A4</code></td><td><code class="wrap">18ced21814a6dd307566594ce379b0e2d3c97311c99acdf69cf57d39b5c57bb3</code></td></tr>
+</tbody></table></div>
+</details>
+</section>
+
+<section id="refs">
+<h2>근거 파일과 참고 자료</h2>
+<ul class="refs">
+<li><a href="af-control.json">af-control.json</a> — 조회 조건, 계산식, 실행 25건의 입력과 결과</li>
+<li><a href="../verify_af_control.py">verify_af_control.py</a> — 정적 대조와 에뮬레이터 실행</li>
+<li><a href="af-drive.html">렌즈 능력과 구동 분기</a> · <a href="af-drive.json">af-drive.json</a> — 비트 6에 따른 구동 경로 분기</li>
+<li><a href="af-input.html">AF 카운터와 보정값</a> — 입력 카운터와 보정값이 만들어지는 과정</li>
+<li><a href="hq-status.json">hq-status.json</a> — 연구 목표별 근거와 미해결 항목</li>
+<li>외부 자료: <a href="https://www.ricoh-imaging.co.jp/english/products/lens/suit_mount.html">리코 마운트별 호환표</a>(바디 구동과 렌즈 구동) · <a href="https://github.com/unicorn-engine/unicorn">Unicorn CPU 에뮬레이터</a></li>
+</ul>
+<p class="small muted">이 문서의 근거 스냅샷은 2026-11-08 기준입니다.</p>
+</section>
+
+</main>
+</div>
+<!-- chrome:bottom -->
+<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">AF와 렌즈 제어 — 이 주제의 문서</h2><ol><li><a href="guide-af.html">AF 안내</a></li><li><a href="af-drive.html">렌즈 능력과 구동 분기</a></li><li><a href="af-control.html" aria-current="page">AF 요청 계산과 구동 준비</a></li><li><a href="af-input.html">AF 카운터와 보정값</a></li></ol></nav>
+<nav class="pager" aria-label="이전·다음 문서"><a class="prev" href="af-drive.html"><small>← 이전</small>렌즈 능력과 구동 분기</a><a class="next" href="af-input.html"><small>다음 →</small>AF 카운터와 보정값</a></nav>
+<footer class="sitefoot"><div class="sitefoot-in"><nav aria-label="사이트"><a href="../index.html#map">문서 지도</a><a href="../index.html#levels">검증 수준 읽는 법</a><a href="../glossary.html">용어집</a><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/research-program.html">세 기종 연구 본부</a><a href="https://github.com/yunhyok/pentax-k3ii-firmware-analysis">GitHub 저장소</a></nav><p>PENTAX K-3 II 펌웨어 1.12 분석 문서. PC에서 수행한 정적 분석과 에뮬레이션 결과이며, 카메라 실기에서 검증한 내용이 아닙니다. 원본 펌웨어와 복호화한 바이너리는 포함하지 않습니다.</p></div></footer>
+<!-- /chrome:bottom -->
+</body>
+</html>

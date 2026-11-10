@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>촬영 준비·보존 레코드 안내 — PENTAX K-3 II 펌웨어 연구</title>
+<meta name="description" content="K-3 II 펌웨어가 업데이트 때 남겨 두는 보존 섹터 13~22의 구성과, 거기서 읽은 레코드가 촬영 준비 단계의 픽셀 보정 정책과 저장 요청으로 이어지는 흐름을 한 장의 지도로 정리한 안내 문서입니다.">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body data-camera="k3ii">
+<!-- chrome:top -->
+<a class="skip" href="#main">본문 바로가기</a>
+<div class="topbar"><div class="topbar-in"><a class="brand" href="../index.html">PENTAX <b>펌웨어 연구</b></a><div class="cams" aria-label="기종 선택"><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/">K-3 III</a><a href="../index.html" aria-current="true">K-3 II</a><a href="https://yunhyok.github.io/pentax-q7-firmware-analysis/">Q7</a></div><nav class="topnav" aria-label="주제"><a href="../index.html">개요</a><a href="guide-pipeline.html">영상 처리</a><a href="guide-capture.html" aria-current="true">촬영·보존 레코드</a><a href="guide-rebuild.html">재구축·업데이트</a><a href="guide-af.html">AF</a><a href="guide-ui.html">UI</a></nav></div></div>
+<nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../index.html">PENTAX K-3 II</a></li><li aria-current="page">촬영 준비·보존 레코드 안내</li></ol></nav>
+<!-- /chrome:top -->
+<header class="page-head">
+<p class="eyebrow">촬영 준비와 보존 레코드 · 주제 안내</p>
+<h1>촬영 준비·보존 레코드 안내</h1>
+<p class="lead">펌웨어를 새로 올려도 지워지지 않는 플래시 구역이 있고, 거기에는 설정 복사본과 픽셀 보정 레코드 같은 데이터의 자리가 있습니다. 이 주제의 문서들은 그 구역의 구조와, 거기서 읽은 값이 촬영 준비 단계에서 픽셀 보정 여부를 정하고 저장 요청까지 이어지는 과정을 다룹니다.</p>
+</header>
+<div class="layout">
+<!-- chrome:toc -->
+<nav class="toc" aria-label="이 문서의 목차"><h2 data-toc="no">이 문서에서</h2><ol><li><a href="#map">한눈에 보기: 보존 섹터와 촬영 준비의 흐름</a></li><li><a href="#background">배경 지식</a></li><li><a href="#status">지금까지 알아낸 것과 아직 모르는 것</a></li><li><a href="#order">읽는 순서</a></li><li><a href="#refs">근거 파일과 참고 자료</a></li></ol></nav>
+<!-- /chrome:toc -->
+<main class="doc" id="main">
+
+<section class="summary">
+<h2 data-toc="no">핵심 요약</h2>
+<ul>
+<li>펌웨어의 업데이트 코드는 128KiB 섹터 13~22를 건너뜁니다. 이 열 섹터에 <strong>설정 복사본 두 벌, 32바이트 진단 레코드, 픽셀 보정 레코드, 정책 플래그의 근거가 되는 레코드</strong>가 나뉘어 있습니다.</li>
+<li>촬영 준비 함수는 여러 값을 모아 <strong>픽셀 보정 정책 함수</strong>를 부르고, 정책 함수가 만든 활성 바이트가 촬영 패킷을 거쳐 <strong>이미지 버퍼의 픽셀 보정</strong>을 켜거나 끕니다.</li>
+<li>저장 쪽에서는 JPEG 완료 길이가 촬영 객체의 내장 레코드를 거쳐 <strong>StoreImage 요청</strong>에 같은 값으로 닿습니다.</li>
+<li>모두 원본 코드를 PC 에뮬레이터에서 시험용 입력으로 실행한 결과입니다. 실제 카메라의 보존 데이터, 플래시 기록, 실제 촬영에서의 동작은 확인하지 않았습니다.</li>
+</ul>
+</section>
+
+<section id="map">
+<h2>한눈에 보기: 보존 섹터와 촬영 준비의 흐름</h2>
+<p class="takeaway">위쪽은 플래시의 보존 섹터, 가운데는 RAM으로 올라온 사본과 검사, 아래쪽은 촬영 준비에서 보정과 저장 요청까지의 흐름입니다. 동그라미 번호는 아래 “읽는 순서”의 문서 번호입니다.</p>
+
+<figure class="diagram">
+<figcaption>보존 섹터 13~22와 이 주제의 문서가 다루는 범위</figcaption>
+<div class="dg-scroll">
+<svg class="dg" viewBox="0 0 800 632" role="img" aria-labelledby="dg-map-title dg-map-desc">
+<title id="dg-map-title">보존 섹터 지도와 촬영 준비·픽셀 보정·저장 요청의 데이터 흐름</title>
+<desc id="dg-map-desc">맨 위는 플래시의 보존 섹터 13부터 22까지입니다. 섹터 13과 22는 설정 복사본, 14는 진단 레코드, 15부터 19는 픽셀 레코드, 20은 주 사본, 21은 백업 사본입니다. 섹터 13과 22는 설정 저장 문서 9번이, 섹터 14의 32바이트 진단 레코드는 문서 8번이, 섹터 15에서 19의 픽셀 레코드는 문서 1번이, 섹터 20과 21에서 올라온 ID 0x63에서 0x65의 RAM 사본은 문서 5번이 다룹니다. RAM 사본의 레코드 검사가 설정 바이트를 만드는 과정은 문서 6번, 상위 명령과 패킷이 레코드를 고치는 과정은 문서 7번입니다. 아래쪽 흐름에서 촬영 준비 함수(문서 3번)가 정책 함수(문서 2번)를 부르고, 정책 함수는 설정 바이트와 두 마커로 초기 플래그를 정한 뒤 표 조회로 활성 바이트를 만듭니다. 활성 바이트는 촬영 패킷을 거쳐 픽셀 보정으로 가고, 픽셀 보정은 픽셀 레코드를 읽어 이미지 버퍼의 픽셀을 이웃 평균으로 바꿉니다. 그 뒤의 이미지 처리와 압축은 이 주제 밖입니다. 마지막 줄에서 JPEG 완료 길이가 내장 레코드 여섯 개(문서 4번)를 거쳐 StoreImage 요청에 닿습니다. 점선 상자는 확인하지 않은 범위로, 플래시 물리 기록, 입력값의 출처, 이미지 처리와 압축, 파일 쓰기와 SD가 해당합니다.</desc>
+<defs>
+<marker id="dg-map-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker>
+<marker id="dg-map-aho" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah open" d="M0 0L10 5L0 10z"/></marker>
+</defs>
+<text class="h" x="10" y="22">플래시의 보존 섹터 · 128KiB 단위로 0부터 센 번호</text>
+<rect class="b" x="10" y="34" width="78" height="56"/><text class="t mid" x="49" y="57">13</text><text class="n mid" x="49" y="78">설정 A</text>
+<rect class="b" x="88" y="34" width="78" height="56"/><text class="t mid" x="127" y="57">14</text><text class="n mid" x="127" y="78">진단</text>
+<rect class="b" x="166" y="34" width="78" height="56"/><text class="t mid" x="205" y="57">15</text><text class="n mid" x="205" y="78">픽셀</text>
+<rect class="b" x="244" y="34" width="78" height="56"/><text class="t mid" x="283" y="57">16</text><text class="n mid" x="283" y="78">픽셀</text>
+<rect class="b" x="322" y="34" width="78" height="56"/><text class="t mid" x="361" y="57">17</text><text class="n mid" x="361" y="78">픽셀</text>
+<rect class="b" x="400" y="34" width="78" height="56"/><text class="t mid" x="439" y="57">18</text><text class="n mid" x="439" y="78">픽셀</text>
+<rect class="b" x="478" y="34" width="78" height="56"/><text class="t mid" x="517" y="57">19</text><text class="n mid" x="517" y="78">픽셀</text>
+<rect class="b" x="556" y="34" width="78" height="56"/><text class="t mid" x="595" y="57">20</text><text class="n mid" x="595" y="78">주 사본</text>
+<rect class="b" x="634" y="34" width="78" height="56"/><text class="t mid" x="673" y="57">21</text><text class="n mid" x="673" y="78">백업 사본</text>
+<rect class="b" x="712" y="34" width="78" height="56"/><text class="t mid" x="751" y="57">22</text><text class="n mid" x="751" y="78">설정 B</text>
+
+<path class="e" d="M49 90V148" marker-end="url(#dg-map-ah)"/>
+<path class="e" d="M127 90V120H237V148" marker-end="url(#dg-map-ah)"/>
+<path class="e" d="M170 92V100H552V92"/>
+<path class="e" d="M361 100V148" marker-end="url(#dg-map-ah)"/>
+<path class="e" d="M560 92V100H708V92"/>
+<path class="e" d="M634 100V148" marker-end="url(#dg-map-ah)"/>
+
+<rect class="b ok" x="10" y="150" width="140" height="74" rx="8"/>
+<a href="settings-storage.html"><text class="t" x="22" y="174">설정 저장 ⑨</text></a>
+<text class="s" x="22" y="194">13·22의 두 복사본</text>
+<text class="s" x="22" y="212">반대쪽 쓰기 요청</text>
+<rect class="b ok" x="162" y="150" width="150" height="74" rx="8"/>
+<a href="preserved-record.html"><text class="t" x="174" y="174">진단 레코드 ⑧</text></a>
+<text class="s" x="174" y="194">ID 0 · 32바이트</text>
+<text class="s" x="174" y="212">SerialNo(UID) 열</text>
+<rect class="b ok" x="324" y="150" width="190" height="74" rx="8"/>
+<a href="pixel-records.html"><text class="t" x="336" y="174">픽셀 레코드 ①</text></a>
+<text class="s" x="336" y="194">64KiB 묶음 10개 → RAM</text>
+<text class="s" x="336" y="212">레코드 = x, y, 플래그</text>
+<rect class="b ok" x="526" y="150" width="264" height="74" rx="8"/>
+<a href="preserved-sector20.html"><text class="t" x="538" y="174">ID 0x63~0x65의 RAM 사본 ⑤</text></a>
+<text class="s" x="538" y="194">백업 사본의 마커가 맞으면 백업을 적재</text>
+<text class="s" x="538" y="212">첫 워드가 유효 마커인지 검사</text>
+
+<rect class="b open" x="10" y="262" width="140" height="74" rx="8"/>
+<text class="t" x="22" y="286">플래시 물리 기록</text>
+<text class="s" x="22" y="306">요청까지만 확인</text>
+<text class="s" x="22" y="324">실제 기록은 미확인</text>
+<path class="e open" d="M80 224V260" marker-end="url(#dg-map-aho)"/>
+<rect class="b ok" x="162" y="262" width="300" height="74" rx="8"/>
+<a href="preserved-dispatch.html"><text class="t" x="174" y="286">상위 명령과 패킷 ⑦</text></a>
+<text class="s" x="174" y="306">ID 0x63 블록 읽기·쓰기, 레코드 개수 갱신</text>
+<text class="s" x="174" y="324">명령이 어디서 오는지는 미확인</text>
+<rect class="b ok" x="526" y="262" width="264" height="74" rx="8"/>
+<a href="preserved-config.html"><text class="t" x="538" y="286">레코드 검사 → 설정 바이트 ⑥</text></a>
+<text class="s" x="538" y="306">두 그룹을 따로 검사해 +0xC, +0xD에 저장</text>
+<text class="s" x="538" y="324">두 마커가 모두 맞을 때만 검사</text>
+<path class="e" d="M658 224V260" marker-end="url(#dg-map-ah)"/>
+<path class="e" d="M462 299H524" marker-end="url(#dg-map-ah)"/>
+
+<rect class="b open" x="10" y="350" width="140" height="56" rx="8"/>
+<text class="t" x="22" y="374">입력값의 출처</text>
+<text class="s" x="22" y="394">메뉴 대응은 미확인</text>
+<path class="e open" d="M80 406V426" marker-end="url(#dg-map-aho)"/>
+
+<path class="e" d="M700 336V384H269V426" marker-end="url(#dg-map-ah)"/>
+<text class="n mid" x="390" y="376">설정 +0xC와 두 마커 → 초기 +0x4A</text>
+<path class="e" d="M500 224V426" marker-end="url(#dg-map-ah)"/>
+<text class="n" x="508" y="406">레코드를 읽음</text>
+
+<rect class="b ok" x="10" y="428" width="150" height="76" rx="8"/>
+<a href="capture-prepare.html"><text class="t" x="22" y="452">촬영 준비 함수 ③</text></a>
+<text class="s" x="22" y="472">가상 호출 25개</text>
+<text class="s" x="22" y="490">A, +0x3C 등 생산</text>
+<rect class="b ok" x="184" y="428" width="170" height="76" rx="8"/>
+<a href="pixel-policy.html"><text class="t" x="196" y="452">정책 함수 ②</text></a>
+<text class="s" x="196" y="472">표 364칸의 값이 4면</text>
+<text class="s" x="196" y="490">+0x49 = 1 (보정 켬)</text>
+<rect class="b ok" x="378" y="428" width="90" height="76" rx="8"/>
+<text class="t" x="390" y="452">촬영 패킷</text>
+<text class="s" x="390" y="472">+0xA 활성</text>
+<rect class="b ok" x="490" y="428" width="140" height="76" rx="8"/>
+<a href="pixel-records.html#pixels"><text class="t" x="502" y="452">픽셀 보정 ①</text></a>
+<text class="s" x="502" y="472">버퍼의 픽셀 값을</text>
+<text class="s" x="502" y="490">이웃 평균으로 바꿈</text>
+<rect class="b open" x="654" y="428" width="136" height="76" rx="8"/>
+<a href="guide-pipeline.html"><text class="t" x="666" y="452">이미지 처리·압축</text></a>
+<text class="s" x="666" y="472">영상 처리 주제에서</text>
+<text class="s" x="666" y="490">따로 다룸</text>
+<path class="e" d="M160 466H182" marker-end="url(#dg-map-ah)"/>
+<path class="e" d="M354 466H376" marker-end="url(#dg-map-ah)"/>
+<path class="e" d="M468 466H488" marker-end="url(#dg-map-ah)"/>
+<path class="e open" d="M630 466H652" marker-end="url(#dg-map-aho)"/>
+
+<path class="e open" d="M722 504V524H95V544" marker-end="url(#dg-map-aho)"/>
+<rect class="b ok" x="10" y="546" width="170" height="74" rx="8"/>
+<text class="t" x="22" y="570">JPEG 완료 길이</text>
+<text class="s" x="22" y="590">완료 코드가 카운터에서</text>
+<text class="s" x="22" y="608">읽은 값 (카운터는 합성)</text>
+<rect class="b ok" x="204" y="546" width="200" height="74" rx="8"/>
+<a href="store-image-records.html"><text class="t" x="216" y="570">내장 레코드 6개 ④</text></a>
+<text class="s" x="216" y="590">촬영 객체 안의 저장 레코드</text>
+<text class="s" x="216" y="608">주소와 길이를 담음</text>
+<rect class="b ok" x="428" y="546" width="200" height="74" rx="8"/>
+<a href="store-image-records.html#request"><text class="t" x="440" y="570">StoreImage 요청</text></a>
+<text class="s" x="440" y="590">슬롯 2가 주 버퍼의</text>
+<text class="s" x="440" y="608">주소와 길이</text>
+<rect class="b open" x="654" y="546" width="136" height="74" rx="8"/>
+<a href="storage-dma-analysis.html"><text class="t" x="666" y="570">파일 쓰기 · SD</text></a>
+<text class="s" x="666" y="590">쓰기 서비스부터는</text>
+<text class="s" x="666" y="608">실행하지 않음</text>
+<path class="e" d="M180 583H202" marker-end="url(#dg-map-ah)"/>
+<path class="e" d="M404 583H426" marker-end="url(#dg-map-ah)"/>
+<path class="e open" d="M628 583H652" marker-end="url(#dg-map-aho)"/>
+</svg>
+</div>
+<ul class="dg-legend"><li><i></i>플래시의 보존 섹터</li><li><i class="ok"></i>원본 코드를 시험용 입력으로 실행해 확인</li><li><i class="open"></i>이 주제에서 확인하지 않은 범위 (점선 화살표 포함)</li></ul>
+</figure>
+
+<div class="table-wrap"><table>
+<caption>보존 섹터 13~22의 구성</caption>
+<thead><tr><th class="n">섹터</th><th>실행 주소</th><th>맡는 객체</th><th>담긴 것</th><th>문서</th></tr></thead>
+<tbody>
+<tr><td class="n">13</td><td><code>0x021A0000</code></td><td>설정 공급자</td><td>설정 복사본 A. 주 설정, 세대 카운터, 용도 미확정 블록</td><td class="nowrap"><a href="settings-storage.html">설정 저장</a></td></tr>
+<tr><td class="n">14</td><td><code>0x021C0000</code></td><td>ID 0 (첫 32바이트)</td><td>진단 출력에 쓰이는 값이 든 32바이트 레코드. 저장 함수는 이 섹터에서 ID 79개를 순회하지만 ID 0만 확인</td><td class="nowrap"><a href="preserved-record.html">섹터 14</a></td></tr>
+<tr><td class="n">15~19</td><td><code>0x021E0000</code>~<code>0x0227FFFF</code></td><td>ID <code>0x58</code>~<code>0x61</code></td><td>픽셀 보정 레코드. 64KiB 묶음 10개</td><td class="nowrap"><a href="pixel-records.html">픽셀 레코드</a></td></tr>
+<tr><td class="n">20</td><td><code>0x02280000</code></td><td>ID <code>0x63</code>·<code>0x64</code>·<code>0x65</code></td><td>세 레코드의 주 사본. 64 + 56 + 8KiB</td><td class="nowrap" rowspan="2"><a href="preserved-sector20.html">섹터 20·21</a></td></tr>
+<tr><td class="n">21</td><td><code>0x022A0000</code></td><td>같은 세 ID</td><td>세 레코드의 백업 사본</td></tr>
+<tr><td class="n">22</td><td><code>0x022C0000</code></td><td>설정 공급자</td><td>설정 복사본 B</td><td class="nowrap"><a href="settings-storage.html">설정 저장</a></td></tr>
+</tbody></table></div>
+<div class="callout"><strong class="label">표기 규칙</strong>
+<p>섹터 번호는 플래시를 128KiB(<code>0x20000</code>바이트) 단위로 잘라 0부터 센 번호입니다. 펌웨어 파일의 처음이 실행 주소 <code>0x02000000</code>에 놓이므로, 섹터 n의 실행 주소는 <code>0x02000000 + n × 0x20000</code>입니다. 각 문서의 함수 주소는 복호화한 파일 안의 위치(파일 오프셋)로 적습니다.</p></div>
+</section>
+
+<section id="background">
+<h2>배경 지식</h2>
+
+<h3>플래시 섹터와 “보존”</h3>
+<p>플래시 메모리는 이미 쓴 자리를 바로 덮어쓰지 못합니다. 일정한 크기의 구역을 통째로 지운 다음 다시 기록합니다. 이 구역을 제조사에 따라 블록 또는 섹터라고 부릅니다(<a href="https://www.renesas.com/en/document/apn/nor-flash-memory-erase-operation">Renesas AN500</a>, <a href="https://www.infineon.com/assets/row/public/documents/10/49/infineon-s29gl01gs-s29gl512s-s29gl256s-s29gl128s-128-mb-256-mb-512-mb-1-gb-gl-s-mirrorbit-flash-parallel-3-datasheet-en.pdf">Infineon S29GL-S 데이터시트</a>). 두 자료는 용어를 설명하려고 든 예입니다. K-3 II에 어떤 플래시 부품이 들어 있는지는 이 주제의 문서에서 다루지 않습니다.</p>
+<p>이 펌웨어의 업데이트 코드는 128KiB 섹터 1~127을 차례로 처리하면서 13~22를 건너뛰고, 섹터 0을 마지막에 처리합니다. 인수가 다른 별도 분기 하나만 13과 22를 추가로 처리합니다. 그래서 일반 업데이트 뒤에도 13~22의 내용은 남습니다. 이 열 섹터가 <dfn title="펌웨어 업데이트가 덮어쓰지 않고 남겨 두는 플래시 구역. 이 연구에서는 128KiB 섹터 13~22입니다.">보존 섹터</dfn>입니다. 이 순서는 원본 업데이트 코드를 에뮬레이터에서 실행해 얻은 것이며, 자세한 내용은 <a href="installation.html#order">업데이트 전송과 기록 오류</a>에 있습니다.</p>
+
+<h3>유효 마커와 사본</h3>
+<p>보존 구역의 레코드는 첫 워드가 <code>0xA55A5AA5</code>일 때만 유효하다고 취급됩니다. 적재 코드는 마커가 맞으면 플래시의 내용을, 아니면 기본값을 RAM에 넣습니다. 마커는 “데이터가 들어 있다”는 표시입니다. 내용이 올바른지까지 검사한다는 뜻은 아닙니다.</p>
+<p>일부 데이터는 두 벌입니다. 설정은 섹터 13과 22에 복사본이 하나씩 있고, 섹터 20의 세 레코드는 섹터 21에 백업 사본이 있습니다. 어느 쪽을 읽을지 고르는 규칙은 각 문서에서 다룹니다.</p>
+
+<h3>공급자와 ID</h3>
+<p>펌웨어에는 보존 구역을 관리하는 관리자 객체가 있습니다. 구역 하나하나는 번호(ID)가 붙은 <dfn title="보존 구역 한 조각을 맡는 등록 객체. 자기 구역의 플래시 주소, RAM 사본 주소, 크기를 돌려줍니다.">공급자</dfn> 객체가 맡습니다. 공급자는 자기 구역의 플래시 주소, RAM 사본의 주소, 크기를 돌려줍니다. 적재는 플래시에서 RAM 사본으로, 저장은 RAM 사본에서 섹터 쓰기 요청으로 가는 방향입니다.</p>
+
+<h3>결함 픽셀 보정</h3>
+<p>이미지 센서에는 늘 지나치게 밝거나 어둡게 읽히는 픽셀이 생길 수 있습니다. K-3 II 사용설명서는 이런 픽셀을 찾아 보정하는 기능을 설정 메뉴의 Pixel Mapping(“Maps out and corrects any defective pixels on the sensor”)으로 안내합니다(<a href="https://www.ricoh-imaging.co.jp/english/support/man-pdf/k-3-2.pdf">K-3 II Operating Manual</a>). 섹터 15~19의 레코드는 픽셀 좌표와 이웃 방향을 담고 있고, 보정 코드는 그 픽셀을 이웃 값의 평균으로 바꿉니다. 메뉴의 Pixel Mapping이 이 레코드를 만드는지는 확인하지 않았습니다.</p>
+
+<h3>촬영 객체와 보정 플래그</h3>
+<p>펌웨어는 촬영 작업 하나의 상태를 큰 구조체에 모아 둡니다. 문서에서는 이것을 촬영 객체라고 부르고, 안의 위치를 <code>CAP+0x49</code>처럼 적습니다. <code>CAP+0x47</code>~<code>+0x4A</code>의 네 바이트가 보정 플래그이며, 그중 <code>+0x49</code>가 픽셀 레코드 보정의 활성 바이트입니다. 정책 함수가 이 네 바이트를 정합니다.</p>
+
+<h3>“확인”과 “쓰기 요청”의 뜻</h3>
+<p>이 주제의 실험은 모두 원본 ARM 기계어를 PC의 Unicorn 에뮬레이터에서 실행한 것입니다. 플래시 내용, 촬영 객체, 이미지는 시험용으로 만든 값입니다. 카메라에서 실행한 실험은 없습니다. 문서에서 “쓰기 요청”은 저장 코드가 섹터 쓰기 함수의 입구까지 도달했다는 뜻이며, 플래시에 실제로 기록됐다는 뜻이 아닙니다.</p>
+</section>
+
+<section id="status">
+<h2>지금까지 알아낸 것과 아직 모르는 것</h2>
+<div class="table-wrap"><table>
+<caption>주제 전체의 확인 상태</caption>
+<thead><tr><th>항목</th><th>상태</th><th>근거 문서</th></tr></thead>
+<tbody>
+<tr><td>업데이트 코드가 섹터 13~22를 건너뜀</td><td><span class="badge ok">확인</span></td><td><a href="installation.html">업데이트 전송과 기록 오류</a></td></tr>
+<tr><td>섹터 13·22: 설정 복사본을 고르는 두 단계, 내용이 달라졌을 때만 반대쪽 섹터에 쓰기 요청 (29건)</td><td><span class="badge ok">확인</span></td><td class="nowrap"><a href="settings-storage.html">설정 저장</a></td></tr>
+<tr><td>섹터 14: ID 0의 32바이트 적재, 애플리케이션 복사본, 섹터 저장 요청</td><td><span class="badge ok">확인</span></td><td class="nowrap"><a href="preserved-record.html">섹터 14</a></td></tr>
+<tr><td>섹터 14의 다섯 번째 워드가 진단 CSV의 SerialNo(UID) 열로 나감. 인수 전달은 실행으로, 파일 이름과 헤더는 코드를 읽어 확인</td><td><span class="badge ok">확인</span> <span class="badge static">정적 분석</span></td><td class="nowrap"><a href="preserved-record.html">섹터 14</a></td></tr>
+<tr><td>섹터 15~19: 공급자 10개의 적재, 6바이트 레코드, 같은 버퍼를 순서대로 고치는 보정 (12회)</td><td><span class="badge ok">확인</span></td><td class="nowrap"><a href="pixel-records.html">픽셀 레코드</a></td></tr>
+<tr><td>보정 코드가 이웃 좌표를 검사하지 않음 (6회)</td><td><span class="badge ok">확인</span></td><td><a href="pixel-records.html#coordinate-boundary">픽셀 레코드</a></td></tr>
+<tr><td>섹터 20·21: 세 공급자의 적재(백업 사본 우선), 두 마커와 설정 바이트가 초기 <code>CAP+0x4A</code>를 정함</td><td><span class="badge ok">확인</span></td><td><a href="preserved-sector20.html">섹터 20·21</a></td></tr>
+<tr><td>설정 객체의 검사 바이트 두 개(<code>+0xC</code>, <code>+0xD</code>)를 만드는 두 그룹 검사 (초기화 5건, 갱신 3건)</td><td><span class="badge ok">확인</span></td><td><a href="preserved-config.html">정책 플래그의 생산자</a></td></tr>
+<tr><td>상위 명령의 작업 계획, 개수 갱신 조건, ID 0x63 패킷 전달. 계산과 대기의 결과는 준비해 넣음</td><td><span class="badge ok">확인</span> <span class="badge model">모델</span></td><td><a href="preserved-dispatch.html">상위 명령 경로</a></td></tr>
+<tr><td>정책 함수: 조회표 364칸, 강제 조건, 뒤쪽 덮어쓰기 순서 (53건)</td><td><span class="badge ok">확인</span></td><td><a href="pixel-policy.html">픽셀 정책</a></td></tr>
+<tr><td>촬영 준비 함수: 가상 호출 25개의 순서, 작업 종류 5·7·8·11의 분기, 반환까지 이미지 포인터 유지</td><td><span class="badge ok">확인</span></td><td><a href="capture-prepare.html">촬영 준비</a></td></tr>
+<tr><td>정책 → 촬영 패킷 → 같은 이미지 버퍼의 보정 연결 (2건)</td><td><span class="badge ok">확인</span></td><td><a href="pixel-policy.html#connected">픽셀 정책</a></td></tr>
+<tr><td>JPEG 완료 길이 → 내장 레코드 → StoreImage 요청 슬롯 2 (2건, 카운터는 합성)</td><td><span class="badge ok">확인</span> <span class="badge model">모델</span></td><td><a href="store-image-records.html">저장 레코드</a></td></tr>
+<tr><td>실제 카메라의 보존 섹터에 든 내용. 배포 파일과 같다고 가정하지 않음</td><td><span class="badge open">미확인</span></td><td>—</td></tr>
+<tr><td>플래시 물리 기록, 전원 차단 뒤 유지, 재부팅 뒤 복구</td><td><span class="badge open">미확인</span></td><td>—</td></tr>
+<tr><td>픽셀 레코드를 누가 언제 만드는지, 메뉴의 Pixel Mapping과의 관계</td><td><span class="badge open">미확인</span></td><td>—</td></tr>
+<tr><td>섹터 14의 나머지 ID, 섹터 20·21 레코드 내용의 물리적 의미</td><td><span class="badge open">미확인</span></td><td>—</td></tr>
+<tr><td>정책 입력 A·B·C의 물리 단위와 메뉴 대응</td><td><span class="badge open">미확인</span></td><td>—</td></tr>
+<tr><td>상위 명령의 실제 발생원(통신·메뉴)</td><td><span class="badge open">미확인</span></td><td>—</td></tr>
+<tr><td>작업 스케줄러를 거친 실제 촬영에서의 도달, 센서 데이터, JPEG 비트스트림, SD 기록</td><td><span class="badge open">미확인</span></td><td>—</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="order">
+<h2>읽는 순서</h2>
+<p>조사한 순서가 아니라 이해하기 쉬운 순서입니다. 번호는 위 그림의 동그라미 번호와 같습니다.</p>
+
+<h3>픽셀 보정의 흐름</h3>
+<ul class="cards">
+<li class="card"><span class="tag">① 레코드와 보정</span><h3><a href="pixel-records.html">보존 픽셀 레코드와 촬영 패킷</a></h3><p class="q">픽셀 레코드는 어떻게 생겼고, 이미지 버퍼를 어떻게 바꾸는가?</p><p>64KiB 묶음 10개, 6바이트 레코드. 이웃 평균을 같은 버퍼에 써서 순서가 결과를 바꿉니다.</p></li>
+<li class="card"><span class="tag">② 켤지 정하기</span><h3><a href="pixel-policy.html">픽셀 보정 활성값과 준비 분기</a></h3><p class="q">보정을 켜는 바이트는 어떤 조건에서 1이 되는가?</p><p>표 364칸의 값이 4일 때 켜지고, 뒤쪽 조건이 다시 끌 수 있습니다.</p></li>
+<li class="card"><span class="tag">③ 입력 만들기</span><h3><a href="capture-prepare.html">촬영 준비의 연속 호출</a></h3><p class="q">정책 함수의 입력은 준비 함수의 어느 호출이 만드는가?</p><p>가상 호출 25개 가운데 앞의 여덟 개가 값을 만들고 아홉 번째가 정책 함수입니다.</p></li>
+</ul>
+
+<h3>저장 쪽</h3>
+<ul class="cards">
+<li class="card"><span class="tag">④ 저장 요청</span><h3><a href="store-image-records.html">JPEG 완료값과 저장 레코드</a></h3><p class="q">압축이 끝난 길이는 저장 작업에 어떻게 전달되는가?</p><p>촬영 객체의 내장 레코드 여섯 개를 거쳐 StoreImage 요청 슬롯 2에 같은 값으로 닿습니다.</p></li>
+</ul>
+
+<h3>정책 플래그의 출처</h3>
+<ul class="cards">
+<li class="card"><span class="tag">⑤ 섹터 20·21</span><h3><a href="preserved-sector20.html">보존 섹터 20·21과 정책 입력</a></h3><p class="q">정책 함수가 맨 앞에서 보는 두 마커는 어디서 오는가?</p><p>세 공급자가 백업 사본을 우선해 RAM에 올리고, 그 마커가 초기 플래그의 조건이 됩니다.</p></li>
+<li class="card"><span class="tag">⑥ 설정 바이트</span><h3><a href="preserved-config.html">정책 플래그의 생산자</a></h3><p class="q">초기 플래그의 또 다른 조건인 설정 바이트는 누가 만드는가?</p><p>보존 레코드를 두 그룹으로 검사한 결과가 바이트 두 개에 따로 저장됩니다.</p></li>
+<li class="card"><span class="tag">⑦ 상위 명령</span><h3><a href="preserved-dispatch.html">보존 레코드의 상위 명령 경로</a></h3><p class="q">레코드를 고치고 검사를 다시 돌리게 하는 것은 무엇인가?</p><p>명령 처리기의 작업 계획과 패킷 처리기까지 연결했습니다. 명령의 발생원은 모릅니다.</p></li>
+</ul>
+
+<h3>나머지 보존 섹터</h3>
+<ul class="cards">
+<li class="card"><span class="tag">⑧ 섹터 14</span><h3><a href="preserved-record.html">보존 섹터 14의 진단 레코드</a></h3><p class="q">섹터 14의 첫 32바이트는 무엇에 쓰이는가?</p><p>다섯 번째 워드가 진단 CSV의 SerialNo(UID) 열로 나갑니다. 실물 시리얼과의 일치는 미확인입니다.</p></li>
+<li class="card"><span class="tag">⑨ 섹터 13·22</span><h3><a href="settings-storage.html">보존 섹터의 설정 저장</a></h3><p class="q">설정은 왜 두 벌이고, 어느 쪽을 읽고 어느 쪽에 쓰는가?</p><p>마커와 세대 카운터로 읽을 쪽을 고르고, 내용이 달라졌을 때만 반대쪽에 쓰기를 요청합니다.</p></li>
+</ul>
+</section>
+
+<section id="refs">
+<h2>근거 파일과 참고 자료</h2>
+<ul class="refs">
+<li>근거 JSON: <a href="pixel-records.json">pixel-records.json</a> · <a href="pixel-policy.json">pixel-policy.json</a> · <a href="capture-prepare.json">capture-prepare.json</a> · <a href="store-image-records.json">store-image-records.json</a> · <a href="preserved-sector20.json">preserved-sector20.json</a> · <a href="preserved-config.json">preserved-config.json</a> · <a href="preserved-dispatch.json">preserved-dispatch.json</a> · <a href="preserved-record.json">preserved-record.json</a> · <a href="settings-storage.json">settings-storage.json</a></li>
+<li>검증 스크립트: 저장소 최상위의 <code>verify_*.py</code>. 이름이 근거 JSON과 짝을 이룹니다. 예: <a href="../verify_pixel_records.py">verify_pixel_records.py</a></li>
+<li><a href="hq-status.json">hq-status.json</a> — 연구 목표별 진행 상태와 남은 과제 목록</li>
+<li><a href="installation.html">업데이트 전송과 기록 오류</a> — 업데이트가 섹터 13~22를 건너뛰는 순서의 근거</li>
+<li>외부 자료: <a href="https://www.ricoh-imaging.co.jp/english/support/man-pdf/k-3-2.pdf">PENTAX K-3 II Operating Manual (RICOH IMAGING, PDF)</a> — 설정 메뉴의 Pixel Mapping 설명</li>
+<li>외부 자료: <a href="https://www.renesas.com/en/document/apn/nor-flash-memory-erase-operation">Renesas AN500, NOR Flash Memory Erase Operation</a> — 플래시는 블록 단위로 지운 뒤 기록한다는 일반 원리</li>
+<li>외부 자료: <a href="https://www.infineon.com/assets/row/public/documents/10/49/infineon-s29gl01gs-s29gl512s-s29gl256s-s29gl128s-128-mb-256-mb-512-mb-1-gb-gl-s-mirrorbit-flash-parallel-3-datasheet-en.pdf">Infineon S29GL-S 데이터시트</a> — 지우기 단위를 “sector”라고 부르는 예. 이 카메라의 부품이라는 뜻이 아닙니다</li>
+<li>외부 자료: <a href="https://github.com/unicorn-engine/unicorn">Unicorn CPU 에뮬레이터</a></li>
+</ul>
+</section>
+
+</main>
+</div>
+<!-- chrome:bottom -->
+<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">촬영 준비와 보존 레코드 — 이 주제의 문서</h2><ol><li><a href="guide-capture.html" aria-current="page">촬영 준비·보존 레코드 안내</a></li><li><a href="capture-prepare.html">촬영 준비의 연속 호출</a></li><li><a href="store-image-records.html">JPEG 완료값과 저장 레코드</a></li><li><a href="pixel-policy.html">픽셀 보정 활성값과 준비 분기</a></li><li><a href="pixel-records.html">보존 픽셀 레코드와 촬영 패킷</a></li><li><a href="preserved-record.html">보존 섹터 14의 진단 레코드</a></li><li><a href="preserved-sector20.html">보존 섹터 20·21과 정책 입력</a></li><li><a href="preserved-config.html">정책 플래그의 생산자</a></li><li><a href="preserved-dispatch.html">보존 레코드의 상위 명령 경로</a></li><li><a href="settings-storage.html">보존 섹터의 설정 저장</a></li></ol></nav>
+<nav class="pager" aria-label="이전·다음 문서"><a class="prev" href="superresolution-lifecycle.html"><small>← 이전</small>Pixel Shift 메뉴와 버퍼 수명</a><a class="next" href="capture-prepare.html"><small>다음 →</small>촬영 준비의 연속 호출</a></nav>
+<footer class="sitefoot"><div class="sitefoot-in"><nav aria-label="사이트"><a href="../index.html#map">문서 지도</a><a href="../index.html#levels">검증 수준 읽는 법</a><a href="../glossary.html">용어집</a><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/research-program.html">세 기종 연구 본부</a><a href="https://github.com/yunhyok/pentax-k3ii-firmware-analysis">GitHub 저장소</a></nav><p>PENTAX K-3 II 펌웨어 1.12 분석 문서. PC에서 수행한 정적 분석과 에뮬레이션 결과이며, 카메라 실기에서 검증한 내용이 아닙니다. 원본 펌웨어와 복호화한 바이너리는 포함하지 않습니다.</p></div></footer>
+<!-- /chrome:bottom -->
+</body>
+</html>
