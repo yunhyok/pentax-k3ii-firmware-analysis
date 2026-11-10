@@ -1,55 +1,473 @@
 <!doctype html>
-<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="K-3 II Color Space 메뉴의 sRGB·AdobeRGB 선택, 확정·취소, RAM 기록 횟수와 텍스트·선택 표시 경로 검증.">
-<title>K-3 II — 색 공간 메뉴의 상태와 표시</title><link rel="stylesheet" href="../assets/report.css"></head>
-<body><header><div class="eyebrow">PENTAX K-3 II · firmware 1.12 · 2026-11-08</div>
-<h1>sRGB·AdobeRGB 메뉴를<br>입력 이벤트부터 RAM 기록까지 추적했다</h1>
-<p class="lead">Color Space 메뉴의 설정 번호는 0x15C이며 sRGB는 0, AdobeRGB는 1이다. 선택은 임시값만 바꾸고, 확정은 같은 값을 다시 고른 경우에도 현재값과 미러에 각각 1바이트를 기록한다. 취소는 기록하지 않으며, 다시 열면 저장값을 읽는다.</p>
-<nav aria-label="보고서 탐색"><a href="#route">화면 연결</a><a href="#state">상태·기록</a><a href="#render">텍스트·선택 표시</a><a href="#limits">재현·한계</a><a href="settings-storage.html">설정 섹터 저장</a><a href="hq-status.json">연구 상태</a></nav></header>
-<main><p class="note">주소는 해제 파일 오프셋이다. <code>screen+…</code>는 객체 필드이며 이벤트·위젯 번호는 K-3 II 내부 값이다. 논리 이벤트 재생을 물리 버튼 시험으로 표현하지 않았다. 아래의 ‘저장값’은 별도 표기가 없으면 RAM 값이다.</p>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>색공간 메뉴에서 고른 값이 설정에 기록되기까지 — PENTAX K-3 II 펌웨어 연구</title>
+<meta name="description" content="K-3 II의 Color Space 메뉴(sRGB·AdobeRGB)를 화면 요청, 선택·확정·취소, RAM 설정 기록, 글자와 선택 표시 준비로 나누어 원본 ARM 코드를 에뮬레이터에서 실행한 기록입니다. 고르기만 해서는 설정이 바뀌지 않고, 확정하면 RAM 두 곳에 기록합니다.">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body data-camera="k3ii">
+<!-- chrome:top -->
+<a class="skip" href="#main">본문 바로가기</a>
+<div class="topbar"><div class="topbar-in"><a class="brand" href="../index.html">PENTAX <b>펌웨어 연구</b></a><div class="cams" aria-label="기종 선택"><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/">K-3 III</a><a href="../index.html" aria-current="true">K-3 II</a><a href="https://yunhyok.github.io/pentax-q7-firmware-analysis/">Q7</a></div><nav class="topnav" aria-label="주제"><a href="../index.html">개요</a><a href="guide-pipeline.html">영상 처리</a><a href="guide-capture.html">촬영·보존 레코드</a><a href="guide-rebuild.html">재구축·업데이트</a><a href="guide-af.html">AF</a><a href="guide-ui.html" aria-current="true">UI</a></nav></div></div>
+<nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../index.html">PENTAX K-3 II</a></li><li><a href="guide-ui.html">메뉴와 UI</a></li><li aria-current="page">색공간 메뉴와 표시</li></ol></nav>
+<!-- /chrome:top -->
+<header class="page-head">
+<p class="eyebrow">메뉴와 UI · 색공간 메뉴의 선택과 기록</p>
+<h1>색공간 메뉴에서 고른 값이 설정에 기록되기까지</h1>
+<p class="lead">메뉴에서 sRGB나 AdobeRGB를 고르고 확정할 때 카메라 안에서 어떤 값이 언제 바뀌는지 추적했습니다. 메뉴를 고치거나 다른 기종과 비교하려면 이 순서를 먼저 알아야 합니다.</p>
+</header>
+<div class="layout">
+<!-- chrome:toc -->
+<nav class="toc" aria-label="이 문서의 목차"><h2 data-toc="no">이 문서에서</h2><ol><li><a href="#background">배경: 색공간 메뉴와 이 문서의 용어</a></li><li><a href="#route">상위 메뉴 항목이 색공간 화면을 요청합니다</a></li><li><a href="#state">고르기, 확정, 취소에 따라 바뀌는 값이 다릅니다</a></li><li><a href="#persist">RAM에 기록하는 단계와 플래시에 저장하는 단계는 따로 있습니다</a></li><li><a href="#render">글자와 선택 표시는 그리기 전 단계까지 실행했습니다</a></li><li><a href="#limits">한계와 남은 과제</a></li><li><a href="#reproduce">재현 방법</a></li><li><a href="#refs">근거 파일과 참고 자료</a></li></ol></nav>
+<!-- /chrome:toc -->
+<main class="doc" id="main">
 
-<section aria-labelledby="route"><h2 id="route">1. 상위 메뉴가 상세 화면 0xB4를 요청한다</h2>
-<p>상위 위젯 <code>0x0140B043</code>에 논리 동작 <code>0x1D</code>를 전달하면 원본 <code>0x4A5888</code> 계열이 그룹 13·행 인덱스 6을 조회하고 상세 화면 <code>0xB4</code>를 알린다. 별도 실행한 등록부 <code>0x6D8F3C → 0x6D9220 → 0x6D9E7C</code>는 <code>0x4377A0</code>을 통해 화면 객체를 만들고 등록 슬롯 <code>+0x2D0</code>에 넣었다. 두 실행 사이의 알림 소비자와 물리 입력 변환은 아직 연결하지 않았다. <a href="color-ui.json">parent_route·screen 근거</a></p>
-<div class="table-scroll"><table><thead><tr><th scope="col">기능</th><th scope="col">논리 위젯</th><th scope="col">화면·리소스</th></tr></thead><tbody>
-<tr><td>Color Space 제목</td><td><code>0x01913009</code></td><td>type 3 · 언어 표 <code>0xE482C4</code></td></tr>
-<tr><td>sRGB 선택 / 글자</td><td><code>0x0191300A / 0x0191300C</code></td><td>선택 type 2 · 글자 type 4 · <code>0xE4836C</code></td></tr>
-<tr><td>AdobeRGB 선택 / 글자</td><td><code>0x0191300E / 0x01913010</code></td><td>선택 type 2 · 글자 type 4 · <code>0xE483C0</code></td></tr>
-<tr><td>각 항목 도움말</td><td><code>0x01913012 / 0x01913013</code></td><td>type 3 · <code>0xE48414 / 0xE48468</code></td></tr>
+<section class="summary">
+<h2 data-toc="no">핵심 요약</h2>
+<ul>
+<li>Color Space 메뉴의 두 선택지는 <strong>설정값 하나</strong>로 저장됩니다. sRGB는 0, AdobeRGB는 1입니다.</li>
+<li>항목을 <strong>고르는 것만으로는 설정이 바뀌지 않습니다.</strong> 화면 객체 안의 임시값만 바뀝니다. 확정 동작을 받아야 RAM의 설정 두 곳(현재값과 미러)에 1바이트씩 기록하고, 취소하면 아무것도 기록하지 않습니다.</li>
+<li>이미 저장된 값과 <strong>같은 값을 확정해도 두 곳에 다시 기록</strong>합니다. 플래시 섹터로 내보내는 저장 함수는 따로 있고, 그 함수는 내용이 같으면 쓰기 요청을 생략합니다.</li>
+<li>화면의 글자 5개와 선택 그림 2개가 준비되는 과정도 실행했습니다. 실행은 화면에 그리기 전에서 멈췄습니다.</li>
+<li>모든 결과는 PC 에뮬레이터에서 원본 코드에 동작 번호를 직접 넣어 얻었습니다. 실제 버튼, LCD 표시, 플래시 기록은 확인하지 않았습니다.</li>
+</ul>
+</section>
+
+<div class="scope">
+<div class="ok"><h3><span class="badge ok">확인</span> 원본 코드 실행으로 확인</h3>
+<ul>
+<li>선택·확정·취소·다시 열기 8개 사례의 임시값과 RAM 쓰기 횟수</li>
+<li>상위 메뉴 항목이 색공간 화면을 요청하는 알림</li>
+<li>등록부가 색공간 화면 객체를 만들어 등록하는 구간</li>
+<li>글자 5개의 글리프 배열, 선택 그림 2개의 그림 번호</li>
+</ul></div>
+<div class="model"><h3><span class="badge model">모델</span> 시험 조건으로 정한 것</h3>
+<ul>
+<li>버튼 대신 동작 번호를 함수에 직접 전달</li>
+<li>활성 인덱스와 뱅크 내용은 시험용 값</li>
+<li>메모리 할당, 기본 화면 생성, 위젯 검색, 알림 수신자는 검증용 대체 코드</li>
+</ul></div>
+<div class="open"><h3><span class="badge open">미확인</span> 확인하지 않은 것</h3>
+<ul>
+<li>물리 버튼이 동작 번호로 바뀌는 경로</li>
+<li>LCD에 실제로 그려지는 모양</li>
+<li>플래시 기록, 재부팅 뒤 값 유지</li>
+<li>다른 기종에서의 동작</li>
+</ul></div>
+</div>
+
+<section id="background">
+<h2>배경: 색공간 메뉴와 이 문서의 용어</h2>
+<p>K-3 II 사용 설명서에서 Color Space는 사용자 설정 메뉴 C3의 20번 항목입니다. 선택지는 sRGB와 AdobeRGB이고 기본값은 sRGB입니다. AdobeRGB로 찍은 사진은 파일 이름이 <code>_IMG</code>로 시작합니다(<a href="https://www.ricoh-imaging.co.jp/english/support/man-pdf/k-3-2.pdf">K-3 II 사용 설명서</a> 26·84쪽).</p>
+<p>설명서는 메뉴 조작을 이렇게 안내합니다. 십자 버튼으로 항목을 고르고, OK 버튼으로 확정하고, MENU 버튼으로 이전 화면에 돌아갑니다(9·19쪽). 펌웨어 안에서는 이 조작이 작은 번호로 바뀌어 화면 객체에 전달됩니다. 이 문서는 그 번호를 받은 뒤의 처리를 다룹니다. 어느 버튼이 어느 번호가 되는지는 확인하지 못했습니다.</p>
+
+<dl class="kv">
+<dt>위젯</dt><dd>화면을 이루는 부품 하나(제목, 선택 항목, 도움말)에 붙은 32비트 번호입니다.</dd>
+<dt>논리 동작</dt><dd>화면 객체에 전달되는 작은 번호입니다. 이 문서에는 3, 6, <code>0x11</code>, <code>0x1D</code>가 나옵니다. 버튼 이름이 아닙니다.</dd>
+<dt>임시값</dt><dd>화면 객체가 들고 있는 “지금 고른 값”입니다. 확정하기 전에는 설정과 별개입니다.</dd>
+<dt>현재값과 미러</dt><dd>설정이 들어 있는 RAM의 두 위치입니다. 현재값은 설정 객체 안에 있는 사본이고, 미러는 설정 객체가 가리키는 별도 RAM 블록입니다. 미러가 플래시 섹터와 주고받는 버퍼라는 점은 <a href="settings-storage.html">보존 섹터의 설정 저장</a>에서 다룹니다.</dd>
+<dt>뱅크</dt><dd>같은 설정 번호의 값을 여러 벌 담는 구획입니다. 0~7의 “활성 인덱스”가 어느 뱅크를 쓸지 정합니다. 활성 인덱스가 카메라의 어떤 상태에 대응하는지는 확인하지 않았습니다.</dd>
+<dt>주소 표기</dt><dd>코드와 표의 위치는 복호화한 펌웨어 파일의 오프셋입니다(<a href="firmware-structure.html">펌웨어 파일 구조와 복호화</a>). <code>screen+0xE7</code>처럼 쓴 것은 객체 안의 필드 위치입니다.</dd>
+</dl>
+
+<figure class="diagram">
+<figcaption>색공간 화면 객체를 이루는 부품 (개념도)</figcaption>
+<div class="dg-scroll">
+<svg class="dg" viewBox="0 0 800 312" role="img" aria-labelledby="dg-screen-title dg-screen-desc">
+<title id="dg-screen-title">색공간 화면 객체의 위젯 일곱 개와 상태 두 개</title>
+<desc id="dg-screen-desc">색공간 화면 객체는 제목 글자 하나, sRGB의 선택 그림과 글자, AdobeRGB의 선택 그림과 글자, 두 항목의 도움말 글자로 이루어집니다. 화면 객체는 이와 별도로 임시값 한 바이트와 마지막으로 선택한 위젯 번호를 들고 있습니다. 배치와 크기는 실제 화면이 아니라 임의로 그린 것입니다.</desc>
+<rect class="g" x="8" y="30" width="560" height="272" rx="12"/>
+<text class="h" x="22" y="22">색공간 화면 객체 · 화면 ID 0xB4</text>
+
+<rect class="b" x="24" y="46" width="528" height="52" rx="8"/>
+<text class="t" x="36" y="68">제목 글자 “Color Space”</text>
+<text class="s" x="36" y="87">위젯 0x01913009 · 글자(type 3)</text>
+
+<rect class="b" x="24" y="110" width="256" height="52" rx="8"/>
+<text class="t" x="36" y="132">선택 그림 (sRGB)</text>
+<text class="s" x="36" y="151">위젯 0x0191300A · 그림 0x34B</text>
+<rect class="b" x="296" y="110" width="256" height="52" rx="8"/>
+<text class="t" x="308" y="132">글자 “sRGB”</text>
+<text class="s" x="308" y="151">위젯 0x0191300C · 글자(type 4)</text>
+
+<rect class="b" x="24" y="174" width="256" height="52" rx="8"/>
+<text class="t" x="36" y="196">선택 그림 (AdobeRGB)</text>
+<text class="s" x="36" y="215">위젯 0x0191300E · 그림 0x34F</text>
+<rect class="b" x="296" y="174" width="256" height="52" rx="8"/>
+<text class="t" x="308" y="196">글자 “AdobeRGB”</text>
+<text class="s" x="308" y="215">위젯 0x01913010 · 글자(type 4)</text>
+
+<rect class="b" x="24" y="238" width="256" height="52" rx="8"/>
+<text class="t" x="36" y="260">도움말 (sRGB)</text>
+<text class="s" x="36" y="279">위젯 0x01913012 · 글자(type 3)</text>
+<rect class="b" x="296" y="238" width="256" height="52" rx="8"/>
+<text class="t" x="308" y="260">도움말 (AdobeRGB)</text>
+<text class="s" x="308" y="279">위젯 0x01913013 · 글자(type 3)</text>
+
+<text class="h" x="596" y="22">화면 객체가 기억하는 값</text>
+<rect class="b key" x="592" y="46" width="200" height="66" rx="8"/>
+<text class="t" x="604" y="70">임시값</text>
+<text class="s mono" x="604" y="90">screen+0xE7 · 1바이트</text>
+<rect class="b" x="592" y="124" width="200" height="66" rx="8"/>
+<text class="t" x="604" y="148">마지막 선택 위젯</text>
+<text class="s mono" x="604" y="168">screen+0xD4</text>
+<text class="n" x="592" y="222">부품의 위치·크기·색은</text>
+<text class="n" x="592" y="240">확인하지 않았습니다.</text>
+<text class="n" x="592" y="258">이 그림의 배치는</text>
+<text class="n" x="592" y="276">임의로 정한 것입니다.</text>
+</svg>
+</div>
+<ul class="dg-legend"><li><i class="key"></i>이 문서의 주제인 임시값</li><li><i></i>펌웨어 표에서 확인한 부품과 필드</li></ul>
+</figure>
+<p>선택을 받는 위젯(선택 그림)과 글자를 보여 주는 위젯은 번호가 다릅니다. 예를 들어 sRGB는 선택 그림이 <code>0x0191300A</code>, 글자가 <code>0x0191300C</code>입니다.</p>
+</section>
+
+<section id="route">
+<h2>상위 메뉴 항목이 색공간 화면을 요청합니다</h2>
+<p class="takeaway">상위 메뉴의 색공간 항목에 동작 <code>0x1D</code>를 주면 화면 <code>0xB4</code>를 열라는 알림이 나옵니다. 화면 객체를 만들어 등록하는 구간은 따로 실행해 확인했습니다.</p>
+
+<figure class="diagram">
+<figcaption>화면 요청에서 화면 객체 등록까지: 따로 실행한 두 구간</figcaption>
+<div class="dg-scroll">
+<svg class="dg" viewBox="0 0 800 262" role="img" aria-labelledby="dg-route-title dg-route-desc">
+<title id="dg-route-title">상위 메뉴의 알림 구간과 화면 등록 구간</title>
+<desc id="dg-route-desc">첫 구간에서는 상위 메뉴 항목 위젯에 논리 동작 0x1D를 직접 넣었고, 상위 화면 처리기가 화면 0xB4를 요청하는 알림을 냈습니다. 둘째 구간에서는 화면 등록부가 색공간 화면 생성자를 불러 객체를 만들고 등록 슬롯에 넣었습니다. 버튼 입력과, 알림을 받아 등록부를 부르는 부분은 이 문서에서 실행하지 않았습니다.</desc>
+<defs><marker id="dg-route-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker>
+<marker id="dg-route-aho" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah open" d="M0 0L10 5L0 10z"/></marker></defs>
+<text class="h" x="8" y="20">구간 1 · 상위 메뉴의 알림</text>
+<rect class="b open" x="8" y="32" width="140" height="70" rx="8"/>
+<text class="t" x="20" y="60">물리 버튼</text>
+<text class="s" x="20" y="80">동작 번호로 변환</text>
+
+<rect class="b model" x="172" y="32" width="180" height="70" rx="8"/>
+<text class="t" x="184" y="60">논리 동작 0x1D</text>
+<text class="s" x="184" y="80">항목 위젯 0x0140B043</text>
+
+<rect class="b ok" x="376" y="32" width="190" height="70" rx="8"/>
+<text class="t" x="388" y="60">상위 화면 처리기</text>
+<text class="s" x="388" y="80">0x4A5888 · 그룹 13의 행</text>
+
+<rect class="b ok" x="590" y="32" width="202" height="70" rx="8"/>
+<text class="t" x="602" y="60">알림: 화면 0xB4 요청</text>
+<text class="s" x="602" y="80">동작 0x1D와 함께 전달</text>
+
+<text class="h" x="202" y="158">구간 2 · 화면 등록부 (따로 실행)</text>
+<rect class="b open" x="8" y="170" width="170" height="70" rx="8"/>
+<a href="ui-dispatch.html"><text class="t" x="20" y="198">알림 수신 · 전환</text></a>
+<text class="s" x="20" y="218">여기서는 대체 코드</text>
+
+<rect class="b ok" x="202" y="170" width="180" height="70" rx="8"/>
+<text class="t" x="214" y="198">화면 등록부</text>
+<text class="s mono" x="214" y="218">0x6D8F3C → 0x6D9E7C</text>
+
+<rect class="b ok" x="406" y="170" width="170" height="70" rx="8"/>
+<text class="t" x="418" y="198">색공간 화면 생성자</text>
+<text class="s mono" x="418" y="218">0x4377A0</text>
+
+<rect class="b ok" x="600" y="170" width="192" height="70" rx="8"/>
+<text class="t" x="612" y="198">등록 슬롯에 저장</text>
+<text class="s mono" x="612" y="218">등록부+0x2D0</text>
+
+<path class="e open" d="M148 67H170" marker-end="url(#dg-route-aho)"/>
+<path class="e" d="M352 67H374" marker-end="url(#dg-route-ah)"/>
+<path class="e" d="M566 67H588" marker-end="url(#dg-route-ah)"/>
+<path class="e open" d="M690 102V128H93V168" marker-end="url(#dg-route-aho)"/>
+<path class="e open" d="M178 205H200" marker-end="url(#dg-route-aho)"/>
+<path class="e" d="M382 205H404" marker-end="url(#dg-route-ah)"/>
+<path class="e" d="M576 205H598" marker-end="url(#dg-route-ah)"/>
+</svg>
+</div>
+<ul class="dg-legend"><li><i class="ok"></i>원본 코드 실행으로 확인</li><li><i class="model"></i>직접 넣어 준 입력</li><li><i class="open"></i>이 문서에서 실행하지 않은 부분</li></ul>
+</figure>
+
+<p>첫 구간에서는 상위 화면 객체에 동작 <code>0x1D</code>를 전달했습니다. 처리기는 메뉴 분류 13의 경로 표에서 인덱스 6의 값을 읽어, 화면 <code>0xB4</code>를 요청하는 알림을 보냈습니다. 알림을 받는 쪽은 검증용 코드로 대신하고 전달된 값만 기록했습니다.</p>
+<p>둘째 구간에서는 화면 등록부에 화면 ID <code>0xB4</code>를 주고 실행했습니다. 등록부는 색공간 화면 생성자를 불러 객체를 만들고, 등록부의 <code>+0x2D0</code>(4×<code>0xB4</code>) 위치에 넣었습니다. 생성자는 임시값을 0으로 초기화합니다. 이 실행에서 메모리 할당 함수와 기본 화면 생성 함수는 검증용 코드로 대신했습니다.</p>
+<p>두 구간 사이, 즉 알림을 받아 등록부를 부르기까지의 과정은 <a href="ui-dispatch.html">색공간 메뉴 알림과 화면 전환</a>에서 이었습니다.</p>
+
+<details class="evidence"><summary>화면 요청과 등록에 쓰인 위치</summary>
+<div class="table-wrap"><table class="compact">
+<thead><tr><th>항목</th><th>위치 또는 값</th></tr></thead>
+<tbody>
+<tr><th scope="row">상위 화면의 가상 함수 표</th><td><code>0xA5E1D4</code>, 슬롯 <code>+0xD4</code>가 처리기 <code>0x4A5888</code></td></tr>
+<tr><th scope="row">색공간 항목 위젯</th><td><code>0x0140B043</code> (표의 위치 <code>0x9B48DC</code>)</td></tr>
+<tr><th scope="row">분류 13의 경로 행</th><td><code>0x9B5EF4</code>에 <code>0x43, 0xB0, 0xB1, 0xB2, 0xB3, 0xAF, 0xB4, 0xB5</code>. 인덱스 6이 <code>0xB4</code></td></tr>
+<tr><th scope="row">등록부 실행 구간</th><td><code>0x6D8F3C</code> → <code>0x6D9220</code> → <code>0x6D9E7C</code>, 종료 <code>0x6DA178</code></td></tr>
+<tr><th scope="row">색공간 화면 생성자</th><td><code>0x4377A0</code> (호출 위치 <code>0x6D9E84</code>), 화면의 가상 함수 표 <code>0xA61868</code></td></tr>
+<tr><th scope="row">검증용 대체</th><td>할당 함수 <code>0x712828</code>·<code>0x712860</code>, 기본 화면 생성 <code>0x6D5A38</code>, 위젯 검색, 알림 수신자, 초기화 완료 플래그</td></tr>
 </tbody></table></div>
-<p>선택 이벤트 ID와 표시 글자 ID는 서로 다르다. 원본 <code>0x9A2BE4</code> 표와 각 객체의 가상 함수 표를 함께 대조했다. 기종 간 공통 대상으로 삼은 것은 색 공간의 기능이며, 이 숫자나 메모리 배치를 다른 모델에 그대로 적용할 근거는 없다. <a href="../verify_color_ui.py">리소스·가상 슬롯 검증</a></p>
+<p class="small">설명서의 C3 메뉴에는 15~21번 일곱 항목이 있고 Color Space는 여섯 번째입니다. 경로 행에서는 <code>0xB4</code>가 인덱스 6에 있습니다. 행의 첫 값 <code>0x43</code>이 무엇을 뜻하는지는 확인하지 않았으므로, 행의 순서가 메뉴의 순서와 같다는 것은 추정입니다.</p>
+</details>
 </section>
 
-<section aria-labelledby="state"><h2 id="state">2. 취소 후의 임시값과 다시 열었을 때의 값이 다르다</h2>
-<figure><figcaption>도식 1. 색 공간 메뉴의 상태 전이</figcaption><div class="flow" role="group" aria-label="화면 열기는 저장값을 임시값으로 읽고, 선택은 임시값만 갱신하며, 확정은 두 RAM 위치에 기록하고 취소는 기록하지 않음">
-<div class="stage"><strong>열기·선택</strong><span>0x43795C: 설정 0x15C 읽기<br>screen+0xE7에 임시값<br>0x43816C: 선택한 0 또는 1</span></div><div class="arrow" aria-hidden="true">→</div>
-<div class="stage"><strong>확정 또는 취소</strong><span>동작 6: 0x4382F4로 적용<br>동작 3: 설정 쓰기 없음<br>두 동작 모두 임시 바이트 유지</span></div><div class="arrow" aria-hidden="true">→</div>
-<div class="stage"><strong>다시 열기</strong><span>원본 getter로 저장값 읽기<br>취소했던 임시 선택은 사라짐<br>역방향 조회도 저장값을 따름</span></div></div>
-<p class="caption">확정 6은 알림 0xC2를 보낸다. 취소 3과 별도 적용 동작 0x11은 모두 0xC1을 보냈다. 따라서 알림 번호만 보고 저장 여부를 판단할 수 없다.</p></figure>
-<p>상태 전이 8건을 실행했다. 양방향 변경·취소, 양쪽 값의 동일값 확정, 선택 없이 확정, 동작 <code>0x11</code>의 적용을 포함한다. 확정 사례마다 실제 메모리 쓰기 훅으로 현재 뱅크와 미러의 1바이트 기록을 각각 한 번 관찰했다. 열기·선택·이탈·취소·재열기에는 해당 설정 영역의 쓰기가 없었다. <a href="color-ui.json">lifecycle_cases</a></p>
-<div class="table-scroll"><table><thead><tr><th scope="col">기존 값 → 선택</th><th scope="col">동작</th><th scope="col">RAM 쓰기: 현재 / 미러</th><th scope="col">다시 연 값</th></tr></thead><tbody>
-<tr><td>sRGB → AdobeRGB</td><td>확정 6</td><td>1 / 1</td><td>AdobeRGB</td></tr>
-<tr><td>AdobeRGB → sRGB</td><td>확정 6</td><td>1 / 1</td><td>sRGB</td></tr>
-<tr><td>서로 다른 값 선택</td><td>취소 3</td><td>0 / 0</td><td>기존 값</td></tr>
-<tr><td>기존 값과 같은 선택</td><td>확정 6</td><td>1 / 1</td><td>기존 값</td></tr>
-<tr><td>선택 없이 확정</td><td>확정 6</td><td>1 / 1</td><td>기존 값</td></tr>
+<section id="state">
+<h2>고르기, 확정, 취소에 따라 바뀌는 값이 다릅니다</h2>
+<p class="takeaway">항목을 고르면 화면 객체의 임시값만 바뀝니다. 확정하면 RAM 설정 두 곳에 기록하고, 취소하면 기록하지 않습니다. 화면을 다시 열면 임시값은 저장된 값으로 돌아갑니다.</p>
+
+<figure class="diagram">
+<figcaption>sRGB가 저장된 상태에서 AdobeRGB를 골랐을 때 세 위치의 값</figcaption>
+<div class="dg-scroll">
+<svg class="dg" viewBox="0 0 800 330" role="img" aria-labelledby="dg-state-title dg-state-desc">
+<title id="dg-state-title">확정하는 경우와 취소하는 경우의 임시값, RAM 현재값, RAM 미러</title>
+<desc id="dg-state-desc">두 경우 모두 화면을 열면 임시값이 저장값 0으로 채워지고, AdobeRGB를 고르면 임시값만 1이 됩니다. 확정하면 RAM 현재값과 미러가 1로 기록되고, 다시 열어도 임시값은 1입니다. 취소하면 RAM 현재값과 미러는 0으로 남고 임시값은 1인 채로 남지만, 다시 열면 임시값이 0으로 돌아갑니다.</desc>
+<rect class="gf" x="146" y="8" width="314" height="292" rx="12"/>
+<rect class="gf" x="474" y="8" width="318" height="292" rx="12"/>
+<text class="h mid" x="303" y="28">확정하는 경우</text>
+<text class="h mid" x="633" y="28">취소하는 경우</text>
+<text class="s mid" x="199" y="50">임시값</text>
+<text class="s mid" x="303" y="50">RAM 현재값</text>
+<text class="s mid" x="407" y="50">RAM 미러</text>
+<text class="s mid" x="527" y="50">임시값</text>
+<text class="s mid" x="631" y="50">RAM 현재값</text>
+<text class="s mid" x="735" y="50">RAM 미러</text>
+<text class="mono mid" x="199" y="66">screen+0xE7</text>
+<text class="mono mid" x="527" y="66">screen+0xE7</text>
+
+<text class="t" x="10" y="98">① 열기</text>
+<text class="s" x="10" y="116">저장값을 읽음</text>
+<text class="t" x="10" y="152">② 고르기</text>
+<text class="s" x="10" y="170">AdobeRGB 선택</text>
+<text class="t" x="10" y="206">③ 확정 / 취소</text>
+<text class="s" x="10" y="224">동작 6 / 동작 3</text>
+<text class="t" x="10" y="260">④ 다시 열기</text>
+<text class="s" x="10" y="278">저장값을 읽음</text>
+
+<rect class="b key" x="154" y="78" width="90" height="46" rx="8"/>
+<text class="t mid" x="199" y="98">0</text><text class="s mid" x="199" y="115">sRGB</text>
+<rect class="b mute" x="258" y="78" width="90" height="46" rx="8"/>
+<text class="t mid" x="303" y="98">0</text><text class="s mid" x="303" y="115">sRGB</text>
+<rect class="b mute" x="362" y="78" width="90" height="46" rx="8"/>
+<text class="t mid" x="407" y="98">0</text><text class="s mid" x="407" y="115">sRGB</text>
+
+<rect class="b key" x="154" y="132" width="90" height="46" rx="8"/>
+<text class="t mid" x="199" y="152">1</text><text class="s mid" x="199" y="169">AdobeRGB</text>
+<rect class="b mute" x="258" y="132" width="90" height="46" rx="8"/>
+<text class="t mid" x="303" y="152">0</text><text class="s mid" x="303" y="169">sRGB</text>
+<rect class="b mute" x="362" y="132" width="90" height="46" rx="8"/>
+<text class="t mid" x="407" y="152">0</text><text class="s mid" x="407" y="169">sRGB</text>
+
+<rect class="b mute" x="154" y="186" width="90" height="46" rx="8"/>
+<text class="t mid" x="199" y="206">1</text><text class="s mid" x="199" y="223">AdobeRGB</text>
+<rect class="b key" x="258" y="186" width="90" height="46" rx="8"/>
+<text class="t mid" x="303" y="206">1</text><text class="s mid" x="303" y="223">AdobeRGB</text>
+<rect class="b key" x="362" y="186" width="90" height="46" rx="8"/>
+<text class="t mid" x="407" y="206">1</text><text class="s mid" x="407" y="223">AdobeRGB</text>
+
+<rect class="b key" x="154" y="240" width="90" height="46" rx="8"/>
+<text class="t mid" x="199" y="260">1</text><text class="s mid" x="199" y="277">AdobeRGB</text>
+<rect class="b mute" x="258" y="240" width="90" height="46" rx="8"/>
+<text class="t mid" x="303" y="260">1</text><text class="s mid" x="303" y="277">AdobeRGB</text>
+<rect class="b mute" x="362" y="240" width="90" height="46" rx="8"/>
+<text class="t mid" x="407" y="260">1</text><text class="s mid" x="407" y="277">AdobeRGB</text>
+
+<rect class="b key" x="482" y="78" width="90" height="46" rx="8"/>
+<text class="t mid" x="527" y="98">0</text><text class="s mid" x="527" y="115">sRGB</text>
+<rect class="b mute" x="586" y="78" width="90" height="46" rx="8"/>
+<text class="t mid" x="631" y="98">0</text><text class="s mid" x="631" y="115">sRGB</text>
+<rect class="b mute" x="690" y="78" width="90" height="46" rx="8"/>
+<text class="t mid" x="735" y="98">0</text><text class="s mid" x="735" y="115">sRGB</text>
+
+<rect class="b key" x="482" y="132" width="90" height="46" rx="8"/>
+<text class="t mid" x="527" y="152">1</text><text class="s mid" x="527" y="169">AdobeRGB</text>
+<rect class="b mute" x="586" y="132" width="90" height="46" rx="8"/>
+<text class="t mid" x="631" y="152">0</text><text class="s mid" x="631" y="169">sRGB</text>
+<rect class="b mute" x="690" y="132" width="90" height="46" rx="8"/>
+<text class="t mid" x="735" y="152">0</text><text class="s mid" x="735" y="169">sRGB</text>
+
+<rect class="b mute" x="482" y="186" width="90" height="46" rx="8"/>
+<text class="t mid" x="527" y="206">1</text><text class="s mid" x="527" y="223">AdobeRGB</text>
+<rect class="b mute" x="586" y="186" width="90" height="46" rx="8"/>
+<text class="t mid" x="631" y="206">0</text><text class="s mid" x="631" y="223">sRGB</text>
+<rect class="b mute" x="690" y="186" width="90" height="46" rx="8"/>
+<text class="t mid" x="735" y="206">0</text><text class="s mid" x="735" y="223">sRGB</text>
+
+<rect class="b key" x="482" y="240" width="90" height="46" rx="8"/>
+<text class="t mid" x="527" y="260">0</text><text class="s mid" x="527" y="277">sRGB</text>
+<rect class="b mute" x="586" y="240" width="90" height="46" rx="8"/>
+<text class="t mid" x="631" y="260">0</text><text class="s mid" x="631" y="277">sRGB</text>
+<rect class="b mute" x="690" y="240" width="90" height="46" rx="8"/>
+<text class="t mid" x="735" y="260">0</text><text class="s mid" x="735" y="277">sRGB</text>
+
+<text class="n mid" x="303" y="320">③에서 현재값·미러에 1바이트씩 기록</text>
+<text class="n mid" x="633" y="320">③에서 RAM 쓰기 없음</text>
+</svg>
+</div>
+<ul class="dg-legend"><li><i class="key"></i>그 단계에서 값이 기록된 위치</li><li><i class="mute"></i>그대로인 위치</li></ul>
+</figure>
+
+<p>취소한 뒤에도 임시값에는 고른 값이 남아 있습니다. 다만 화면을 다시 열면 열기 함수가 저장값을 읽어 임시값을 덮어쓰므로, 취소했던 선택은 사라집니다. 저장값을 선택 위젯 번호로 바꿔 주는 조회 함수도 임시값이 아니라 저장값을 따랐습니다.</p>
+
+<div class="table-wrap"><table class="compact">
+<caption>실행한 8개 사례 (마지막 열은 활성 인덱스 → 뱅크)</caption>
+<thead><tr><th>사례</th><th>기존 값 → 고른 값</th><th>동작 → 알림 값</th><th class="n">RAM 쓰기<br>현재값 / 미러</th><th>동작 뒤<br>임시값</th><th>다시 연 뒤<br>임시값</th><th>뱅크</th></tr></thead>
+<tbody>
+<tr><th scope="row" class="nowrap">바꿔서 확정</th><td class="nowrap">sRGB → AdobeRGB</td><td class="nowrap">6 → <code>0xC2</code></td><td class="n">1 / 1</td><td>AdobeRGB</td><td>AdobeRGB</td><td class="nowrap">1 → 0</td></tr>
+<tr><th scope="row" class="nowrap">바꿔서 확정</th><td class="nowrap">AdobeRGB → sRGB</td><td class="nowrap">6 → <code>0xC2</code></td><td class="n">1 / 1</td><td>sRGB</td><td>sRGB</td><td class="nowrap">2 → 2</td></tr>
+<tr><th scope="row" class="nowrap">고르고 취소</th><td class="nowrap">sRGB → AdobeRGB</td><td class="nowrap">3 → <code>0xC1</code></td><td class="n">0 / 0</td><td>AdobeRGB</td><td>sRGB</td><td class="nowrap">1 → 0</td></tr>
+<tr><th scope="row" class="nowrap">고르고 취소</th><td class="nowrap">AdobeRGB → sRGB</td><td class="nowrap">3 → <code>0xC1</code></td><td class="n">0 / 0</td><td>sRGB</td><td>AdobeRGB</td><td class="nowrap">2 → 2</td></tr>
+<tr><th scope="row" class="nowrap">같은 값 확정</th><td class="nowrap">sRGB → sRGB</td><td class="nowrap">6 → <code>0xC2</code></td><td class="n">1 / 1</td><td>sRGB</td><td>sRGB</td><td class="nowrap">0 → 0</td></tr>
+<tr><th scope="row" class="nowrap">같은 값 확정</th><td class="nowrap">AdobeRGB → AdobeRGB</td><td class="nowrap">6 → <code>0xC2</code></td><td class="n">1 / 1</td><td>AdobeRGB</td><td>AdobeRGB</td><td class="nowrap">2 → 2</td></tr>
+<tr><th scope="row" class="nowrap">고르지 않고 확정</th><td class="nowrap">AdobeRGB → 고르지 않음</td><td class="nowrap">6 → <code>0xC2</code></td><td class="n">1 / 1</td><td>AdobeRGB</td><td>AdobeRGB</td><td class="nowrap">1 → 0</td></tr>
+<tr><th scope="row" class="nowrap">동작 <code>0x11</code>로 적용</th><td class="nowrap">sRGB → AdobeRGB</td><td class="nowrap"><code>0x11</code> → <code>0xC1</code></td><td class="n">1 / 1</td><td>AdobeRGB</td><td>AdobeRGB</td><td class="nowrap">2 → 2</td></tr>
 </tbody></table></div>
-<p>설정의 활성 인덱스 0과 1은 저장 뱅크 0을 공유한다. 전체 매핑은 <code>[0, 0, 2, 3, 4, 5, 6, 7]</code>이며 바이트 위치는 뱅크 기준 <code>0x588 + 0x15C</code>다. 이 메뉴는 같은 값일 때 쓰기를 생략하지 않는다. 다만 별도 <a href="settings-storage.html#save">섹터 저장 함수</a>에서는 준비된 내용이 기존 섹터와 같으면 쓰기 요청을 생략했다. 서로 다른 단계의 결과다.</p>
+<p class="small muted">설정값으로는 sRGB가 0, AdobeRGB가 1입니다. 모든 사례에서 다시 연 뒤의 임시값은 RAM에 저장된 값과 같았습니다.</p>
+
+<p>표에서 읽을 수 있는 점은 네 가지입니다.</p>
+<ul>
+<li><strong>확정은 값을 비교하지 않습니다.</strong> 기존 값과 같은 값을 확정하거나 아무것도 고르지 않고 확정해도, 현재값과 미러에 각각 한 번씩 기록했습니다.</li>
+<li><strong>취소는 RAM에 쓰지 않습니다.</strong> 열기, 고르기, 항목 떠나기, 취소, 다시 열기에서는 설정 영역 쓰기가 한 번도 없었습니다. 쓰기는 메모리 쓰기 훅으로 주소·크기·값을 직접 관찰했습니다.</li>
+<li><strong>알림 값만으로 저장 여부를 알 수 없습니다.</strong> 확정(동작 6)은 <code>0xC2</code>를, 취소(동작 3)는 <code>0xC1</code>을 보냅니다. 그런데 설정을 기록하는 동작 <code>0x11</code>도 <code>0xC1</code>을 보냈습니다. 두 값이 무엇을 가리키는지는 확인하지 않았습니다.</li>
+<li><strong>활성 인덱스 0과 1은 뱅크 0을 함께 씁니다.</strong> 활성 인덱스 0~7에 대응하는 뱅크는 0, 0, 2, 3, 4, 5, 6, 7입니다. 기록할 때 다른 뱅크의 바이트는 바뀌지 않았습니다.</li>
+</ul>
+
+<details class="evidence"><summary>화면 함수와 설정 바이트의 위치</summary>
+<div class="table-wrap"><table class="compact">
+<caption>색공간 화면의 함수 (가상 함수 표 <code>0xA61868</code>)</caption>
+<thead><tr><th>역할</th><th>슬롯</th><th>함수</th><th>공통 진입점</th></tr></thead>
+<tbody>
+<tr><th scope="row">열기: 저장값을 임시값으로 읽기</th><td><code>+0x98</code></td><td><code>0x43795C</code></td><td>–</td></tr>
+<tr><th scope="row">조회: 저장값 → 선택 위젯</th><td><code>+0xBC</code></td><td><code>0x4380DC</code></td><td><code>0x6D5EC4</code></td></tr>
+<tr><th scope="row">고르기</th><td><code>+0xC0</code></td><td><code>0x43816C</code></td><td><code>0x6D5ED0</code></td></tr>
+<tr><th scope="row">항목 떠나기</th><td><code>+0xC4</code></td><td><code>0x438250</code></td><td><code>0x6D5EDC</code></td></tr>
+<tr><th scope="row">동작 처리(확정·취소)</th><td><code>+0xD4</code></td><td><code>0x438310</code></td><td><code>0x6D5F38</code></td></tr>
+<tr><th scope="row">적용: 임시값을 설정에 쓰기</th><td>–</td><td><code>0x4382F4</code> → <code>0x6F1A38</code></td><td>–</td></tr>
+</tbody></table></div>
+<div class="table-wrap"><table class="compact">
+<caption>설정 <code>0x15C</code>의 바이트 위치</caption>
+<thead><tr><th>항목</th><th>값</th></tr></thead>
+<tbody>
+<tr><th scope="row">뱅크 표에서 이 설정의 행</th><td><code>0xA53C40</code> (<code>0xA52680</code> + <code>0x15C</code>×16)</td></tr>
+<tr><th scope="row">뱅크 간격</th><td><code>0x418</code>바이트(1,048바이트)</td></tr>
+<tr><th scope="row">뱅크 안의 위치</th><td><code>0x588</code> + <code>0x15C</code> = <code>0x6E4</code></td></tr>
+<tr><th scope="row">현재값 바이트</th><td>설정 객체 + <code>0x14</code> + <code>0x6E4</code> + <code>0x418</code>×뱅크</td></tr>
+<tr><th scope="row">미러 바이트</th><td>미러 블록 + <code>0x6E4</code> + <code>0x418</code>×뱅크. 미러 블록의 주소는 설정 객체 <code>+0xC</code>에 있음</td></tr>
+<tr><th scope="row">활성 인덱스</th><td>설정 객체 <code>+0x23C8</code>의 1바이트</td></tr>
+</tbody></table></div>
+<p class="small">열기와 다시 열기는 <code>0x437998</code>의 원본 읽기 명령을 거칩니다. 사례마다 다른 뱅크의 바이트에는 표식값 <code>0xA5</code>를 넣어 두고 그대로 남는지 확인했습니다. 사례별 값은 <a href="color-ui.json">color-ui.json</a>의 <code>lifecycle_cases</code>에, 상위 메뉴의 알림은 <code>parent_route</code>에, 구간별 SHA-256은 <code>range_hashes</code>에 있습니다.</p>
+</details>
 </section>
 
-<section aria-labelledby="render"><h2 id="render">3. 선택 표시의 객체 필드까지 실행했다</h2>
-<figure><figcaption>도식 2. 실제 리소스에서 텍스트·선택 상태까지</figcaption><div class="flow" role="group" aria-label="리소스 표에서 원본 잎 객체를 생성하고, 선택 위젯과 글자 래퍼의 가상 함수를 통해 상태 및 16비트 매개변수를 갱신">
-<div class="stage"><strong>리소스 조회</strong><span>제목·도움말: type 3<br>글자: type 4<br>선택 그림: type 2</span></div><div class="arrow" aria-hidden="true">→</div>
-<div class="stage"><strong>원본 객체 준비</strong><span>텍스트 5개: 글리프 배열·길이<br>그림 2개: ID 0x34B / 0x34F<br>화면 출력 직전에서 종료</span></div><div class="arrow" aria-hidden="true">→</div>
-<div class="stage"><strong>선택·이탈</strong><span>래퍼+0x0E / 하위 객체+0x51<br>+0x54·+0x56: 100·150<br>이탈하면 100·100으로 복귀</span></div></div>
-<p class="caption">두 16비트 값은 관찰한 매개변수다. 실제 LCD에서의 확대율·색상·형태를 확인하지 않았으므로 시각 효과의 단위까지 이름 붙이지 않았다.</p></figure>
-<p>선택 그림과 글자 래퍼는 가상 슬롯 <code>+0x48 → 0x707A54 → 0x70ACB8</code>을 공유한다. 실제 선택·이탈 실행에서 상태 바이트와 하위 객체의 두 16비트 값이 바뀌었다. 도움말은 슬롯 <code>+0xC → 0x70AA6C</code>가 해당 객체 <code>+0xC</code>를 설정했다. 이 관찰만으로 나머지 도움말이 반드시 숨겨진다고 단정하지 않았다. <a href="color-ui.json">focus·text_cases</a></p>
+<section id="persist">
+<h2>RAM에 기록하는 단계와 플래시에 저장하는 단계는 따로 있습니다</h2>
+<p class="takeaway">이 메뉴는 같은 값이어도 RAM에 다시 씁니다. 플래시 섹터 쓰기를 요청하는 저장 함수는 별도이고, 그 함수는 내용이 같으면 요청을 생략합니다.</p>
+<ol class="flow">
+<li class="ok"><strong>확정 동작</strong><span>RAM 현재값과 미러에 1바이트씩 기록. 같은 값이어도 기록</span></li>
+<li class="open"><strong>저장 함수 호출</strong><span>메뉴 확정 뒤 언제 불리는지 미확인</span></li>
+<li class="ok"><strong>섹터 내용 비교</strong><span>준비한 내용이 기존 섹터와 같으면 쓰기 요청 없음</span></li>
+<li class="open"><strong>플래시 기록</strong><span>실제 기록과 재부팅 뒤 유지는 미확인</span></li>
+</ol>
+<p>셋째 단계는 <a href="settings-storage.html#save">보존 섹터의 설정 저장</a>에서 따로 실행한 결과입니다. 그 검증에서 sRGB를 다시 쓰면 RAM에는 두 번 기록했지만 섹터 쓰기 요청은 0건이었습니다. AdobeRGB로 바꾸면 반대쪽 섹터에 쓰기 요청이 1건 생겼습니다.</p>
+<div class="callout warn"><strong class="label">주의</strong>
+<p>“같은 값이면 쓰지 않는다”는 말은 저장 함수에만 해당합니다. 메뉴의 확정 동작에는 해당하지 않습니다. 두 결과는 서로 다른 실행에서 얻었고, 메뉴 확정에서 저장 함수까지 한 번에 이어 실행한 적은 없습니다.</p></div>
 </section>
 
-<p class="note">후속 검증: <a href="ui-dispatch.html">알림 필터의 생산자와 대기·활성 레코드를 연결해 화면 할당 요청까지 실행했다.</a> 아래의 알림 수신자 대체 경계는 이 문서의 기존 검증 범위다.</p>
-<section aria-labelledby="limits"><h2 id="limits">4. 원본 논리 동작을 검증했고, 실물 출력은 남아 있다</h2>
+<section id="render">
+<h2>글자와 선택 표시는 그리기 전 단계까지 실행했습니다</h2>
+<p class="takeaway">화면의 글자와 선택 그림은 리소스 표에서 객체로 만들어집니다. 항목을 고르거나 떠나면 객체 안의 상태 값이 바뀝니다. 그 값이 화면에서 어떤 모양이 되는지는 확인하지 않았습니다.</p>
+<ol class="flow">
+<li class="ok"><strong>리소스 조회</strong><span>위젯 번호로 표 <code>0x9A2BE4</code>의 20바이트 레코드를 찾음</span></li>
+<li class="ok"><strong>객체 준비</strong><span>글자 5개는 글리프 배열과 길이, 그림 2개는 그림 번호</span></li>
+<li class="ok"><strong>고르기·떠나기</strong><span>객체의 상태 바이트와 16비트 값 두 개가 바뀜</span></li>
+<li class="open"><strong>화면에 그리기</strong><span>글꼴·그림 합성과 LCD 출력은 실행하지 않음</span></li>
+</ol>
+
+<div class="table-wrap"><table>
+<caption>색공간 화면의 위젯과 리소스</caption>
+<thead><tr><th>부품</th><th>위젯</th><th>종류</th><th>언어 표 또는 그림 번호</th><th class="n">준비된 글리프 수<br>(끝 표시 포함)</th></tr></thead>
+<tbody>
+<tr><th scope="row">제목 Color Space</th><td><code>0x01913009</code></td><td>글자(type 3)</td><td><code>0xE482C4</code></td><td class="n">12</td></tr>
+<tr><th scope="row">sRGB 선택 그림</th><td><code>0x0191300A</code></td><td>그림(type 2)</td><td>그림 <code>0x34B</code></td><td class="n">–</td></tr>
+<tr><th scope="row">sRGB 글자</th><td><code>0x0191300C</code></td><td>글자(type 4)</td><td><code>0xE4836C</code></td><td class="n">5</td></tr>
+<tr><th scope="row">AdobeRGB 선택 그림</th><td><code>0x0191300E</code></td><td>그림(type 2)</td><td>그림 <code>0x34F</code></td><td class="n">–</td></tr>
+<tr><th scope="row">AdobeRGB 글자</th><td><code>0x01913010</code></td><td>글자(type 4)</td><td><code>0xE483C0</code></td><td class="n">9</td></tr>
+<tr><th scope="row">sRGB 도움말</th><td><code>0x01913012</code></td><td>글자(type 3)</td><td><code>0xE48414</code></td><td class="n">25</td></tr>
+<tr><th scope="row">AdobeRGB 도움말</th><td><code>0x01913013</code></td><td>글자(type 3)</td><td><code>0xE48468</code></td><td class="n">29</td></tr>
+</tbody></table></div>
+<p>글자 리소스는 언어마다 하나씩 포인터를 가진 “언어 표”를 가리킵니다. 영어 글자는 글리프 코드가 1바이트씩 저장되어 있고, 코드에 <code>0x1E</code>를 더하면 ASCII 문자가 됩니다. 이렇게 읽은 영어 문구는 Color Space, sRGB, AdobeRGB, Sets color space to sRGB, Sets color space to AdobeRGB입니다. 준비 함수는 이 코드를 16비트 배열로 펼치고 끝 표시(0)를 포함한 길이를 돌려줍니다.</p>
+
+<h3>고르거나 떠날 때 바뀌는 값</h3>
+<p>선택 그림과 글자는 같은 함수로 선택 상태를 받습니다. 한 항목을 고르면 그 항목의 선택 그림과 글자 두 객체에서 값이 아래처럼 바뀌었습니다.</p>
+<div class="table-wrap"><table class="fit">
+<caption>선택 상태에 따라 바뀌는 필드</caption>
+<thead><tr><th>필드</th><th class="n">고른 직후</th><th class="n">떠난 뒤</th></tr></thead>
+<tbody>
+<tr><th scope="row">위젯 래퍼 <code>+0x0E</code> (상태 바이트)</th><td class="n">1</td><td class="n">0</td></tr>
+<tr><th scope="row">하위 객체 <code>+0x51</code> (상태 바이트)</th><td class="n">1</td><td class="n">0</td></tr>
+<tr><th scope="row">하위 객체 <code>+0x54</code>, <code>+0x56</code> (16비트 값 둘)</th><td class="n">100, 150</td><td class="n">100, 100</td></tr>
+<tr><th scope="row">고른 항목의 도움말 위젯 <code>+0xC</code></th><td class="n">1</td><td class="n">확인 안 함</td></tr>
+</tbody></table></div>
+<div class="callout warn"><strong class="label">주의</strong>
+<p>100과 150은 관찰한 숫자일 뿐입니다. 확대율인지, 색이나 모양에 관한 값인지는 LCD 출력을 확인하지 않아 이름을 붙이지 않았습니다. 도움말도 고른 항목의 값이 1이 된다는 것까지만 확인했습니다. 나머지 도움말이 반드시 숨겨진다고 단정하지 않습니다.</p></div>
+
+<details class="evidence"><summary>리소스 레코드와 표시 함수의 위치</summary>
+<div class="table-wrap"><table class="compact">
+<thead><tr><th>부품</th><th>리소스 레코드</th><th>화면 설정 코드</th><th>영어 글리프 위치</th></tr></thead>
+<tbody>
+<tr><th scope="row">제목</th><td><code>0x9A2C98</code></td><td><code>0x437D04</code></td><td><code>0xE4F16F</code></td></tr>
+<tr><th scope="row">sRGB 선택 그림</th><td><code>0x9A2CAC</code></td><td><code>0x437D1C</code></td><td>–</td></tr>
+<tr><th scope="row">sRGB 글자</th><td><code>0x9A2CD4</code></td><td><code>0x437D4C</code></td><td><code>0xE4F187</code></td></tr>
+<tr><th scope="row">AdobeRGB 선택 그림</th><td><code>0x9A2CFC</code></td><td><code>0x437D7C</code></td><td>–</td></tr>
+<tr><th scope="row">AdobeRGB 글자</th><td><code>0x9A2D24</code></td><td><code>0x437DAC</code></td><td><code>0xE4F18C</code></td></tr>
+<tr><th scope="row">sRGB 도움말</th><td><code>0x9A2D4C</code></td><td><code>0x437DDC</code></td><td><code>0xE4F195</code></td></tr>
+<tr><th scope="row">AdobeRGB 도움말</th><td><code>0x9A2D60</code></td><td><code>0x437DF4</code></td><td><code>0xE4F1AE</code></td></tr>
+</tbody></table></div>
+<ul>
+<li>리소스 레코드는 20바이트이고 내용은 위젯 번호, 종류, 언어 표 주소(그림은 그림 번호), 3, 0 순서입니다.</li>
+<li>선택 그림(type 2)과 글자(type 4) 래퍼는 가상 슬롯 <code>+0x48</code> → <code>0x707A54</code> → <code>0x70ACB8</code>을 함께 씁니다.</li>
+<li>도움말(type 3) 래퍼는 슬롯 <code>+0xC</code> → <code>0x70AA6C</code>가 객체 <code>+0xC</code>를 설정합니다. 검증기는 고르는 순간 위젯 <code>0x01913001</code>의 같은 필드가 1에서 0으로 바뀌는 것도 확인합니다. 이 위젯의 역할은 확정하지 않았습니다.</li>
+<li>글자 객체에는 언어 표 주소(<code>+0x90</code>)와 16비트 스타일 값 4(<code>+0x84</code>)가 들어갑니다. 그림 객체에는 그림 번호(<code>+0x60</code>)가 들어갑니다.</li>
+<li>글리프 준비 함수는 <code>0x873964</code>입니다. 실행은 래스터화를 시작하기 전에 멈췄습니다.</li>
+<li>고를 때와 떠날 때 화면은 최상위 선택 목록 서비스 <code>0x708774</code>를 한 번씩 부릅니다. 이 서비스는 검증용 코드로 대신했습니다.</li>
+<li>글리프 원본과 준비된 배열의 SHA-256은 <a href="color-ui.json">color-ui.json</a>의 <code>resources</code>와 <code>text_cases</code>에 있습니다. 원본 글리프와 그림 데이터는 공개하지 않습니다.</li>
+</ul>
+</details>
+</section>
+
+<section id="limits">
+<h2>한계와 남은 과제</h2>
+<p>이 문서의 결과는 화면 객체에 동작 번호를 직접 넣었을 때의 동작입니다. 카메라에서 버튼을 눌러 확인한 것이 아닙니다.</p>
+<ul>
+<li><strong>버튼 입력</strong> — 어느 버튼이 동작 3, 6, <code>0x11</code>, <code>0x1D</code>가 되는지 모릅니다. 설명서의 OK·MENU 버튼과 이 번호들을 연결하지 않았습니다.</li>
+<li><strong>알림 이후</strong> — 상위 메뉴의 알림을 받아 화면을 여는 과정은 <a href="ui-dispatch.html">색공간 메뉴 알림과 화면 전환</a>에서 화면 할당 요청까지 이었습니다. 화면 생성부터 표시까지 한 번에 이어 실행한 적은 없습니다.</li>
+<li><strong>표시</strong> — 글리프 배열과 객체 상태까지만 확인했습니다. 글꼴 그리기, 그림 합성, LCD 출력은 실행하지 않았습니다.</li>
+<li><strong>저장</strong> — RAM의 현재값과 미러까지만 관찰했습니다. 플래시 기록과 재부팅 뒤 유지는 확인하지 않았습니다.</li>
+<li><strong>다른 기종</strong> — 위젯 번호, 동작 번호, 객체 필드 위치는 K-3 II 펌웨어 1.12의 내부 값입니다. 다른 기종에 그대로 적용할 근거가 없습니다. 기종 사이에 공통으로 삼을 수 있는 것은 “색공간을 고른다”는 기능입니다. 세 기종 비교는 <a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/ui-port-contract.html">K-3 III 저장소의 UI 이식 설계</a>에 있습니다.</li>
+</ul>
+</section>
+
+<section id="reproduce">
+<h2>재현 방법</h2>
+<p>검증기는 복호화한 펌웨어 파일 <code>decoded.bin</code>을 입력으로 받습니다. 파일을 만드는 방법은 <a href="firmware-structure.html">펌웨어 파일 구조와 복호화</a>에 있습니다. 원본 펌웨어와 복호화한 파일은 저장소에 없습니다.</p>
+<dl class="kv">
+<dt>복호화한 파일의 SHA-256</dt><dd><code class="wrap">1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc</code></dd>
+<dt>에뮬레이터</dt><dd>Unicorn 2.1.4</dd>
+</dl>
 <pre><code>python verify_color_ui.py decoded.bin --compare analysis/color-ui.json
 python verify_settings_storage.py decoded.bin --compare analysis/settings-storage.json
 python verify_publication.py</code></pre>
-<p>리소스 조회·객체 생성·텍스트 준비와 화면 이벤트·설정 읽기·쓰기는 원본 ARM 명령을 실행했다. 할당자, 기본 화면 생성, 루트 선택 목록, 위젯 검색과 알림 수신자는 검증용 경계다. 코디네이터가 공개 스냅샷을 다시 실행해 결과 일치를 확인했다. <a href="../verify_color_ui.py">검증기</a> · <a href="color-ui.json">전체 입력·결과·한계</a></p>
-<p>K-3 III 분석의 방법에 맞춰 메뉴 이름, 이벤트, 임시 상태, 설정 저장, 표시 준비를 분리했다. 물리 버튼 입력부터 알림 소비자까지의 연결, LCD 래스터화, 실제 플래시 기록과 기종 간 이식 실행은 검증하지 않았다. 원본 글리프와 그림 데이터는 공개하지 않았다.</p>
-</section></main><footer>K-3 II v1.12 · <a href="ui-resources.html">PEF·DNG 메뉴</a> · <a href="../index.html">전체 분석</a></footer></body></html>
+<p>첫 명령은 표와 분기를 파일 바이트로 확인한 뒤 원본 코드를 실행합니다. 결과가 저장소의 <code>color-ui.json</code>과 다르면 실패합니다. 둘째 명령은 설정 저장 쪽 검증이고, 셋째는 문서의 링크와 공개 파일 범위를 검사합니다.</p>
+</section>
+
+<section id="refs">
+<h2>근거 파일과 참고 자료</h2>
+<ul class="refs">
+<li><a href="color-ui.json">color-ui.json</a> — 화면·설정·리소스 위치, 8개 사례와 글자 5건의 결과, 구간 해시, 검증 한계</li>
+<li><a href="../verify_color_ui.py">verify_color_ui.py</a> — 표·분기 확인과 에뮬레이터 실행 코드</li>
+<li><a href="settings-storage.html">보존 섹터의 설정 저장</a> · <a href="settings-storage.json">settings-storage.json</a> — RAM 설정이 섹터 쓰기 요청으로 이어지는 조건</li>
+<li><a href="ui-dispatch.html">색공간 메뉴 알림과 화면 전환</a> — 알림을 받아 화면 할당을 요청하기까지</li>
+<li><a href="ui-resources.html">RAW 형식 메뉴와 텍스트</a> — 같은 글리프 준비 함수를 쓰는 다른 메뉴</li>
+<li><a href="hq-status.json">hq-status.json</a> — 연구 목표별 진행 상태</li>
+<li>외부 자료: <a href="https://www.ricoh-imaging.co.jp/english/support/man-pdf/k-3-2.pdf">PENTAX K-3 II 사용 설명서(영문 PDF)</a> — 메뉴 조작 9·19쪽, Color Space 26쪽, 파일 이름 84쪽 · <a href="https://www.ricoh-imaging.co.jp/japan/support/pdf/k-3-3_09.pdf">리코 K-3 Mark III 메뉴 대비표(K-3 II, 일본어 PDF)</a> — 4쪽에 색공간 항목의 대응</li>
+</ul>
+</section>
+
+</main>
+</div>
+<!-- chrome:bottom -->
+<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">메뉴와 UI — 이 주제의 문서</h2><ol><li><a href="guide-ui.html">메뉴·UI 안내</a></li><li><a href="color-ui.html" aria-current="page">색공간 메뉴와 표시</a></li><li><a href="ui-resources.html">RAW 형식 메뉴와 텍스트</a></li><li><a href="ui-dispatch.html">색공간 메뉴 알림과 화면 전환</a></li></ol></nav>
+<nav class="pager" aria-label="이전·다음 문서"><a class="prev" href="guide-ui.html"><small>← 이전</small>메뉴·UI 안내</a><a class="next" href="ui-resources.html"><small>다음 →</small>RAW 형식 메뉴와 텍스트</a></nav>
+<footer class="sitefoot"><div class="sitefoot-in"><nav aria-label="사이트"><a href="../index.html#map">문서 지도</a><a href="../index.html#levels">검증 수준 읽는 법</a><a href="../glossary.html">용어집</a><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/research-program.html">세 기종 연구 본부</a><a href="https://github.com/yunhyok/pentax-k3ii-firmware-analysis">GitHub 저장소</a></nav><p>PENTAX K-3 II 펌웨어 1.12 분석 문서. PC에서 수행한 정적 분석과 에뮬레이션 결과이며, 카메라 실기에서 검증한 내용이 아닙니다. 원본 펌웨어와 복호화한 바이너리는 포함하지 않습니다.</p></div></footer>
+<!-- /chrome:bottom -->
+</body>
+</html>

@@ -1,137 +1,705 @@
 <!doctype html>
 <html lang="ko">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="PENTAX K-3 II v1.12의 CPU 식별 근거와 RAW 현상, 톤·감마 생성 및 B2Y 설정 경로를 추적한 재현 가능한 정적 분석.">
-<title>K-3 II 심층 분석 — CPU와 RAW·톤·감마 경로</title>
-<link rel="stylesheet" href="../assets/report.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>하드웨어 식별 근거와 RAW 현상·톤 곡선 경로 — PENTAX K-3 II 펌웨어 연구</title>
+<meta name="description" content="K-3 II 펌웨어 1.12에서 CPU 계열을 알려 주는 근거, F²MC-8L 호환 보조 코드, RAW 현상 함수, 톤 곡선 생성과 B2Y 설정 경로를 추적하고, 원본 명령을 에뮬레이터에서 실행해 곡선 출력 268,288개를 대조한 기록입니다.">
+<link rel="stylesheet" href="../assets/site.css">
 </head>
-<body>
-<header>
-<div class="eyebrow">PENTAX K-3 II · firmware 1.12 · 2026-11-08</div>
-<h1>CPU 식별 근거와<br>RAW·톤·감마 경로</h1>
-<p class="lead">K-3 III에서 사용한 코드 참조 추적과 원본 명령 실행 검증을 K-3 II에 적용했다. 보조 이미지의 F²MC-8L 호환 명령열, RAW 현상 함수, 톤 곡선 생성과 B2Y 설정 경로를 확인했다. 정확한 SoC·MCU 부품 번호와 전체 픽셀 처리 순서는 아직 확정하지 못했다.</p>
-<nav aria-label="보고서 탐색"><a href="../index.html">초기 분석</a><a href="#comparison">K-3 III와 비교</a><a href="#hardware">CPU·보조 영역</a><a href="#raw">RAW 현상</a><a href="#tone">톤·감마</a><a href="#validation">검증·재현</a><a href="#next">남은 연결</a></nav>
+<body data-camera="k3ii">
+<!-- chrome:top -->
+<a class="skip" href="#main">본문 바로가기</a>
+<div class="topbar"><div class="topbar-in"><a class="brand" href="../index.html">PENTAX <b>펌웨어 연구</b></a><div class="cams" aria-label="기종 선택"><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/">K-3 III</a><a href="../index.html" aria-current="true">K-3 II</a><a href="https://yunhyok.github.io/pentax-q7-firmware-analysis/">Q7</a></div><nav class="topnav" aria-label="주제"><a href="../index.html" aria-current="true">개요</a><a href="guide-pipeline.html">영상 처리</a><a href="guide-capture.html">촬영·보존 레코드</a><a href="guide-rebuild.html">재구축·업데이트</a><a href="guide-af.html">AF</a><a href="guide-ui.html">UI</a></nav></div></div>
+<nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../index.html">PENTAX K-3 II</a></li><li><a href="../index.html">시작하기</a></li><li aria-current="page">하드웨어 식별과 RAW 현상 개관</li></ol></nav>
+<!-- /chrome:top -->
+<header class="page-head">
+<p class="eyebrow">시작하기 · 하드웨어와 RAW 현상의 첫 지도</p>
+<h1>하드웨어 식별 근거와 RAW 현상·톤 곡선 경로</h1>
+<p class="lead">복호화한 펌웨어를 놓고 먼저 두 가지를 물었습니다. 이 코드는 어떤 프로세서에서 돌아가는가, 그리고 RAW 사진을 현상할 때 밝기와 대비를 정하는 곡선은 어디서 만들어지는가. 이 문서는 두 질문에 답한 범위와 남은 빈칸을 정리합니다.</p>
 </header>
-<main>
-<p class="note">이 문서는 첫 심층 분석 시점의 기록이다. 이후 확인한 작업 목록·톤 연결, selector=6의 메타데이터 대응, WB·색 행렬·클리핑은 <a href="pipeline-analysis.html">후속 분석 보고서</a>에 정리했다. 아래의 미확정 목록은 당시 범위를 나타낸다.</p>
-<section aria-labelledby="summary"><h2 id="summary">이번에 확인한 범위</h2>
-<div class="table-scroll"><table><thead><tr><th scope="col">대상</th><th scope="col">확인한 내용</th><th scope="col">남은 문제</th></tr></thead><tbody>
-<tr><td>주 CPU·SoC</td><td>MIDR의 Cortex-A9 부품 번호 비교, 별도 ARM 시작 경로, 칩 버전 레지스터를 읽는 코드</td><td>실제 MIDR·패키지 표기·정확한 SoC</td></tr>
-<tr><td>K-3MC 보조 이미지</td><td>F²MC-8L 호환 초기화 명령, 리셋 벡터 <code>0x1080</code>, 인터럽트 벡터와 반환</td><td>정확한 MCU 모델·보드 연결·담당 기능</td></tr>
-<tr><td>RAW 현상</td><td><code>DevelopmentRawImage</code> 진단의 실제 참조, 호출 지점 4곳, 조건부 표본 변환, 컨트롤러 상태 설정·신호 전달</td><td>컨트롤러에서 ISP 설정까지의 연결</td></tr>
-<tr><td>톤·감마</td><td>곡선 선택 → 보간 → 4개 곡선 구성 → 테이블 확장 → B2Y 레지스터·테이블 쓰기</td><td>메뉴 이름 매핑·실제 ISP 픽셀 수식·출력 색차</td></tr>
+<div class="layout">
+<!-- chrome:toc -->
+<nav class="toc" aria-label="이 문서의 목차"><h2 data-toc="no">이 문서에서</h2><ol><li><a href="#background">배경: 무엇을 알아보려 했고 주소는 어떻게 읽는가</a></li><li><a href="#hardware">CPU와 보조 MCU: 계열은 확인했고 부품 번호는 모릅니다</a></li><li><a href="#raw">RAW 현상 함수에서 컨트롤러 전달까지</a></li><li><a href="#tone">톤 곡선 생성에서 B2Y 설정까지</a></li><li><a href="#validation">실행으로 확인한 것: 곡선 출력 268,288개</a></li><li><a href="#comparison">K-3 Mark III에서 한 분석을 K-3 II에도 할 수 있는가</a></li><li><a href="#limits">한계와 남은 과제</a></li><li><a href="#reproduce">재현 방법</a></li><li><a href="#refs">근거 파일과 참고 자료</a></li></ol></nav>
+<!-- /chrome:toc -->
+<main class="doc" id="main">
+
+<section class="summary" id="summary">
+<h2 data-toc="no">핵심 요약</h2>
+<ul>
+<li>주 프로그램은 ARM 코드이고, 시작 부분에 <strong>Cortex-A9를 가려내는 비교</strong>가 있습니다. 비교가 맞지 않을 때 가는 별도의 ARM 시작 코드와, 칩 버전을 읽어 진단 문구로 내보내는 코드도 찾았습니다. <strong>칩(SoC)의 정확한 부품 번호는 알아내지 못했습니다.</strong></li>
+<li>파일 끝의 보조 이미지는 <strong>Fujitsu F²MC-8L 계열과 호환되는 8비트 명령열</strong>입니다. 첫 명령 14개와 리셋·인터럽트 벡터가 제조사 매뉴얼의 명령표, 벡터 규칙과 맞습니다. 어떤 MCU이고 무슨 일을 맡는지는 모릅니다.</li>
+<li><strong>RAW 현상 함수</strong>를 진단 문구에서 찾아냈습니다. 호출 지점 네 곳과, 작업을 컨트롤러로 넘기는 코드까지 따라갔습니다.</li>
+<li><strong>톤 곡선</strong>은 곡선 선택, 보간, 네 곡선 구성, 테이블 확장을 거쳐 만들어지고, B2Y라는 영상 처리 블록의 레지스터와 테이블 주소로 기록됩니다.</li>
+<li>보간·구성·확장 코드는 원본 기계어를 PC의 에뮬레이터에서 실행했습니다. <strong>출력 268,288개가 따로 작성한 참조식과 모두 같았습니다.</strong> 입력은 직접 만든 합성 값이며, 카메라에서 실행한 결과가 아닙니다.</li>
+</ul>
+</section>
+
+<div class="scope">
+<div class="ok"><h3><span class="badge ok">확인</span> 원본 코드 실행·바이트 대조</h3>
+<ul>
+<li>톤 보간 262,144개, 테이블 확장 5,120개, 곡선 구성 1,024개 출력 일치</li>
+<li>톤 적용 함수의 합성 사례 2건, RAW 표본 변환 4건(출력 263개)</li>
+<li>보조 이미지 첫 명령 14개와 벡터, ARM 시작 코드의 명령 워드</li>
+</ul></div>
+<div class="static"><h3><span class="badge static">정적 분석</span> 코드를 읽어서 판단</h3>
+<ul>
+<li>RAW 현상 함수의 호출 지점과 컨트롤러 전달</li>
+<li>톤 준비·적용 함수의 호출 관계와 레지스터 이름</li>
+<li>기본 곡선을 만드는 두 생산자 함수</li>
+<li>보조 코드가 F²MC-8L 호환이라는 판단</li>
+</ul></div>
+<div class="model"><h3><span class="badge model">모델</span> 시험 조건으로 정한 것</h3>
+<ul>
+<li>입력 곡선과 표본은 직접 만든 합성 값</li>
+<li>B2Y 레지스터·테이블 주소 자리에 합성 RAM 배치</li>
+<li>CPU는 Unicorn의 Cortex-A9 모델(명령 실행용 선택)</li>
+</ul></div>
+<div class="open"><h3><span class="badge open">미확인</span> 확인하지 않은 것</h3>
+<ul>
+<li>실제 MIDR·칩 버전 값, SoC와 보조 MCU의 부품 번호</li>
+<li>보조 MCU의 역할과 보드 연결</li>
+<li>하드웨어 안에서 픽셀이 처리되는 순서와 수식</li>
+<li>DMA·인터럽트·센서·실제 ISP 동작</li>
+</ul></div>
+</div>
+
+<section id="background">
+<h2>배경: 무엇을 알아보려 했고 주소는 어떻게 읽는가</h2>
+<p>K-3 II는 리코가 2015년 4월에 발표한 DSLR입니다. 리코는 이 카메라의 영상 엔진을 PRIME III라고 소개합니다. PRIME III는 상품명이고, 그 안에 든 칩의 부품 번호는 공개 자료에 없습니다. 펌웨어를 읽거나 에뮬레이터에서 실행하려면 적어도 CPU의 계열은 알아야 하므로, 펌웨어 안에서 근거를 찾았습니다.</p>
+<p>두 번째 주제는 RAW 현상입니다. 카메라는 센서가 기록한 RAW 데이터를 JPEG로 만들 때 밝기와 대비를 <dfn title="입력 밝기를 출력 밝기로 바꾸는 표. 사진의 대비와 계조를 정합니다.">톤 곡선</dfn>으로 바꿉니다. 이 곡선을 만드는 코드와, 만든 곡선을 영상 처리 하드웨어에 넘기는 코드를 찾는 것이 목표였습니다. 출발점은 <a href="firmware-structure.html#seeds">펌웨어 안의 진단 문자열</a>입니다.</p>
+
+<div class="table-wrap"><table>
+<caption>이 문서에서 확인한 범위</caption>
+<thead><tr><th>대상</th><th>확인한 내용</th><th>남은 문제</th></tr></thead>
+<tbody>
+<tr><th scope="row">주 CPU·SoC</th><td>MIDR의 Cortex-A9 부품 번호 비교, 별도의 ARM 시작 경로, 칩 버전 레지스터를 읽는 코드</td><td>실제 MIDR 값, 패키지 표기, 정확한 SoC</td></tr>
+<tr><th scope="row">K-3MC 보조 이미지</th><td>F²MC-8L 호환 초기화 명령, 리셋 벡터 <code>0x1080</code>, 인터럽트 벡터와 복귀 명령</td><td>정확한 MCU 모델, 보드 연결, 맡은 기능</td></tr>
+<tr><th scope="row">RAW 현상</th><td><code>DevelopmentRawImage</code> 진단 문구를 실제로 참조하는 코드, 호출 지점 4곳, 조건부 표본 변환, 컨트롤러의 상태 설정과 신호 전달</td><td>컨트롤러에서 ISP 설정까지의 연결(<a href="pipeline-analysis.html">다음 문서</a>에서 다룸)</td></tr>
+<tr><th scope="row">톤·감마</th><td>곡선 선택 → 보간 → 4개 곡선 구성 → 테이블 확장 → B2Y 레지스터·테이블 쓰기</td><td>메뉴 이름과의 대응(<a href="output-menu-analysis.html">이후 문서</a>에서 다룸), 실제 ISP의 픽셀 수식, 출력 색차</td></tr>
 </tbody></table></div>
-<p class="caption">직접 근거: <a href="hardware.json">CPU·보조 영역</a> · <a href="raw-path.json">RAW 경로</a> · <a href="tone-path.json">톤·감마 경로</a>. 함수 이름 중 진단 문자열에 없는 이름은 분석용 설명이다.</p>
-<p class="note">이 문서의 <strong>VA</strong>는 주 이미지의 분석용 주소 <code>0x02000000 + 파일 오프셋</code>이다. <strong>ROM</strong>은 보조 이미지에 적용한 별도 주소다. MMIO·테이블 주소는 코드가 사용하는 값이며 실제 물리 주소나 장치의 동작을 측정한 결과는 아니다.</p>
+
+<h3>이 문서의 주소 표기</h3>
+<dl class="kv">
+<dt>VA</dt><dd>주 이미지 코드의 분석용 주소입니다. <code>0x02000000 + 파일 오프셋</code>으로 구합니다. 근거는 <a href="firmware-structure.html#cpu">펌웨어 파일 구조 문서</a>에 있습니다.</dd>
+<dt>ROM</dt><dd>보조 이미지에만 쓰는 별도의 주소입니다. 파일 <code>0x01000000</code>이 ROM <code>0x1000</code>에 대응합니다.</dd>
+<dt>장치 주소</dt><dd><code>0x2002…</code>, <code>0x20A…</code>, <code>0xD000…</code>처럼 코드가 하드웨어 레지스터나 테이블에 접근할 때 쓰는 값입니다. 코드에 적힌 값일 뿐이며, 실제 물리 주소나 장치의 동작을 측정한 결과가 아닙니다.</dd>
+<dt>함수 이름</dt><dd>진단 문자열에 나오지 않는 이름(“준비 함수”, “컨트롤러 래퍼” 등)은 설명을 위해 붙인 것입니다.</dd>
+<dt>B2Y</dt><dd>펌웨어의 진단 문구 <code>IO_B2Y.F_B2Y.TGCTL</code>에 나오는 영상 처리 블록의 이름입니다. 이 문서는 코드가 이 이름으로 부르는 레지스터 묶음을 가리킬 때 씁니다.</dd>
+</dl>
 </section>
 
-<section aria-labelledby="comparison"><h2 id="comparison">1. K-3 III와 같은 항목을 분석할 수 있는가</h2>
-<p>분석 절차는 적용할 수 있다. K-3 II에도 A32 코드, 가상 함수표, 진단 문자열과 레지스터 접근 함수가 남아 있다. 다만 K-3 III의 명령 번호·주소·데이터 구조를 옮기는 방식은 쓸 수 없다. 아래 표는 K-3 III의 공개 분석 항목을 기준으로 이번 K-3 II 분석에서 확인한 범위를 정리했다.</p>
-<div class="table-scroll"><table><thead><tr><th scope="col">같이 검토한 항목</th><th scope="col">K-3 II 적용 결과</th><th scope="col">판정</th></tr></thead><tbody>
-<tr><td>파일 식별·내부 형식</td><td>해시 고정, XOR 해제, 독립 디코더 전체 바이트 대조</td><td>적용 완료</td></tr>
-<tr><td>주소 매핑·코드 진입점</td><td>주 이미지 기준 주소와 별도 보조 ROM 매핑</td><td>대상 범위 검증</td></tr>
-<tr><td>SoC·보조 CPU</td><td>부품 번호 비교 경로와 F²MC-8L 호환 코드 식별</td><td>정확한 부품 번호 미확정</td></tr>
-<tr><td>명령 카탈로그·디스패처</td><td>K-3 III의 957개 명령표에 대응하는 자체 테이블은 미식별</td><td>별도 탐색 필요</td></tr>
-<tr><td>RAW 현상·작업 전달</td><td>현상 함수와 컨트롤러 전달 코드까지 추적</td><td>일부 연결 확보</td></tr>
-<tr><td>컬러모드·리소스 이름</td><td>일반 경로와 selector=6 곡선 생산자 구분</td><td>카메라 메뉴 이름 미연결</td></tr>
-<tr><td>감마·톤 수치 연산</td><td>원본 A32/NEON 보간·곡선 구성·테이블 확장 실행 대조</td><td>268,288개 출력 일치</td></tr>
-<tr><td>ISP 설정·버퍼 전달</td><td>TGCTL·TCTBLCTL과 4개 테이블 목적지 확인</td><td>합성 메모리에서 적용 함수 검증</td></tr>
-<tr><td>WB·색 행렬·클리핑</td><td>관련 B2Y 진단 항목과 CC1CTL 읽기 주소 확인</td><td>설정 생산자·수식 추적 필요</td></tr>
-<tr><td>JPEG 양자화·완료 처리</td><td>RAW 작업과 최종 JPEG 인코더 연결은 아직 미확정</td><td>추적 방법 적용 가능</td></tr>
-<tr><td>AF·셔터·GPIO</td><td>진단·기능 문자열은 있으나 이번 심층 검증 대상은 아님</td><td>자체 객체·핀 근거 필요</td></tr>
-<tr><td>Lightroom·카메라 출력 재현</td><td>테이블과 UI 이름, RAW/JPEG 짝 자료가 더 필요</td><td>현재 결과만으로 평가 불가</td></tr>
+<section id="hardware">
+<h2>CPU와 보조 MCU: 계열은 확인했고 부품 번호는 모릅니다</h2>
+<p class="takeaway">펌웨어에는 실행 코드의 근거가 세 갈래로 남아 있습니다. Cortex-A9를 가려내는 주 시작 경로, 값이 다를 때 가는 별도의 ARM 시작 코드, 그리고 F²MC-8L 호환 8비트 코드입니다.</p>
+
+<figure class="diagram">
+<figcaption>서로 구분해야 하는 세 갈래의 실행 코드</figcaption>
+<div class="dg-scroll">
+<svg class="dg" viewBox="0 0 800 330" role="img" aria-labelledby="dg-paths-title dg-paths-desc">
+<title id="dg-paths-title">주 이미지의 두 ARM 시작 경로와 보조 이미지의 8비트 코드</title>
+<desc id="dg-paths-desc">왼쪽은 주 이미지의 ARM 코드입니다. 분석용 주소 0x0200020C에서 CPU 식별값의 부품 번호를 0xC09와 비교합니다. 같으면 0x0200022C로 이어져 VFP를 켜고 주 초기화로 갑니다. 다르면 0x02000420으로 가서 0xC0001FFC의 값이 0xA55A5AA5가 될 때까지 기다린 뒤 0x02020100의 별도 ARM 시작 코드로 분기합니다. 이 코드의 코어 종류와 역할은 확인하지 못했습니다. 오른쪽은 파일 0x01000000에서 시작하는 60 KiB 크기의 보조 이미지입니다. ROM 0xFFFE의 리셋 벡터가 ROM 0x1080을 가리키고, 거기서 F²MC-8L 호환 초기화 명령 14개가 스택을 설정한 뒤 0x72C1을 호출합니다. 왼쪽과 오른쪽은 서로 연결되어 있지 않습니다.</desc>
+<defs><marker id="dg-paths-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="gf" x="8" y="14" width="544" height="306" rx="12"/>
+<text class="h" x="24" y="36">주 이미지 · ARM 코드</text>
+<rect class="gf" x="572" y="14" width="220" height="306" rx="12"/>
+<text class="h" x="586" y="36">보조 이미지 K-3MC · 8비트</text>
+
+<rect class="b ok" x="24" y="92" width="190" height="72" rx="8"/>
+<text class="t" x="36" y="117">CPU 식별값 비교</text>
+<text class="s" x="36" y="137">VA 0x0200020C</text>
+<text class="s" x="36" y="155">부품 번호가 0xC09인가</text>
+
+<rect class="b static" x="246" y="48" width="290" height="72" rx="8"/>
+<text class="t" x="258" y="73">같으면: 주 시작 경로</text>
+<text class="s" x="258" y="93">VA 0x0200022C</text>
+<text class="s" x="258" y="111">VFP 활성화와 주 초기화로 진행</text>
+
+<rect class="b ok" x="246" y="136" width="290" height="72" rx="8"/>
+<text class="t" x="258" y="161">다르면: 추가 ARM 시작 경로</text>
+<text class="s" x="258" y="181">VA 0x02000420</text>
+<text class="s" x="258" y="199">0xC0001FFC에서 0xA55A5AA5를 기다림</text>
+
+<rect class="b ok" x="246" y="240" width="290" height="72" rx="8"/>
+<text class="t" x="258" y="265">별도의 ARM 시작 코드</text>
+<text class="s" x="258" y="285">VA 0x02020100 · CP15 제어 레지스터 설정</text>
+<text class="s topen" x="258" y="303">코어 종류와 역할은 미확인</text>
+
+<rect class="b ok" x="586" y="48" width="192" height="72" rx="8"/>
+<text class="t" x="598" y="73">보조 이미지 60 KiB</text>
+<text class="s" x="598" y="93">파일 0x01000000부터</text>
+<text class="s" x="598" y="111">ROM 0x1000~0xFFFF</text>
+
+<rect class="b ok" x="586" y="136" width="192" height="72" rx="8"/>
+<text class="t" x="598" y="161">리셋 벡터</text>
+<text class="s" x="598" y="181">ROM 0xFFFE의 값 10 80</text>
+<text class="s" x="598" y="199">→ ROM 0x1080</text>
+
+<rect class="b static" x="586" y="240" width="192" height="72" rx="8"/>
+<text class="t" x="598" y="265">F²MC-8L 호환 명령열</text>
+<text class="s" x="598" y="285">ROM 0x1080부터 14개 확인</text>
+<text class="s" x="598" y="303">스택 설정 → CALL 0x72C1</text>
+
+<path class="e" d="M214 116H230V84H244" marker-end="url(#dg-paths-ah)"/>
+<path class="e" d="M214 140H230V172H244" marker-end="url(#dg-paths-ah)"/>
+<path class="e" d="M391 208V238" marker-end="url(#dg-paths-ah)"/>
+<text class="n" x="400" y="228">값이 맞으면 분기</text>
+<path class="e" d="M682 120V134" marker-end="url(#dg-paths-ah)"/>
+<path class="e" d="M682 208V238" marker-end="url(#dg-paths-ah)"/>
+</svg>
+</div>
+<ul class="dg-legend"><li><i class="ok"></i>파일 바이트로 확인한 명령과 값</li><li><i class="static"></i>코드를 읽어 판단</li></ul>
+<p>왼쪽 아래의 ARM 시작 코드와 오른쪽의 8비트 코드를 하나의 “보조 CPU”로 합쳐서 보지 않습니다. 이 세 갈래를 관찰했다는 사실만으로 물리 칩이 몇 개인지, 어떻게 연결되는지 확정할 수 없습니다.</p>
+</figure>
+
+<h3>주 CPU: Cortex-A9를 가려내는 비교</h3>
+<p>주 이미지의 시작 코드는 CPU 식별 레지스터 <dfn title="Main ID Register. Arm 프로세서의 설계사, 부품 번호, 리비전을 담은 읽기 전용 레지스터">MIDR</dfn>를 읽어 <code>0xFFF0</code>으로 마스킹한 값을 <code>0xC090</code>과 비교합니다. 부품 번호로는 <code>0xC09</code>이고, Arm의 문서에서 이 값은 Cortex-A9입니다. 따라서 펌웨어에 Cortex-A9를 구분하는 경로가 있다는 사실은 확인할 수 있습니다. 명령과 포인터의 세부 근거는 <a href="firmware-structure.html#cpu">펌웨어 파일 구조 문서</a>에 있습니다.</p>
+<p>이 비교만으로 실제로 실장된 SoC, 코어 수, 클럭을 정할 수는 없습니다. 리코의 <a href="https://www.ricoh-imaging.co.jp/english/products/k-3-2/feature/05.html">제품 소개 페이지</a>에는 PRIME III 칩 사진이 있지만, 칩 위에는 PENTAX 로고만 보이고 읽을 수 있는 부품 번호는 없습니다.</p>
+
+<h3 id="alt-arm">값이 다를 때 가는 ARM 시작 경로</h3>
+<p>MIDR 비교가 맞지 않으면 코드는 한 주소를 반복해서 읽으며 기다립니다. 정해진 값이 읽히면 별도의 ARM 시작 코드로 분기합니다. 다른 쪽에서 값을 써 주기를 기다리는 모양이어서 공유 메모리로 보이지만, 누가 쓰는지는 확인하지 않았습니다.</p>
+<dl class="kv">
+<dt>기다리는 코드</dt><dd>VA <code>0x02000420</code></dd>
+<dt>읽는 주소와 기다리는 값</dt><dd><code>0xC0001FFC</code>에서 <code>0xA55A5AA5</code></dd>
+<dt>분기하는 곳</dt><dd>VA <code>0x02020100</code></dd>
+</dl>
+<p>분기한 곳에는 CP15 제어 레지스터를 다루는 ARM 시작 코드가 있습니다. 바로 앞 파일 <code>0x20000</code>에는 별도의 모델·버전 헤더가 있습니다. 검증기는 이 헤더가 주 헤더와 같은 식별 문자열 <code>HOKKTKIYHTNTMU</code>로 시작하는지 확인합니다. 이 경로를 실행하는 코어의 종류와 역할은 알 수 없습니다.</p>
+<div class="callout"><strong class="label">참고</strong>
+<p><a href="rebuild.html">재포장</a>과 <a href="installation.html">업데이트 전송</a> 문서가 다루는 통신 슬롯(<code>0xC0001FD0</code> 계열)도 같은 <code>0xC000…</code> 대역에 있습니다. 두 주소가 어떤 관계인지는 이 문서에서 확인하지 않았습니다.</p></div>
+
+<h3 id="chip-version">칩 버전을 읽는 코드</h3>
+<p>VA <code>0x02753C6C</code>의 함수는 장치 주소 <code>0xD0001000</code>을 읽어 상위 4비트만 남깁니다. VA <code>0x025C990C</code>의 호출이 이 함수를 <code>CHIP VER</code>라는 출력 형식과 잇습니다. 칩을 식별할 때 실제로 읽어 볼 후보 주소는 얻은 셈입니다. 다만 카메라에서 읽은 값이 없고, 이 값을 부품 번호로 바꾸는 표도 찾지 못했습니다.</p>
+
+<h3 id="aux">보조 이미지: F²MC-8L 호환 코드라는 근거</h3>
+<p><a href="https://www.infineon.com/assets/row/public/documents/10/57/infineon-f2mc-8l-mb89580b-bw-series-hardware-manual-additionaltechnicalinformation-en.pdf">F²MC-8L</a>은 Fujitsu가 만든 8비트 마이크로컨트롤러 계열입니다. 대조에 쓴 매뉴얼에 따르면 이 계열의 CPU는 메모리의 맨 끝 <code>0xFFFE</code>~<code>0xFFFF</code>에 리셋 벡터를, <code>0xFFFD</code>에 모드 데이터를 두고, 16비트 값은 높은 바이트를 먼저 적습니다.</p>
+<p>보조 이미지를 ROM <code>0x1000</code>~<code>0xFFFF</code>에 대응시키면 이 규칙과 맞아떨어집니다. 이미지의 마지막 4바이트 <code>FF 00 10 80</code>을 매뉴얼의 규칙대로 읽으면 다음과 같습니다.</p>
+<div class="table-wrap"><table class="fit">
+<caption>보조 이미지의 마지막 4바이트</caption>
+<thead><tr><th>ROM 주소</th><th>바이트</th><th>매뉴얼의 뜻</th></tr></thead>
+<tbody>
+<tr><td><code>0xFFFC</code></td><td><code>FF</code></td><td>쓰지 않는 자리(FF로 채움)</td></tr>
+<tr><td><code>0xFFFD</code></td><td><code>00</code></td><td>모드 데이터(단일 칩 모드)</td></tr>
+<tr><td><code>0xFFFE</code>~<code>0xFFFF</code></td><td><code>10 80</code></td><td>리셋 벡터. ROM <code>0x1080</code>을 가리킵니다.</td></tr>
 </tbody></table></div>
-<p class="caption">비교 기준은 K-3 III 저장소의 고정 커밋 <code>b51d680</code>이다: <a href="https://github.com/yunhyok/pentax-k3iii-firmware-analysis/blob/b51d680202336a5872a66f99ca2924a2cb7c75fa/analysis/index.html">명령·AF 분석</a> · <a href="https://github.com/yunhyok/pentax-k3iii-firmware-analysis/blob/b51d680202336a5872a66f99ca2924a2cb7c75fa/analysis/color-algorithms.html">색 연산</a> · <a href="https://github.com/yunhyok/pentax-k3iii-firmware-analysis/blob/b51d680202336a5872a66f99ca2924a2cb7c75fa/analysis/pipeline-report.html">ISP·JPEG 경로</a> · <a href="https://github.com/yunhyok/pentax-k3iii-firmware-analysis/blob/b51d680202336a5872a66f99ca2924a2cb7c75fa/analysis/color-lightroom.html">Lightroom 검토</a>.</p>
+<ul>
+<li><strong>리셋 벡터</strong> — 벡터가 가리키는 ROM <code>0x1080</code>은 보조 헤더 바로 뒤, 곧 코드의 첫 바이트입니다.</li>
+<li><strong>첫 명령</strong> — <code>E4 02 4E</code>는 <code>MOVW A,#0x024E</code>, 이어지는 <code>E1</code>은 <code>MOVW SP,A</code>로 읽힙니다. 스택을 잡고 PS(프로그램 상태)의 비트를 정리한 뒤 ROM <code>0x72C1</code>을 호출하는 흐름이며, 14개 명령이 모두 Fujitsu 명령표와 맞습니다.</li>
+<li><strong>인터럽트 벡터</strong> — ROM <code>0xFFDC</code>~<code>0xFFFB</code>의 2바이트 항목 16개 가운데 10개가 ROM <code>0x23B8</code>을 가리킵니다. 이곳에는 레지스터를 저장하고 되돌린 뒤 <code>RETI</code>(인터럽트 복귀)로 끝나는 코드가 있습니다.</li>
+</ul>
+<p>따라서 F²MC-8L <strong>호환 명령어 계열</strong>이라는 판단은 근거가 탄탄합니다. 다만 호환되는 파생 제품 가운데 어느 것인지는 가려내지 못합니다. 대조에 쓴 매뉴얼은 MB89580B/BW용이지만, 이 부품이 카메라에 들어 있다고 지목하는 것은 아닙니다.</p>
+
+<details class="evidence"><summary>보조 이미지의 첫 명령 14개와 벡터</summary>
+<div class="table-wrap"><table class="compact">
+<caption>ROM 0x1080부터의 명령 (hardware.json의 secondary.instructions)</caption>
+<thead><tr><th>ROM 주소</th><th>파일 오프셋</th><th>바이트</th><th>명령</th></tr></thead>
+<tbody>
+<tr><td><code>0x1080</code></td><td><code>0x01000080</code></td><td><code>E4 02 4E</code></td><td><code>MOVW A,#0x024E</code></td></tr>
+<tr><td><code>0x1083</code></td><td><code>0x01000083</code></td><td><code>E1</code></td><td><code>MOVW SP,A</code></td></tr>
+<tr><td><code>0x1084</code></td><td><code>0x01000084</code></td><td><code>70</code></td><td><code>MOVW A,PS</code></td></tr>
+<tr><td><code>0x1085</code></td><td><code>0x01000085</code></td><td><code>E4 07 FF</code></td><td><code>MOVW A,#0x07FF</code></td></tr>
+<tr><td><code>0x1088</code></td><td><code>0x01000088</code></td><td><code>63</code></td><td><code>ANDW A</code></td></tr>
+<tr><td><code>0x1089</code></td><td><code>0x01000089</code></td><td><code>71</code></td><td><code>MOVW PS,A</code></td></tr>
+<tr><td><code>0x108A</code></td><td><code>0x0100008A</code></td><td><code>70</code></td><td><code>MOVW A,PS</code></td></tr>
+<tr><td><code>0x108B</code></td><td><code>0x0100008B</code></td><td><code>E4 00 30</code></td><td><code>MOVW A,#0x0030</code></td></tr>
+<tr><td><code>0x108E</code></td><td><code>0x0100008E</code></td><td><code>73</code></td><td><code>ORW A</code></td></tr>
+<tr><td><code>0x108F</code></td><td><code>0x0100008F</code></td><td><code>71</code></td><td><code>MOVW PS,A</code></td></tr>
+<tr><td><code>0x1090</code></td><td><code>0x01000090</code></td><td><code>E7 75 53</code></td><td><code>MOVW EP,#0x7553</code></td></tr>
+<tr><td><code>0x1093</code></td><td><code>0x01000093</code></td><td><code>E4 08 75</code></td><td><code>MOVW A,#0x0875</code></td></tr>
+<tr><td><code>0x1096</code></td><td><code>0x01000096</code></td><td><code>E4 00 0C</code></td><td><code>MOVW A,#0x000C</code></td></tr>
+<tr><td><code>0x1099</code></td><td><code>0x01000099</code></td><td><code>31 72 C1</code></td><td><code>CALL 0x72C1</code></td></tr>
+</tbody></table></div>
+<div class="table-wrap"><table class="compact fit">
+<caption>ROM 0xFFDC~0xFFFB의 벡터 항목 16개</caption>
+<thead><tr><th>ROM 주소</th><th>가리키는 ROM 주소</th></tr></thead>
+<tbody>
+<tr><td><code>0xFFDC</code>, <code>0xFFDE</code>, <code>0xFFE0</code>, <code>0xFFE2</code>, <code>0xFFE4</code>, <code>0xFFE6</code>, <code>0xFFE8</code>, <code>0xFFEE</code>, <code>0xFFF0</code>, <code>0xFFF2</code></td><td><code>0x23B8</code> (공용 처리기)</td></tr>
+<tr><td><code>0xFFEA</code></td><td><code>0x23A5</code></td></tr>
+<tr><td><code>0xFFEC</code></td><td><code>0x2388</code></td></tr>
+<tr><td><code>0xFFF4</code></td><td><code>0x2331</code></td></tr>
+<tr><td><code>0xFFF6</code></td><td><code>0x2314</code></td></tr>
+<tr><td><code>0xFFF8</code></td><td><code>0x22FD</code></td></tr>
+<tr><td><code>0xFFFA</code></td><td><code>0x22E6</code></td></tr>
+</tbody></table></div>
+<p class="small">대조한 매뉴얼의 벡터 표에는 인터럽트 항목이 <code>0xFFE4</code>~<code>0xFFFB</code>의 12개만 있습니다. 그 아래 네 항목(<code>0xFFDC</code>~<code>0xFFE3</code>)은 표 밖이며, 모두 공용 처리기 주소를 담고 있습니다. 공용 처리기의 <code>RETI</code>는 ROM <code>0x23CF</code>에 있습니다.</p>
+<dl class="kv">
+<dt>첫 명령 14개 구간의 SHA-256</dt><dd><code class="wrap">03e0477e19a163109c40af22b797c8208de12c3a8e8eca9dbdbef97e588d32dd</code></dd>
+<dt>대조한 자료</dt><dd>Fujitsu CM25-10142-3E(MB89580B/BW 하드웨어 매뉴얼)의 CPU 벡터 표와 부록 B(인쇄 쪽 323~329)</dd>
+<dt>검증기</dt><dd><a href="../verify_hardware.py">verify_hardware.py</a> — 명령 14개와 벡터를 확인하는 검사이며, F²MC 전체를 풀이하는 디스어셈블러는 아닙니다.</dd>
+</dl>
+</details>
+
+<details class="evidence"><summary>추가 ARM 시작 경로와 칩 버전 읽기의 명령</summary>
+<div class="table-wrap"><table class="compact">
+<thead><tr><th>파일 오프셋</th><th>값</th><th>뜻</th></tr></thead>
+<tbody>
+<tr><td><code>+0x420</code></td><td><code>0xE59F0028</code></td><td><code>+0x450</code>의 값 <code>0xC0001FFC</code>를 r0에 읽습니다.</td></tr>
+<tr><td><code>+0x424</code></td><td><code>0xE5901000</code></td><td>그 주소의 값을 r1에 읽습니다.</td></tr>
+<tr><td><code>+0x428</code></td><td><code>0xE59F20C8</code></td><td><code>+0x4F8</code>의 값 <code>0xA55A5AA5</code>를 r2에 읽습니다.</td></tr>
+<tr><td><code>+0x42C</code>, <code>+0x430</code></td><td><code>0xE1510002</code>, <code>0x1AFFFFFB</code></td><td>두 값을 비교하고, 다르면 <code>+0x424</code>로 돌아가 다시 읽습니다.</td></tr>
+<tr><td><code>+0x434</code>, <code>+0x438</code></td><td><code>0xE59F00C0</code>, <code>0xE12FFF10</code></td><td><code>+0x4FC</code>의 값 <code>0x02020100</code>으로 분기합니다.</td></tr>
+<tr><td><code>+0x20000</code></td><td><code>HOKKTKIYHTNTMU</code></td><td>별도 헤더의 식별 문자열</td></tr>
+<tr><td><code>+0x20100</code>~<code>+0x20108</code></td><td><code>0xEE110F10</code>, <code>0xE3C00080</code>, <code>0xEE010F10</code></td><td>CP15 제어 레지스터를 읽어 비트 7을 지우고 다시 씁니다.</td></tr>
+<tr><td><code>+0x753C6C</code>~<code>+0x753C74</code></td><td><code>0xE5900000</code>, <code>0xE200020F</code></td><td><code>+0x753C84</code>에 적힌 주소 <code>0xD0001000</code>을 읽어 <code>0xF0000000</code>으로 마스킹합니다.</td></tr>
+<tr><td><code>+0x5C9A68</code></td><td>문자열</td><td><code>CHIP VER</code> 출력 형식</td></tr>
+<tr><td><code>+0xA562E9</code></td><td><code>M7 for Fujitsu</code></td><td>이미지 전체에 한 번 나오는 라이브러리 표기. SHA-256 <code class="wrap">885f3411889654604a9f164f0e1031249462212eeb2bcf5ef0ea76f205f2316a</code></td></tr>
+</tbody></table></div>
+<p class="small">출처: <a href="hardware.json">hardware.json</a>과 <a href="../verify_hardware.py">verify_hardware.py</a>. 카메라에서 읽은 MIDR 값, 칩 버전 값, 기판 표기는 없습니다.</p>
+</details>
+
+<details><summary>Fujitsu Milbeaut 계열 칩으로 확정하지 않은 이유</summary>
+<p>펌웨어에는 Fujitsu의 M7용 영상 안정화 라이브러리의 이름(<code>M7 for Fujitsu</code>)이 남아 있습니다. 이 문자열은 관련 소프트웨어를 알려 주는 단서이지, 칩이 무엇인지 알려 주는 근거는 아닙니다.</p>
+<p>Fujitsu(현 Socionext)의 영상 처리 칩 MB86S22는 공개 사양에 Cortex-A5를 명시합니다(<a href="https://www.socionextcn.com.cn/en/service/assp/image-processor/51.html">Socionext MB86S22 사양</a>). M7이라는 문자열만 보고 K-3 II의 칩을 MB86S22로 정하면, 펌웨어에 있는 Cortex-A9 비교 경로를 설명할 수 없습니다. 두 프로세서가 함께 들어 있다는 근거도 없습니다. K-3 Mark III의 SC2000A 역시 이 기종의 부품 근거로 쓰지 않았습니다.</p>
+<p>정확한 부품 번호를 정하려면 K-3 II 기판에서 읽을 수 있는 패키지 표기, 제조사의 부품 자료, 또는 카메라에서 읽은 식별값과 공식 대응표가 필요합니다. 공개 자료에서는 이를 구하지 못했습니다.</p>
+</details>
 </section>
 
-<section aria-labelledby="hardware"><h2 id="hardware">2. CPU 계열과 정확한 부품 번호를 구분한다</h2>
-<p>리코가 공개한 엔진명은 <strong>PRIME III</strong>다. 이는 SoC 부품 번호가 아니다. 주 시작 코드는 MIDR에서 부품 번호 <code>0xC09</code>를 비교하므로 Cortex-A9를 구분하는 경로가 있다는 사실은 확인할 수 있다. 하지만 이 정적 비교만으로 실장 SoC, 코어 수와 클럭을 결정할 수는 없다. <a href="https://www.ricoh-imaging.co.jp/english/products/k-3-2/feature/05.html">리코 제품 설명</a> · <a href="https://documentation-service.arm.com/static/5f0370fccafe527e86f5bfb2">Arm Cortex-A9 TRM §4.3.1</a> · <a href="findings.json">시작 코드 검사</a></p>
-<figure><figcaption>공식 PRIME III 소개 이미지</figcaption><img src="https://www.ricoh-imaging.co.jp/english/products/k-3-2/feature/img/bod_img_05_02.jpg" alt="리코가 K-3 II 제품 페이지에 게시한 PRIME III 이미지. 칩 위에는 PENTAX 로고가 보이며 실리콘 부품 번호는 보이지 않는다." width="300" height="255" style="max-width:100%;height:auto"><p class="caption">출처: <a href="https://www.ricoh-imaging.co.jp/english/products/k-3-2/feature/05.html">RICOH IMAGING</a>. 제품 소개 이미지이며 판독 가능한 SoC 부품 번호를 제공하지 않는다. 원격 이미지를 표시하므로 이 사진은 인터넷 연결이 필요하다.</p></figure>
-<figure><figcaption>01 / 구분해야 할 세 가지 실행 코드 근거</figcaption>
-<div class="columns"><div><h3>주 이미지의 ARM 경로</h3><div class="map"><div class="range">VA 0x0200020C</div><div>MIDR 읽기 → <code>&amp; 0xFFF0</code> → <code>0xC090</code> 비교</div><div class="range">일치 경로</div><div>VA <code>0x0200022C</code><br>VFP 활성화와 주 초기화로 진행</div><div class="range">불일치 경로</div><div>VA <code>0x02000420</code><br><code>0xC0001FFC</code>에서 <code>0xA55A5AA5</code> 대기 → <code>0x02020100</code>으로 분기</div></div></div>
-<div><h3>별도 K-3MC 이미지</h3><div class="map"><div class="range">파일 0x01000000</div><div>보조 헤더·독립 XOR 구간<br>전체 60 KiB</div><div class="range">ROM 0xFFFE</div><div>big-endian 리셋 벡터 <code>10 80</code><br>→ ROM <code>0x1080</code></div><div class="range">파일 0x01000080</div><div>F²MC-8L 호환 초기화 명령열<br>스택·PS 설정 → ROM <code>0x72C1</code> 호출</div></div></div></div>
-<p class="caption">왼쪽 아래는 추가 ARM 시작 코드다. 이것과 오른쪽 8비트 계열 코드를 하나의 “보조 CPU”로 합치지 않는다. 세 경로의 관찰만으로 물리 칩의 개수나 연결 구조를 확정할 수 없다. <a href="hardware.json">주소·명령·벡터 근거</a></p></figure>
-<h3>추가 ARM 시작 경로와 칩 버전 읽기</h3>
-<p>MIDR 비교가 맞지 않으면 공유 메모리로 보이는 주소를 대기한 뒤 <code>0x02020100</code>으로 이동한다. 이 위치에는 CP15 제어 레지스터를 다루는 ARM 시작 코드가 있으며, 앞쪽 파일 <code>0x20000</code>에는 별도의 모델·버전 헤더가 있다. 이 경로의 코어 종류와 역할은 미확정이다.</p>
-<p>또한 VA <code>0x02753C6C</code>는 <code>0xD0001000</code>을 읽어 상위 4비트만 남긴다. VA <code>0x025C990C</code>의 호출과 <code>CHIP VER</code> 출력 형식이 연결된다. 칩 식별을 위한 실측 후보는 확보했지만 실제 읽기 값은 없다. 이 값을 부품 번호로 변환하는 표도 아직 찾지 못했다. <a href="hardware.json">정적 검사 결과</a></p>
-<h3>F²MC-8L 호환 코드라는 판단 근거</h3>
-<p>보조 영역을 ROM <code>0x1000–0xFFFF</code>에 대응시키면 리셋 벡터가 페이로드 첫 명령을 가리킨다. <code>E4 02 4E</code>는 <code>MOVW A,#0x024E</code>, 다음 <code>E1</code>은 <code>MOVW SP,A</code>로 해석된다. 이어지는 PS 마스크 설정과 절대 호출도 Fujitsu 명령표에 맞는다. 인터럽트 벡터 여러 개가 가리키는 ROM <code>0x23B8</code>에는 레지스터 저장·복구와 <code>RETI</code>가 있다. <a href="https://www.infineon.com/assets/row/public/documents/10/57/infineon-f2mc-8l-mb89580b-bw-series-hardware-manual-additionaltechnicalinformation-en.pdf">Fujitsu CM25-10142-3E, CPU 벡터 표·부록 B</a></p>
-<p>따라서 F²MC-8L <strong>호환 명령어 계열</strong>이라는 판단은 강하게 뒷받침된다. 다만 호환 파생 제품까지 구분하지는 못한다. 이 설명에 사용한 매뉴얼의 MB89580B/BW를 실제 카메라 부품으로 지목하는 것은 아니다. <a href="../verify_hardware.py">초기 14개 명령·벡터 검증기</a></p>
-<details><summary>Fujitsu/Milbeaut 후보를 확정하지 않은 이유</summary><p>펌웨어에 Fujitsu의 M7 영상 안정화 라이브러리 명칭이 남아 있다. 이는 관련 소프트웨어의 단서다. 반면 공개 MB86S22 사양은 Cortex-A5를 명시한다. M7이라는 문자열만으로 K-3 II를 MB86S22로 확정하면 Cortex-A9 비교 경로와의 관계를 설명하지 못한다. 두 프로세서가 함께 있다는 근거도 아직 없다. K-3 III의 SC2000A 역시 이 모델의 부품 증거로 쓰지 않았다. <a href="https://www.socionextcn.com.cn/en/service/assp/image-processor/51.html">Socionext MB86S22 사양</a></p><p>정확한 부품 번호를 결정하려면 K-3 II PCB의 판독 가능한 패키지 표기, 제조사 부품 자료 또는 실측 ID와 공식 대응표가 필요하다. 이번에 확인한 공개 자료에서는 이를 확보하지 못했다.</p></details>
-</section>
+<section id="raw">
+<h2>RAW 현상 함수에서 컨트롤러 전달까지</h2>
+<p class="takeaway">진단 문구 <code>DevelopmentRawImage()</code>를 참조하는 함수가 RAW 현상의 진입점입니다. 이 함수를 부르는 곳 네 군데와, 작업을 컨트롤러로 넘기는 코드를 확인했습니다.</p>
 
-<section aria-labelledby="raw"><h2 id="raw">3. RAW 현상 함수에서 컨트롤러 전달까지</h2>
-<p><code>DevelopmentRawImage()</code> 문자열 포인터는 단순 검색으로 참조를 찾지 못했다. 실제 코드는 PC 상대 <code>ADD</code> 명령으로 문자열 주소를 만든다. VA <code>0x0252ADF4</code>에서 진단 문자열을 참조하는 것을 확인했고, 이를 포함하는 함수의 진입점은 <code>0x02529664</code>다. 네 호출 지점 <code>0x0268F928</code>, <code>0x02690554</code>, <code>0x02691040</code>, <code>0x02692098</code>을 따로 검증했다. <a href="raw-path.json">명령어·호출 대상·구간 해시</a></p>
-<figure><figcaption>02 / RAW 제어 경로 — 이번에 연결한 범위</figcaption><div class="flow"><div class="stage"><strong>현상 호출</strong><span>확인한 호출 지점 4곳<br>→ VA <code>0x02529664</code></span></div><div class="arrow" aria-hidden="true">→</div><div class="stage"><strong>버퍼·작업 준비</strong><span>할당 실패 분기<br>조건부 표본 변환·작업 링크 설정</span></div><div class="arrow" aria-hidden="true">→</div><div class="stage"><strong>컨트롤러 전달</strong><span>VA <code>0x026DB894</code><br>상태 설정 → 신호 전달</span></div></div><p class="note">여기서 톤 준비·적용 함수까지 이어지는 경로와 큐 사용 여부는 미확정이다. 이 간격을 실제 호출 화살표로 표시하지 않았다.</p></figure>
-<p>할당 함수 후보 <code>0x0270C56C</code>의 반환값이 0이면 오류 진단으로 분기한다. 성공 경로에서는 작업 객체의 <code>+0x20C8</code>, <code>+0x20D0</code>, <code>+0x20C4</code>에 링크를 설정하는 작은 함수들이 호출된다. 컨트롤러 래퍼는 <code>0x025A11F8</code>을 거친 뒤 컨트롤러 <code>+0x340</code>의 신호 객체에 값 1을 전달한다. 이는 CPU 제어 흐름이며 센서 픽셀의 처리 순서와는 구별해야 한다. <a href="../verify_raw_path.py">경로 검증 코드</a></p>
+<figure class="diagram">
+<figcaption>RAW 현상의 제어 흐름에서 이 문서가 연결한 범위</figcaption>
+<div class="dg-scroll">
+<svg class="dg" viewBox="0 0 800 256" role="img" aria-labelledby="dg-raw-title dg-raw-desc">
+<title id="dg-raw-title">호출 지점에서 RAW 현상 함수를 거쳐 컨트롤러 전달까지</title>
+<desc id="dg-raw-desc">호출 지점 네 곳이 분석용 주소 0x02529664의 RAW 현상 함수를 부릅니다. 이 함수 안에서 버퍼 할당(실패하면 오류 진단 출력), 조건이 맞을 때만 실행되는 표본 변환 루프, 작업 객체의 링크 설정을 확인했습니다. 함수는 0x026DB894의 컨트롤러 래퍼를 불러 상태를 설정하고 신호를 전달합니다. 그 뒤 작업이 처리되어 톤이 적용되기까지의 연결은 다른 문서에서 다룹니다.</desc>
+<defs><marker id="dg-raw-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker></defs>
+
+<rect class="b static" x="8" y="20" width="172" height="72" rx="8"/>
+<text class="t" x="20" y="45">호출 지점 4곳</text>
+<text class="s" x="20" y="65">VA 0x0268F928</text>
+<text class="s" x="20" y="83">외 3곳</text>
+
+<rect class="b static" x="208" y="20" width="172" height="72" rx="8"/>
+<text class="t" x="220" y="45">RAW 현상 함수</text>
+<text class="s" x="220" y="65">VA 0x02529664</text>
+<text class="s" x="220" y="83">진단 문구로 이름 확인</text>
+
+<rect class="b static" x="408" y="20" width="172" height="72" rx="8"/>
+<text class="t" x="420" y="45">컨트롤러 전달</text>
+<text class="s" x="420" y="65">VA 0x026DB894</text>
+<text class="s" x="420" y="83">상태 설정 → 신호 전달</text>
+
+<rect class="b mute" x="608" y="20" width="184" height="72" rx="8"/>
+<text class="t" x="620" y="45">작업 처리와 톤 적용</text>
+<text class="s" x="620" y="65">이 문서의 범위 밖</text>
+<text class="s" x="620" y="83">(RAW 이후 문서에서 다룸)</text>
+
+<rect class="g" x="8" y="122" width="572" height="124" rx="10"/>
+<text class="h" x="20" y="143">RAW 현상 함수 안에서 확인한 부분</text>
+
+<rect class="b static" x="20" y="158" width="176" height="76" rx="8"/>
+<text class="t" x="32" y="183">버퍼 할당</text>
+<text class="s" x="32" y="203">후보 VA 0x0270C56C</text>
+<text class="s" x="32" y="221">0을 돌려주면 오류 진단</text>
+
+<rect class="b ok" x="206" y="158" width="176" height="76" rx="8"/>
+<text class="t" x="218" y="183">표본 변환 루프</text>
+<text class="s" x="218" y="203">조건이 맞을 때만 실행</text>
+<text class="s" x="218" y="221">값 × 4의 하위 16비트</text>
+
+<rect class="b static" x="392" y="158" width="176" height="76" rx="8"/>
+<text class="t" x="404" y="183">작업 링크 설정</text>
+<text class="s" x="404" y="203">작업 객체 +0x20C4,</text>
+<text class="s" x="404" y="221">+0x20C8, +0x20D0</text>
+
+<path class="e" d="M180 56H206" marker-end="url(#dg-raw-ah)"/>
+<path class="e" d="M380 56H406" marker-end="url(#dg-raw-ah)"/>
+<path class="e dash" d="M580 56H606" marker-end="url(#dg-raw-ah)"/>
+<path class="e" d="M294 92V122"/>
+</svg>
+</div>
+<ul class="dg-legend"><li><i class="static"></i>코드를 읽어 확인한 호출과 분기</li><li><i class="ok"></i>원본 명령을 실행해 확인</li><li><i></i>다른 문서에서 다루는 단계</li></ul>
+<p>아래 묶음의 세 상자는 함수 안에서 찾은 부분이며, 세 부분의 실행 순서를 나타내지 않습니다.</p>
+</figure>
+
+<p>이 함수는 문자열을 가리키는 포인터를 검색해서는 찾을 수 없었습니다. 실제 코드는 현재 실행 위치를 기준으로 문자열 주소를 계산하는 명령(PC 상대 <code>ADD</code>)을 쓰기 때문입니다. VA <code>0x0252ADF4</code>의 명령이 진단 문구를 참조하고, 이 명령을 포함하는 함수의 진입점이 VA <code>0x02529664</code>입니다.</p>
+<ul>
+<li><strong>호출 지점</strong> — 네 곳을 하나씩 확인했습니다(주소는 아래 세부 근거의 표). 호출 지점을 빠짐없이 찾은 목록은 아닙니다.</li>
+<li><strong>버퍼 할당</strong> — 할당 함수로 보이는 VA <code>0x0270C56C</code>가 0을 돌려주면 오류 진단을 출력하는 쪽으로 분기합니다.</li>
+<li><strong>작업 링크</strong> — 성공한 경로에서는 작업 객체의 <code>+0x20C8</code>, <code>+0x20D0</code>, <code>+0x20C4</code>에 링크를 써 넣는 작은 함수들이 호출됩니다.</li>
+<li><strong>컨트롤러 전달</strong> — 컨트롤러 래퍼(VA <code>0x026DB894</code>)는 VA <code>0x025A11F8</code>을 거쳐 상태를 설정한 뒤, 컨트롤러 <code>+0x340</code>의 신호 객체에 값 1을 전달합니다.</li>
+</ul>
+<p>여기까지는 CPU가 실행하는 제어 흐름입니다. 센서 픽셀이 처리되는 순서와는 구별해야 합니다.</p>
+
 <h3>원본 명령으로 확인한 표본 변환</h3>
-<p>VA <code>0x0252AE94–0x0252AEC0</code>의 루프는 16비트 표본을 읽고 2비트 왼쪽으로 이동시킨 뒤 하위 16비트를 저장한다. 앞선 조건이 맞을 때만 이 루프를 사용하며 다른 경로는 건너뛴다.</p>
+<p>VA <code>0x0252AE94</code>~<code>0x0252AEC0</code>의 루프는 16비트 표본을 하나씩 읽어 왼쪽으로 2비트 밀고 하위 16비트를 저장합니다. 앞선 조건이 맞을 때만 이 루프를 쓰고, 다른 경로는 건너뜁니다.</p>
 <pre><code>dst[i] = (src_u16[i] &lt;&lt; 2) &amp; 0xFFFF
 
 예: 0x0001 → 0x0004
     0x3FFF → 0xFFFC
     0x4000 → 0x0000</code></pre>
-<p>빈 입력, 단일 표본, 경계값, 고정 시드 난수의 4개 합성 사례에서 원본 A32 명령과 참조식이 일치했다. 출력 263개와 함께 버퍼 경계, 원본 보존도 확인했다. 이 루프만으로 입력 RAW가 항상 14비트라고 단정할 수는 없다. <a href="raw-numeric.json">실행 결과</a> · <a href="../verify_raw_numeric.py">재현 코드</a></p>
+<p>이 루프를 에뮬레이터에서 실행해 참조식과 비교했습니다. 빈 입력, 표본 1개, 경계값 5개, 고정 시드 난수 257개의 네 사례에서 출력 263개가 모두 일치했습니다. 출력 버퍼의 경계를 넘겨 쓰지 않는지, 원본 버퍼가 그대로인지도 확인했습니다. 이 루프만 보고 입력 RAW가 항상 14비트라고 단정할 수는 없습니다.</p>
+
+<div class="callout"><strong class="label">이어지는 연결</strong>
+<p>컨트롤러에 넘긴 작업이 어떻게 처리되어 톤 준비·적용 함수까지 가는지는 이 문서에서 연결하지 못했습니다. 그림에서 이 구간을 실선 화살표로 그리지 않은 이유입니다. 작업 목록과 톤 적용까지의 연결은 <a href="pipeline-analysis.html">RAW 이후의 톤·WB·색 행렬</a>에서 다룹니다.</p></div>
+
+<details class="evidence"><summary>호출·분기 17개와 구간 해시</summary>
+<div class="table-wrap"><table class="compact">
+<caption>확인한 직접 분기 (raw-path.json의 edges)</caption>
+<thead><tr><th>명령 주소(VA)</th><th>대상(VA)</th><th>명령 워드</th><th>뜻</th></tr></thead>
+<tbody>
+<tr><td><code>0x0268F928</code></td><td><code>0x02529664</code></td><td><code>0xebfa674d</code></td><td>호출 지점 1</td></tr>
+<tr><td><code>0x02690554</code></td><td><code>0x02529664</code></td><td><code>0xebfa6442</code></td><td>호출 지점 2</td></tr>
+<tr><td><code>0x02691040</code></td><td><code>0x02529664</code></td><td><code>0xebfa6187</code></td><td>호출 지점 3</td></tr>
+<tr><td><code>0x02692098</code></td><td><code>0x02529664</code></td><td><code>0xebfa5d71</code></td><td>호출 지점 4</td></tr>
+<tr><td><code>0x0252ADB8</code></td><td><code>0x0270C56C</code></td><td><code>0xeb0785eb</code></td><td>할당 함수 후보 호출</td></tr>
+<tr><td><code>0x0252ADC0</code></td><td><code>0x0252ADF4</code></td><td><code>0x0a00000b</code></td><td>결과가 0이면 오류 진단으로</td></tr>
+<tr><td><code>0x0252ADF8</code></td><td><code>0x027073EC</code></td><td><code>0xeb07717b</code></td><td>진단 출력 함수 호출</td></tr>
+<tr><td><code>0x0252AE44</code></td><td><code>0x0252B51C</code></td><td><code>0xea0001b4</code></td><td>실패 시 공통 종료부로</td></tr>
+<tr><td><code>0x0252AE64</code></td><td><code>0x0252AEC0</code></td><td><code>0x1a000015</code></td><td>플래그가 0이 아니면 표본 변환을 건너뜀</td></tr>
+<tr><td><code>0x0252AF48</code></td><td><code>0x026DB894</code></td><td><code>0xeb06c251</code></td><td>컨트롤러 래퍼 호출</td></tr>
+<tr><td><code>0x0252B104</code></td><td><code>0x026DB894</code></td><td><code>0xeb06c1e2</code></td><td>컨트롤러 래퍼 호출</td></tr>
+<tr><td><code>0x0252B114</code></td><td><code>0x026DB894</code></td><td><code>0xeb06c1de</code></td><td>컨트롤러 래퍼 호출</td></tr>
+<tr><td><code>0x0252B124</code></td><td><code>0x026DB894</code></td><td><code>0xeb06c1da</code></td><td>컨트롤러 래퍼 호출</td></tr>
+<tr><td><code>0x0252B134</code></td><td><code>0x026DB894</code></td><td><code>0xeb06c1d6</code></td><td>컨트롤러 래퍼 호출</td></tr>
+<tr><td><code>0x026DB8C4</code></td><td><code>0x025A11F8</code></td><td><code>0xebfb164b</code></td><td>대기 상태 설정</td></tr>
+<tr><td><code>0x026DB8D0</code></td><td><code>0x026DB888</code></td><td><code>0xeaffffec</code></td><td>신호 래퍼로 분기</td></tr>
+<tr><td><code>0x026DB890</code></td><td><code>0x0270C3CC</code></td><td><code>0xea00c2cd</code></td><td>컨트롤러 <code>+0x340</code>의 신호 객체에 신호</td></tr>
+</tbody></table></div>
+<div class="table-wrap"><table class="compact">
+<caption>코드 구간의 해시 (파일 오프셋, 끝은 미포함)</caption>
+<thead><tr><th>구간</th><th>파일 오프셋</th><th>SHA-256</th></tr></thead>
+<tbody>
+<tr><th scope="row">RAW 현상 함수 전체</th><td><code>0x529664</code>~<code>0x52B540</code></td><td><code class="wrap">6c6648adffaa40539e33efba3b1a3dad77dc2d255383b7bf48ad4b16f7a72d81</code></td></tr>
+<tr><th scope="row">조건부 표본 변환 루프</th><td><code>0x52AE94</code>~<code>0x52AEC0</code></td><td><code class="wrap">dc33822c9f2757e87f63a8ce7320ea67c34d776b37f4ff28354f1532a8e06d15</code></td></tr>
+<tr><th scope="row">컨트롤러 전달</th><td><code>0x6DB894</code>~<code>0x6DB8D4</code></td><td><code class="wrap">06f1a0d21230e8aed9d90b196a72b03c481497e8e0a4c05b3d9ddf3ec3be084b</code></td></tr>
+<tr><th scope="row">대기 상태 설정</th><td><code>0x5A11F8</code>~<code>0x5A1234</code></td><td><code class="wrap">35ad9dd531448e8e37b2f9f93f9fcc66a06feefc8872a24a2b27c5a9ec141fab</code></td></tr>
+<tr><th scope="row">작업 링크 설정 함수들</th><td><code>0x72D320</code>~<code>0x72D358</code></td><td><code class="wrap">5e2da4f613e7512347d44927534d1bb2791de608deca4cde7f0327abae1a6101</code></td></tr>
+</tbody></table></div>
+<ul class="small">
+<li>작업 객체의 필드: <code>+0x20C8</code>은 VA <code>0x0272D320</code>, <code>+0x20D0</code>은 <code>0x0272D334</code>, <code>+0x20C4</code>는 <code>0x0272D340</code>이 씁니다. 16비트 필드 <code>+0x20AE</code>는 <code>0x0272D34C</code>가 씁니다.</li>
+<li>표본 변환 루프의 진입 조건: VA <code>0x0252AE60</code>에서 r10과 r9를 OR한 값이 0일 때. 두 값은 그보다 앞에서 정해집니다.</li>
+<li>표본 변환 사례별 입력·출력 해시는 <a href="raw-numeric.json">raw-numeric.json</a>에 있습니다.</li>
+</ul>
+</details>
 </section>
 
-<section aria-labelledby="tone"><h2 id="tone">4. 곡선 생성에서 B2Y 설정까지</h2>
-<p>이번 추적은 진단 함수의 레지스터 읽기와 실제 쓰기 함수를 같은 주소로 맞추는 데서 시작했다. <code>DumpToneGamma</code>의 읽기와 설정 함수가 모두 <code>TGCTL = 0x20020800</code>, <code>TCTBLCTL = 0x20020804</code>를 사용한다. 따라서 해당 이름은 근처 문자열을 임의로 붙인 것이 아니라 진단 출력과 접근 주소를 대조한 결과다. <a href="tone-path.json">ADR·레지스터·호출 근거</a></p>
-<figure><figcaption>03 / 톤 설정의 생산자와 소비자 <span class="tag">CPU 설정 흐름이며 픽셀 통과 순서가 아님</span></figcaption>
-<div class="flow"><div class="stage"><strong>준비</strong><span>VA <code>0x024DDDC4</code><br>설명자 저장·곡선 선택</span></div><div class="arrow" aria-hidden="true">→</div><div class="stage"><strong>곡선 구성</strong><span><code>0x024DD42C</code><br>3개 곡선 + 가중 합 곡선</span></div><div class="arrow" aria-hidden="true">→</div><div class="stage"><strong>확장·보관</strong><span><code>0x024DC910</code><br>4개 객체 버퍼에 저장</span></div></div>
-<div class="flow"><div class="stage"><strong>공통 래퍼</strong><span><code>+0x454</code> 하위 객체<br>준비 뒤 <code>+0xB</code> 플래그 설정</span></div><div class="arrow" aria-hidden="true">→</div><div class="stage"><strong>적용</strong><span>VA <code>0x024DDE3C</code><br>플래그·설명자에 따라 쓰기</span></div><div class="arrow" aria-hidden="true">→</div><div class="stage"><strong>B2Y 제어·테이블</strong><span><code>0x20020800</code> 등<br><code>0x20A21000–0x20A24000</code></span></div></div>
-<p class="caption">생성자가 설치하는 vtable <code>0x02A60DCC</code>의 슬롯 <code>+0x18/+0x1C</code>가 준비·적용 함수를 가리킨다. 래퍼의 두 호출도 같은 하위 객체를 전달한다. 따라서 서로 다른 객체의 함수를 우연히 이어 붙인 관계가 아니다.</p></figure>
-<h3>곡선 선택·보간·확장</h3>
-<p>선택 함수 <code>0x024DDAB8</code>는 일반 생산자 <code>0x024DC980</code>와 selector=6 생산자 <code>0x024DD924</code>를 구분한다. 두 생산자는 256개 halfword와 상한 <code>0x4000</code>을 다룬다. selector=6을 K-3 III의 리버설 모드와 곧바로 같은 이름으로 부르지는 않았다. 메뉴·리소스 연결이 더 필요하다.</p>
-<p>보간 함수 <code>0x024DD3EC</code>의 입력을 <code>x</code>, 256개 항목의 곡선을 <code>C</code>라 하면 다음과 같다. 음수 차분의 나눗셈은 0 방향 절삭이며, 단순한 Python 음수 정수 나눗셈과 다를 수 있다.</p>
+<section id="tone">
+<h2>톤 곡선 생성에서 B2Y 설정까지</h2>
+<p class="takeaway">톤 곡선은 준비 단계에서 만들어 객체 안의 버퍼에 두고, 적용 단계에서 B2Y의 제어 레지스터와 곡선 테이블 주소로 기록합니다.</p>
+
+<figure class="diagram">
+<figcaption>톤 설정을 만드는 쪽과 쓰는 쪽</figcaption>
+<div class="dg-scroll">
+<svg class="dg" viewBox="0 0 800 396" role="img" aria-labelledby="dg-tone-title dg-tone-desc">
+<title id="dg-tone-title">공통 래퍼가 준비 함수와 적용 함수를 부르고, 곡선이 객체 버퍼를 거쳐 B2Y 장치 주소로 기록되는 흐름</title>
+<desc id="dg-tone-desc">세 열로 나뉩니다. 왼쪽 열은 CPU가 실행하는 함수입니다. 공통 래퍼가 하위 객체 +0x454를 넘겨 먼저 준비 함수(분석용 주소 0x024DDDC4)를 부르고, +0xB 플래그를 세운 뒤 적용 함수(0x024DDE3C)를 부릅니다. 가운데 열은 RAM의 객체 버퍼입니다. 준비 함수가 만든 곡선 네 개가 객체 +0x1420C부터 +0x1720C까지의 버퍼에 곡선마다 1,280개 값으로 저장됩니다. 오른쪽 열은 B2Y 장치 주소입니다. 적용 함수는 곡선 버퍼를 0x20A21000부터 0x20A24000까지의 곡선 테이블 네 개로 복사하고, 제어 레지스터 TGCTL, TCTBLCTL, TCYC(0x20020800부터)를 기록하고, 객체 +0x20C의 별도 테이블을 0x20A00000으로 복사합니다.</desc>
+<defs><marker id="dg-tone-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="gf" x="8" y="14" width="264" height="372" rx="12"/>
+<rect class="gf" x="296" y="14" width="228" height="372" rx="12"/>
+<rect class="gf" x="548" y="14" width="244" height="372" rx="12"/>
+<text class="h" x="20" y="36">CPU가 실행하는 함수</text>
+<text class="h" x="308" y="36">RAM의 객체 버퍼</text>
+<text class="h" x="560" y="36">B2Y 장치 주소</text>
+
+<rect class="b static" x="20" y="48" width="240" height="56" rx="8"/>
+<text class="t" x="32" y="72">공통 래퍼</text>
+<text class="s" x="32" y="92">하위 객체 +0x454를 넘겨 호출</text>
+
+<rect class="b static" x="20" y="132" width="240" height="72" rx="8"/>
+<text class="t" x="32" y="157">① 준비 함수</text>
+<text class="s" x="32" y="177">VA 0x024DDDC4</text>
+<text class="s" x="32" y="195">곡선 선택 → 보간 → 구성 → 확장</text>
+
+<rect class="b ok" x="20" y="240" width="240" height="72" rx="8"/>
+<text class="t" x="32" y="265">② 적용 함수</text>
+<text class="s" x="32" y="285">VA 0x024DDE3C</text>
+<text class="s" x="32" y="303">플래그와 설명자에 따라 기록</text>
+
+<rect class="b" x="308" y="132" width="204" height="72" rx="8"/>
+<text class="t" x="320" y="157">곡선 버퍼 4개</text>
+<text class="s" x="320" y="177">객체 +0x1420C ~ +0x1720C</text>
+<text class="s" x="320" y="195">곡선마다 1,280개 값</text>
+
+<rect class="b" x="308" y="326" width="204" height="52" rx="8"/>
+<text class="t" x="320" y="348">별도 테이블 원본</text>
+<text class="s" x="320" y="367">객체 +0x20C</text>
+
+<rect class="b model" x="560" y="132" width="220" height="72" rx="8"/>
+<text class="t" x="572" y="157">곡선 테이블 4개</text>
+<text class="s" x="572" y="177">0x20A21000 ~ 0x20A24000</text>
+<text class="s" x="572" y="195">0xA00 또는 0x1000바이트</text>
+
+<rect class="b model" x="560" y="240" width="220" height="72" rx="8"/>
+<text class="t" x="572" y="265">제어 레지스터</text>
+<text class="s" x="572" y="285">TGCTL · TCTBLCTL · TCYC</text>
+<text class="s" x="572" y="303">0x20020800부터</text>
+
+<rect class="b model" x="560" y="326" width="220" height="52" rx="8"/>
+<text class="t" x="572" y="348">별도 테이블</text>
+<text class="s" x="572" y="367">0x20A00000</text>
+
+<path class="e" d="M140 104V130" marker-end="url(#dg-tone-ah)"/>
+<path class="e" d="M140 204V238" marker-end="url(#dg-tone-ah)"/>
+<text class="n" x="149" y="225">+0xB 플래그를 세운 뒤</text>
+<path class="e" d="M260 168H306" marker-end="url(#dg-tone-ah)"/>
+<path class="e" d="M512 168H558" marker-end="url(#dg-tone-ah)"/>
+<path class="e" d="M260 276H558" marker-end="url(#dg-tone-ah)"/>
+<path class="e" d="M140 312V352H306" marker-end="url(#dg-tone-ah)"/>
+<path class="e" d="M512 352H558" marker-end="url(#dg-tone-ah)"/>
+</svg>
+</div>
+<ul class="dg-legend"><li><i class="static"></i>코드를 읽어 확인한 호출 관계</li><li><i class="ok"></i>원본 명령을 실행해 확인한 함수</li><li><i></i>객체 안의 버퍼</li><li><i class="model"></i>장치 주소(검증에서는 합성 RAM으로 대체)</li></ul>
+<p>화살표는 CPU가 설정값을 만들고 옮기는 순서입니다. 픽셀이 하드웨어를 통과하는 순서가 아닙니다. 가운데 열에서 오른쪽 열로 가는 두 복사는 적용 함수가 수행합니다.</p>
+</figure>
+
+<h3>레지스터 이름을 정한 근거</h3>
+<p>추적은 진단 함수가 읽는 주소와 설정 함수가 쓰는 주소를 맞춰 보는 데서 시작했습니다. 진단 함수 <code>DumpToneGamma</code>는 <code>IO_B2Y.F_B2Y.TGCTL</code>, <code>IO_B2Y.F_B2Y.TCTBLCTL</code>이라는 이름을 붙여 값을 출력합니다. 이때 읽는 주소와 설정 함수가 쓰는 주소가 모두 <code>TGCTL = 0x20020800</code>, <code>TCTBLCTL = 0x20020804</code>입니다. 그래서 이 이름은 근처의 문자열을 임의로 붙인 것이 아니라, 진단 출력과 접근 주소를 대조해 얻은 것입니다.</p>
+
+<h3>준비와 적용이 같은 객체의 함수라는 근거</h3>
+<p>객체를 만드는 생성자가 <dfn title="객체가 쓸 함수들의 주소를 모아 둔 표. C++의 가상 함수 호출에 쓰입니다.">가상 함수표</dfn>를 설치하고, 이 표의 이웃한 두 슬롯이 준비 함수와 적용 함수를 가리킵니다. 공통 래퍼는 두 번의 호출에 같은 하위 객체를 넘기고, 준비가 끝나면 플래그를 세웁니다. 서로 다른 객체의 함수를 우연히 이어 붙인 관계가 아닙니다.</p>
+<dl class="kv">
+<dt>가상 함수표</dt><dd>VA <code>0x02A60DCC</code></dd>
+<dt>슬롯 <code>+0x18</code></dt><dd>준비 함수, VA <code>0x024DDDC4</code></dd>
+<dt>슬롯 <code>+0x1C</code></dt><dd>적용 함수, VA <code>0x024DDE3C</code></dd>
+<dt>래퍼가 넘기는 하위 객체</dt><dd>객체 <code>+0x454</code></dd>
+<dt>준비 뒤에 세우는 플래그</dt><dd>객체 <code>+0xB</code></dd>
+</dl>
+
+<h3>곡선을 만드는 네 단계</h3>
+<ol class="flow">
+<li class="static"><strong>곡선 선택</strong><span>일반 생산자와 selector 6 생산자 가운데 하나를 고릅니다.</span></li>
+<li class="ok"><strong>보간</strong><span>256개 항목의 곡선에서 입력값에 해당하는 값을 구합니다.</span></li>
+<li class="ok"><strong>네 곡선 구성</strong><span>보간한 곡선 세 개와 가중 합 곡선 하나를 만듭니다.</span></li>
+<li class="ok"><strong>테이블 확장</strong><span>256개를 1,280개 값으로 늘려 버퍼에 저장합니다.</span></li>
+</ol>
+<div class="table-wrap"><table class="fit">
+<caption>곡선을 만드는 함수</caption>
+<thead><tr><th>역할</th><th>VA</th><th>상태</th></tr></thead>
+<tbody>
+<tr><th scope="row">곡선 선택</th><td><code>0x024DDAB8</code></td><td><span class="badge static">정적 분석</span></td></tr>
+<tr><th scope="row">일반 생산자</th><td><code>0x024DC980</code></td><td><span class="badge static">정적 분석</span></td></tr>
+<tr><th scope="row">selector 6 생산자</th><td><code>0x024DD924</code></td><td><span class="badge static">정적 분석</span></td></tr>
+<tr><th scope="row">세 곡선 조정</th><td><code>0x024DD6D4</code></td><td><span class="badge static">정적 분석</span> 호출만 확인</td></tr>
+<tr><th scope="row">보간</th><td><code>0x024DD3EC</code></td><td><span class="badge ok">확인</span></td></tr>
+<tr><th scope="row">네 곡선 구성</th><td><code>0x024DD42C</code></td><td><span class="badge ok">확인</span></td></tr>
+<tr><th scope="row">테이블 확장</th><td><code>0x024DC910</code></td><td><span class="badge ok">확인</span></td></tr>
+</tbody></table></div>
+<p><strong>곡선 선택.</strong> 선택 함수는 일반 생산자와 selector 6 생산자를 구분합니다. 두 생산자 모두 16비트 값 256개를 만들고 상한 <code>0x4000</code>을 씁니다. 이 문서의 근거만으로는 selector 6이 어떤 메뉴 항목인지 정할 수 없었습니다. 이후 <a href="pipeline-analysis.html">RAW 이후의 톤·WB·색 행렬</a>과 <a href="output-menu-analysis.html">JPEG 출력 버퍼와 Reversal Film 메뉴</a>에서 Reversal Film에 대응한다는 근거를 따로 확인했습니다. 준비 함수는 선택 함수와 구성 함수 사이에 세 곡선을 조정하는 함수도 부르는데, 그 계산은 이 문서에서 다루지 않습니다.</p>
+<p><strong>보간.</strong> 입력을 <code>x</code>, 256개 항목의 곡선을 <code>C</code>라고 하면 다음과 같습니다. 차이가 음수일 때의 나눗셈은 0 쪽으로 버립니다. Python의 정수 나눗셈(<code>//</code>)은 음수를 아래쪽으로 내리므로 결과가 다를 수 있습니다.</p>
 <pre><code>q = x &gt;&gt; 6;  f = x &amp; 63
 q &gt;= 255 : C[255]
 그 외     : C[q] + trunc0((C[q+1] - C[q]) * f / 64)</code></pre>
-<p>구성 함수는 세 곡선을 각각 보간한 뒤 <code>(77·A + 150·B + 29·C) &gt;&gt; 8</code>로 네 번째 곡선을 만든다. 계수는 휘도 가중치 형태지만 이 사실만으로 실제 색 공간·채널 배치나 ISP의 픽셀 계산식을 확정하지 않는다.</p>
-<p>확장 함수는 각 구간을 4개 값으로 늘리고 끝값 256개를 덧붙여 총 1,280개 halfword, 즉 <code>0xA00</code>바이트를 만든다. NEON 연산의 16비트 순환, 산술 시프트와 <code>0–0x4000</code> 제한을 그대로 반영해 검증했다. 끝에 덧붙이는 값은 별도 제한 없이 원래 마지막 halfword를 사용한다. <a href="../verify_tone_numeric.py">독립 참조식과 원본 명령 실행</a></p>
+<p><strong>네 곡선 구성.</strong> 세 곡선을 각각 보간한 뒤 <code>(77·A + 150·B + 29·C) &gt;&gt; 8</code>로 네 번째 곡선을 만듭니다. 계수는 밝기(휘도)를 구할 때 쓰는 가중치의 모양입니다. <a href="https://www.itu.int/rec/R-REC-BT.601">ITU-R BT.601</a>의 휘도 계수 0.299, 0.587, 0.114에 256을 곱하면 76.5, 150.3, 29.2로 이 값에 가깝습니다. 그렇다고 이 사실만으로 실제 색 공간이나 채널 배치, ISP의 픽셀 계산식을 확정하지는 않습니다.</p>
+<p><strong>테이블 확장.</strong> 구간마다 값을 4개로 늘리고 끝값 256개를 덧붙여 16비트 값 1,280개, 곧 <code>0xA00</code>바이트를 만듭니다. 이 함수는 여러 값을 한꺼번에 처리하는 <dfn title="ARM의 SIMD 확장. 여러 데이터를 한 명령으로 처리합니다.">NEON</dfn> 명령을 씁니다. 검증에 쓴 참조식은 NEON 연산의 16비트 순환, 산술 시프트, <code>0</code>~<code>0x4000</code> 범위 제한을 그대로 따릅니다. 끝에 덧붙이는 값은 범위 제한 없이 원래의 마지막 값을 씁니다.</p>
+
 <h3>테이블 목적지와 제어 레지스터</h3>
-<div class="table-scroll"><table><thead><tr><th scope="col">소스 객체 오프셋</th><th scope="col">코드가 쓰는 목적지</th><th scope="col">확인된 전달</th></tr></thead><tbody>
+<div class="table-wrap"><table>
+<caption>적용 함수가 복사하는 테이블</caption>
+<thead><tr><th>객체 안의 원본</th><th>코드가 쓰는 목적지</th><th>내용</th></tr></thead>
+<tbody>
 <tr><td><code>+0x1420C</code></td><td><code>0x20A21000</code></td><td>첫 번째 곡선</td></tr>
 <tr><td><code>+0x1520C</code></td><td><code>0x20A22000</code></td><td>두 번째 곡선</td></tr>
 <tr><td><code>+0x1620C</code></td><td><code>0x20A23000</code></td><td>세 번째 곡선</td></tr>
 <tr><td><code>+0x1720C</code></td><td><code>0x20A24000</code></td><td>가중 합 곡선</td></tr>
-<tr><td><code>+0x20C</code></td><td><code>0x20A00000</code></td><td>별도 테이블. 전달 길이는 저장된 개수의 4배</td></tr>
+<tr><td><code>+0x20C</code></td><td><code>0x20A00000</code></td><td>별도 테이블. 복사 길이는 저장된 개수의 4배입니다.</td></tr>
 </tbody></table></div>
-<p>곡선별 복사 길이는 조건에 따라 <code>0xA00</code> 또는 <code>0x1000</code>이다. 두 길이의 분기를 합성 메모리에서 모두 실행해 소스·목적지 바이트와 복사 뒤 남는 영역을 대조했다. <code>0x1000</code> 분기가 언제 실제 촬영에 선택되는지는 별도 문제다.</p>
-<p>TGCTL의 비트 0·1·16·17·24·25와 TCTBLCTL의 여러 필드를 설명자에서 읽어 수정하는 함수도 연결했다. 읽기-수정-쓰기 방식이라 관련 없는 비트는 보존한다. 다만 각 비트를 “감마 켜기”, “특정 색 공간 선택”처럼 이름 붙일 공식 레지스터 정의는 아직 없다. <a href="tone-path.json">필드 위치 목록</a> · <a href="tone-numeric.json">적용 함수 실행 대조</a></p>
+<p>곡선 하나를 복사하는 길이는 조건에 따라 <code>0xA00</code> 또는 <code>0x1000</code>바이트입니다. 두 길이의 분기를 모두 합성 메모리에서 실행해 원본·목적지 바이트와 복사 뒤에 남는 영역을 대조했습니다. <code>0x1000</code> 분기가 실제 촬영에서 언제 선택되는지는 별개의 문제입니다.</p>
+<p>적용 함수는 설명자에서 값을 읽어 TGCTL의 비트 0·1·16·17·24·25와 TCTBLCTL의 여러 필드를 고칩니다. 읽고 고쳐서 다시 쓰는 방식이므로 관련 없는 비트는 그대로 남습니다. 각 비트를 “감마 켜기”, “특정 색 공간 선택”처럼 부를 만한 공식 레지스터 정의는 아직 없습니다.</p>
+
+<details class="evidence"><summary>호출 관계, 레지스터 필드, 구간 해시</summary>
+<div class="table-wrap"><table class="compact">
+<caption>제어 레지스터의 필드 (tone-path.json의 registers)</caption>
+<thead><tr><th>레지스터</th><th>호출 위치</th><th>설정 함수</th><th>설명자 오프셋</th><th>비트 위치</th><th class="n">폭</th></tr></thead>
+<tbody>
+<tr><th scope="row" rowspan="6">TGCTL <code>0x20020800</code></th><td><code>0x4DDE64</code></td><td><code>0x5B64A0</code></td><td><code>+0x00</code></td><td>0</td><td class="n">1</td></tr>
+<tr><td><code>0x4DDE74</code></td><td><code>0x5B64D0</code></td><td><code>+0x01</code></td><td>1</td><td class="n">1</td></tr>
+<tr><td><code>0x4DDE94</code></td><td><code>0x5B6500</code></td><td><code>+0x10</code></td><td>16</td><td class="n">1</td></tr>
+<tr><td><code>0x4DDEC0</code></td><td><code>0x5B6530</code></td><td><code>+0x14</code></td><td>17</td><td class="n">1</td></tr>
+<tr><td><code>0x4DDEA4</code></td><td><code>0x5B6560</code></td><td><code>+0x11</code></td><td>24</td><td class="n">1</td></tr>
+<tr><td><code>0x4DDEDC</code></td><td><code>0x5B6590</code></td><td><code>+0x18</code></td><td>25</td><td class="n">1</td></tr>
+<tr><th scope="row" rowspan="5">TCTBLCTL <code>0x20020804</code></th><td><code>0x4DDEEC</code></td><td><code>0x5B65C0</code></td><td><code>+0x1C</code></td><td>0</td><td class="n">2</td></tr>
+<tr><td><code>0x4DDEFC</code></td><td><code>0x5B65E4</code></td><td><code>+0x1E</code></td><td>4</td><td class="n">2</td></tr>
+<tr><td><code>0x4DDF0C</code></td><td><code>0x5B6608</code></td><td><code>+0x20</code></td><td>8</td><td class="n">2</td></tr>
+<tr><td><code>0x4DDF1C</code></td><td><code>0x5B662C</code></td><td><code>+0x21</code></td><td>16</td><td class="n">1</td></tr>
+<tr><td><code>0x4DDF2C</code></td><td><code>0x5B6658</code></td><td><code>+0x22</code></td><td>24</td><td class="n">6</td></tr>
+<tr><th scope="row">TCYC <code>0x20020808</code></th><td><code>0x4DDE84</code></td><td><code>0x5B667C</code></td><td><code>+4</code>, <code>+8</code>, <code>+12</code></td><td>—</td><td class="n">12</td></tr>
+</tbody></table></div>
+<p class="small">위치는 모두 파일 오프셋입니다(VA는 <code>0x02000000</code>을 더한 값). B2Y의 기준 주소는 <code>0x20020000</code>입니다. 색 행렬 진단 함수 <code>DumpColorMatrixUnit1</code>이 읽는 CC1CTL의 주소는 <code>0x20020880</code>입니다.</p>
+<div class="table-wrap"><table class="compact">
+<caption>확인한 직접 호출 22개 (tone-path.json의 direct_edges, 파일 오프셋)</caption>
+<thead><tr><th>명령 위치</th><th>대상</th><th>뜻</th></tr></thead>
+<tbody>
+<tr><td><code>0x5B3A3C</code></td><td><code>0x5B1160</code></td><td>진단 출력 → 톤 진단</td></tr>
+<tr><td><code>0x5B3A44</code></td><td><code>0x5B0EFC</code></td><td>진단 출력 → 색 행렬 진단</td></tr>
+<tr><td><code>0x5B1168</code></td><td><code>0x7073EC</code></td><td>톤 진단의 제목 줄 → 출력 함수</td></tr>
+<tr><td><code>0x5B117C</code></td><td><code>0x7073EC</code></td><td>TGCTL 값 → 출력 함수</td></tr>
+<tr><td><code>0x4BCCC4</code></td><td><code>0x4DDDC4</code></td><td>공통 래퍼 → 준비 함수</td></tr>
+<tr><td><code>0x4BCDE8</code></td><td><code>0x4DDE3C</code></td><td>공통 래퍼 → 적용 함수</td></tr>
+<tr><td><code>0x4DDE1C</code></td><td><code>0x4DDAB8</code></td><td>준비 → 곡선 선택</td></tr>
+<tr><td><code>0x4DDE24</code></td><td><code>0x4DD6D4</code></td><td>준비 → 세 곡선 조정</td></tr>
+<tr><td><code>0x4DDE30</code></td><td><code>0x4DD42C</code></td><td>준비 → 곡선 구성(함수 끝의 분기)</td></tr>
+<tr><td><code>0x4DDC08</code></td><td><code>0x4DC980</code></td><td>선택 → 일반 생산자</td></tr>
+<tr><td><code>0x4DDC74</code></td><td><code>0x4DD924</code></td><td>선택 → selector 6 생산자</td></tr>
+<tr><td><code>0x4DD510</code>, <code>0x4DD52C</code>, <code>0x4DD54C</code></td><td><code>0x4DD3EC</code></td><td>구성 → 보간(첫째·둘째·셋째 곡선)</td></tr>
+<tr><td><code>0x4DD5B4</code>, <code>0x4DD5C4</code>, <code>0x4DD5D4</code>, <code>0x4DD5E4</code></td><td><code>0x4DC910</code></td><td>구성 → 테이블 확장(세 곡선과 가중 합 곡선)</td></tr>
+<tr><td><code>0x4DDE84</code></td><td><code>0x5B667C</code></td><td>적용 → TCYC 설정</td></tr>
+<tr><td><code>0x4DE080</code></td><td><code>0x4F962C</code></td><td>적용 → 별도 테이블의 개수 읽기</td></tr>
+<tr><td><code>0x4DE08C</code></td><td><code>0x5B6BF0</code></td><td>적용 → 별도 테이블의 목적지 주소 얻기</td></tr>
+<tr><td><code>0x4DE098</code></td><td><code>0x712898</code></td><td>적용 → 별도 테이블 복사</td></tr>
+</tbody></table></div>
+<div class="table-wrap"><table class="compact">
+<caption>곡선 테이블 네 개의 복사 호출 (파일 오프셋)</caption>
+<thead><tr><th>목적지</th><th>주소를 돌려주는 함수</th><th>객체 안의 원본</th><th>0xA00바이트 복사</th><th>0x1000바이트 복사</th></tr></thead>
+<tbody>
+<tr><td><code>0x20A21000</code></td><td><code>0x5B6C00</code></td><td><code>+0x1420C</code></td><td><code>0x4DE108</code></td><td><code>0x4DE160</code></td></tr>
+<tr><td><code>0x20A22000</code></td><td><code>0x5B6C08</code></td><td><code>+0x1520C</code></td><td><code>0x4DE11C</code></td><td><code>0x4DE174</code></td></tr>
+<tr><td><code>0x20A23000</code></td><td><code>0x5B6C10</code></td><td><code>+0x1620C</code></td><td><code>0x4DE130</code></td><td><code>0x4DE188</code></td></tr>
+<tr><td><code>0x20A24000</code></td><td><code>0x5B6C18</code></td><td><code>+0x1720C</code></td><td><code>0x4DE144</code></td><td><code>0x4DE19C</code></td></tr>
+</tbody></table></div>
+<ul class="small">
+<li>별도 테이블: 원본은 객체 <code>+0x20C</code>, 개수(16비트)는 객체 <code>+0x18A22</code>에 있습니다.</li>
+<li>설명자 포인터는 하위 객체의 <code>+0x208</code>에 저장됩니다.</li>
+<li>진단 문구의 위치(파일 오프셋): <code>DumpToneGamma</code> 제목 <code>0x5B1290</code>, <code>IO_B2Y.F_B2Y.TGCTL</code> <code>0x5B12C8</code>, <code>IO_B2Y.F_B2Y.TCTBLCTL</code> <code>0x5B12F0</code>, <code>DumpColorMatrixUnit1</code> 제목 <code>0x5B0F8C</code>. 이 문구를 참조하는 명령은 차례로 <code>0x5B1164</code>, <code>0x5B1178</code>, <code>0x5B1184</code>, <code>0x5B0F00</code>에 있습니다.</li>
+</ul>
+<div class="table-wrap"><table class="compact">
+<caption>코드 구간의 해시 (파일 오프셋, 끝은 미포함)</caption>
+<thead><tr><th>구간</th><th>내용</th><th>SHA-256</th></tr></thead>
+<tbody>
+<tr><td><code>0x4DC910</code>~<code>0x4DC980</code></td><td>테이블 확장</td><td><code class="wrap">54c2bded9dee1a710cd94bb16a187ed6b95d573a0e1fbb30e4caedec172c2b88</code></td></tr>
+<tr><td><code>0x4DC980</code>~<code>0x4DCFCC</code></td><td>일반 생산자</td><td><code class="wrap">20c12dd2377f6977567f44efcecc71849074f5aa8d3987d96cbf21bbb8da4d3a</code></td></tr>
+<tr><td><code>0x4DD3EC</code>~<code>0x4DD42C</code></td><td>보간</td><td><code class="wrap">48d5fa13e54e9ee871b49fb1ec22c5e110ca2f5b6fef7715f70487b40023006f</code></td></tr>
+<tr><td><code>0x4DD42C</code>~<code>0x4DD60C</code></td><td>곡선 구성</td><td><code class="wrap">cda6396a98ea34bef9920b7760065ebb8c8a2e95f28ce5c2cc85174fd8d0b184</code></td></tr>
+<tr><td><code>0x4DD924</code>~<code>0x4DDAB8</code></td><td>selector 6 생산자</td><td><code class="wrap">a2833975c72b87bd748163382ad8e90c41ca2aa26aff7e1a8df830619087ebb5</code></td></tr>
+<tr><td><code>0x4DDE3C</code>~<code>0x4DE1A8</code></td><td>적용 함수</td><td><code class="wrap">3612773135e01e057cf9602743aa277fa362b77396bcf1b9c975807d5beb7581</code></td></tr>
+<tr><td><code>0x5B1160</code>~<code>0x5B1290</code></td><td>톤 진단 함수</td><td><code class="wrap">ecc599bc38c35386e6d3ae2653eda5e4db452b7efb3d6a569833e9b4b283b736</code></td></tr>
+</tbody></table></div>
+<p class="small">출처: <a href="tone-path.json">tone-path.json</a>, <a href="../verify_tone_path.py">verify_tone_path.py</a>.</p>
+</details>
 </section>
 
-<section aria-labelledby="validation"><h2 id="validation">5. 무엇을 실행해 검증했는가</h2>
-<p>코드 판독에는 Capstone 5.0.7을 사용했고 수치 연산은 Unicorn 2.1.4로 격리 실행했다. Cortex-A9 에뮬레이터 설정은 해당 명령을 실행하기 위한 선택이며 카메라의 실장 칩을 확인한 증거는 아니다. 외부 장치 대신 합성 RAM을 배치했으므로 DMA·IRQ·센서·물리 ISP 동작은 검증하지 않았다.</p>
-<p>기본 곡선 생산자 두 함수는 정적으로 추적했다. 아래 실행 대조는 그 뒤의 보간·구성·확장과 적용 함수에 한정하며 생산자 자체의 계산을 모두 실행한 결과는 아니다.</p>
-<div class="table-scroll"><table><thead><tr><th scope="col">검증 대상</th><th scope="col">결과</th><th scope="col">범위</th></tr></thead><tbody>
-<tr><td>보간 함수</td><td>262,144개 출력 일치</td><td>4개 곡선 × 모든 u16 입력 65,536개</td></tr>
-<tr><td>NEON 테이블 확장</td><td>5,120개 출력 일치</td><td>4개 곡선 × 1,280 halfword, 원본 Thumb 끝값 채우기 포함</td></tr>
-<tr><td>3개 곡선과 가중 합 구성</td><td>1,024개 출력 일치</td><td>원본 구성 루프 × 4개 결과 곡선</td></tr>
-<tr><td>톤 적용 함수</td><td>2개 합성 사례 통과</td><td>제어 워드·별도 테이블·4개 곡선 복사·플래그·미변경 영역</td></tr>
-<tr><td>RAW 표본 변환</td><td>4개 사례·263개 출력 일치</td><td>빈 입력·경계값·고정 시드 난수·버퍼 경계</td></tr>
+<section id="validation">
+<h2>실행으로 확인한 것: 곡선 출력 268,288개</h2>
+<p class="takeaway">보간·구성·확장과 적용 함수, RAW 표본 변환은 원본 기계어를 에뮬레이터에서 실행해 참조식과 비교했습니다. 기본 곡선을 만드는 두 생산자 함수는 실행하지 않고 읽기만 했습니다.</p>
+<div class="callout model"><strong class="label">시험 조건</strong>
+<p>코드는 Capstone 5.0.7로 읽고, 수치 연산은 Unicorn 2.1.4에서 따로 떼어 실행했습니다. 에뮬레이터의 CPU를 Cortex-A9로 정한 것은 해당 명령을 실행하기 위한 선택이며, 카메라에 든 칩을 확인한 증거가 아닙니다. 하드웨어 장치 대신 합성 RAM을 놓았으므로 DMA, 인터럽트, 센서, 실제 ISP의 동작은 검증하지 않았습니다.</p></div>
+<div class="table-wrap"><table>
+<caption>실행해서 대조한 항목</caption>
+<thead><tr><th>대상</th><th>결과</th><th>범위</th><th>상태</th></tr></thead>
+<tbody>
+<tr><th scope="row">보간 함수</th><td>262,144개 출력 일치</td><td>곡선 4개 × 가능한 16비트 입력 65,536개 전부</td><td><span class="badge ok">확인</span></td></tr>
+<tr><th scope="row">NEON 테이블 확장</th><td>5,120개 출력 일치</td><td>곡선 4개 × 16비트 값 1,280개. 끝값을 채우는 원본 Thumb 코드 포함</td><td><span class="badge ok">확인</span></td></tr>
+<tr><th scope="row">세 곡선과 가중 합 구성</th><td>1,024개 출력 일치</td><td>원본 구성 루프 × 결과 곡선 4개</td><td><span class="badge ok">확인</span></td></tr>
+<tr><th scope="row">톤 적용 함수</th><td>합성 사례 2건 통과</td><td>제어 워드, 별도 테이블, 곡선 4개 복사, 플래그, 바뀌지 않아야 할 영역</td><td><span class="badge ok">확인</span></td></tr>
+<tr><th scope="row">RAW 표본 변환</th><td>4개 사례, 263개 출력 일치</td><td>빈 입력, 경계값, 고정 시드 난수, 버퍼 경계</td><td><span class="badge ok">확인</span></td></tr>
+<tr><th scope="row">기본 곡선 생산자 두 개</th><td>실행하지 않음</td><td>코드를 읽어 추적</td><td><span class="badge static">정적 분석</span></td></tr>
 </tbody></table></div>
-<p class="caption"><a href="tone-numeric.json">톤 수치 실행 결과</a> · <a href="raw-numeric.json">RAW 수치 실행 결과</a> · <a href="validation.json">도구·검사 기록</a>. 출력 개수는 카메라 이미지 수나 독립 함수 개수가 아니다.</p>
-<h3>재현 명령</h3>
-<p>먼저 <a href="../index.html#reproduce">초기 분석의 절차</a>로 공식 v1.12 파일을 해제한다. 기본 정적 검증은 Python 표준 라이브러리만 사용한다. 원본 펌웨어는 저장소에 포함하지 않았다.</p>
+<p>세 가지 톤 연산의 출력 수를 더하면 262,144 + 5,120 + 1,024 = 268,288개입니다. 이 숫자는 비교한 출력값의 개수입니다. 카메라로 찍은 이미지의 수나 서로 다른 함수의 수가 아닙니다. 입력으로 쓴 곡선과 표본은 모두 <span class="badge model">모델</span> 값입니다.</p>
+
+<details class="evidence"><summary>사례별 출력 해시</summary>
+<div class="table-wrap"><table class="compact">
+<caption>톤 연산 (tone-numeric.json의 checks)</caption>
+<thead><tr><th>합성 곡선</th><th>연산</th><th class="n">비교한 출력</th><th>출력의 SHA-256</th></tr></thead>
+<tbody>
+<tr><th scope="row" rowspan="2">섞어 올라가는 곡선</th><td>보간</td><td class="n">65,536</td><td><code class="wrap">af46d5ec18e572afc66bde41e6907103e3d1de927fe24bddd060d469a92db92a</code></td></tr>
+<tr><td>확장</td><td class="n">1,280</td><td><code class="wrap">ca8f5dc731f8383ace755c99a6491404102a4dad17649e06a162ad9a99904e48</code></td></tr>
+<tr><th scope="row" rowspan="2">내려가는 곡선</th><td>보간</td><td class="n">65,536</td><td><code class="wrap">53195b1f116805768e53b6a68230fc2b11ecf45800771d3340b738ed2261a717</code></td></tr>
+<tr><td>확장</td><td class="n">1,280</td><td><code class="wrap">669cf8ccadcea432b420645919ee931c900ac7ea5d5b78da5436d733027a3a49</code></td></tr>
+<tr><th scope="row" rowspan="2">양 끝값이 번갈아 나오는 곡선</th><td>보간</td><td class="n">65,536</td><td><code class="wrap">3c77fc45860d4b5eeebe1d0fd69085f3a82507bad1d5d9dab3c05faec52604e3</code></td></tr>
+<tr><td>확장</td><td class="n">1,280</td><td><code class="wrap">8dc44c7cd0b7398eca0f29d1143f0ee015466e8d6f270c19f1027f733a2bb398</code></td></tr>
+<tr><th scope="row" rowspan="2">부호 없는 범위 전체를 쓰는 곡선</th><td>보간</td><td class="n">65,536</td><td><code class="wrap">8fbda5414555ad8bd84169f2b4747f6a90e22de0fb7c473bc7d583a33518383d</code></td></tr>
+<tr><td>확장</td><td class="n">1,280</td><td><code class="wrap">bf4b1249ea68111c3035e611b64ce584782b9e99e8bcc577e11886b4f20a782d</code></td></tr>
+<tr><th scope="row">서로 다른 원본 곡선과 표본</th><td>네 곡선 구성</td><td class="n">1,024</td><td><code class="wrap">cf8b9597173aba8612a9f2645c24e715a010a980098ad768c41f7ffcf5504b19</code></td></tr>
+</tbody></table></div>
+<ul class="small">
+<li>톤 적용 함수의 두 사례는 곡선당 복사 길이가 2,560바이트(<code>0xA00</code>)인 경우와 4,096바이트(<code>0x1000</code>)인 경우입니다. 두 사례 모두 곡선 테이블 4개, 별도 테이블 32바이트, 제어 레지스터 워드 4개를 비교했습니다.</li>
+<li>RAW 표본 변환의 네 사례는 표본 0개, 1개, 5개, 257개입니다.</li>
+<li>기록: <a href="tone-numeric.json">tone-numeric.json</a>, <a href="raw-numeric.json">raw-numeric.json</a>, <a href="validation.json">validation.json</a>.</li>
+</ul>
+</details>
+</section>
+
+<section id="comparison">
+<h2>K-3 Mark III에서 한 분석을 K-3 II에도 할 수 있는가</h2>
+<p class="takeaway">절차는 그대로 쓸 수 있습니다. K-3 Mark III의 명령 번호, 주소, 데이터 구조를 옮겨 오는 방식은 쓸 수 없습니다.</p>
+<p>K-3 II의 펌웨어에도 ARM 코드(A32), 가상 함수표, 진단 문자열, 레지스터 접근 함수가 남아 있어서 같은 방법으로 추적할 수 있습니다. 아래 표는 K-3 Mark III의 공개 분석 항목을 기준으로, 이 문서를 쓴 시점에 K-3 II에서 확인한 범위를 정리한 것입니다. 그 뒤에 조사가 이어진 항목은 마지막 칸에 문서를 적었습니다.</p>
+<div class="table-wrap"><table>
+<caption>K-3 Mark III의 분석 항목을 K-3 II에 적용한 결과</caption>
+<thead><tr><th>검토한 항목</th><th>이 문서 시점의 K-3 II 결과</th><th>판정</th><th>이어진 문서</th></tr></thead>
+<tbody>
+<tr><th scope="row">파일 식별·내부 형식</th><td>해시 고정, XOR 해제, 독립 디코더와 전체 바이트 대조</td><td>적용 완료</td><td><a href="firmware-structure.html">펌웨어 파일 구조</a></td></tr>
+<tr><th scope="row">주소 매핑·코드 진입점</th><td>주 이미지의 기준 주소와 별도의 보조 ROM 매핑</td><td>대상 범위 검증</td><td><a href="firmware-structure.html#cpu">코드와 주소 검증</a></td></tr>
+<tr><th scope="row">SoC·보조 CPU</th><td>부품 번호 비교 경로와 F²MC-8L 호환 코드 식별</td><td>정확한 부품 번호 미확정</td><td>—</td></tr>
+<tr><th scope="row">명령 카탈로그·디스패처</th><td>K-3 Mark III의 957개 명령표에 대응하는 자체 표는 찾지 못함</td><td>별도 탐색 필요</td><td>—</td></tr>
+<tr><th scope="row">RAW 현상·작업 전달</th><td>현상 함수와 컨트롤러 전달 코드까지 추적</td><td>일부 연결 확보</td><td><a href="pipeline-analysis.html">RAW 이후의 톤·WB·색 행렬</a></td></tr>
+<tr><th scope="row">컬러 모드·리소스 이름</th><td>일반 경로와 selector 6 곡선 생산자 구분</td><td>카메라 메뉴 이름 미연결</td><td><a href="output-menu-analysis.html">JPEG 출력 버퍼와 Reversal Film 메뉴</a></td></tr>
+<tr><th scope="row">감마·톤 수치 연산</th><td>원본 A32/NEON 보간·곡선 구성·테이블 확장을 실행해 대조</td><td>268,288개 출력 일치</td><td><a href="tone-rebuild.html">톤 보간 함수 C 재구현</a></td></tr>
+<tr><th scope="row">ISP 설정·버퍼 전달</th><td>TGCTL·TCTBLCTL과 테이블 목적지 4개 확인</td><td>합성 메모리에서 적용 함수 검증</td><td><a href="guide-pipeline.html">영상 처리 경로 안내</a></td></tr>
+<tr><th scope="row">WB·색 행렬·클리핑</th><td>관련 B2Y 진단 항목과 CC1CTL 읽기 주소 확인</td><td>설정 생산자·수식 추적 필요</td><td><a href="pipeline-analysis.html">RAW 이후의 톤·WB·색 행렬</a></td></tr>
+<tr><th scope="row">JPEG 양자화·완료 처리</th><td>RAW 작업과 최종 JPEG 인코더의 연결은 미확정</td><td>추적 방법 적용 가능</td><td><a href="output-menu-analysis.html">JPEG 출력 버퍼</a>, <a href="store-image-records.html">JPEG 완료값과 저장 레코드</a></td></tr>
+<tr><th scope="row">AF·셔터·GPIO</th><td>진단·기능 문자열은 있으나 이 문서의 검증 대상이 아님</td><td>자체 객체·핀 근거 필요</td><td><a href="guide-af.html">AF 안내</a></td></tr>
+<tr><th scope="row">Lightroom·카메라 출력 재현</th><td>테이블과 UI 이름, RAW/JPEG 짝 자료가 더 필요</td><td>현재 결과만으로 평가 불가</td><td>—</td></tr>
+</tbody></table></div>
+<p class="small muted">비교 기준은 K-3 Mark III 저장소의 고정 커밋 <code>b51d680</code>입니다: <a href="https://github.com/yunhyok/pentax-k3iii-firmware-analysis/blob/b51d680202336a5872a66f99ca2924a2cb7c75fa/analysis/index.html">명령·AF 분석</a> · <a href="https://github.com/yunhyok/pentax-k3iii-firmware-analysis/blob/b51d680202336a5872a66f99ca2924a2cb7c75fa/analysis/color-algorithms.html">색 연산</a> · <a href="https://github.com/yunhyok/pentax-k3iii-firmware-analysis/blob/b51d680202336a5872a66f99ca2924a2cb7c75fa/analysis/pipeline-report.html">ISP·JPEG 경로</a> · <a href="https://github.com/yunhyok/pentax-k3iii-firmware-analysis/blob/b51d680202336a5872a66f99ca2924a2cb7c75fa/analysis/color-lightroom.html">Lightroom 검토</a>.</p>
+</section>
+
+<section id="limits">
+<h2>한계와 남은 과제</h2>
+<ul>
+<li><strong>부품 번호를 모릅니다.</strong> 카메라에서 읽은 MIDR 값, 칩 버전 레지스터 값, 기판 표기가 없습니다. 주 이미지의 추가 ARM 시작 경로, F²MC-8L 호환 보조 코드, 패키지 부품 번호를 각각 따로 다루어 추정이 사실처럼 굳지 않게 합니다.</li>
+<li><strong>F²MC-8L 호환은 명령어 수준의 판단입니다.</strong> 호환 파생 제품이나 MCU 부품 번호를 가려내지 못합니다. MB86S22A도, MB89 계열의 어느 부품도 이 카메라의 부품으로 지목하지 않습니다.</li>
+<li><strong>호출 지점 목록은 완전하지 않습니다.</strong> RAW 현상 함수의 직접 호출 네 곳을 확인했을 뿐입니다.</li>
+<li><strong>픽셀 처리 순서를 그리지 못합니다.</strong> 확인한 것은 설정 코드와 테이블 전달 관계입니다. “RAW → WB → 행렬 → 감마 → 톤 → JPEG”를 확정된 순서로 볼 근거가 없습니다. 하드웨어 안의 픽셀 순서, 디모자이킹 수식, 특정 커스텀 이미지의 실제 색 재현에는 근거가 더 필요합니다.</li>
+<li><strong>장치의 동작은 측정하지 않았습니다.</strong> 장치 메모리의 동작, 물리 주소, 픽셀 단계의 타이밍은 알 수 없습니다. <code>0x20A00000</code> 테이블의 내용과 하드웨어가 픽셀마다 적용하는 변환 함수도 열려 있습니다.</li>
+<li><strong>이름은 설명용입니다.</strong> selector와 설명자 필드의 이름은 분석하면서 붙였습니다.</li>
+</ul>
+
+<h3 id="next">이 문서 뒤에 이어진 조사</h3>
+<p>이 문서를 쓸 때 다음 과제로 꼽은 것은 세 가지였습니다. 지금은 각각 다른 문서에서 다룹니다.</p>
+<ul>
+<li>RAW 컨트롤러에 넘긴 작업이 톤 준비·적용 호출까지 이어지는 경로 → <a href="pipeline-analysis.html">RAW 이후의 톤·WB·색 행렬</a></li>
+<li>selector와 화면(UI) 리소스의 연결 → <a href="output-menu-analysis.html">JPEG 출력 버퍼와 Reversal Film 메뉴</a></li>
+<li>WB·색 행렬·클리핑과 JPEG 인코더의 설정을 만드는 코드 → <a href="guide-pipeline.html">영상 처리 경로 안내</a>에서 시작</li>
+</ul>
+</section>
+
+<section id="reproduce">
+<h2>재현 방법</h2>
+<p>먼저 <a href="firmware-structure.html#reproduce">펌웨어 파일 구조 문서의 절차</a>로 공식 펌웨어 1.12 파일을 복호화합니다. 원본 펌웨어는 저장소에 없습니다. 정적 검증 세 개는 Python 표준 라이브러리만 씁니다.</p>
 <pre><code>python verify_hardware.py .private/decoded/decoded.bin --compare analysis/hardware.json
 python verify_raw_path.py .private/decoded/decoded.bin --compare analysis/raw-path.json
 python verify_tone_path.py .private/decoded/decoded.bin --compare analysis/tone-path.json
 python -m unittest discover -s tests -v
-python verify_publication.py
-
-# 선택 사항: 별도 Python 환경에 실행 엔진 설치
-python -m pip install unicorn==2.1.4
+python verify_publication.py</code></pre>
+<p>원본 명령을 실행하는 수치 검증에는 Unicorn이 필요합니다. 별도의 Python 환경에 설치하기를 권합니다.</p>
+<pre><code>python -m pip install unicorn==2.1.4
 python verify_raw_numeric.py .private/decoded/decoded.bin --compare analysis/raw-numeric.json
 python verify_tone_numeric.py .private/decoded/decoded.bin --compare analysis/tone-numeric.json</code></pre>
-<details><summary>REA 및 자동 디컴파일 결과의 취급</summary><p>REA가 남긴 기존 ZIP 식별 증거를 재사용했다. 이 Windows 환경의 펌웨어 Binwalk 경로와 원시 ARM 네이티브 분석 공급자는 준비되지 않아 이번 코드 분석은 Python·Capstone·Unicorn으로 진행했다. 이를 REA 자체가 만든 코드 증거로 표시하지 않았다. <a href="rea-summary.json">REA 증거·제약</a></p><p>angr 10.0.5는 RAW 현상 범위에서 블록 710개를 찾았지만, 자동 생성된 C 유사 코드는 함수 앞부분만 담았다. 조건부 호출과 점프 테이블을 포함한 전체 함수 설명으로는 채택하지 않았다. 공개 결론은 확인한 명령열·직접 분기·바이트 해시와 격리 실행 결과에 한정했다.</p></details>
+<p>각 검증기는 복호화한 이미지의 SHA-256이 맞는지 확인한 뒤, 결과를 공개된 JSON과 비교합니다.</p>
+
+<details><summary>자동 분석 도구의 결과를 어떻게 다뤘는가</summary>
+<p>공식 ZIP을 식별한 기록은 REA라는 분석 도구가 남긴 것을 그대로 썼습니다. 조사에 쓴 Windows 환경에는 REA의 펌웨어 스캐너(Binwalk)와 원시 ARM 이미지용 네이티브 분석 공급자가 준비되어 있지 않았습니다. 그래서 코드 분석은 Python, Capstone, Unicorn으로 했고, 이 결과를 REA가 만든 코드 증거로 표시하지 않았습니다. 제약은 <a href="rea-summary.json">rea-summary.json</a>에 있습니다.</p>
+<p>자동 분석 도구 angr 10.0.5는 RAW 현상 함수의 범위에서 블록 710개를 찾았습니다. 그러나 자동으로 만든 C 유사 코드에는 함수의 앞부분만 담겼습니다. 조건부 호출과 점프 테이블을 포함한 함수 전체의 설명으로는 채택하지 않았습니다. 공개한 결론은 직접 확인한 명령열, 직접 분기, 바이트 해시, 격리 실행 결과에 한정했습니다.</p>
+</details>
 </section>
 
-<section aria-labelledby="next"><h2 id="next">6. 다음 분석에서 연결해야 할 지점</h2>
-<p>RAW 컨트롤러 래퍼의 후속 처리에서 톤 래퍼의 준비·적용 호출까지 연결하는 것이 다음 우선 과제다. 이 구간이 확인돼야 곡선이 어떤 현상 조건에서 적용되는지 더 정확히 설명할 수 있다. 그다음 selector와 UI 리소스를 연결하고, WB·색 행렬·클리핑과 JPEG 인코더의 설정 생산자를 같은 방식으로 추적한다.</p>
-<p>현재 자료로는 “RAW → WB → 행렬 → 감마 → 톤 → JPEG”를 확정 순서로 그릴 수 없다. 확인한 것은 설정 코드와 테이블 전달 관계다. 하드웨어 내부의 픽셀 순서, 디모자이킹 수식, 특정 커스텀 이미지의 실제 색 재현은 추가 근거가 필요하다.</p>
-<p>정확한 SoC·보조 MCU 부품 번호도 미확정으로 남겼다. 주 이미지의 추가 ARM 경로, F²MC-8L 호환 보조 코드와 패키지 부품 번호를 각각 관리해 추정이 사실로 굳어지지 않도록 한다.</p>
+<section id="refs">
+<h2>근거 파일과 참고 자료</h2>
+<ul class="refs">
+<li><a href="hardware.json">hardware.json</a> — 추가 ARM 시작 경로, 칩 버전 읽기, 보조 이미지의 명령 14개와 벡터</li>
+<li><a href="raw-path.json">raw-path.json</a> — RAW 현상 함수의 호출·분기 17개와 구간 해시</li>
+<li><a href="raw-numeric.json">raw-numeric.json</a> — 표본 변환 루프의 실행 결과 4건</li>
+<li><a href="tone-path.json">tone-path.json</a> — 톤 준비·적용의 호출 관계, 레지스터 필드, 테이블 목적지</li>
+<li><a href="tone-numeric.json">tone-numeric.json</a> — 보간·확장·구성의 출력 대조와 적용 함수 사례 2건</li>
+<li><a href="findings.json">findings.json</a> — 시작 코드의 MIDR 비교(<a href="firmware-structure.html#cpu">설명</a>)</li>
+<li><a href="validation.json">validation.json</a> — 도구 버전과 검사 기록</li>
+<li><a href="../verify_hardware.py">verify_hardware.py</a> · <a href="../verify_raw_path.py">verify_raw_path.py</a> · <a href="../verify_raw_numeric.py">verify_raw_numeric.py</a> · <a href="../verify_tone_path.py">verify_tone_path.py</a> · <a href="../verify_tone_numeric.py">verify_tone_numeric.py</a> — 검증 스크립트</li>
+<li>리코: <a href="https://www.ricoh-imaging.co.jp/english/products/k-3-2/feature/05.html">K-3 II 제품 소개(PRIME III)</a> · <a href="https://news.ricoh-imaging.co.jp/rim_info2/2015/20150423_019143.html">K-3 II 발표 자료(2015-04-23)</a></li>
+<li>Arm: <a href="https://documentation-service.arm.com/static/5f0370fccafe527e86f5bfb2">Cortex-A9 Technical Reference Manual(DDI 0388G) §4.3.1 Main ID Register</a></li>
+<li>Fujitsu: <a href="https://www.infineon.com/assets/row/public/documents/10/57/infineon-f2mc-8l-mb89580b-bw-series-hardware-manual-additionaltechnicalinformation-en.pdf">F²MC-8L MB89580B/BW 하드웨어 매뉴얼(CM25-10142-3E)</a> — 벡터 표와 부록 B의 명령표. 지금은 Infineon이 배포합니다.</li>
+<li>Socionext: <a href="https://www.socionextcn.com.cn/en/service/assp/image-processor/51.html">MB86S22 사양</a></li>
+<li>도구: <a href="https://www.unicorn-engine.org/">Unicorn CPU 에뮬레이터</a> · <a href="https://www.capstone-engine.org/">Capstone 디스어셈블러</a> · <a href="https://angr.io/">angr</a></li>
+</ul>
+<p class="small muted">이 문서의 근거 파일은 2026-11-08에 만들었습니다. 원본 펌웨어, 복호화한 이미지, 전체 디스어셈블 결과는 다시 배포하지 않습니다. 공개 범위와 라이선스는 <a href="firmware-structure.html#sources">출처와 라이선스, 공개 범위</a>에 정리했습니다.</p>
 </section>
+
 </main>
-<footer>2026-11-08 심층 분석 공개분 · <a href="https://github.com/yunhyok/pentax-k3ii-firmware-analysis">GitHub 저장소</a> · <a href="../index.html#sources">출처·라이선스·공개 범위</a><br>원본 펌웨어·해제본·전체 디스어셈블은 재배포하지 않는다. 플래싱·실기 실행은 수행하지 않았다.</footer>
-</body></html>
+</div>
+<!-- chrome:bottom -->
+<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">시작하기 — 이 주제의 문서</h2><ol><li><a href="../index.html">개요</a></li><li><a href="firmware-structure.html">펌웨어 파일 구조와 복호화<span>XOR 해제, 코드·주소 검증, 재현 절차</span></a></li><li><a href="deep-analysis.html" aria-current="page">하드웨어 식별과 RAW 현상 개관<span>CPU 근거, 톤 곡선 생성</span></a></li><li><a href="../glossary.html">용어집</a></li></ol></nav>
+<nav class="pager" aria-label="이전·다음 문서"><a class="prev" href="firmware-structure.html"><small>← 이전</small>펌웨어 파일 구조와 복호화</a><a class="next" href="../glossary.html"><small>다음 →</small>용어집</a></nav>
+<footer class="sitefoot"><div class="sitefoot-in"><nav aria-label="사이트"><a href="../index.html#map">문서 지도</a><a href="../index.html#levels">검증 수준 읽는 법</a><a href="../glossary.html">용어집</a><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/research-program.html">세 기종 연구 본부</a><a href="https://github.com/yunhyok/pentax-k3ii-firmware-analysis">GitHub 저장소</a></nav><p>PENTAX K-3 II 펌웨어 1.12 분석 문서. PC에서 수행한 정적 분석과 에뮬레이션 결과이며, 카메라 실기에서 검증한 내용이 아닙니다. 원본 펌웨어와 복호화한 바이너리는 포함하지 않습니다.</p></div></footer>
+<!-- /chrome:bottom -->
+</body>
+</html>

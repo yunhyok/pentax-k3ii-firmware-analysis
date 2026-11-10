@@ -1,49 +1,345 @@
 <!doctype html>
 <html lang="ko">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="K-3 II RAW File Format 메뉴의 PEF·DNG 이벤트, 설정 0x97과 텍스트 리소스 ABI를 원본 ARM으로 검증.">
-<title>K-3 II — RAW 형식 메뉴와 텍스트 ABI</title><link rel="stylesheet" href="../assets/report.css"></head>
-<body><header><div class="eyebrow">PENTAX K-3 II · firmware 1.12 · 2026-11-08</div>
-<h1>PEF·DNG 선택을<br>설정 저장과 텍스트 준비까지 연결했다</h1>
-<p class="lead">RAW File Format 메뉴의 PEF는 값 0, DNG는 값 1이다. 원본 화면 디스패처를 실행하면 선택 시 임시값이 바뀌고, 적용 이벤트에서만 설정 0x97의 RAM 저장 뱅크가 갱신된다. 리소스 조회와 텍스트 객체 생성도 실행해 UI 이식에 필요한 K-3 II 쪽 계약을 구체화했다.</p>
-<nav aria-label="보고서 탐색"><a href="#mapping">기종 간 대응</a><a href="#events">선택·적용</a><a href="#text">리소스·텍스트</a><a href="#reproduce">재현·한계</a><a href="superresolution-lifecycle.html">Pixel Shift 메뉴</a><a href="hq-status.json">연구 상태</a></nav></header>
-<main><p class="note">주소는 해제 파일 오프셋, <code>screen+…</code>와 <code>renderer+…</code>는 객체 필드다. 위젯·이벤트 숫자는 K-3 II 내부 값이다. K-3 III의 같은 메뉴 이름이 같은 숫자나 바이너리 ABI를 뜻하지 않는다.</p>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RAW 형식 메뉴의 PEF·DNG 선택과 메뉴 글자 준비 — PENTAX K-3 II 펌웨어 연구</title>
+<meta name="description" content="K-3 II의 RAW File Format 메뉴에서 PEF는 0, DNG는 1로 설정 0x97에 저장됩니다. 고르기·적용·취소가 임시값과 RAM 설정을 어떻게 바꾸는지, 메뉴 글자가 리소스에서 글리프 배열로 준비되는 과정을 원본 ARM 코드로 실행한 기록입니다.">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body data-camera="k3ii">
+<!-- chrome:top -->
+<a class="skip" href="#main">본문 바로가기</a>
+<div class="topbar"><div class="topbar-in"><a class="brand" href="../index.html">PENTAX <b>펌웨어 연구</b></a><div class="cams" aria-label="기종 선택"><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/">K-3 III</a><a href="../index.html" aria-current="true">K-3 II</a><a href="https://yunhyok.github.io/pentax-q7-firmware-analysis/">Q7</a></div><nav class="topnav" aria-label="주제"><a href="../index.html">개요</a><a href="guide-pipeline.html">영상 처리</a><a href="guide-capture.html">촬영·보존 레코드</a><a href="guide-rebuild.html">재구축·업데이트</a><a href="guide-af.html">AF</a><a href="guide-ui.html" aria-current="true">UI</a></nav></div></div>
+<nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../index.html">PENTAX K-3 II</a></li><li><a href="guide-ui.html">메뉴와 UI</a></li><li aria-current="page">RAW 형식 메뉴와 텍스트</li></ol></nav>
+<!-- /chrome:top -->
+<header class="page-head">
+<p class="eyebrow">메뉴와 UI · RAW 형식 메뉴와 글자 리소스</p>
+<h1>RAW 형식 메뉴의 PEF·DNG 선택과 메뉴 글자 준비</h1>
+<p class="lead">RAW 파일을 PEF로 저장할지 DNG로 저장할지 고르는 메뉴를 추적했습니다. 고른 값이 설정에 기록되는 순서와, 메뉴에 보이는 글자가 준비되는 과정을 함께 확인했습니다.</p>
+</header>
+<div class="layout">
+<!-- chrome:toc -->
+<nav class="toc" aria-label="이 문서의 목차"><h2 data-toc="no">이 문서에서</h2><ol><li><a href="#background">배경: RAW File Format 메뉴와 두 파일 형식</a></li><li><a href="#mapping">분석 대상은 제조사 대응표에 공통으로 있는 항목입니다</a></li><li><a href="#events">고르기와 적용은 서로 다른 단계입니다</a></li><li><a href="#text">메뉴 글자는 리소스에서 글리프 배열로 준비됩니다</a></li><li><a href="#limits">한계와 남은 과제</a></li><li><a href="#reproduce">재현 방법</a></li><li><a href="#refs">근거 파일과 참고 자료</a></li></ol></nav>
+<!-- /chrome:toc -->
+<main class="doc" id="main">
 
-<section aria-labelledby="mapping"><h2 id="mapping">1. 공식 대응표의 공통 항목을 분석 대상으로 삼았다</h2>
-<p>Ricoh의 K-3 III·K-3 II 메뉴 대비표 첫 페이지는 K-3 II의 촬영 메뉴 1·정지화상 기록 설정에 있는 RAW 파일 형식을 K-3 III의 촬영 메뉴 5·RAW 파일 형식과 대응시킨다. 이는 기능 대응의 근거다. 이벤트 번호나 실행 코드 호환성의 근거로 사용하지 않았다. <a href="https://www.ricoh-imaging.co.jp/japan/support/pdf/k-3-3_09.pdf">제조사 메뉴 대비표</a> · <a href="https://www.ricoh-imaging.co.jp/japan/support/product_support_k-3-3_correlation_table.html">공식 안내</a></p>
-<div class="table-scroll"><table><thead><tr><th scope="col">K-3 II 리소스</th><th scope="col">위젯 ID</th><th scope="col">리소스 레코드 / 언어 표</th></tr></thead><tbody>
-<tr><td>RAW File Format</td><td><code>0x01500040</code></td><td><code>0x993834 / 0xE3FE34</code></td></tr>
-<tr><td>PEF</td><td><code>0x01500043</code></td><td><code>0x993870 / 0xE3FE88</code></td></tr>
-<tr><td>DNG</td><td><code>0x01500044</code></td><td><code>0x993884 / 0xE3FEDC</code></td></tr>
+<section class="summary">
+<h2 data-toc="no">핵심 요약</h2>
+<ul>
+<li>RAW File Format 메뉴의 두 선택지는 <strong>설정값 하나</strong>로 저장됩니다. PEF는 0, DNG는 1입니다.</li>
+<li>항목을 고르면 화면 객체의 <strong>임시값만</strong> 바뀝니다. 적용 이벤트를 받아야 RAM의 설정(현재값과 미러)에 기록합니다. 취소 이벤트는 기록하지 않고 임시값을 원래 값으로 되돌립니다.</li>
+<li>메뉴 글자 세 개(RAW File Format, PEF, DNG)가 리소스 표에서 글자 객체로 만들어지고, 언어에 따라 16비트 글리프 배열로 준비되는 과정을 실행했습니다. 화면에 그리는 단계는 실행하지 않았습니다.</li>
+<li>이 메뉴는 K-3 III에도 같은 이름으로 있습니다. 그러나 이 문서의 번호와 객체 구조는 K-3 II의 것이고, 다른 기종과 호환된다는 근거는 없습니다. 실제 버튼, LCD 표시, 플래시 저장도 확인하지 않았습니다.</li>
+</ul>
+</section>
+
+<div class="scope">
+<div class="ok"><h3><span class="badge ok">확인</span> 원본 코드 실행으로 확인</h3>
+<ul>
+<li>고르기·떠나기·적용·취소 12개 사례의 임시값과 RAM 설정</li>
+<li>설정 읽기·쓰기 함수와 뱅크 계산</li>
+<li>리소스 검색에서 글자 객체 생성까지</li>
+<li>글리프 준비 12건, 래퍼 상태 2건</li>
+</ul></div>
+<div class="model"><h3><span class="badge model">모델</span> 시험 조건으로 정한 것</h3>
+<ul>
+<li>버튼 대신 이벤트 번호를 함수에 직접 전달</li>
+<li>활성 인덱스, 뱅크 내용, 활성 언어 인덱스는 시험용 값</li>
+<li>메모리 할당, 화면 갱신, 위젯 검색·알림은 검증용 대체 코드</li>
+</ul></div>
+<div class="open"><h3><span class="badge open">미확인</span> 확인하지 않은 것</h3>
+<ul>
+<li>물리 버튼과 이벤트 번호의 대응</li>
+<li>글꼴 그리기와 LCD 출력</li>
+<li>플래시 저장, RAW 파일 기록에 미치는 효과</li>
+<li>K-3 III·Q7과의 번호·구조 호환</li>
+</ul></div>
+</div>
+
+<section id="background">
+<h2>배경: RAW File Format 메뉴와 두 파일 형식</h2>
+<p>K-3 II 사용 설명서에서 RAW File Format은 촬영 메뉴 1의 Image Capture Settings 안에 있습니다. 선택지는 PEF와 DNG이고 기본값은 PEF입니다(<a href="https://www.ricoh-imaging.co.jp/english/support/man-pdf/k-3-2.pdf">K-3 II 사용 설명서</a> 20·37쪽).</p>
+<dl class="kv">
+<dt>PEF</dt><dd>설명서는 PEF를 “PENTAX 고유의 RAW 파일 형식”이라고 설명합니다(37쪽).</dd>
+<dt>DNG</dt><dd>Adobe가 만들어 규격을 공개한 RAW 파일 형식입니다. TIFF 6.0을 바탕으로 합니다(<a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000188.shtml">미국 의회도서관의 DNG 형식 설명</a>). 설명서에는 이 제품이 Adobe의 허락을 받아 DNG 기술을 쓴다고 적혀 있습니다(109쪽).</dd>
+</dl>
+<p>이 문서는 두 형식의 파일 내용을 다루지 않습니다. 다루는 것은 메뉴에서 형식을 고르는 동작과 메뉴 글자입니다. 임시값, 현재값과 미러, 뱅크, 논리 동작 같은 용어는 <a href="color-ui.html#background">색공간 메뉴 문서의 배경</a>과 같은 뜻으로 씁니다. 추가로 쓰는 말은 아래와 같습니다.</p>
+<dl class="kv">
+<dt>글리프 코드</dt><dd>글자 하나를 가리키는 펌웨어 내부 번호입니다. 글꼴 안의 그림 번호에 해당하며, 표준 문자 코드라고 확정하지 않았습니다.</dd>
+<dt>언어 표</dt><dd>같은 문구의 언어별 글리프 데이터 주소를 모아 둔 표입니다. 언어 인덱스로 한 칸을 고릅니다.</dd>
+<dt>글자 객체와 래퍼</dt><dd>글자 객체는 문구 하나를 준비하는 객체이고, 래퍼는 그 객체를 위젯으로 감싼 객체입니다. 원문 검증기에서는 각각 renderer, wrapper라고 부릅니다.</dd>
+<dt>주소 표기</dt><dd>코드와 표의 위치는 복호화한 펌웨어 파일의 오프셋입니다. <code>screen+0xF9</code>, <code>renderer+0x90</code>처럼 쓴 것은 객체 안의 필드 위치입니다.</dd>
+</dl>
+</section>
+
+<section id="mapping">
+<h2>분석 대상은 제조사 대응표에 공통으로 있는 항목입니다</h2>
+<p class="takeaway">리코의 메뉴 대비표는 K-3 II와 K-3 III의 RAW 파일 형식 항목을 서로 대응시킵니다. 이것은 기능이 같다는 근거이고, 내부 번호나 코드가 호환된다는 근거는 아닙니다.</p>
+<p>리코가 공개한 K-3 Mark III 메뉴 대비표(K-3 II 편) 1쪽에는 K-3 II의 촬영 메뉴 1 → 記録設定(영문 설명서의 Image Capture Settings) → RAWファイル形式이 K-3 III의 촬영 메뉴 5 → RAWファイル形式과 같은 줄에 놓여 있습니다(<a href="https://www.ricoh-imaging.co.jp/japan/support/pdf/k-3-3_09.pdf">대비표 PDF</a>, <a href="https://www.ricoh-imaging.co.jp/japan/support/product_support_k-3-3_correlation_table.html">대비표 안내 페이지</a>). 두 기종에 모두 있는 메뉴라서 비교의 출발점으로 골랐습니다.</p>
+
+<div class="table-wrap"><table>
+<caption>K-3 II 펌웨어에서 찾은 세 글자 리소스</caption>
+<thead><tr><th>영어 문구</th><th>위젯</th><th>리소스 레코드</th><th>언어 표</th></tr></thead>
+<tbody>
+<tr><th scope="row">RAW File Format</th><td><code>0x01500040</code></td><td><code>0x993834</code></td><td><code>0xE3FE34</code></td></tr>
+<tr><th scope="row">PEF</th><td><code>0x01500043</code></td><td><code>0x993870</code></td><td><code>0xE3FE88</code></td></tr>
+<tr><th scope="row">DNG</th><td><code>0x01500044</code></td><td><code>0x993884</code></td><td><code>0xE3FEDC</code></td></tr>
 </tbody></table></div>
-<p>이 세 레코드는 <code>0x993334</code> 표의 type 4 항목이다. 화면 생성 코드에서 해당 ID로 조회한 뒤 텍스트 객체에 실제 언어 표 포인터를 넣는 구간까지 실행했다. 메뉴 적용의 상위 항목 ID는 제목 위젯과 다른 <code>0x0150000A</code>다. <a href="ui-resources.json">리소스와 화면 디스패처 근거</a></p>
+<p>세 레코드는 위젯 표 <code>0x993334</code>에 있는 글자(type 4) 항목입니다. 화면을 만드는 코드가 이 위젯 번호로 표를 검색하는 것까지 확인했습니다. PEF와 DNG 위젯은 글자를 보여 주는 동시에 선택을 받는 위젯입니다. 메뉴에서 이 항목 전체를 가리키는 번호는 제목 위젯과 다른 <code>0x0150000A</code>입니다.</p>
 </section>
 
-<section aria-labelledby="events"><h2 id="events">2. 선택과 적용은 서로 다른 단계다</h2>
-<figure><figcaption>도식 1. PEF·DNG 선택에서 설정 0x97까지</figcaption><div class="flow" role="group" aria-label="PEF 또는 DNG 위젯 선택은 임시값을 바꾸고 허용된 적용 이벤트가 저장값과 두 RAM 뱅크를 갱신">
-<div class="stage"><strong>위젯 선택</strong><span>PEF 0x01500043 → 0<br>DNG 0x01500044 → 1<br>가상 슬롯 +0xC0</span></div><div class="arrow" aria-hidden="true">→</div>
-<div class="stage"><strong>화면의 임시값</strong><span>screen+0xF9에 선택 기록<br>screen+0xF4는 기존 값 유지<br>다른 항목을 떠나도 임시값 보존</span></div><div class="arrow" aria-hidden="true">→</div>
-<div class="stage"><strong>적용 이벤트</strong><span>가상 슬롯 +0xD0<br>0x3E6148 → 설정 0x97<br>활성 RAM 뱅크와 미러에 기록</span></div></div>
-<p class="caption">취소로 처리되는 이벤트는 기존 값 +0xF4를 임시값 +0xF9로 되돌린다. 물리 버튼을 누른 시험은 아니며, 원본 가상 디스패처에 이벤트를 전달했다.</p></figure>
-<p>상위 항목 <code>0x0150000A</code>의 적용 이벤트 <code>0, 1, 6, 0x10, 0x11, 0x1D, 0x20</code>에서 임시값을 저장한다. 이벤트 3과 <code>0xF</code>는 저장하지 않고 임시값을 복원했다. 다른 상위 항목 ID를 주면 설정은 바뀌지 않고 임시 선택이 남았다. 이 번호를 물리 버튼 이름으로 해석하지 않았다. <a href="ui-resources.json">선택·이탈·적용 사례 12건</a></p>
-<p>설정 쓰기는 <code>0x6DA5E4 → 0x6F1A38 → 0x700E84 → 0x6FE52C</code>로 이어진다. 활성 인덱스 0…7의 저장 뱅크는 <code>[0, 0, 2, 3, 4, 5, 6, 7]</code>이다. 인덱스 0과 1은 뱅크 0을 공유한다. 검증에서는 선택된 뱅크와 미러의 변경을 확인하고 다른 뱅크의 표식값이 그대로 남는지도 대조했다. 영구 저장 매체 기록은 이 범위에 포함하지 않았다. <a href="../verify_ui_resources.py">원본 설정 getter·setter와 뱅크 검사</a></p>
-<p>역방향 함수 <code>0x3E53A4</code>는 저장값 0을 PEF 위젯, 1을 DNG 위젯으로 바꾼다. 대조값 2에서는 일치하는 위젯이 없다는 값 0을 반환했다. 이 결과는 <a href="superresolution-lifecycle.html">앞선 Pixel Shift 분석</a>처럼 문자열·화면 이벤트·설정값을 별도로 검증한 것이다.</p>
+<section id="events">
+<h2>고르기와 적용은 서로 다른 단계입니다</h2>
+<p class="takeaway">PEF나 DNG를 고르면 화면 객체의 임시값만 바뀝니다. 적용 이벤트가 와야 임시값이 RAM의 설정 <code>0x97</code>에 기록됩니다. 취소 이벤트는 임시값을 기존 값으로 되돌립니다.</p>
+
+<figure class="diagram">
+<figcaption>화면 객체의 두 바이트와 RAM 설정 사이에서 값이 움직이는 방향</figcaption>
+<div class="dg-scroll">
+<svg class="dg" viewBox="0 0 800 300" role="img" aria-labelledby="dg-ev-title dg-ev-desc">
+<title id="dg-ev-title">고르기, 적용, 취소, 화면 초기화에서 값이 복사되는 방향</title>
+<desc id="dg-ev-desc">화면 객체에는 임시값 screen+0xF9와 기존 값 screen+0xF4가 있습니다. PEF나 DNG 위젯을 고르면 임시값만 0 또는 1로 바뀝니다. 적용 이벤트는 임시값을 RAM의 설정 0x97에 기록하고 기존 값도 임시값으로 맞춥니다. 취소 이벤트는 기존 값을 임시값으로 되돌립니다. 화면을 초기화할 때는 RAM의 저장값을 두 바이트에 복사합니다.</desc>
+<defs><marker id="dg-ev-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker>
+<marker id="dg-ev-ahm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah model" d="M0 0L10 5L0 10z"/></marker>
+<marker id="dg-ev-ahk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah key" d="M0 0L10 5L0 10z"/></marker></defs>
+
+<rect class="b model" x="8" y="58" width="178" height="72" rx="8"/>
+<text class="t" x="20" y="82">PEF·DNG 고르기</text>
+<text class="s" x="20" y="101">PEF 위젯 → 0</text>
+<text class="s" x="20" y="119">DNG 위젯 → 1</text>
+
+<rect class="gf" x="232" y="24" width="250" height="262" rx="12"/>
+<text class="h" x="246" y="44">화면 객체</text>
+<rect class="b key" x="252" y="58" width="210" height="72" rx="8"/>
+<text class="t" x="264" y="82">임시값</text>
+<text class="s mono" x="264" y="101">screen+0xF9</text>
+<text class="s" x="264" y="119">고르면 바로 바뀜</text>
+<rect class="b" x="252" y="196" width="210" height="72" rx="8"/>
+<text class="t" x="264" y="220">기존 값</text>
+<text class="s mono" x="264" y="239">screen+0xF4</text>
+<text class="s" x="264" y="257">적용할 때 갱신</text>
+<text class="n" x="318" y="168">적용</text>
+<text class="n" x="412" y="168">취소</text>
+
+<rect class="b ok" x="586" y="76" width="206" height="124" rx="8"/>
+<text class="t" x="598" y="104">RAM의 설정 0x97</text>
+<text class="s" x="598" y="126">현재값과 미러 두 곳</text>
+<text class="s" x="598" y="146">적용할 때 1바이트씩 기록</text>
+<text class="s" x="598" y="166">0 = PEF, 1 = DNG</text>
+
+<text class="n mid" x="524" y="96">적용 이벤트</text>
+<text class="n mid" x="534" y="156">화면 초기화</text>
+<text class="n mid" x="534" y="186">저장값 복사</text>
+
+<path class="e model" d="M186 94H250" marker-end="url(#dg-ev-ahm)"/>
+<path class="e key" d="M462 104H584" marker-end="url(#dg-ev-ahk)"/>
+<path class="e" d="M586 166H484" marker-end="url(#dg-ev-ah)"/>
+<path class="e" d="M310 130V194" marker-end="url(#dg-ev-ah)"/>
+<path class="e" d="M404 196V132" marker-end="url(#dg-ev-ah)"/>
+</svg>
+</div>
+<ul class="dg-legend"><li><i class="key"></i>임시값과 적용 경로</li><li><i class="ok"></i>원본 코드가 기록한 RAM 설정</li><li><i class="model"></i>직접 넣어 준 선택 입력</li></ul>
+</figure>
+
+<p>화면을 초기화하면 저장된 설정값이 기존 값과 임시값 두 곳에 들어갑니다. 그 뒤의 동작은 이벤트에 따라 셋으로 갈립니다.</p>
+<div class="table-wrap"><table class="compact">
+<caption>실행한 12개 사례 (마지막 열은 활성 인덱스 → 뱅크)</caption>
+<thead><tr><th>이벤트를 받은 항목과 이벤트 번호</th><th>기존 값 → 고른 값</th><th>설정 기록</th><th>실행 뒤 저장값</th><th>실행 뒤 임시값</th><th>뱅크</th></tr></thead>
+<tbody>
+<tr><th scope="row">항목 <code>0x0150000A</code>에 이벤트 0, 1, 6, <code>0x10</code>, <code>0x11</code>, <code>0x1D</code>, <code>0x20</code> (7건)</th><td class="nowrap">PEF → DNG</td><td class="nowrap">기록함</td><td>DNG</td><td>DNG</td><td class="nowrap">1 → 0</td></tr>
+<tr><th scope="row">항목 <code>0x0150000A</code>에 이벤트 6</th><td class="nowrap">DNG → PEF</td><td class="nowrap">기록함</td><td>PEF</td><td>PEF</td><td class="nowrap">0 → 0</td></tr>
+<tr><th scope="row">항목 <code>0x0150000A</code>에 이벤트 <code>0x20</code></th><td class="nowrap">DNG → PEF</td><td class="nowrap">기록함</td><td>PEF</td><td>PEF</td><td class="nowrap">2 → 2</td></tr>
+<tr><th scope="row">항목 <code>0x0150000A</code>에 이벤트 3</th><td class="nowrap">DNG → PEF</td><td class="nowrap">안 함</td><td>DNG</td><td>DNG (되돌림)</td><td class="nowrap">2 → 2</td></tr>
+<tr><th scope="row">항목 <code>0x0150000A</code>에 이벤트 <code>0xF</code></th><td class="nowrap">PEF → DNG</td><td class="nowrap">안 함</td><td>PEF</td><td>PEF (되돌림)</td><td class="nowrap">1 → 0</td></tr>
+<tr><th scope="row">다른 항목 <code>0x0150000B</code>에 이벤트 6</th><td class="nowrap">PEF → DNG</td><td class="nowrap">안 함</td><td>PEF</td><td>DNG (그대로 남음)</td><td class="nowrap">1 → 0</td></tr>
+</tbody></table></div>
+<ul>
+<li><strong>적용 이벤트는 일곱 가지입니다.</strong> 0, 1, 6, <code>0x10</code>, <code>0x11</code>, <code>0x1D</code>, <code>0x20</code>에서 임시값을 설정에 기록했습니다. 이 번호를 버튼 이름으로 해석하지 않았습니다.</li>
+<li><strong>취소로 처리되는 이벤트는 3과 <code>0xF</code>입니다.</strong> 설정은 그대로 두고 임시값을 기존 값으로 되돌렸습니다.</li>
+<li><strong>다른 항목 번호로 온 이벤트는 무시됩니다.</strong> 설정도 임시값도 바뀌지 않아, 고른 값이 임시값에 남았습니다.</li>
+<li><strong>고른 뒤 다른 위젯으로 옮겨 가도 임시값은 남습니다.</strong> 모든 사례에서 반대쪽 위젯을 떠나는 동작을 넣었고 임시값은 그대로였습니다.</li>
+<li><strong>기록은 고른 뱅크에만 합니다.</strong> 활성 인덱스 0~7의 뱅크는 0, 0, 2, 3, 4, 5, 6, 7입니다. 현재값과 미러의 해당 뱅크 바이트만 바뀌었고, 표식값을 넣어 둔 다른 뱅크는 그대로였습니다.</li>
+</ul>
+<p>저장값을 위젯 번호로 바꿔 주는 조회 함수도 실행했습니다. 0이면 PEF 위젯, 1이면 DNG 위젯을 돌려주고, 대조로 넣은 값 2에서는 “해당 위젯 없음”을 뜻하는 0을 돌려줬습니다.</p>
+<div class="callout"><strong class="label">참고</strong>
+<p><a href="color-ui.html#state">색공간 메뉴</a>와 견주면 구조는 같고 세부가 다릅니다. 색공간 화면은 취소해도 임시값이 남고 다시 열 때 저장값으로 덮어씁니다. 이 화면은 기존 값을 따로 들고 있다가 취소 이벤트에서 곧바로 되돌립니다. <a href="superresolution-lifecycle.html#menu">Pixel Shift Resolution 메뉴</a>도 고르기와 적용이 나뉘어 있고 같은 설정 쓰기 함수를 씁니다.</p></div>
+
+<details class="evidence"><summary>화면 함수와 설정 쓰기 경로</summary>
+<div class="table-wrap"><table class="compact">
+<caption>화면의 함수 (가상 함수 표 <code>0xA629E4</code>)</caption>
+<thead><tr><th>역할</th><th>공통 진입점</th><th>슬롯</th><th>함수</th></tr></thead>
+<tbody>
+<tr><th scope="row">조회: 저장값 → 위젯</th><td><code>0x6D5EC4</code></td><td><code>+0xBC</code></td><td><code>0x3E54A8</code> (안에서 <code>0x3E53A4</code> 호출)</td></tr>
+<tr><th scope="row">고르기</th><td><code>0x6D5ED0</code></td><td><code>+0xC0</code></td><td><code>0x3E5E84</code></td></tr>
+<tr><th scope="row">위젯 떠나기</th><td><code>0x6D5EDC</code></td><td><code>+0xC4</code></td><td><code>0x3E6030</code></td></tr>
+<tr><th scope="row">항목 이벤트(적용·취소)</th><td><code>0x6D5F00</code></td><td><code>+0xD0</code></td><td><code>0x3E6344</code> → 적용 <code>0x3E6148</code></td></tr>
+</tbody></table></div>
+<div class="table-wrap"><table class="compact">
+<caption>설정 <code>0x97</code>의 위치와 쓰기 경로</caption>
+<thead><tr><th>항목</th><th>값</th></tr></thead>
+<tbody>
+<tr><th scope="row">설정 쓰기</th><td><code>0x6DA5E4</code> → <code>0x6F1A38</code> → <code>0x700E84</code> → <code>0x6FE52C</code>. 마지막 함수가 현재값과 미러에 한 번씩 불립니다.</td></tr>
+<tr><th scope="row">설정 읽기</th><td><code>0x6F1A50</code>. 화면 초기화 구간 <code>0x3E35F0</code>–<code>0x3E3620</code>에서 호출</td></tr>
+<tr><th scope="row">뱅크 표에서 이 설정의 행</th><td><code>0xA52FF0</code> (<code>0xA52680</code> + <code>0x97</code>×16). 뱅크 조회 함수 <code>0x4B14C4</code></td></tr>
+<tr><th scope="row">뱅크 안의 위치</th><td><code>0x588</code> + <code>0x97</code> = <code>0x61F</code>, 뱅크 간격 <code>0x418</code>바이트(1,048바이트)</td></tr>
+<tr><th scope="row">현재값과 미러</th><td>현재값은 설정 객체 <code>+0x14</code>부터, 미러 블록의 주소는 설정 객체 <code>+0xC</code>에 있음. 활성 인덱스는 설정 객체 <code>+0x23C8</code></td></tr>
+</tbody></table></div>
+<p class="small">화면 생성 직후 <code>screen+0xF4</code>와 <code>screen+0xF9</code>는 0입니다. 고른 위젯 번호는 <code>screen+0xD4</code>에도 기록됩니다. 사례별 값은 <a href="ui-resources.json">ui-resources.json</a>의 <code>event_cases</code>에, 구간별 SHA-256은 <code>range_hashes</code>에 있습니다.</p>
+</details>
 </section>
 
-<section aria-labelledby="text"><h2 id="text">3. 텍스트 준비 ABI까지 확인했다</h2>
-<figure><figcaption>도식 2. 리소스 레코드가 글리프 배열로 바뀌는 경로</figcaption><div class="flow" role="group" aria-label="type 4 레코드 조회 뒤 텍스트 객체에 언어 표와 스타일을 기록하고 선택된 언어의 글리프를 16비트 배열로 준비">
-<div class="stage"><strong>0x70A1B8 · 조회</strong><span>실제 위젯 ID로 표 검색<br>0x70A390 → 0x70A0E8<br>0x709000에서 type 4 생성</span></div><div class="arrow" aria-hidden="true">→</div>
-<div class="stage"><strong>0x873B08 · 객체 설정</strong><span>renderer+0x90: 언어 표<br>renderer+0x84: 16비트 스타일<br>이 세 레코드의 스타일은 4</span></div><div class="arrow" aria-hidden="true">→</div>
-<div class="stage"><strong>0x873964 · 글리프 준비</strong><span>언어별 1바이트 / 2바이트 소스<br>16비트 출력과 길이 생성<br>길이에 종료 코드 0 포함</span></div></div>
-<p class="caption">리소스 조회→텍스트 객체 생성은 위젯 래퍼 할당 직전에 멈췄다. 텍스트 준비는 래스터화를 시작하기 전에 멈췄다. 두 구간의 실행 경계를 연결된 전체 LCD 렌더링으로 표현하지 않았다.</p></figure>
-<p>각 리소스에서 언어 인덱스 0, 비어 있는 1바이트 소스인 9, 16비트 소스인 10, 활성 인덱스 10에서 인덱스 0을 강제한 경우를 실행했다. 총 12건의 출력 바이트와 길이를 대조했다. 영문 라벨은 저장 글리프 코드에 <code>0x1E</code>를 더하면 읽을 수 있지만, 전체 글리프를 Unicode나 UTF-16 텍스트라고 단정하지 않았다. 폰트 아틀라스와 LCD 비트맵은 추출하지 않았다. <a href="ui-resources.json">텍스트 사례와 출력 해시</a></p>
-<p>래퍼는 상태에 따라 <code>+0x5C</code> 또는 <code>+0x60</code>의 언어 표를 고르고 <code>+0x64</code>의 스타일을 전달한다. 두 상태를 별도로 실행했으며 화면의 <code>0x3E4630 → 0x82DE2C</code>가 제목의 두 번째 언어 표를 설정하는 것도 확인했다. 따라서 이식에는 문자열 교체뿐 아니라 객체 상태·포인터·길이 규약을 맞추는 작업이 필요하다. <a href="../verify_ui_resources.py">래퍼 상태 대조</a></p>
+<section id="text">
+<h2>메뉴 글자는 리소스에서 글리프 배열로 준비됩니다</h2>
+<p class="takeaway">위젯 번호로 리소스 레코드를 찾아 글자 객체를 만들고, 글자 객체는 언어에 맞는 글리프 데이터를 16비트 배열로 펼칩니다. 두 구간을 각각 실행했고, 화면에 그리는 단계는 실행하지 않았습니다.</p>
+
+<figure class="diagram">
+<figcaption>글자 리소스가 글리프 배열이 되기까지: 실행한 두 구간</figcaption>
+<div class="dg-scroll">
+<svg class="dg" viewBox="0 0 800 262" role="img" aria-labelledby="dg-text-title dg-text-desc">
+<title id="dg-text-title">리소스 레코드에서 글자 객체, 글리프 배열까지의 경로와 실행이 멈춘 지점</title>
+<desc id="dg-text-desc">첫 구간에서는 위젯 번호로 리소스 레코드를 검색하고 글자 객체를 만들어 언어 표 주소와 스타일 값을 기록했습니다. 실행은 위젯 래퍼를 할당하기 직전에 멈췄습니다. 둘째 구간에서는 만들어진 글자 객체에 언어 선택 조건을 주고 글리프 준비 함수를 실행해 16비트 글리프 배열과 길이를 얻었습니다. 글꼴 그리기와 LCD 출력은 실행하지 않았습니다.</desc>
+<defs><marker id="dg-text-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker>
+<marker id="dg-text-aho" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah open" d="M0 0L10 5L0 10z"/></marker>
+<marker id="dg-text-ahm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah model" d="M0 0L10 5L0 10z"/></marker></defs>
+
+<text class="h" x="8" y="20">구간 1 · 리소스에서 글자 객체까지</text>
+<rect class="b" x="8" y="30" width="160" height="72" rx="8"/>
+<text class="t" x="20" y="54">리소스 레코드</text>
+<text class="s" x="20" y="73">위젯 번호 · 종류 4</text>
+<text class="s" x="20" y="91">언어 표 주소</text>
+
+<rect class="b ok" x="196" y="30" width="160" height="72" rx="8"/>
+<text class="t" x="208" y="54">위젯 번호로 검색</text>
+<text class="s mono" x="208" y="73">0x70A1B8</text>
+<text class="s" x="208" y="91">표 0x993334</text>
+
+<rect class="b ok" x="384" y="30" width="200" height="72" rx="8"/>
+<text class="t" x="396" y="54">글자 객체 생성</text>
+<text class="s mono" x="396" y="73">0x709000 → 0x873B08</text>
+<text class="s" x="396" y="91">언어 표와 스타일 4를 기록</text>
+
+<rect class="b open" x="612" y="30" width="180" height="72" rx="8"/>
+<text class="t" x="624" y="54">위젯 래퍼 할당</text>
+<text class="s" x="624" y="73">이 직전에 실행을 멈춤</text>
+
+<text class="n end" x="474" y="126">만들어진 글자 객체를 입력으로 사용</text>
+
+<text class="h" x="8" y="160">구간 2 · 글리프 배열까지</text>
+<rect class="b model" x="8" y="170" width="160" height="72" rx="8"/>
+<text class="t" x="20" y="194">언어 선택 조건</text>
+<text class="s" x="20" y="213">활성 인덱스 0 · 9 · 10</text>
+<text class="s" x="20" y="231">인덱스 0 강제 플래그</text>
+
+<rect class="b ok" x="196" y="170" width="188" height="72" rx="8"/>
+<text class="t" x="208" y="194">글리프 준비</text>
+<text class="s mono" x="208" y="213">0x873A1C → 0x873964</text>
+<text class="s" x="208" y="231">1바이트·2바이트 소스</text>
+
+<rect class="b key" x="412" y="170" width="172" height="72" rx="8"/>
+<text class="t" x="424" y="194">16비트 글리프 배열</text>
+<text class="s" x="424" y="213">길이에 끝 표시 0 포함</text>
+
+<rect class="b open" x="612" y="170" width="180" height="72" rx="8"/>
+<text class="t" x="624" y="194">글꼴 그리기 · LCD</text>
+<text class="s" x="624" y="213">실행하지 않음</text>
+
+<path class="e" d="M168 66H194" marker-end="url(#dg-text-ah)"/>
+<path class="e" d="M356 66H382" marker-end="url(#dg-text-ah)"/>
+<path class="e open" d="M584 66H610" marker-end="url(#dg-text-aho)"/>
+<path class="e" d="M484 102V134H290V168" marker-end="url(#dg-text-ah)"/>
+<path class="e model" d="M168 206H194" marker-end="url(#dg-text-ahm)"/>
+<path class="e" d="M384 206H410" marker-end="url(#dg-text-ah)"/>
+<path class="e open" d="M584 206H610" marker-end="url(#dg-text-aho)"/>
+</svg>
+</div>
+<ul class="dg-legend"><li><i class="ok"></i>원본 코드 실행으로 확인</li><li><i class="key"></i>얻은 결과</li><li><i class="model"></i>시험용으로 정한 조건</li><li><i class="open"></i>실행하지 않은 부분</li></ul>
+</figure>
+
+<h3>글자 객체에 들어가는 값</h3>
+<p>리소스 레코드는 20바이트이고, 위젯 번호, 종류(4), 언어 표 주소, 3, 0 순서로 들어 있습니다. 글자 객체가 만들어지면 객체의 <code>+0x90</code>에 언어 표 주소가, <code>+0x84</code>에 16비트 스타일 값이 기록됩니다. 세 레코드의 스타일 값은 모두 4였습니다.</p>
+
+<h3>언어에 따라 달라지는 글리프 준비</h3>
+<p>준비 함수는 활성 언어 인덱스로 언어 표의 한 칸을 고릅니다. 언어마다 글리프 데이터가 1바이트 단위인지 2바이트 단위인지는 별도의 표가 정합니다. 어느 쪽이든 결과는 16비트 배열이고, 길이에는 끝 표시(0)가 포함됩니다. 글자 객체의 <code>+0xAC</code>가 0이 아니면 활성 언어와 상관없이 인덱스 0을 씁니다.</p>
+<div class="table-wrap"><table>
+<caption>글리프 준비 12건: 준비된 16비트 단위 수(끝 표시 포함)</caption>
+<thead><tr><th>문구</th><th class="n">언어 인덱스 0<br>(1바이트 소스)</th><th class="n">언어 인덱스 9<br>(1바이트 소스, 빈 문구)</th><th class="n">언어 인덱스 10<br>(2바이트 소스)</th><th class="n">인덱스 10에서<br>인덱스 0 강제</th></tr></thead>
+<tbody>
+<tr><th scope="row">RAW File Format</th><td class="n">16</td><td class="n">1</td><td class="n">10</td><td class="n">16</td></tr>
+<tr><th scope="row">PEF</th><td class="n">4</td><td class="n">1</td><td class="n">4</td><td class="n">4</td></tr>
+<tr><th scope="row">DNG</th><td class="n">4</td><td class="n">1</td><td class="n">4</td><td class="n">4</td></tr>
+</tbody></table></div>
+<p>인덱스 0의 영어 문구는 글리프 코드에 <code>0x1E</code>를 더하면 ASCII 문자로 읽힙니다. 이렇게 읽은 결과가 RAW File Format, PEF, DNG입니다. 인덱스 9에서는 세 문구 모두 비어 있어 끝 표시 하나만 나왔습니다. 인덱스 9와 10이 어느 언어인지는 확인하지 않았습니다.</p>
+<div class="callout warn"><strong class="label">주의</strong>
+<p>글리프 코드를 Unicode나 UTF-16 문자열이라고 단정하지 않습니다. 영어 문구에서 <code>0x1E</code>를 더하는 규칙이 맞았을 뿐입니다. 글꼴 데이터와 LCD 비트맵은 추출하지 않았습니다.</p></div>
+
+<h3>래퍼는 상태에 따라 언어 표를 바꿉니다</h3>
+<p>위젯 래퍼는 언어 표 주소를 두 개(<code>+0x5C</code>, <code>+0x60</code>) 들고 있다가 상태에 따라 하나를 골라 글자 객체에 넣습니다. 스타일 값(<code>+0x64</code>)도 함께 넘깁니다. 상태 0과 1을 따로 실행해 각각 첫째와 둘째 언어 표가 선택되는 것을 확인했습니다. 화면을 만드는 코드가 제목 래퍼의 둘째 언어 표에 RAW File Format의 언어 표를 넣는 것도 확인했습니다.</p>
+<p>그래서 다른 기종의 메뉴를 옮겨 오려면 문구만 바꿔서는 안 됩니다. 객체의 상태, 포인터가 놓이는 자리, 길이를 세는 방식까지 맞춰야 합니다.</p>
+
+<details class="evidence"><summary>글자 준비에 쓰인 위치와 12건의 소스</summary>
+<div class="table-wrap"><table class="compact">
+<thead><tr><th>항목</th><th>위치 또는 값</th></tr></thead>
+<tbody>
+<tr><th scope="row">리소스 검색과 객체 생성</th><td><code>0x70A1B8</code> → <code>0x70A390</code> → <code>0x70A0E8</code> → <code>0x709000</code>(type 4 생성) → <code>0x873B08</code>(객체 설정)</td></tr>
+<tr><th scope="row">화면 설정 코드</th><td>RAW File Format <code>0x3E4320</code>, PEF <code>0x3E4368</code>, DNG <code>0x3E4380</code></td></tr>
+<tr><th scope="row">글자 객체의 가상 함수 표</th><td><code>0xA5D1AC</code>, 슬롯 <code>+0xC</code>가 준비 진입 <code>0x873A1C</code>, 준비 함수 <code>0x873964</code></td></tr>
+<tr><th scope="row">글자 객체의 필드</th><td><code>renderer+0x90</code> 언어 표 주소, <code>renderer+0x84</code> 16비트 스타일, <code>renderer+0xAC</code> 인덱스 0 강제 플래그</td></tr>
+<tr><th scope="row">언어별 단위 표</th><td><code>0xDDDB88</code>. 언어마다 1바이트이고, 0이 아니면 1바이트 소스</td></tr>
+<tr><th scope="row">준비 결과</th><td>배열 주소(<code>+0</code>)와 16비트 단위 수(<code>+4</code>)</td></tr>
+<tr><th scope="row">래퍼의 필드와 함수</th><td><code>+0x5C</code>·<code>+0x60</code> 언어 표, <code>+0x64</code> 스타일. 첫째 표 설정 <code>0x82DE20</code>, 둘째 표 설정 <code>0x82DE2C</code>(둘 다 넘긴 주소가 0이면 쓰지 않음), 상태 선택 <code>0x82DE38</code>. 화면의 <code>0x3E4630</code> → <code>0x82DE2C</code>가 제목의 둘째 언어 표를 설정</td></tr>
+<tr><th scope="row">같은 언어 표를 쓰는 다른 레코드</th><td><code>0x9938E8</code>의 type 3 레코드(위젯 <code>0x01500049</code>)도 언어 표 <code>0xE3FE34</code>를 가리킴</td></tr>
+<tr><th scope="row">검증용 대체</th><td>할당 함수 <code>0x712828</code>·<code>0x712860</code>, 화면 갱신 함수 <code>0x3E31E8</code>, <code>0x3E3370</code>, <code>0x51F4A8</code>, <code>0x3E2C9C</code>, <code>0x708774</code></td></tr>
+</tbody></table></div>
+<div class="table-wrap"><table class="compact">
+<caption>글리프 소스의 위치</caption>
+<thead><tr><th>문구</th><th>언어 인덱스 0</th><th>언어 인덱스 9</th><th>언어 인덱스 10</th></tr></thead>
+<tbody>
+<tr><th scope="row">RAW File Format</th><td><code>0xE4C7C5</code></td><td><code>0xE09DF6</code></td><td><code>0xE0AF48</code></td></tr>
+<tr><th scope="row">PEF</th><td><code>0xE4C7D5</code></td><td><code>0xE09DF7</code></td><td><code>0xE0AF5C</code></td></tr>
+<tr><th scope="row">DNG</th><td><code>0xE4C7D9</code></td><td><code>0xE09DF8</code></td><td><code>0xE0AF64</code></td></tr>
+</tbody></table></div>
+<p class="small">준비된 배열의 SHA-256은 <a href="ui-resources.json">ui-resources.json</a>의 <code>text_cases</code>에 있습니다. 해시에는 끝 표시가 포함됩니다.</p>
+</details>
 </section>
 
-<section aria-labelledby="reproduce"><h2 id="reproduce">4. 기능 대응은 확인했고, 기종 간 실행은 남아 있다</h2>
+<section id="limits">
+<h2>한계와 남은 과제</h2>
+<ul>
+<li><strong>입력</strong> — 이벤트 번호를 화면의 가상 함수에 직접 전달했습니다. 버튼을 누른 시험이 아니고, 이벤트 번호가 어느 버튼인지도 모릅니다.</li>
+<li><strong>표시</strong> — 리소스 검색에서 글자 객체 생성까지, 글자 객체에서 글리프 배열까지를 각각 실행했습니다. 두 구간을 이어 화면 전체를 그린 것이 아닙니다. 글꼴 그리기와 LCD 출력은 실행하지 않았습니다.</li>
+<li><strong>저장과 효과</strong> — RAM의 현재값과 미러까지만 확인했습니다. 플래시 저장은 <a href="settings-storage.html#save">보존 섹터의 설정 저장</a>에서 따로 다루며, 그 검증에서 PEF를 DNG로 바꾼 설정이 섹터 쓰기 요청에 도달했습니다. 이 설정이 실제 RAW 파일 기록을 어떻게 바꾸는지는 이 문서의 범위가 아닙니다.</li>
+<li><strong>다른 기종</strong> — K-3 III와 Q7의 번호와 글자 준비 방식은 이 결과로 대신할 수 없습니다. 지금은 기능 대응표를 바탕으로 각 기종의 고르기·적용 규칙을 비교하는 단계입니다. 메뉴를 옮겨 실행하거나 펌웨어를 고친 적은 없습니다. 세 기종 비교는 <a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/ui-port-contract.html">K-3 III 저장소의 UI 이식 설계</a>에 있습니다.</li>
+</ul>
+</section>
+
+<section id="reproduce">
+<h2>재현 방법</h2>
+<p>검증기는 복호화한 펌웨어 파일 <code>decoded.bin</code>을 입력으로 받습니다(<a href="firmware-structure.html">펌웨어 파일 구조와 복호화</a>). 에뮬레이터는 Unicorn 2.1.4입니다.</p>
 <pre><code>python verify_ui_resources.py decoded.bin --compare analysis/ui-resources.json
 python -m unittest discover -s tests -v
 python verify_publication.py</code></pre>
-<p>검증은 Unicorn 2.1.4와 동일한 K-3 II v1.12 해제본을 사용한다. 힙 할당, 일부 화면 갱신, 위젯 조회·알림 콜백을 합성 경계로 제공했다. 리소스 검색, 텍스트 준비, 가상 디스패처, 설정 뱅크 계산과 RAM 쓰기는 원본 명령으로 실행했다. 코디네이터가 결과 스냅샷을 다시 실행해 일치를 확인했다. <a href="ui-resources.json">입력 해시·구간 해시·제한</a></p>
-<p>K-3 III·Q7의 수치 ID와 텍스트 ABI를 이 결과로 대신할 수 없다. 기능별 대응표를 바탕으로 각 기종의 선택·적용 계약을 비교하는 단계이며, 전송한 UI의 실행, 물리 입력, LCD 출력, 영구 저장은 미검증이다. 실제 이식이나 펌웨어 패치를 적용하지 않았다. <a href="hq-status.json">UI 연구 상태와 다음 작업</a></p>
-</section></main><footer>K-3 II v1.12 · <a href="installation.html">업데이트 전송·오류 처리</a> · <a href="../README.md">저장소 안내</a></footer></body></html>
+<p>첫 명령은 리소스 레코드, 분기, 가상 함수 표를 파일 바이트로 확인한 뒤 원본 코드를 실행합니다. 리소스 검색, 글리프 준비, 화면의 가상 함수, 뱅크 계산, RAM 쓰기는 원본 명령으로 실행하고, 결과가 저장소의 <code>ui-resources.json</code>과 다르면 실패합니다. 나머지 두 명령은 펌웨어 없이 돌아가는 단위 테스트와 문서 검사입니다.</p>
+</section>
+
+<section id="refs">
+<h2>근거 파일과 참고 자료</h2>
+<ul class="refs">
+<li><a href="ui-resources.json">ui-resources.json</a> — 화면·설정·글자 객체의 위치, 이벤트 12건, 글리프 준비 12건, 구간 해시, 검증 한계</li>
+<li><a href="../verify_ui_resources.py">verify_ui_resources.py</a> — 표·분기 확인과 에뮬레이터 실행 코드</li>
+<li><a href="color-ui.html">색공간 메뉴와 표시</a> — 같은 설정 쓰기 함수와 글리프 준비 함수를 쓰는 메뉴</li>
+<li><a href="superresolution-lifecycle.html#menu">Pixel Shift 메뉴와 버퍼 수명</a> — 고르기와 적용이 나뉜 또 다른 메뉴</li>
+<li><a href="settings-storage.html">보존 섹터의 설정 저장</a> — RAM 설정이 섹터 쓰기 요청으로 이어지는 조건</li>
+<li><a href="hq-status.json">hq-status.json</a> — 연구 목표별 진행 상태</li>
+<li>외부 자료: <a href="https://www.ricoh-imaging.co.jp/english/support/man-pdf/k-3-2.pdf">PENTAX K-3 II 사용 설명서(영문 PDF)</a> — 메뉴 목록 20쪽, Image Capture Settings 37쪽, DNG 허락 표시 109쪽 · <a href="https://www.ricoh-imaging.co.jp/japan/support/pdf/k-3-3_09.pdf">리코 K-3 Mark III 메뉴 대비표(K-3 II, 일본어 PDF)</a> · <a href="https://www.ricoh-imaging.co.jp/japan/support/product_support_k-3-3_correlation_table.html">대비표 안내 페이지</a> · <a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000188.shtml">미국 의회도서관: Adobe Digital Negative (DNG)</a></li>
+</ul>
+</section>
+
+</main>
+</div>
+<!-- chrome:bottom -->
+<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">메뉴와 UI — 이 주제의 문서</h2><ol><li><a href="guide-ui.html">메뉴·UI 안내</a></li><li><a href="color-ui.html">색공간 메뉴와 표시</a></li><li><a href="ui-resources.html" aria-current="page">RAW 형식 메뉴와 텍스트</a></li><li><a href="ui-dispatch.html">색공간 메뉴 알림과 화면 전환</a></li></ol></nav>
+<nav class="pager" aria-label="이전·다음 문서"><a class="prev" href="color-ui.html"><small>← 이전</small>색공간 메뉴와 표시</a><a class="next" href="ui-dispatch.html"><small>다음 →</small>색공간 메뉴 알림과 화면 전환</a></nav>
+<footer class="sitefoot"><div class="sitefoot-in"><nav aria-label="사이트"><a href="../index.html#map">문서 지도</a><a href="../index.html#levels">검증 수준 읽는 법</a><a href="../glossary.html">용어집</a><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/research-program.html">세 기종 연구 본부</a><a href="https://github.com/yunhyok/pentax-k3ii-firmware-analysis">GitHub 저장소</a></nav><p>PENTAX K-3 II 펌웨어 1.12 분석 문서. PC에서 수행한 정적 분석과 에뮬레이션 결과이며, 카메라 실기에서 검증한 내용이 아닙니다. 원본 펌웨어와 복호화한 바이너리는 포함하지 않습니다.</p></div></footer>
+<!-- /chrome:bottom -->
+</body>
+</html>

@@ -1,4 +1,4 @@
-"""Check offline HTML links, evidence consistency, and the public file boundary.
+"""Check offline HTML links, shared navigation, evidence consistency, and the public file boundary.
 
 SPDX-License-Identifier: GPL-2.0-only
 """
@@ -7,6 +7,7 @@ from hashlib import sha256
 import json
 from pathlib import Path
 import subprocess
+import sys
 from urllib.parse import unquote, urlsplit
 import xml.etree.ElementTree as ET
 
@@ -34,16 +35,23 @@ class Document(HTMLParser):
 
 def main():
     root = Path(__file__).resolve().parent
+    sys.path.insert(0, str(root / "tools"))
+    from site_chrome import Site
+    site = Site()
     files = subprocess.check_output(["git", "ls-files", "--cached", "--others", "--exclude-standard"], cwd=root, text=True).splitlines()
     documents = {root / name: Document((root / name).read_text(encoding="utf-8"))
                  for name in files if name.endswith(".html")}
-    text = (root / "index.html").read_text(encoding="utf-8")
+    text = (root / "analysis/firmware-structure.html").read_text(encoding="utf-8")
     local = 0
     for source, doc in documents.items():
         assert doc.lang == "ko" and doc.tags.count("h1") == 1 and doc.tags.count("main") == 1, source
         assert len(doc.ids) == len(set(doc.ids)), f"duplicate HTML IDs: {source}"
         body = source.read_text(encoding="utf-8")
-        assert "{{" not in body and "<!-- HUMANIZE" not in body, source
+        assert "{{" not in body and "<!-- HUMANIZE" not in body and "STUB-PLACEHOLDER" not in body, source
+        name = source.relative_to(root).as_posix()
+        assert name in site.index, f"{name} is not listed in site-map.json"
+        assert "assets/site.css" in body, f"{name} must link the shared stylesheet"
+        assert site.render(name, body) == body, f"{name}: navigation is stale; run python tools/site_chrome.py"
         for link in doc.links:
             url = urlsplit(link)
             if url.scheme or url.netloc:

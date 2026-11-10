@@ -1,58 +1,253 @@
 <!doctype html>
 <html lang="ko">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="PENTAX K-3 II v1.12 펌웨어의 난독화 해제, Cortex-A9 시작 경로, 주소 검증과 후속 분석 계획."><title>PENTAX K-3 II — 펌웨어 분석 01</title><link rel="stylesheet" href="assets/report.css"></head>
-<body>
-<header><div class="eyebrow">PENTAX K-3 II · FIRMWARE 1.12 · 2026-11-07</div><h1>바이너리에서 시작하는<br>K-3 II 펌웨어 분석</h1><p class="lead">K-3 II v1.12 펌웨어의 식별, 난독화 해제, 시작 코드 검증을 마쳤다. 첨부 파일은 리코 공식 배포본과 전체 바이트가 같고, Python으로 해제한 결과도 기존 JavaScript 디코더와 일치한다. 시작 코드에서 Cortex-A9 부품 번호를 검사하는 경로를 확인했다. 정확한 SoC 부품번호와 실기 동작은 아직 확인하지 않았다.</p><nav aria-label="보고서 목차"><a href="#identity">파일 식별</a><a href="#format">파일 구조</a><a href="#cpu">CPU·주소</a><a href="#seeds">다음 추적 지점</a><a href="#comparison">세대 비교</a><a href="#reproduce">재현</a><a href="#sources">출처·범위</a></nav></header>
-<main>
-<p class="note"><strong>보존 레코드 상위 명령:</strong> <a href="analysis/preserved-dispatch.html">작업 계획·원본 포인터 복사·갱신 조건과 별도 패킷 전달</a>. 실제 실행 구간과 준비한 계산·대기 결과, 생략한 상태 검사·동기화를 구분했다.</p>
-<p class="note"><strong>정책 플래그 생산자:</strong> <a href="analysis/preserved-config.html">원본 보존 레코드 검사 → 설정 +0xC·+0xD → 같은 객체의 초기 촬영 정책</a>. 초기화 5건과 갱신 3건에서 두 검사 결과를 독립적으로 대조했다.</p>
-<p class="note"><strong>보존 영역의 정책 입력:</strong> <a href="analysis/preserved-sector20.html">섹터 20·21의 적재·픽셀 초기 플래그·패킷 수정과 저장 준비</a>. 세 공급자의 인접 영역과 전체 128 KiB 전달을 원본 실행으로 확인했다.</p>
-<p class="note"><strong>저장 레코드 후속:</strong> <a href="analysis/store-image-records.html">JPEG 완료 길이·내장 레코드 재사용·StoreImage 요청 별칭</a>. 세 계열의 7개 전달 조건과 분리·공유 출력의 두 연결 사례를 검증했다.</p>
-<p class="note"><strong>촬영 준비 연속 실행:</strong> <a href="analysis/capture-prepare.html">아홉 호출과 정책 입력의 생산</a>. 중간 호출을 생략하지 않은 21건, 앞부분 분기 21건과 실제 함수 반환 세 건을 검증했다.</p>
-<p class="note"><strong>픽셀 보정 활성값 후속:</strong> <a href="analysis/pixel-policy.html">원본 정책의 표 조회·해제 우선순위·작업 준비 함수의 호출 생략</a>. 정책 직접 호출과 SuperResolution 준비 분기를 구분했다.</p>
-<p class="note"><strong>픽셀 보정 후속:</strong> <a href="analysis/pixel-records.html">보존 섹터 15~19·촬영 패킷·같은 버퍼의 순차 수정</a>. 적재 캐시와 무효 설명자, 섹터 저장 요청까지 원본 실행으로 검증했다. <a href="analysis/pixel-records.html#coordinate-boundary">별도 좌표 경계 대조</a>는 중심 검사와 이웃 주소 계산을 구분한다.</p>
-<p class="note"><strong>보존 영역 후속:</strong> <a href="analysis/preserved-record.html">섹터 14의 등록 객체·32바이트 사본·진단 인수·저장 요청</a>. 메시지로 바뀐 애플리케이션 사본과 저장용 RAM을 구분했다.</p>
-<p class="note"><strong>메뉴 알림 후속:</strong> <a href="analysis/ui-dispatch.html">필터 값 생산·대기 요청·원본 전환 함수의 화면 할당 경계</a>. 같은 앱과 상태 제공자로 연결하고 주입한 작업 재개 값은 구분했다.</p>
-<p class="note"><strong>AF 입력 후속:</strong> <a href="analysis/af-input.html">카운터·보정값 생산자와 같은 객체의 구동 준비 전달</a>. 원본 생성자의 타이머·UDC 연결과 16비트 계산 경계를 확인했다.</p>
-<p class="note"><strong>C 재컴파일 후속:</strong> <a href="analysis/tone-rebuild.html">64바이트 톤 보간 함수와 원본 호출자의 연결 검증</a>. 수치 일치와 레지스터 보존을 확인하고 조건 플래그 차이의 적용 범위를 구분했다.</p>
-<p class="note"><strong>색 공간·설정 저장 후속:</strong> <a href="analysis/color-ui.html">sRGB·AdobeRGB 입력·임시값·확정·취소와 표시</a> · <a href="analysis/settings-storage.html">보존 섹터의 복사본 선택과 반대 섹터 쓰기 요청</a>. 같은 값의 RAM 기록과 실제 섹터 요청을 구분했다.</p>
-<p class="note"><strong>수정·이식 선행 연구:</strong> <a href="analysis/installation.html">업데이트 전송과 기록 오류</a> · <a href="analysis/ui-resources.html">RAW 형식 메뉴와 텍스트 ABI</a> · <a href="analysis/af-control.html">AF 요청 계산과 구동 준비</a> · <a href="analysis/rebuild.html">무손실 재포장과 원본 업데이트 검사</a> · <a href="analysis/af-drive.html">렌즈 능력 응답과 AF 구동 선택</a> · <a href="analysis/hq-status.json">목표별 검증 상태</a>.</p>
-<p class="note"><strong>최신 Pixel Shift·버퍼 수명 분석:</strong> <a href="analysis/superresolution-lifecycle.html">실제 메뉴→SuperResolution 선택, 슬롯 4·17의 할당·반환, 공통 스케일러 활성값</a>. 원본 실행으로 확인한 규칙과 실기 촬영 이력을 구분했다.</p>
-<p class="note"><strong>마스크 CPP 분석:</strong> <a href="analysis/masked-cpp-analysis.html">보조 JPEG 입력·조건부 주소 공유·RAW 현상 메뉴와 작업 모드 생산자</a>. 실제 활성 조건과 합성 실행으로만 확인한 연결을 구분했다.</p>
-<p class="note"><strong>앞선 백엔드 B·CPP 분석:</strong> <a href="analysis/backend-b-cpp-analysis.html">B의 SD·ADMA 연결과 모듈 17 합성→스케일러·JPEG 버퍼</a>. 기본 분기의 주소 공유와 마스크 분기의 미확정 경계를 구분했다.</p>
-<p class="note"><strong>앞선 저장 경로 분석:</strong> <a href="analysis/storage-dma-analysis.html">파일시스템→SD 명령·ADMA2와 대체 버퍼</a>. 전체·부분 섹터, CSD 용량, 대규모 요청 분할, CPP·JPEG 대체 분기를 원본 명령으로 검증했다.</p>
-<p class="note"><strong>앞선 버퍼·메뉴 결과:</strong> <a href="analysis/output-menu-analysis.html">JPEG 버퍼→Exif·파일시스템 전달과 실제 Reversal Film 메뉴 이벤트</a>를 연결했다. 조건부 경로와 원본 명령 실행 결과를 도식으로 정리했다.</p>
-<p class="note">후속 분석: <a href="analysis/pipeline-analysis.html">RAW 이후 경로·selector=6·WB·색 행렬·클리핑</a>을 원본 명령으로 검증했다.</p>
-<p class="note"><strong>2026-11-08 후속 결과:</strong> 보조 ISA와 RAW·톤·감마 코드 추적, 원본 명령 실행 검증을 추가했다. <a href="analysis/deep-analysis.html">심층 분석 보고서 읽기</a>. 아래 문서는 2026-11-07의 초기 분석 범위를 기록한다.</p>
-<section aria-labelledby="method"><h2 id="method">같은 조사 절차, 별도의 검증</h2><p>K-3 Mark III에서 사용한 파일 식별 → 형식 확인 → 디코딩 → 주소·코드 대조 → 재현 검증 순서를 따랐다. K-3 II는 별도 프로젝트로 관리한다. K-3 III의 적재 주소, 명령 표, 영상처리 레지스터와 계수는 가져오지 않았다.</p>
-<figure aria-label="공식 파일 식별에서 독립 디코더 대조를 거쳐 코드 근거를 확인하는 분석 흐름"><figcaption>01 / 분석의 흐름</figcaption><div class="flow"><div class="stage"><strong>공식 배포본과 대조</strong><span>ZIP 구성원·SHA-256<br>전체 바이트 동일성</span></div><div class="arrow" aria-hidden="true">→</div><div class="stage"><strong>XOR 난독화 해제</strong><span>Python ↔ 기존 JavaScript<br>전체 출력 바이트 대조</span></div><div class="arrow" aria-hidden="true">→</div><div class="stage"><strong>코드·주소 검증</strong><span>예외 벡터·MIDR 비교<br>문자열·데이터 포인터</span></div></div><p class="caption">K-3 III의 결과를 전제하지 않고, 단계마다 K-3 II 파일의 근거를 확인했다.</p></figure></section>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PENTAX K-3 II 펌웨어 연구 — 개요</title>
+<meta name="description" content="PENTAX K-3 II 펌웨어 1.12를 분석한 연구 기록의 입구입니다. 펌웨어 파일의 구조, 네 가지 연구 목표가 어디까지 왔는지, 각 결과를 얼마나 믿을 수 있는지 안내합니다.">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-camera="k3ii">
+<!-- chrome:top -->
+<a class="skip" href="#main">본문 바로가기</a>
+<div class="topbar"><div class="topbar-in"><a class="brand" href="index.html">PENTAX <b>펌웨어 연구</b></a><div class="cams" aria-label="기종 선택"><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/">K-3 III</a><a href="index.html" aria-current="true">K-3 II</a><a href="https://yunhyok.github.io/pentax-q7-firmware-analysis/">Q7</a></div><nav class="topnav" aria-label="주제"><a href="index.html" aria-current="true">개요</a><a href="analysis/guide-pipeline.html">영상 처리</a><a href="analysis/guide-capture.html">촬영·보존 레코드</a><a href="analysis/guide-rebuild.html">재구축·업데이트</a><a href="analysis/guide-af.html">AF</a><a href="analysis/guide-ui.html">UI</a></nav></div></div>
+<nav class="crumbs" aria-label="현재 위치"><ol><li><a href="index.html">PENTAX K-3 II</a></li></ol></nav>
+<!-- /chrome:top -->
+<header class="hero">
+<div>
+<p class="eyebrow">PENTAX K-3 II · 펌웨어 1.12</p>
+<h1>K-3 II 펌웨어를 바이너리에서부터 읽은 기록</h1>
+<p class="lead">리코가 배포한 펌웨어 파일의 난독화를 풀고, 사진 한 장이 만들어져 카드에 저장되기까지의 경로와 메뉴·AF·업데이트 코드를 추적했습니다. 무엇을 알아냈고 무엇은 아직 모르는지 근거와 함께 적었습니다.</p>
+<div class="notice">
+<p><strong>먼저 알아 둘 점</strong></p>
+<p>모든 분석은 PC에서 했습니다. 수정한 펌웨어를 카메라에 설치하거나 실행한 적이 없습니다. 이 저장소에는 카메라에 넣을 수 있는 펌웨어가 없으며, 원본 펌웨어와 난독화를 푼 바이너리도 들어 있지 않습니다.</p>
+</div>
+</div>
+<figure class="photo">
+<img src="assets/photos/pentax-k3ii.jpg" alt="렌즈를 장착한 검은색 PENTAX K-3 II를 앞쪽 위에서 본 모습" width="1200" height="1200">
+<figcaption><span class="credit">사진: © Jörgens.Mi/Wikipedia, <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>, <a href="https://commons.wikimedia.org/wiki/File:Pentax_K3-II_jm37903.jpg">Wikimedia Commons</a> (크기 축소)</span></figcaption>
+</figure>
+</header>
 
-<section aria-labelledby="identity"><h2 id="identity">1. 분석 대상과 동일성</h2><p>첨부 파일의 크기는 16,838,656바이트다. 리코의 공식 ZIP에 들어 있는 파일과 SHA-256 및 전체 바이트가 일치한다. 평문 헤더에는 PENTAX K-3 II와 Version 1.12가 들어 있다. 이 대조는 내려받은 공식 파일과의 동일성을 확인한 것이며, 제조사 전자서명을 검증한 결과는 아니다.</p><p class="caption">근거: <a href="analysis/official-package.json">공식 ZIP 대조</a> · <a href="analysis/inventory.json">헤더·구간 인벤토리</a> · <a href="https://www.ricoh-imaging.co.jp/english/support/digital/k3_2.html">리코 v1.12 안내</a></p>
-<div class="table-scroll"><table><thead><tr><th scope="col">항목</th><th scope="col">관찰값</th></tr></thead><tbody><tr><th scope="row">파일·버전</th><td><code>fwdc230b.bin</code> · <code>Version 1.12</code></td></tr><tr><th scope="row">공식 배포일</th><td>2021-07-20</td></tr><tr><th scope="row">원본·해제본 크기</th><td>각 16,838,656바이트 (16 MiB + 60 KiB)</td></tr><tr><th scope="row">원본 SHA-256</th><td class="hash"><code>a33485f351019960192891ef69ddc5d4904ef9e298671d9d9955679e4c901a9a</code></td></tr><tr><th scope="row">해제본 SHA-256</th><td class="hash"><code>1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc</code></td></tr></tbody></table></div></section>
+<main class="home" id="main">
 
-<section aria-labelledby="format"><h2 id="format">2. 파일 구조와 난독화 해제</h2><p>이 파일은 0x80바이트 블록 단위의 32비트 little-endian XOR 방식으로 난독화되어 있다. 두 헤더에서 얻은 초기값으로 세 구간을 해제했다. 결과의 길이와 파일 오프셋은 원본과 같다. 이번 단계에서는 압축 해제가 필요하지 않았다. 해제된 내부 구간에 다른 압축 데이터가 존재하는지는 별도 조사 대상이다.</p>
-<figure><figcaption>02 / 파일 오프셋으로 보는 해제 구간 <span class="tag">도식의 높이는 크기에 비례하지 않음</span></figcaption><div class="map"><div class="range">0x00000000<br>→ 0x00000100</div><div><strong>XOR 구간 A · 256바이트</strong><br>해제 후 ARM 예외 벡터가 나타난다. 초기값은 주 헤더 <code>0x100</code>에서 읽는다.</div><div class="range">0x00000100<br>→ 0x00000200</div><div><strong>평문 주 헤더 · 256바이트</strong><br><code>PENTAX K-3 II</code>, <code>Version 1.12</code>, 모델 식별자</div><div class="range">0x00000200<br>→ 0x01000000</div><div><strong>XOR 구간 B · 16,776,704바이트</strong><br>시작 코드, 코드·문자열·리소스가 섞인 주 영역</div><div class="range">0x01000000<br>→ 0x01000080</div><div><strong>평문 보조 헤더 · 128바이트</strong><br>별도 초기값, <code>PENTAX K-3MC</code></div><div class="range">0x01000080<br>→ 0x0100F000</div><div><strong>XOR 구간 C · 61,312바이트</strong><br>보조 영역. CPU와 기능은 미분류.</div></div><p class="caption">구간 끝은 모두 미포함이다. 여기의 주소는 런타임 주소가 아닌 파일 오프셋이다. <a href="analysis/inventory.json">구간 근거</a></p></figure>
-<p>0x01000000부터 파일 끝까지는 61,440바이트다. 이 구간에는 별도 초기값과 PENTAX K-3MC 헤더가 있다. 독립된 해제 구간이라는 사실은 확인했지만 담당 기능과 명령어 집합은 미확정이다. 이름의 MC만으로 기계 제어용 프로세서라고 단정하지 않는다.</p><p>해제 전후 길이가 같고 기존 디코더와 모든 바이트가 일치했다. 이 파일에 적용한 분기는 압축 해제를 호출하지 않는다. <a href="analysis/decoder-comparison.json">독립 구현 대조 결과</a> · <a href="inspect_firmware.py">Python 검사기</a></p>
-<figure><figcaption>03 / 해제 후의 바이트 분포</figcaption><picture><source media="(max-width: 640px)" srcset="assets/entropy-mobile.svg"><img src="assets/entropy.svg" width="1000" height="300" style="width:100%;height:auto" alt="해제된 파일을 64 KiB씩 나눠 계산한 Shannon 엔트로피. 코드와 리소스 구간은 값이 높고 후반의 반복 바이트 구간은 0에 가까워진다."></picture><p class="caption">단위는 bit/byte, 창 크기는 65,536바이트다. 전체 해제본의 엔트로피는 5.757986이다. 엔트로피만으로 압축·암호화·실행 코드를 판별하지 않는다. <a href="analysis/findings.json">원시 측정값</a></p></figure></section>
+<section class="band wrap" id="goals">
+<h2>이 연구가 답하려는 네 가지 질문</h2>
+<p class="sub">세 기종(K-3 Mark III, K-3 II, Q7)을 같은 질문으로 조사하고 있습니다. 아래는 K-3 II에서 지금까지 온 지점입니다. 세 기종을 나란히 비교한 표는 <a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/research-program.html">세 기종 연구 본부</a>에 있습니다.</p>
+<ul class="cards wide">
+<li class="card goal">
+<span class="tag">목표 1</span>
+<h3><a href="analysis/guide-rebuild.html">펌웨어를 고쳐서 다시 만들 수 있는가</a></h3>
+<p class="state">파일을 다시 만드는 단계까지 확인</p>
+<dl>
+<dt>알아낸 것</dt><dd>난독화를 풀었다가 다시 걸면 배포본과 바이트까지 같습니다. 톤 보간 함수 하나를 C로 다시 짜서 원본 호출 코드와 맞춰 봤고 출력이 일치했습니다. 업데이트의 전송·기록 오류 처리도 원본 코드로 따라갔습니다.</dd>
+<dt>아직 모르는 것</dt><dd>카메라가 수정한 파일을 받아들이는지, 부팅하는지. 플래시에 실제로 기록되는 과정.</dd>
+</dl>
+</li>
+<li class="card goal">
+<span class="tag">목표 2</span>
+<h3><a href="analysis/guide-pipeline.html">카메라의 색은 어떻게 만들어지는가</a></h3>
+<p class="state">처리 경로와 설정값을 추적</p>
+<dl>
+<dt>알아낸 것</dt><dd>RAW에서 JPEG까지 가는 처리 단계와 톤 곡선·화이트밸런스·색 행렬 설정을 추적했습니다. 메뉴의 Reversal Film, Pixel Shift Resolution 같은 선택이 내부 값으로 이어지는 경로도 확인했습니다.</dd>
+<dt>아직 모르는 것</dt><dd>실제 픽셀이 처리되는 순서와 결과. Lightroom 프로파일로 카메라 색에 얼마나 다가갈 수 있는지는 RAW 한 장으로만 쟀습니다.</dd>
+</dl>
+</li>
+<li class="card goal">
+<span class="tag">목표 3</span>
+<h3><a href="analysis/guide-af.html">AF 동작을 바꿀 수 있는가</a></h3>
+<p class="state">제어 코드를 읽는 기초 단계</p>
+<dl>
+<dt>알아낸 것</dt><dd>렌즈가 알려 주는 능력에 따라 바디 모터와 렌즈 모터 중 하나를 고르는 분기, AF 요청값을 계산해 구동 준비 함수로 넘기는 흐름을 원본 코드로 확인했습니다.</dd>
+<dt>아직 모르는 것</dt><dd>AF 센서 입력이 이 계산에 들어오는 지점, 실제 모터 이동과 초점 정확도. 코드를 바꿔 본 적은 없습니다.</dd>
+</dl>
+</li>
+<li class="card goal">
+<span class="tag">목표 4</span>
+<h3><a href="analysis/guide-ui.html">K-3 Mark III의 화면을 이 기종에 옮길 수 있는가</a></h3>
+<p class="state">이 기종의 메뉴 동작을 분석한 단계</p>
+<dl>
+<dt>알아낸 것</dt><dd>색공간 메뉴와 RAW 형식 메뉴에서 선택·확정·취소가 설정값과 저장 요청으로 이어지는 과정을 확인했습니다.</dd>
+<dt>아직 모르는 것</dt><dd>실제 버튼 입력에서 LCD 출력까지의 연결. 화면을 옮기는 작업은 시작하지 않았습니다.</dd>
+</dl>
+</li>
+</ul>
+</section>
 
-<section aria-labelledby="cpu"><h2 id="cpu">3. Cortex-A9를 구분하는 시작 경로</h2><p>파일 시작의 ARM 예외 벡터와 리셋 대상 포인터를 대조하면 주 이미지의 기준 주소 후보는 0x02000000이다. 리셋 대상은 0x02000200이며, 이 위치의 코드에서 MIDR를 읽고 0xFFF0으로 마스킹한 뒤 0xC090과 비교한다. Arm 문서에서 MIDR의 부품 번호 0xC09는 Cortex-A9다. 따라서 펌웨어에 Cortex-A9를 구분하는 시작 경로가 있다는 해석을 지지한다. 실제 카메라에서 MIDR를 읽은 것은 아니며 SoC 부품번호, 코어 수, 동작 클럭은 이 검사로 알 수 없다.</p><p class="caption">근거: <a href="analysis/findings.json">MIDR 검사 오프셋·해시</a> · <a href="verify_findings.py">명령어·포인터 검증</a> · <a href="https://documentation-service.arm.com/static/5f0370fccafe527e86f5bfb2">Arm Cortex-A9 TRM §4.3.1</a></p>
-<figure><figcaption>04 / CPU 판별의 근거 연결</figcaption><div class="flow"><div class="stage"><strong>파일 +0x20C</strong><span><code>MRC p15,0,r0,c0,c0,0</code><br>MIDR를 읽는 명령</span></div><div class="arrow" aria-hidden="true">→</div><div class="stage"><strong>파일 +0x218</strong><span><code>r1 = MIDR &amp; 0xFFF0</code><br>부품 번호 필드만 남긴다.</span></div><div class="arrow" aria-hidden="true">→</div><div class="stage"><strong>파일 +0x224 / +0x228</strong><span><code>r1 == 0xC090</code> 비교<br>다르면 +0x420으로 분기</span></div></div><p class="caption">비교 상수 <code>0xC090 &gt;&gt; 4 = 0xC09</code> → Arm 문서의 Cortex-A9 부품 번호. 실제 MIDR 값은 관측하지 않았다.</p></figure>
-<p>리셋 포인터만으로 주소를 확정하지 않았다. 마스크·비교값을 가리키는 두 포인터, 예외 처리기 진입점, HDMI 문자열을 가리키는 네 데이터 포인터를 대조했다. 모두 같은 주소 변환과 맞는지 확인했다. 이 결과는 분석용 기준 주소를 뒷받침하지만 실행 중의 전체 메모리 배치나 재배치 구간을 설명하지는 않는다.</p><div class="table-scroll"><table><thead><tr><th scope="col">관찰 지점</th><th scope="col">파일 내부 연결</th><th scope="col">의미·한계</th></tr></thead><tbody><tr><td>리셋 벡터</td><td><code>+0x0 → +0x20 → 0x02000200</code></td><td>시작 코드 <code>+0x200</code>과 기준 주소 후보를 연결</td></tr><tr><td>마스크 포인터</td><td><code>+0x458 → 0x02000448 → 0xFFF0</code></td><td>같은 기준 주소를 사용하는 데이터 참조</td></tr><tr><td>비교값 포인터</td><td><code>+0x45C → 0x0200044C → 0xC090</code></td><td>MIDR 검사 상수</td></tr><tr><td>미정의 명령 예외</td><td><code>+0x24 → 0x022EC154</code></td><td><code>+0x2EC154</code>에서 ARM 처리기 시작 패턴 확인</td></tr><tr><td>HDMI 이름 포인터</td><td><code>+0x9B56F4</code> 등 4곳 → <code>0x02A789DA</code></td><td>문자열 <code>+0xA789DA</code>를 가리키는 데이터 참조. 호출 관계는 아님.</td></tr></tbody></table></div>
-<p class="note">현재 확인한 것은 <strong>펌웨어의 Cortex-A9 판별 경로</strong>다. 정확한 SoC 모델과 보조 프로세서는 미확정이며, K-3 III의 SC2000A 정보를 K-3 II에 적용하지 않는다.</p></section>
+<section class="band wrap" id="inside">
+<h2>펌웨어 파일 안에 든 것</h2>
+<p class="sub">배포 파일 <code>fwdc230b.bin</code>은 압축되어 있지 않고, 단순한 XOR 방식으로 난독화되어 있습니다. 풀어도 크기와 위치가 그대로입니다. 파일은 헤더 두 개와 난독화된 구간 세 개로 나뉩니다.</p>
+<ul class="facts">
+<li><b>16,838,656바이트</b><span>파일 크기 (풀기 전후 같음)</span></li>
+<li><b>3개</b><span>XOR 난독화 구간</span></li>
+<li><b>Cortex-A9</b><span>시작 코드가 검사하는 CPU 부품 번호</span></li>
+<li><b>T-Kernel</b><span>진단 문자열에 남은 RTOS 이름</span></li>
+<li><b>2021-07-20</b><span>펌웨어 1.12 공식 배포일</span></li>
+</ul>
 
-<section aria-labelledby="seeds"><h2 id="seeds">4. 후속 추적을 위한 문자열 근거</h2><p>T-Kernel과 T-Kernel/OS 진단 문자열을 찾았다. RAW 현상, 톤·감마, AF 디포커스와 관련된 문자열도 후속 코드 추적의 출발점으로 기록했다. 문자열의 존재만으로 함수의 실행, 알고리즘의 의미, 카메라 메뉴와의 연결을 확정하지 않는다. 길이 6 이상인 인쇄 가능한 ASCII 연속 구간은 30,254개이며 기계어에서 우연히 생긴 구간도 포함할 수 있다.</p><div class="table-scroll"><table><thead><tr><th scope="col">분야</th><th scope="col">해제본 파일 오프셋</th><th scope="col">확인한 문자열·후속 과제</th></tr></thead><tbody><tr><td>RTOS 계열</td><td><code>0xA7A3DA</code>, <code>0x6157C0</code></td><td><code>T-Kernel</code> · <code>T-Kernel/OS SVC in execution</code><br>시스템 호출과 태스크 구조 확인 필요</td></tr><tr><td>RAW 현상</td><td><code>0x52B15C</code></td><td><code>DevelopmentRawImage()</code> 관련 할당 오류 문구<br>참조 함수와 현상 경로 추적 필요</td></tr><tr><td>톤·감마</td><td><code>0x5B1291</code></td><td><code>CColorInterpolationDriver::DumpToneGamma()</code><br>진단 출력과 실제 영상처리 경로의 관계 확인 필요</td></tr><tr><td>AF 디포커스</td><td><code>0x67AC4</code></td><td><code>CalcMoveObjectDriveDefocusError</code><br>명칭만으로 수식·알고리즘을 확정하지 않음</td></tr><tr><td>HDMI</td><td><code>0xA789DA</code></td><td><code>HdmiOutputSet</code><br>4개 데이터 포인터 확인, 명령 처리기 연결은 미확정</td></tr></tbody></table></div>
-<p class="caption"><a href="analysis/findings.json">정확한 문자열 길이·해시·오프셋</a>. 검색한 해제본 전체에서 <code>Linux version</code>, <code>SC2000</code>, <code>milbeaut</code>, <code>SHELLCMD</code>, <code>Cortex</code>의 정확한 바이트열은 각각 0건이었다. 이는 해당 기능이나 구성요소가 없다는 증명은 아니다.</p></section>
+<figure class="diagram">
+<figcaption>파일의 구간 (크기 비례 아님)</figcaption>
+<div class="dg-scroll">
+<svg class="dg" viewBox="0 0 800 196" role="img" aria-labelledby="dg-file-title dg-file-desc">
+<title id="dg-file-title">K-3 II 펌웨어 파일의 다섯 구간</title>
+<desc id="dg-file-desc">파일 앞에서부터 256바이트의 난독화 구간 A, 256바이트의 평문 주 헤더, 16,776,704바이트의 난독화 구간 B, 128바이트의 평문 보조 헤더, 61,312바이트의 난독화 구간 C가 이어집니다. 구간 A를 풀면 ARM 예외 벡터가 나오고, 구간 B는 카메라 본체 프로그램이며, 구간 C는 용도를 확정하지 못한 보조 영역입니다.</desc>
+<rect class="b" x="8" y="52" width="92" height="70" rx="6"/>
+<text class="t mid" x="54" y="82">구간 A</text>
+<text class="s mid" x="54" y="103">256바이트</text>
+<rect class="b mute" x="100" y="52" width="92" height="70" rx="6"/>
+<text class="t mid" x="146" y="82">주 헤더</text>
+<text class="s mid" x="146" y="103">256바이트</text>
+<rect class="b key" x="192" y="52" width="330" height="70" rx="6"/>
+<text class="t mid" x="357" y="82">구간 B · 카메라 본체 프로그램</text>
+<text class="s mid" x="357" y="103">16,776,704바이트 (파일의 99.6%)</text>
+<rect class="b mute" x="522" y="52" width="104" height="70" rx="6"/>
+<text class="t mid" x="574" y="82">보조 헤더</text>
+<text class="s mid" x="574" y="103">128바이트</text>
+<rect class="b open" x="626" y="52" width="166" height="70" rx="6"/>
+<text class="t mid" x="709" y="82">구간 C · 보조 영역</text>
+<text class="s mid" x="709" y="103">61,312바이트</text>
 
-<section aria-labelledby="comparison"><h2 id="comparison">5. K-3 Mark III와 구분할 점</h2><p>리코는 K-3 II의 영상 엔진을 PRIME III, K-3 Mark III를 PRIME V와 2세대 가속기로 설명한다. 기존 K-3 III 분석에서는 Linux 장치 트리의 SC2000A·Cortex-A7 정보를 확인했다. 이번 K-3 II 분석의 Cortex-A9 비교 경로와 파일 구조는 별도로 검증한 결과다. 두 모델의 하드웨어 주소와 영상처리 동작이 호환된다고 볼 근거는 없다.</p><div class="table-scroll"><table><thead><tr><th scope="col">항목</th><th scope="col">K-3 II v1.12 — 이번 파일</th><th scope="col">K-3 Mark III v2.20 — 기존 분석</th></tr></thead><tbody><tr><td>공식 영상 엔진명</td><td>PRIME III</td><td>PRIME V + 2세대 가속기</td></tr><tr><td>파일 처리</td><td>XOR 해제, 출력 크기 동일</td><td><code>0x80</code>부터 LZ 스트림 해제</td></tr><tr><td>CPU 관련 직접 근거</td><td>MIDR 부품 번호 <code>0xC09</code> 비교 경로</td><td>Linux DTB의 <code>arm,cortex-a7</code></td></tr><tr><td>SoC 정보</td><td>정확한 부품번호 미확정</td><td>DTB의 <code>milbeaut,sc2000a</code></td></tr><tr><td>분석용 주소 후보</td><td>주 이미지 <code>0x02000000</code></td><td>RTOS <code>0x52500000</code></td></tr><tr><td>OS·구성</td><td>T-Kernel 관련 문자열, 세부 구조 미확정</td><td>RTOS·Linux·INITFS 등 이름 있는 레코드</td></tr></tbody></table></div><p class="caption">비교 출처: <a href="https://www.ricoh-imaging.co.jp/english/products/k-3-2/feature/05.html">리코 K-3 II</a> · <a href="https://www.ricoh-imaging.co.jp/english/products/k-3-3/feature/02.html">리코 K-3 III</a> · <a href="https://github.com/yunhyok/pentax-k3iii-firmware-analysis/blob/b51d680202336a5872a66f99ca2924a2cb7c75fa/index.html">기존 K-3 III 보고서의 고정 커밋</a>. 영상 엔진의 상품명은 실리콘 부품번호가 아니다.</p></section>
+<text class="n" x="8" y="36">파일 시작</text>
+<text class="n end" x="792" y="36">파일 끝</text>
+<text class="n mid" x="54" y="146">풀면 ARM</text>
+<text class="n mid" x="54" y="162">예외 벡터</text>
+<text class="n mid" x="146" y="146">모델 이름</text>
+<text class="n mid" x="146" y="162">버전 1.12</text>
+<text class="n mid" x="357" y="146">시작 코드, 코드·문자열·자원이 섞인 주 영역</text>
+<text class="n mid" x="357" y="162">분석용 기준 주소 후보 0x02000000</text>
+<text class="n mid" x="574" y="146">PENTAX K-3MC</text>
+<text class="n mid" x="709" y="146">담당 기능과 명령어 종류</text>
+<text class="n mid" x="709" y="162">확정하지 못함</text>
+</svg>
+</div>
+<ul class="dg-legend"><li><i class="key"></i>이 연구가 다룬 부분</li><li><i></i>난독화 구간</li><li><i class="open"></i>용도를 확정하지 못한 구간</li></ul>
+</figure>
 
-<section aria-labelledby="reproduce"><h2 id="reproduce">6. 재현과 검증 범위</h2><p>REA로 공식 ZIP의 구성원과 해시를 확인했다. Windows 환경에서는 REA의 Linux 전용 Binwalk 스캐너를 실행할 수 없었고, 원시 ARM 이미지를 처리할 네이티브 디컴파일 공급자도 준비되어 있지 않았다. 난독화 해제와 근거 검사는 Python, 시작 코드 판독은 Capstone으로 수행했다. 이 도구의 결과를 REA가 생성한 코드 분석 증거로 표시하지 않았다.</p><p>기본 분석은 Python 3.12의 표준 라이브러리만 사용한다. 엔트로피 그림은 선택적으로 matplotlib 3.9.2를 준비한 뒤 <code>python render_entropy.py</code>로 다시 만들 수 있다. 먼저 원본을 별도로 준비한다. 출력 디렉터리는 새 경로여야 하며 기존 파일을 덮어쓰지 않는다.</p><pre><code>python inspect_firmware.py &lt;fwdc230b.bin 경로&gt; --output-dir .private/decoded
-python verify_findings.py .private/decoded/decoded.bin --compare analysis/findings.json
-python -m unittest discover -s tests -v
-python verify_publication.py</code></pre>
-<details><summary>기존 JavaScript 구현과 전체 바이트 대조</summary><p><a href="https://raw.githubusercontent.com/twang2218/pentax-firmware-tool/3e2597b5d4cfa9ce242b6d3aeef32c28e64b6f73/index.js">고정 커밋의 index.js</a>를 <code>.private/vendor/index.js</code>에 저장한 뒤 실행한다. Node.js v24.15.0에서 확인했다. 비교기는 실행 전 소스와 입력 파일의 SHA-256을 확인한다.</p><pre><code>node compare_upstream.js .private/vendor/index.js &lt;fwdc230b.bin 경로&gt; .private/decoded/decoded.bin</code></pre><p>기존 구현의 <code>Buffer()</code> 사용으로 deprecation 경고가 나오지만 전체 출력 대조는 통과했다. <a href="analysis/decoder-comparison.json">결과 JSON</a></p></details>
-<div class="table-scroll"><table><thead><tr><th scope="col">검증</th><th scope="col">결과</th><th scope="col">한계</th></tr></thead><tbody><tr><td>공식 파일 대조</td><td>ZIP 내부 파일과 전체 바이트 일치</td><td>전자서명 검증 아님</td></tr><tr><td>독립 디코더</td><td>16,838,656바이트 전체 일치</td><td>한 버전의 동일 알고리즘 구현 간 대조</td></tr><tr><td>도구 단위 검사</td><td>7개 테스트 통과</td><td>합성 입력·범위·덮어쓰기·오류 검증</td></tr><tr><td>실제 해제본 근거 검사</td><td>공개 <code>findings.json</code> 재생성·일치</td><td>관찰한 정적 근거에 한정</td></tr><tr><td>REA ZIP 검사</td><td>구성원 1개·SHA-256 확인</td><td>펌웨어 코드 분석은 별도 도구</td></tr><tr><td>카메라·재빌드</td><td>미수행</td><td>실기 동작·부팅 가능성 미검증</td></tr></tbody></table></div><p class="caption"><a href="analysis/rea-summary.json">REA 증거 ID·한계</a> · <a href="https://github.com/yunhyok/pentax-k3ii-firmware-analysis/actions">공개 CI 실행 결과</a>. CI는 원본 펌웨어를 받지 않으며 합성 테스트와 공개 자료의 정합성을 확인한다.</p>
-<h3>이어갈 분석</h3><p>다음 단계에서는 데이터 복사 구간과 RAM 재배치를 추적하고 T-Kernel 호출·명령 처리 구조를 확인한다. 이어 RAW 현상과 톤·감마 진단 문자열의 참조를 실제 코드에 연결한다. 보조 이미지의 명령어 집합과 부품 정보는 주 이미지와 분리해 조사한다. 이번 공개분은 분석을 재현하고 이어갈 수 있도록 만든 초기 조사 결과다.</p></section>
+<div class="two">
+<div class="panel">
+<h3>어떤 CPU인가</h3>
+<p>시작 코드는 CPU의 식별 레지스터(<dfn title="Main ID Register. ARM CPU가 자신의 종류를 알려 주는 레지스터">MIDR</dfn>)를 읽어 부품 번호가 <code>0xC09</code>인지 검사합니다. Arm 문서에서 이 번호는 Cortex-A9입니다. 리코는 이 카메라의 영상 엔진을 PRIME III라고 부릅니다.</p>
+<p class="small muted">확인한 것은 펌웨어 안의 검사 코드입니다. 실제 카메라에서 레지스터 값을 읽은 것이 아니며, 칩의 부품 번호·코어 수·동작 클럭은 확인하지 못했습니다.</p>
+</div>
+<div class="panel">
+<h3>K-3 Mark III와 무엇이 다른가</h3>
+<p>두 기종은 펌웨어 형식부터 다릅니다. K-3 Mark III는 압축된 레코드 묶음이고 Linux와 RTOS가 함께 들어 있습니다. K-3 II는 XOR 난독화된 단일 이미지입니다. 그래서 주소, 명령 표, 영상 처리 설정값을 K-3 Mark III에서 가져오지 않고 이 파일에서 따로 확인했습니다.</p>
+<p><a href="analysis/firmware-structure.html">펌웨어 파일 구조와 복호화 자세히 보기 →</a></p>
+</div>
+</div>
+</section>
 
-<section aria-labelledby="sources"><h2 id="sources">7. 출처와 공개 범위</h2><p>공개 저장소에는 직접 작성한 분석·검증 도구, 관찰값, 도식과 HTML 문서를 포함한다. 원본 펌웨어, 해제 바이너리, 전체 문자열 덤프와 디스어셈블 결과는 로컬에 보관한다. 카메라 플래싱, 실기 실행, 전체 펌웨어 재빌드는 수행하지 않았다. 도구의 GPL-2.0 라이선스는 제조사 펌웨어에 적용되지 않는다.</p><p>난독화 해제 로직은 Tao Wang의 <a href="https://github.com/twang2218/pentax-firmware-tool/blob/3e2597b5d4cfa9ce242b6d3aeef32c28e64b6f73/index.js">pentax-firmware-tool</a>을 바탕으로 구현했다. 원 프로젝트는 MooseV2·svenpeter42의 작업과 bootcoder의 패치를 출처로 밝힌다. 도구와 본 저장소에는 <a href="LICENSE">GPL-2.0</a>을 적용하며 원본 펌웨어의 권리는 제조사에 있다.</p><p><a href="https://www.ricoh-imaging.co.jp/english/support/digital/k3_2.html">리코 배포 페이지</a>에 펌웨어 사용 조건이 있다. 이 문서는 해당 조건의 법적 효력을 판단하지 않으며, 공개 저장소에 제조사 펌웨어를 재배포하지 않는다.</p><p><a href="analysis/inventory.json">입력·헤더·해제 구간</a> · <a href="analysis/official-package.json">공식 배포본 대조</a> · <a href="analysis/findings.json">코드·주소·문자열 근거</a> · <a href="analysis/decoder-comparison.json">독립 디코더 대조</a> · <a href="analysis/rea-summary.json">REA 검사 요약</a></p></section>
-</main><footer>조사 기준일 2026-11-07 · 정적 분석 1차 공개분 · <a href="https://github.com/yunhyok/pentax-k3ii-firmware-analysis">GitHub 저장소</a><br>관찰값·해석·미확정 사항을 구분하며 후속 검증에 따라 갱신한다.</footer>
-</body></html>
+<section class="band wrap" id="levels">
+<h2>검증 수준 읽는 법</h2>
+<p class="sub">모든 문서는 결과마다 “얼마나 확실한가”를 같은 네 가지 표시로 구분합니다. 표시가 다르면 믿을 수 있는 정도가 다릅니다.</p>
+<ul class="legend">
+<li><span class="badge ok">확인</span>
+<p>원본 펌웨어의 기계어를 PC의 CPU 에뮬레이터에서 실제로 실행해 관측했거나, 파일의 바이트를 직접 읽어 구조와 해시를 대조한 결과입니다.</p></li>
+<li><span class="badge static">정적 분석</span>
+<p>코드를 실행하지 않고, 기계어를 사람이 읽을 수 있게 바꾼 결과를 읽어서 판단한 내용입니다.</p></li>
+<li><span class="badge model">모델</span>
+<p>하드웨어의 응답이나 입력 데이터처럼, 실물 대신 연구자가 정해서 넣은 값입니다. 그 조건에서만 성립합니다.</p></li>
+<li><span class="badge open">미확인</span>
+<p>아직 확인하지 못했거나, 실물 카메라가 있어야 확인할 수 있는 내용입니다.</p></li>
+</ul>
+
+<figure class="diagram">
+<figcaption>이 연구에서 “확인했다”는 말의 뜻</figcaption>
+<div class="dg-scroll">
+<svg class="dg" viewBox="0 0 800 188" role="img" aria-labelledby="dg-levels-title dg-levels-desc">
+<title id="dg-levels-title">원본 코드를 에뮬레이터에서 실행해 확인하는 절차</title>
+<desc id="dg-levels-desc">펌웨어에서 꺼낸 원본 기계어를 PC의 CPU 에뮬레이터에 올리고, 카메라의 하드웨어 대신 연구자가 만든 입력과 응답을 넣어 실행합니다. 그 결과로 메모리와 레지스터에 쓰인 값을 관측해 기록합니다. 실물 카메라에서의 동작은 이 절차 밖에 있어 확인되지 않은 채로 남습니다.</desc>
+<defs>
+<marker id="dg-levels-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker>
+<marker id="dg-levels-am" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah model" d="M0 0L10 5L0 10z"/></marker>
+</defs>
+<rect class="b" x="8" y="20" width="170" height="64" rx="8"/>
+<text class="t" x="20" y="46">원본 기계어</text>
+<text class="s" x="20" y="67">펌웨어에서 꺼낸 그대로</text>
+<rect class="b model" x="8" y="112" width="170" height="64" rx="8"/>
+<text class="t" x="20" y="138">만든 입력과 응답</text>
+<text class="s" x="20" y="159">센서·저장장치를 대신함</text>
+<rect class="b key" x="232" y="56" width="176" height="84" rx="8"/>
+<text class="t" x="244" y="86">PC의 CPU 에뮬레이터</text>
+<text class="s" x="244" y="107">원본 명령을 한 줄씩 실행</text>
+<text class="s" x="244" y="125">(Unicorn)</text>
+<rect class="b ok" x="462" y="56" width="150" height="84" rx="8"/>
+<text class="t" x="474" y="86">관측한 결과</text>
+<text class="s" x="474" y="107">메모리·레지스터에</text>
+<text class="s" x="474" y="125">쓰인 값</text>
+<rect class="b open" x="666" y="56" width="126" height="84" rx="8"/>
+<text class="t" x="678" y="86">실물 카메라</text>
+<text class="s" x="678" y="107">여기서는</text>
+<text class="s" x="678" y="125">실행하지 않음</text>
+<path class="e" d="M178 52H204V84H230" marker-end="url(#dg-levels-ah)"/>
+<path class="e model" d="M178 144H204V112H230" marker-end="url(#dg-levels-am)"/>
+<path class="e" d="M408 98H460" marker-end="url(#dg-levels-ah)"/>
+<path class="e open" d="M612 98H664"/>
+</svg>
+</div>
+<ul class="dg-legend"><li><i class="ok"></i>확인</li><li><i class="model"></i>모델</li><li><i class="open"></i>미확인</li></ul>
+</figure>
+<p class="wrap-note small muted">이 기종의 RAW로 한 Lightroom 색 프로파일 실험은 성격이 다릅니다. 실제 RAW 파일을 실제 Adobe Lightroom Classic에 넣어 얻은 측정값이며, <a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/lightroom-bridge.html">K-3 Mark III 저장소의 Lightroom 색 프로파일 문서</a>에 세 기종을 함께 정리했습니다.</p>
+</section>
+
+<section class="band wrap" id="map">
+<h2>문서 지도</h2>
+<p class="sub">주제마다 “안내” 문서가 먼저 있습니다. 안내 문서에서 전체 그림을 본 뒤 세부 문서로 들어가면 읽기 쉽습니다. 낯선 용어는 <a href="glossary.html">용어집</a>에서 찾을 수 있습니다.</p>
+<!-- chrome:map -->
+<div class="sitemap"><section><h3 id="map-start">시작하기</h3><ol><li><a href="analysis/firmware-structure.html">펌웨어 파일 구조와 복호화</a><span>XOR 해제, 코드·주소 검증, 재현 절차</span></li><li><a href="analysis/deep-analysis.html">하드웨어 식별과 RAW 현상 개관</a><span>CPU 근거, 톤 곡선 생성</span></li><li><a href="glossary.html">용어집</a></li></ol></section><section><h3 id="map-pipeline">영상 처리와 저장 경로</h3><ol><li><a href="analysis/guide-pipeline.html">영상 처리 경로 안내</a></li><li><a href="analysis/pipeline-analysis.html">RAW 이후의 톤·WB·색 행렬</a></li><li><a href="analysis/output-menu-analysis.html">JPEG 출력 버퍼와 Reversal Film 메뉴</a></li><li><a href="analysis/storage-dma-analysis.html">파일시스템에서 SD·DMA까지</a></li><li><a href="analysis/backend-b-cpp-analysis.html">백엔드 B와 두 번째 CPP 출력</a></li><li><a href="analysis/masked-cpp-analysis.html">마스크 CPP와 보조 JPEG 입력</a></li><li><a href="analysis/superresolution-lifecycle.html">Pixel Shift 메뉴와 버퍼 수명</a></li></ol></section><section><h3 id="map-capture">촬영 준비와 보존 레코드</h3><ol><li><a href="analysis/guide-capture.html">촬영 준비·보존 레코드 안내</a></li><li><a href="analysis/pixel-records.html">보존 픽셀 레코드와 촬영 패킷</a></li><li><a href="analysis/pixel-policy.html">픽셀 보정 활성값과 준비 분기</a></li><li><a href="analysis/capture-prepare.html">촬영 준비의 연속 호출</a></li><li><a href="analysis/store-image-records.html">JPEG 완료값과 저장 레코드</a></li><li><a href="analysis/preserved-sector20.html">보존 섹터 20·21과 정책 입력</a></li><li><a href="analysis/preserved-config.html">정책 플래그의 생산자</a></li><li><a href="analysis/preserved-dispatch.html">보존 레코드의 상위 명령 경로</a></li><li><a href="analysis/preserved-record.html">보존 섹터 14의 진단 레코드</a></li><li><a href="analysis/settings-storage.html">보존 섹터의 설정 저장</a></li></ol></section><section><h3 id="map-rebuild">재구축과 업데이트</h3><ol><li><a href="analysis/guide-rebuild.html">재구축·업데이트 안내</a></li><li><a href="analysis/rebuild.html">무손실 재포장과 업데이트 검사</a></li><li><a href="analysis/installation.html">업데이트 전송과 기록 오류</a></li><li><a href="analysis/tone-rebuild.html">톤 보간 함수 C 재구현</a></li></ol></section><section><h3 id="map-af">AF와 렌즈 제어</h3><ol><li><a href="analysis/guide-af.html">AF와 렌즈 제어 안내</a></li><li><a href="analysis/af-drive.html">렌즈 능력과 구동 분기</a></li><li><a href="analysis/af-control.html">AF 요청 계산과 구동 준비</a></li><li><a href="analysis/af-input.html">AF 카운터와 보정값</a></li></ol></section><section><h3 id="map-ui">메뉴와 UI</h3><ol><li><a href="analysis/guide-ui.html">메뉴·UI 안내</a></li><li><a href="analysis/color-ui.html">색공간 메뉴와 표시</a></li><li><a href="analysis/ui-resources.html">RAW 형식 메뉴와 텍스트</a></li><li><a href="analysis/ui-dispatch.html">색공간 메뉴 알림과 화면 전환</a></li></ol></section></div>
+<!-- /chrome:map -->
+</section>
+
+<section class="band wrap" id="reproduce">
+<h2>직접 확인해 보려면</h2>
+<div class="two">
+<div class="panel">
+<h3>펌웨어 없이</h3>
+<p>공개된 문서·근거 파일·도구가 서로 맞는지 검사합니다. Python 3.12만 있으면 됩니다.</p>
+<pre><code>python -m unittest discover -s tests -v
+python verify_publication.py
+python tools/site_chrome.py --check</code></pre>
+</div>
+<div class="panel">
+<h3>펌웨어 파일을 가지고</h3>
+<p>리코 공식 사이트에서 받은 <code>fwdc230b.bin</code>(SHA-256이 아래와 같은 파일)이 있으면 난독화 해제부터 다시 해 볼 수 있습니다. 원본 코드 실행에는 <code>unicorn==2.1.4</code>가 필요합니다.</p>
+<pre><code>python inspect_firmware.py fwdc230b.bin --output-dir .private/decoded
+python verify_findings.py .private/decoded/decoded.bin</code></pre>
+<p class="small"><code class="wrap">a33485f351019960192891ef69ddc5d4904ef9e298671d9d9955679e4c901a9a</code></p>
+<p class="small muted">문서마다 “재현 방법” 절에 그 문서의 검증 명령이 있습니다. 전체 절차는 <a href="analysis/firmware-structure.html#reproduce">펌웨어 파일 구조와 복호화</a>에 있습니다.</p>
+</div>
+</div>
+</section>
+
+<section class="band wrap" id="sources">
+<h2>공개 범위와 라이선스</h2>
+<div class="two">
+<div class="panel">
+<h3>이 저장소에 있는 것</h3>
+<ul>
+<li>분석 문서(HTML)와 측정 결과(JSON)</li>
+<li>직접 작성한 분석·검증 도구(Python)와 테스트 — <a href="LICENSE">GPL-2.0</a></li>
+<li>직접 작성한 재구성 C 코드 (<code>rebuild/</code>)</li>
+<li>사진 한 장 (<a href="assets/photos/CREDITS.md">출처와 라이선스</a>)</li>
+</ul>
+</div>
+<div class="panel">
+<h3>이 저장소에 없는 것</h3>
+<ul>
+<li>원본 펌웨어 파일과 난독화를 푼 바이너리</li>
+<li>디스어셈블·디컴파일 결과</li>
+<li>카메라에 설치할 수 있는 수정 펌웨어</li>
+</ul>
+<p class="small muted">제조사 펌웨어에는 이 저장소의 라이선스가 적용되지 않습니다. 난독화 방식의 출처는 <a href="analysis/firmware-structure.html#sources">펌웨어 파일 구조와 복호화</a>에 적었습니다.</p>
+</div>
+</div>
+</section>
+
+</main>
+<!-- chrome:bottom -->
+<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">시작하기 — 이 주제의 문서</h2><ol><li><a href="index.html" aria-current="page">개요</a></li><li><a href="analysis/firmware-structure.html">펌웨어 파일 구조와 복호화<span>XOR 해제, 코드·주소 검증, 재현 절차</span></a></li><li><a href="analysis/deep-analysis.html">하드웨어 식별과 RAW 현상 개관<span>CPU 근거, 톤 곡선 생성</span></a></li><li><a href="glossary.html">용어집</a></li></ol></nav>
+<nav class="pager" aria-label="이전·다음 문서"><a class="next" href="analysis/firmware-structure.html"><small>다음 →</small>펌웨어 파일 구조와 복호화</a></nav>
+<footer class="sitefoot"><div class="sitefoot-in"><nav aria-label="사이트"><a href="index.html#map">문서 지도</a><a href="index.html#levels">검증 수준 읽는 법</a><a href="glossary.html">용어집</a><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/research-program.html">세 기종 연구 본부</a><a href="https://github.com/yunhyok/pentax-k3ii-firmware-analysis">GitHub 저장소</a></nav><p>PENTAX K-3 II 펌웨어 1.12 분석 문서. PC에서 수행한 정적 분석과 에뮬레이션 결과이며, 카메라 실기에서 검증한 내용이 아닙니다. 원본 펌웨어와 복호화한 바이너리는 포함하지 않습니다.</p></div></footer>
+<!-- /chrome:bottom -->
+</body>
+</html>
