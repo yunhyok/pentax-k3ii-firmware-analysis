@@ -67,7 +67,7 @@
 <h2>배경: K 마운트의 두 가지 AF 구동 방식</h2>
 <p>K 마운트 렌즈의 자동 초점은 두 방식으로 구동됩니다. 리코의 <a href="https://www.ricoh-imaging.co.jp/english/products/lens/suit_mount.html">마운트별 호환표</a>는 이를 “AF 커플러(바디 구동)”와 “SDM·DC·PLM(렌즈 구동)”으로 나눕니다.</p>
 <ul>
-<li><strong>바디 구동</strong> — 바디 안의 모터가 마운트에 있는 회전축(<dfn title="바디의 AF 모터 회전을 렌즈의 초점 기구에 전달하는 마운트의 기계식 연결부">AF 커플러</dfn>)을 돌려 렌즈의 초점 기구를 움직입니다.</li>
+<li><strong>바디 구동</strong>: 바디 안의 모터가 마운트에 있는 회전축(<dfn title="바디의 AF 모터 회전을 렌즈의 초점 기구에 전달하는 마운트의 기계식 연결부">AF 커플러</dfn>)을 돌려 렌즈의 초점 기구를 움직입니다.</li>
 <li><strong>렌즈 구동</strong>: 렌즈 안에 든 모터가 초점 기구를 움직입니다. 바디는 전기 접점으로 명령만 보냅니다. SDM, DC, PLM은 렌즈 안 모터의 종류를 가리키는 PENTAX의 이름입니다.</li>
 </ul>
 <p>K-3 II의 마운트는 KAF2입니다. <a href="https://www.ricoh-imaging.co.jp/english/products/k-3-2/spec/">제품 사양</a>에 따르면 AF 커플러, 렌즈 정보 접점, 전원 접점을 모두 갖추고 있어 두 방식을 다 쓸 수 있습니다. 리코의 <a href="https://www.ricoh-imaging.co.jp/english/support/qa/k-3-2/index.html">K-3 II FAQ</a>는 모터를 내장한 렌즈를 붙이면 카메라가 렌즈 안 모터로 구동하는 자동 초점으로 자동 전환한다고 설명합니다. 이 문서는 그 전환을 정하는 코드를 다룹니다.</p>
@@ -301,9 +301,9 @@
 <h2>한계와 남은 과제</h2>
 <p>이 결과는 렌즈 응답과 원본 구동 요청 사이의 연결을 확인한 것입니다. 구동 방식을 SDM에서 바디 구동으로 바꿔 주는, 동작하는 펌웨어가 아닙니다.</p>
 <ul>
-<li><strong>실행하지 않은 범위</strong> — AF 센서의 초점 판단, AF 전체의 상태 전이, 모터의 이동과 정지, 렌즈별 시간 제약.</li>
-<li><strong>구분하지 못한 것</strong> — 비트 6으로 선택되는 렌즈 명령 경로 안에서 SDM·DC·PLM을 구분하는 통신 규약.</li>
-<li><strong>하지 않은 일</strong> — 수정 후보 적용, 카메라 플래시 기록, 렌즈 EEPROM 변경.</li>
+<li><strong>실행하지 않은 범위</strong>: AF 센서의 초점 판단, AF 전체의 상태 전이, 모터의 이동과 정지, 렌즈별 시간 제약.</li>
+<li><strong>구분하지 못한 것</strong>: 비트 6으로 선택되는 렌즈 명령 경로 안에서 SDM·DC·PLM을 구분하는 통신 규약.</li>
+<li><strong>하지 않은 일</strong>: 수정 후보 적용, 카메라 플래시 기록, 렌즈 EEPROM 변경.</li>
 </ul>
 <p>AF 연구의 현재 목적은 나중에 변경을 검토할 때 필요한 기본 구조를 확보하는 것입니다. 실물 렌즈의 식별 정보가 없어도 정보 읽기, 판단, AF 계산, 구동 명령의 분석은 이어 갈 수 있습니다. 능력 조회의 조건과 요청값 계산은 <a href="af-control.html">AF 요청 계산과 구동 준비</a>에서 다룹니다.</p>
 </section>

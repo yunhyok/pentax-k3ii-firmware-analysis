@@ -258,7 +258,7 @@
 <tbody>
 <tr><th scope="row">0</th><td><code>+0x9C</code></td><td rowspan="4">원본 <code>0x82D8B8</code>로 요청 슬롯을 다시 조회</td></tr>
 <tr><th scope="row">1</th><td><code>+0x50</code></td></tr>
-<tr><th scope="row">2</th><td><code>+0x4</code> — 주 서술자</td></tr>
+<tr><th scope="row">2</th><td><code>+0x4</code>: 주 서술자</td></tr>
 <tr><th scope="row">3</th><td><code>+0xE8</code></td></tr>
 </tbody></table></div>
 <p>실행은 <code>0x5A8340</code>에서 멈췄습니다. 그 뒤의 요청 검증과 쓰기 서비스 <code>0x5A7D5C</code>는 실행하지 않았습니다.</p>
@@ -354,7 +354,7 @@
 </tbody></table></div>
 <ul>
 <li><strong>공유 조건</strong>: <code>CAP+0x3E</code>와 <code>+0x3F</code>를 모두 켠 조건입니다. 이때는 둘째 출력 서술자의 길이가 0이어도 원본 완료 코드가 첫 길이를 <code>CAP+0x2F0</code>에 복사했습니다.</li>
-<li><strong>분리 조건</strong> — 서로 다른 두 길이가 각각 유지됐습니다.</li>
+<li><strong>분리 조건</strong>: 서로 다른 두 길이가 각각 유지됐습니다.</li>
 </ul>
 
 <h3>완료 코드가 길이를 읽지 않거나 받아들이지 않는 경우</h3>
@@ -453,7 +453,7 @@
 </main>
 </div>
 <!-- chrome:bottom -->
-<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">촬영 준비와 보존 레코드 — 이 주제의 문서</h2><ol><li><a href="guide-capture.html">촬영 준비·보존 레코드 안내</a></li><li><a href="pixel-records.html">보존 픽셀 레코드와 촬영 패킷</a></li><li><a href="pixel-policy.html">픽셀 보정 활성값과 준비 분기</a></li><li><a href="capture-prepare.html">촬영 준비의 연속 호출</a></li><li><a href="store-image-records.html" aria-current="page">JPEG 완료값과 저장 레코드</a></li><li><a href="preserved-sector20.html">보존 섹터 20·21과 정책 입력</a></li><li><a href="preserved-config.html">정책 플래그의 생산자</a></li><li><a href="preserved-dispatch.html">보존 레코드의 상위 명령 경로</a></li><li><a href="preserved-continuity.html">작업자 매개변수와 목록 응답</a></li><li><a href="register-dma.html">보정 결과 레지스터와 DMA 준비<span>두 채널의 별도 원본 실행</span></a></li><li><a href="preserved-record.html">보존 섹터 14의 진단 레코드</a></li><li><a href="settings-storage.html">보존 섹터의 설정 저장</a></li></ol></nav>
+<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">촬영 준비와 보존 레코드 — 이 주제의 문서</h2><ol><li><a href="guide-capture.html">촬영 준비·보존 레코드 안내</a></li><li><a href="pixel-records.html">보존 픽셀 레코드와 촬영 패킷</a></li><li><a href="pixel-policy.html">픽셀 보정 활성값과 준비 분기</a></li><li><a href="capture-prepare.html">촬영 준비의 연속 호출</a></li><li><a href="store-image-records.html" aria-current="page">JPEG 완료값과 저장 레코드</a></li><li><a href="preserved-sector20.html">보존 섹터 20·21과 정책 입력</a></li><li><a href="preserved-config.html">정책 플래그의 생산자</a></li><li><a href="preserved-dispatch.html">보존 레코드의 상위 명령 경로</a></li><li><a href="preserved-continuity.html">작업자 매개변수와 목록 응답</a></li><li><a href="register-dma.html">검출 결과 레지스터와 DMA 준비<span>두 실험: 결과 레지스터, DMA 인수</span></a></li><li><a href="preserved-record.html">보존 섹터 14의 진단 레코드</a></li><li><a href="settings-storage.html">보존 섹터의 설정 저장</a></li></ol></nav>
 <nav class="pager" aria-label="이전·다음 문서"><a class="prev" href="capture-prepare.html"><small>← 이전</small>촬영 준비의 연속 호출</a><a class="next" href="preserved-sector20.html"><small>다음 →</small>보존 섹터 20·21과 정책 입력</a></nav>
 <footer class="sitefoot"><div class="sitefoot-in"><nav aria-label="사이트"><a href="../index.html#map">문서 지도</a><a href="../index.html#levels">검증 수준 읽는 법</a><a href="../glossary.html">용어집</a><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/research-program.html">세 기종 연구 본부</a><a href="https://github.com/yunhyok/pentax-k3ii-firmware-analysis">GitHub 저장소</a></nav><p>PENTAX K-3 II 펌웨어 1.12 분석 문서. PC에서 수행한 정적 분석과 에뮬레이션 결과이며, 카메라 실기에서 검증한 내용이 아닙니다. 원본 펌웨어와 복호화한 바이너리는 포함하지 않습니다.</p></div></footer>
 <!-- /chrome:bottom -->

@@ -189,7 +189,7 @@
 <ul>
 <li><strong>디버그 키</strong>: 디버그 객체의 <code>+4</code> 바이트가 켜져 있을 때만 키 바이트를 읽습니다. 꺼 둔 채 일곱 키를 모두 1로 넣은 사례는 기본 결과와 같았습니다. 키 0x1B와 0x1C는 각각 다른 보정 플래그 <code>+0x47</code>과 <code>+0x48</code>을 지웁니다.</li>
 <li><strong>RAM 마커</strong>: 순서 4의 마커는 ID 3 조회 뒤에 <code>0x72DDAC</code>가 돌려주는 고정 RAM <code>0x4041F3C0</code>의 다음 워드입니다. 이 해제에는 디버그 객체 <code>+4</code>가 필요하지 않았습니다. 실험에서는 ID 3 공급자를 등록하지 않았으므로, 조회가 돌려주는 객체가 이 마커를 제공한다고 주장하지 않습니다.</li>
-<li><strong>작업 종류 6</strong> — 내부 작업 조건입니다. 노출 모드 이름이나 메뉴의 selector = 6을 뜻하지 않습니다.</li>
+<li><strong>작업 종류 6</strong>: 내부 작업 조건입니다. 노출 모드 이름이나 메뉴의 selector = 6을 뜻하지 않습니다.</li>
 <li><strong>기록</strong>: 함수 마지막에 최종 <code>+0x4A</code>, 최종 <code>+0x49</code>, 선택 결과를 태그 0x3F, 0x40, 0x41에 각각 적습니다. 53개 사례 모두에서 이 세 태그만 바뀌었습니다.</li>
 </ul>
 
@@ -363,10 +363,10 @@
 <caption>작업 종류 0~11에서 준비 함수가 만든 바이트</caption>
 <thead><tr><th>내부 작업 종류</th><th class="n">CAP+0x2080</th><th class="n">+0x2081</th><th class="n">+0x2082</th><th>분기 뒤 도달한 곳</th></tr></thead>
 <tbody>
-<tr><th scope="row">0, 1, 2, 3, 4, 6, 9, 10</th><td class="n">0</td><td class="n">0</td><td class="n">0</td><td><code>0x655380</code> — 정책 호출 구간으로</td></tr>
-<tr><th scope="row">5</th><td class="n">1</td><td class="n">0</td><td class="n">0</td><td><code>0x655400</code> — 건너뜀</td></tr>
-<tr><th scope="row">7, 8</th><td class="n">1</td><td class="n">1</td><td class="n">0</td><td><code>0x655400</code> — 건너뜀</td></tr>
-<tr><th scope="row">11</th><td class="n">1</td><td class="n">0</td><td class="n">1</td><td><code>0x655400</code> — 건너뜀</td></tr>
+<tr><th scope="row">0, 1, 2, 3, 4, 6, 9, 10</th><td class="n">0</td><td class="n">0</td><td class="n">0</td><td><code>0x655380</code>: 정책 호출 구간으로</td></tr>
+<tr><th scope="row">5</th><td class="n">1</td><td class="n">0</td><td class="n">0</td><td><code>0x655400</code>: 건너뜀</td></tr>
+<tr><th scope="row">7, 8</th><td class="n">1</td><td class="n">1</td><td class="n">0</td><td><code>0x655400</code>: 건너뜀</td></tr>
+<tr><th scope="row">11</th><td class="n">1</td><td class="n">0</td><td class="n">1</td><td><code>0x655400</code>: 건너뜀</td></tr>
 </tbody></table></div>
 
 <p>이 문서의 실험은 준비 함수를 세 구간으로 잘라 실행했습니다. 앞부분(<code>0x6552B0</code>~<code>0x655344</code>)에서 분기 바이트를 만들고 분기 구간(<code>0x655374</code>~<code>0x65537C</code>)을 같은 객체로 실행했습니다. 그 뒤 건너뛰지 않는 종류에서는 호출 구간(<code>0x6553D0</code>~<code>0x6553DC</code>)이 정책 함수 입구에 닿는지 따로 확인했습니다. 구간 사이의 가상 호출 세 개와 다섯 개는 실행하지 않았습니다.</p>
@@ -437,7 +437,7 @@
 
 <p>표 결과가 4가 되는 같은 입력에서 작업 종류 0과 6을 비교했습니다. 다른 두 보정(<code>+0x47</code>, <code>+0x48</code>)은 원본 디버그 키 0x1B와 0x1C로 꺼서, 픽셀 레코드 보정만 남겼습니다. 그 뒤 패킷 생산 구간(<code>0x65D650</code>~<code>0x65D6B4</code>)과 처리기 구간(<code>0x58174C</code>~<code>0x581818</code>)을 이어 실행했습니다.</p>
 <ul>
-<li><strong>작업 종류 0</strong> — 보정 함수가 실행되어, 같은 16×16 이미지 버퍼의 두 중심 픽셀이 300과 450으로 바뀌었습니다.</li>
+<li><strong>작업 종류 0</strong>: 보정 함수가 실행되어, 같은 16×16 이미지 버퍼의 두 중심 픽셀이 300과 450으로 바뀌었습니다.</li>
 <li><strong>작업 종류 6</strong>: 정책 함수가 뒤쪽에서 <code>CAP+0x49</code>를 0으로 되돌렸고 처리기는 보정 함수를 부르지 않았습니다. 이미지 전체와 앞뒤 대조값이 그대로였습니다.</li>
 </ul>
 <p>두 픽셀이 300과 450이 되는 계산은 <a href="pixel-records.html">보존 픽셀 레코드와 촬영 패킷</a> 문서의 순차 보정 실험과 같은 레코드, 같은 이미지입니다.</p>
@@ -459,8 +459,8 @@
 <ul>
 <li><strong>입력의 의미</strong>: A·B·C는 객체 안의 위치와 관측한 계산으로만 이름 붙였습니다. ISO, 노출 시간, 온도 같은 물리량으로 부를 근거가 아직 부족합니다.</li>
 <li><strong>입력의 생산</strong>: 정책 사례 53건에서는 초기화 가드, 입력 필드, 설정 메모리를 시험값으로 준비했습니다. A와 일부 강제 플래그를 원본 코드가 만드는 과정은 <a href="capture-prepare.html">촬영 준비 함수</a> 문서에 있습니다. B, C, <code>CAP+0x20B6</code>의 상위 생산 코드는 실행하지 않았습니다.</li>
-<li><strong>도달 여부</strong> — 실제 촬영에서 어떤 메뉴 설정이 어떤 작업 종류와 입력값으로 이어지는지는 이 문서의 범위 밖입니다.</li>
-<li><strong>실물</strong> — 실제 센서 데이터, 작업 스케줄러, JPEG 출력은 실행하지 않았습니다.</li>
+<li><strong>도달 여부</strong>: 실제 촬영에서 어떤 메뉴 설정이 어떤 작업 종류와 입력값으로 이어지는지는 이 문서의 범위 밖입니다.</li>
+<li><strong>실물</strong>: 실제 센서 데이터, 작업 스케줄러, JPEG 출력은 실행하지 않았습니다.</li>
 </ul>
 </section>
 
@@ -491,7 +491,7 @@
 </main>
 </div>
 <!-- chrome:bottom -->
-<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">촬영 준비와 보존 레코드 — 이 주제의 문서</h2><ol><li><a href="guide-capture.html">촬영 준비·보존 레코드 안내</a></li><li><a href="pixel-records.html">보존 픽셀 레코드와 촬영 패킷</a></li><li><a href="pixel-policy.html" aria-current="page">픽셀 보정 활성값과 준비 분기</a></li><li><a href="capture-prepare.html">촬영 준비의 연속 호출</a></li><li><a href="store-image-records.html">JPEG 완료값과 저장 레코드</a></li><li><a href="preserved-sector20.html">보존 섹터 20·21과 정책 입력</a></li><li><a href="preserved-config.html">정책 플래그의 생산자</a></li><li><a href="preserved-dispatch.html">보존 레코드의 상위 명령 경로</a></li><li><a href="preserved-continuity.html">작업자 매개변수와 목록 응답</a></li><li><a href="register-dma.html">보정 결과 레지스터와 DMA 준비<span>두 채널의 별도 원본 실행</span></a></li><li><a href="preserved-record.html">보존 섹터 14의 진단 레코드</a></li><li><a href="settings-storage.html">보존 섹터의 설정 저장</a></li></ol></nav>
+<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">촬영 준비와 보존 레코드 — 이 주제의 문서</h2><ol><li><a href="guide-capture.html">촬영 준비·보존 레코드 안내</a></li><li><a href="pixel-records.html">보존 픽셀 레코드와 촬영 패킷</a></li><li><a href="pixel-policy.html" aria-current="page">픽셀 보정 활성값과 준비 분기</a></li><li><a href="capture-prepare.html">촬영 준비의 연속 호출</a></li><li><a href="store-image-records.html">JPEG 완료값과 저장 레코드</a></li><li><a href="preserved-sector20.html">보존 섹터 20·21과 정책 입력</a></li><li><a href="preserved-config.html">정책 플래그의 생산자</a></li><li><a href="preserved-dispatch.html">보존 레코드의 상위 명령 경로</a></li><li><a href="preserved-continuity.html">작업자 매개변수와 목록 응답</a></li><li><a href="register-dma.html">검출 결과 레지스터와 DMA 준비<span>두 실험: 결과 레지스터, DMA 인수</span></a></li><li><a href="preserved-record.html">보존 섹터 14의 진단 레코드</a></li><li><a href="settings-storage.html">보존 섹터의 설정 저장</a></li></ol></nav>
 <nav class="pager" aria-label="이전·다음 문서"><a class="prev" href="pixel-records.html"><small>← 이전</small>보존 픽셀 레코드와 촬영 패킷</a><a class="next" href="capture-prepare.html"><small>다음 →</small>촬영 준비의 연속 호출</a></nav>
 <footer class="sitefoot"><div class="sitefoot-in"><nav aria-label="사이트"><a href="../index.html#map">문서 지도</a><a href="../index.html#levels">검증 수준 읽는 법</a><a href="../glossary.html">용어집</a><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/research-program.html">세 기종 연구 본부</a><a href="https://github.com/yunhyok/pentax-k3ii-firmware-analysis">GitHub 저장소</a></nav><p>PENTAX K-3 II 펌웨어 1.12 분석 문서. PC에서 수행한 정적 분석과 에뮬레이션 결과이며, 카메라 실기에서 검증한 내용이 아닙니다. 원본 펌웨어와 복호화한 바이너리는 포함하지 않습니다.</p></div></footer>
 <!-- /chrome:bottom -->

@@ -1,6 +1,6 @@
 # PENTAX K-3 II 펌웨어 1.12 분석
 
-리코가 배포한 K-3 II 펌웨어 `fwdc230b.bin`의 난독화를 풀고, 사진이 만들어져 저장되는 경로와 메뉴·AF·업데이트 코드를 추적한 연구 기록입니다.
+리코가 배포한 K-3 II 펌웨어 `fwdc230b.bin`의 난독화를 풀고 사진이 만들어져 저장되는 경로와 메뉴·AF·업데이트 코드를 추적한 연구 기록입니다.
 
 **문서는 여기서 읽습니다 → [https://yunhyok.github.io/pentax-k3ii-firmware-analysis/](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/)**
 
@@ -8,7 +8,7 @@
 
 <sub>사진: © Jörgens.Mi/Wikipedia, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/), [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Pentax_K3-II_jm37903.jpg) (크기 축소). 자세한 출처는 [assets/photos/CREDITS.md](assets/photos/CREDITS.md).</sub>
 
-> **먼저 알아 둘 점.** 모든 분석은 PC에서 했습니다. 수정한 펌웨어를 카메라에 설치하거나 실행한 적이 없습니다. 이 저장소에는 카메라에 넣을 수 있는 펌웨어가 없고, 원본 펌웨어와 난독화를 푼 바이너리도 없습니다.
+> **먼저 알아 둘 점.** 모든 분석은 PC에서 했습니다. 수정한 펌웨어를 카메라에 설치하거나 실행한 적이 없습니다. 이 저장소에는 카메라에 넣을 수 있는 펌웨어가 없고 원본 펌웨어와 난독화를 푼 바이너리도 없습니다.
 
 ## 무엇을 알아냈나
 
@@ -119,7 +119,7 @@ python verify_publication.py
 
 </details>
 
-톤 함수 C 재컴파일에는 pyelftools와 Zig 0.17.1도 필요하며, 설치와 빌드 옵션은 [톤 보간 함수 C 재구현](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/tone-rebuild.html#reproduce)에 적었습니다.
+톤 함수 C 재컴파일에는 pyelftools와 Zig 0.17.1도 필요하며 설치와 빌드 옵션은 [톤 보간 함수 C 재구현](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/tone-rebuild.html#reproduce)에 적었습니다.
 
 ## 저장소 구성
 

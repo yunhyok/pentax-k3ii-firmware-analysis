@@ -351,11 +351,11 @@
 <p>이 결과는 원본 코드의 제한된 구간을 합성 메모리에서 실행해 얻었습니다. 실물 카메라에서 얻은 값은 없습니다.</p>
 <ul>
 <li><strong>레코드의 실제 내용</strong>: 실물 카메라의 섹터 14에 무엇이 들어 있는지, 다섯 워드가 무엇을 뜻하는지 모릅니다. SerialNo(UID)는 출력 레이블로만 확인했습니다.</li>
-<li><strong>메시지의 출처</strong> — 애플리케이션 복사본을 고치는 메시지를 누가 보내는지 추적하지 않았습니다.</li>
-<li><strong>복사본의 역전달</strong> — 복사본의 값이 공급자 RAM 사본을 거쳐 플래시로 가는 경로는 확인하지 못했습니다.</li>
-<li><strong>섹터 14의 나머지</strong> — 저장 함수가 조회하는 나머지 ID 78개의 공급자는 등록하지 않았습니다.</li>
-<li><strong>진단 경로의 도달 조건</strong> — 어떤 조작으로 진단 CSV 기록에 이르는지, 파일이 실제로 만들어지는지 확인하지 않았습니다.</li>
-<li><strong>하위 플래시 동작</strong> — 섹터 쓰기 함수 안쪽과 전원을 끈 뒤의 유지 여부는 범위 밖입니다.</li>
+<li><strong>메시지의 출처</strong>: 애플리케이션 복사본을 고치는 메시지를 누가 보내는지 추적하지 않았습니다.</li>
+<li><strong>복사본의 역전달</strong>: 복사본의 값이 공급자 RAM 사본을 거쳐 플래시로 가는 경로는 확인하지 못했습니다.</li>
+<li><strong>섹터 14의 나머지</strong>: 저장 함수가 조회하는 나머지 ID 78개의 공급자는 등록하지 않았습니다.</li>
+<li><strong>진단 경로의 도달 조건</strong>: 어떤 조작으로 진단 CSV 기록에 이르는지, 파일이 실제로 만들어지는지 확인하지 않았습니다.</li>
+<li><strong>하위 플래시 동작</strong>: 섹터 쓰기 함수 안쪽과 전원을 끈 뒤의 유지 여부는 범위 밖입니다.</li>
 </ul>
 </section>
 
@@ -385,8 +385,8 @@ python verify_preserved_record.py .private/decoded/decoded.bin --compare analysi
 </main>
 </div>
 <!-- chrome:bottom -->
-<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">촬영 준비와 보존 레코드 — 이 주제의 문서</h2><ol><li><a href="guide-capture.html">촬영 준비·보존 레코드 안내</a></li><li><a href="pixel-records.html">보존 픽셀 레코드와 촬영 패킷</a></li><li><a href="pixel-policy.html">픽셀 보정 활성값과 준비 분기</a></li><li><a href="capture-prepare.html">촬영 준비의 연속 호출</a></li><li><a href="store-image-records.html">JPEG 완료값과 저장 레코드</a></li><li><a href="preserved-sector20.html">보존 섹터 20·21과 정책 입력</a></li><li><a href="preserved-config.html">정책 플래그의 생산자</a></li><li><a href="preserved-dispatch.html">보존 레코드의 상위 명령 경로</a></li><li><a href="preserved-continuity.html">작업자 매개변수와 목록 응답</a></li><li><a href="register-dma.html">보정 결과 레지스터와 DMA 준비<span>두 채널의 별도 원본 실행</span></a></li><li><a href="preserved-record.html" aria-current="page">보존 섹터 14의 진단 레코드</a></li><li><a href="settings-storage.html">보존 섹터의 설정 저장</a></li></ol></nav>
-<nav class="pager" aria-label="이전·다음 문서"><a class="prev" href="register-dma.html"><small>← 이전</small>보정 결과 레지스터와 DMA 준비</a><a class="next" href="settings-storage.html"><small>다음 →</small>보존 섹터의 설정 저장</a></nav>
+<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">촬영 준비와 보존 레코드 — 이 주제의 문서</h2><ol><li><a href="guide-capture.html">촬영 준비·보존 레코드 안내</a></li><li><a href="pixel-records.html">보존 픽셀 레코드와 촬영 패킷</a></li><li><a href="pixel-policy.html">픽셀 보정 활성값과 준비 분기</a></li><li><a href="capture-prepare.html">촬영 준비의 연속 호출</a></li><li><a href="store-image-records.html">JPEG 완료값과 저장 레코드</a></li><li><a href="preserved-sector20.html">보존 섹터 20·21과 정책 입력</a></li><li><a href="preserved-config.html">정책 플래그의 생산자</a></li><li><a href="preserved-dispatch.html">보존 레코드의 상위 명령 경로</a></li><li><a href="preserved-continuity.html">작업자 매개변수와 목록 응답</a></li><li><a href="register-dma.html">검출 결과 레지스터와 DMA 준비<span>두 실험: 결과 레지스터, DMA 인수</span></a></li><li><a href="preserved-record.html" aria-current="page">보존 섹터 14의 진단 레코드</a></li><li><a href="settings-storage.html">보존 섹터의 설정 저장</a></li></ol></nav>
+<nav class="pager" aria-label="이전·다음 문서"><a class="prev" href="register-dma.html"><small>← 이전</small>검출 결과 레지스터와 DMA 준비</a><a class="next" href="settings-storage.html"><small>다음 →</small>보존 섹터의 설정 저장</a></nav>
 <footer class="sitefoot"><div class="sitefoot-in"><nav aria-label="사이트"><a href="../index.html#map">문서 지도</a><a href="../index.html#levels">검증 수준 읽는 법</a><a href="../glossary.html">용어집</a><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/research-program.html">세 기종 연구 본부</a><a href="https://github.com/yunhyok/pentax-k3ii-firmware-analysis">GitHub 저장소</a></nav><p>PENTAX K-3 II 펌웨어 1.12 분석 문서. PC에서 수행한 정적 분석과 에뮬레이션 결과이며, 카메라 실기에서 검증한 내용이 아닙니다. 원본 펌웨어와 복호화한 바이너리는 포함하지 않습니다.</p></div></footer>
 <!-- /chrome:bottom -->
 </body>

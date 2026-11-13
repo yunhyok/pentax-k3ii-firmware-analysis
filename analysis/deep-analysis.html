@@ -182,7 +182,7 @@
 <tr><td><code>0xFFFE</code>~<code>0xFFFF</code></td><td><code>10 80</code></td><td>리셋 벡터. ROM <code>0x1080</code>을 가리킵니다.</td></tr>
 </tbody></table></div>
 <ul>
-<li><strong>리셋 벡터</strong> — 벡터가 가리키는 ROM <code>0x1080</code>은 보조 헤더 바로 뒤, 곧 코드의 첫 바이트입니다.</li>
+<li><strong>리셋 벡터</strong>: 벡터가 가리키는 ROM <code>0x1080</code>은 보조 헤더 바로 뒤, 곧 코드의 첫 바이트입니다.</li>
 <li><strong>첫 명령</strong>: <code>E4 02 4E</code>는 <code>MOVW A,#0x024E</code>, 이어지는 <code>E1</code>은 <code>MOVW SP,A</code>로 읽힙니다. 스택을 잡고 PS(프로그램 상태)의 비트를 정리한 뒤 ROM <code>0x72C1</code>을 호출하는 흐름입니다. 14개 명령이 모두 Fujitsu 명령표와 맞습니다.</li>
 <li><strong>인터럽트 벡터</strong>: ROM <code>0xFFDC</code>~<code>0xFFFB</code>의 2바이트 항목 16개 가운데 10개가 ROM <code>0x23B8</code>을 가리킵니다. 이곳에는 레지스터를 저장하고 되돌린 뒤 <code>RETI</code>(인터럽트 복귀)로 끝나는 코드가 있습니다.</li>
 </ul>
@@ -315,8 +315,8 @@
 
 <p>이 함수는 문자열을 가리키는 포인터를 검색해서는 찾을 수 없었습니다. 실제 코드는 현재 실행 위치를 기준으로 문자열 주소를 계산하는 명령(PC 상대 <code>ADD</code>)을 쓰기 때문입니다. VA <code>0x0252ADF4</code>의 명령이 진단 문구를 참조합니다. 이 명령을 포함하는 함수의 진입점은 VA <code>0x02529664</code>입니다.</p>
 <ul>
-<li><strong>호출 지점</strong> — 네 곳을 하나씩 확인했습니다(주소는 아래 세부 근거의 표). 호출 지점을 빠짐없이 찾은 목록은 아닙니다.</li>
-<li><strong>버퍼 할당</strong> — 할당 함수로 보이는 VA <code>0x0270C56C</code>가 0을 돌려주면 오류 진단을 출력하는 쪽으로 분기합니다.</li>
+<li><strong>호출 지점</strong>: 네 곳을 하나씩 확인했습니다(주소는 아래 세부 근거의 표). 호출 지점을 빠짐없이 찾은 목록은 아닙니다.</li>
+<li><strong>버퍼 할당</strong>: 할당 함수로 보이는 VA <code>0x0270C56C</code>가 0을 돌려주면 오류 진단을 출력하는 쪽으로 분기합니다.</li>
 <li><strong>작업 링크</strong>: 성공한 경로에서는 작업 객체의 <code>+0x20C8</code>, <code>+0x20D0</code>, <code>+0x20C4</code>에 링크를 써 넣는 작은 함수들이 호출됩니다.</li>
 <li><strong>컨트롤러 전달</strong>: 컨트롤러 래퍼(VA <code>0x026DB894</code>)는 VA <code>0x025A11F8</code>을 거쳐 상태를 설정합니다. 그다음 컨트롤러 <code>+0x340</code>의 신호 객체에 값 1을 전달합니다.</li>
 </ul>

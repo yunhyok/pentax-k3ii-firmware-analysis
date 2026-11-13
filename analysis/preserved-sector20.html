@@ -416,11 +416,11 @@
 <h2>한계와 남은 과제</h2>
 <p id="scope">원본 명령을 다른 코드로 바꿔 실행한 부분은 없습니다. 다만 시작 상태와 호출 경계를 준비해 제한된 구간만 실행한 결과입니다.</p>
 <ul>
-<li><strong>전체 시작 코드</strong> — 생성자와 등록 구간만 따로 실행했습니다. 그 사이의 초기화와 동기화는 포함하지 않았습니다.</li>
-<li><strong>설정 바이트의 생산자</strong> — 이 문서에서는 시험값입니다. 원본 생산자는 <a href="preserved-config.html">정책 플래그의 생산자</a>에 있습니다.</li>
-<li><strong>패킷의 전달과 검증</strong> — 패킷 함수에 직접 인수를 주었습니다. 상위 명령 처리기는 <a href="preserved-dispatch.html">보존 레코드의 상위 명령 경로</a>에서 다룹니다.</li>
-<li><strong>저장의 앞뒤</strong> — 저장 함수의 전처리와 반환, 섹터 쓰기 함수 본문, 물리 플래시 기록은 실행하지 않았습니다.</li>
-<li><strong>값의 의미</strong> — 레코드 내용에 보정값·노출·온도 같은 물리적 의미를 붙일 근거가 아직 없습니다.</li>
+<li><strong>전체 시작 코드</strong>: 생성자와 등록 구간만 따로 실행했습니다. 그 사이의 초기화와 동기화는 포함하지 않았습니다.</li>
+<li><strong>설정 바이트의 생산자</strong>: 이 문서에서는 시험값입니다. 원본 생산자는 <a href="preserved-config.html">정책 플래그의 생산자</a>에 있습니다.</li>
+<li><strong>패킷의 전달과 검증</strong>: 패킷 함수에 직접 인수를 주었습니다. 상위 명령 처리기는 <a href="preserved-dispatch.html">보존 레코드의 상위 명령 경로</a>에서 다룹니다.</li>
+<li><strong>저장의 앞뒤</strong>: 저장 함수의 전처리와 반환, 섹터 쓰기 함수 본문, 물리 플래시 기록은 실행하지 않았습니다.</li>
+<li><strong>값의 의미</strong>: 레코드 내용에 보정값·노출·온도 같은 물리적 의미를 붙일 근거가 아직 없습니다.</li>
 </ul>
 </section>
 
@@ -449,7 +449,7 @@ python verify_preserved_sector20.py .private/decoded/decoded.bin --compare analy
 </main>
 </div>
 <!-- chrome:bottom -->
-<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">촬영 준비와 보존 레코드 — 이 주제의 문서</h2><ol><li><a href="guide-capture.html">촬영 준비·보존 레코드 안내</a></li><li><a href="pixel-records.html">보존 픽셀 레코드와 촬영 패킷</a></li><li><a href="pixel-policy.html">픽셀 보정 활성값과 준비 분기</a></li><li><a href="capture-prepare.html">촬영 준비의 연속 호출</a></li><li><a href="store-image-records.html">JPEG 완료값과 저장 레코드</a></li><li><a href="preserved-sector20.html" aria-current="page">보존 섹터 20·21과 정책 입력</a></li><li><a href="preserved-config.html">정책 플래그의 생산자</a></li><li><a href="preserved-dispatch.html">보존 레코드의 상위 명령 경로</a></li><li><a href="preserved-continuity.html">작업자 매개변수와 목록 응답</a></li><li><a href="register-dma.html">보정 결과 레지스터와 DMA 준비<span>두 채널의 별도 원본 실행</span></a></li><li><a href="preserved-record.html">보존 섹터 14의 진단 레코드</a></li><li><a href="settings-storage.html">보존 섹터의 설정 저장</a></li></ol></nav>
+<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">촬영 준비와 보존 레코드 — 이 주제의 문서</h2><ol><li><a href="guide-capture.html">촬영 준비·보존 레코드 안내</a></li><li><a href="pixel-records.html">보존 픽셀 레코드와 촬영 패킷</a></li><li><a href="pixel-policy.html">픽셀 보정 활성값과 준비 분기</a></li><li><a href="capture-prepare.html">촬영 준비의 연속 호출</a></li><li><a href="store-image-records.html">JPEG 완료값과 저장 레코드</a></li><li><a href="preserved-sector20.html" aria-current="page">보존 섹터 20·21과 정책 입력</a></li><li><a href="preserved-config.html">정책 플래그의 생산자</a></li><li><a href="preserved-dispatch.html">보존 레코드의 상위 명령 경로</a></li><li><a href="preserved-continuity.html">작업자 매개변수와 목록 응답</a></li><li><a href="register-dma.html">검출 결과 레지스터와 DMA 준비<span>두 실험: 결과 레지스터, DMA 인수</span></a></li><li><a href="preserved-record.html">보존 섹터 14의 진단 레코드</a></li><li><a href="settings-storage.html">보존 섹터의 설정 저장</a></li></ol></nav>
 <nav class="pager" aria-label="이전·다음 문서"><a class="prev" href="store-image-records.html"><small>← 이전</small>JPEG 완료값과 저장 레코드</a><a class="next" href="preserved-config.html"><small>다음 →</small>정책 플래그의 생산자</a></nav>
 <footer class="sitefoot"><div class="sitefoot-in"><nav aria-label="사이트"><a href="../index.html#map">문서 지도</a><a href="../index.html#levels">검증 수준 읽는 법</a><a href="../glossary.html">용어집</a><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/research-program.html">세 기종 연구 본부</a><a href="https://github.com/yunhyok/pentax-k3ii-firmware-analysis">GitHub 저장소</a></nav><p>PENTAX K-3 II 펌웨어 1.12 분석 문서. PC에서 수행한 정적 분석과 에뮬레이션 결과이며, 카메라 실기에서 검증한 내용이 아닙니다. 원본 펌웨어와 복호화한 바이너리는 포함하지 않습니다.</p></div></footer>
 <!-- /chrome:bottom -->
