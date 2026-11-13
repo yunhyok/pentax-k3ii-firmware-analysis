@@ -29,8 +29,8 @@
 <ul>
 <li>RAW File Format 메뉴의 두 선택지는 <strong>설정값 하나</strong>로 저장됩니다. PEF는 0, DNG는 1입니다.</li>
 <li>항목을 고르면 화면 객체의 <strong>임시값만</strong> 바뀝니다. 적용 이벤트를 받아야 RAM의 설정(현재값과 미러)에 기록합니다. 취소 이벤트는 기록하지 않고 임시값을 원래 값으로 되돌립니다.</li>
-<li>메뉴 글자 세 개(RAW File Format, PEF, DNG)가 리소스 표에서 글자 객체로 만들어지고, 언어에 따라 16비트 글리프 배열로 준비되는 과정을 실행했습니다. 화면에 그리는 단계는 실행하지 않았습니다.</li>
-<li>이 메뉴는 K-3 III에도 같은 이름으로 있습니다. 그러나 이 문서의 번호와 객체 구조는 K-3 II의 것이고, 다른 기종과 호환된다는 근거는 없습니다. 실제 버튼, LCD 표시, 플래시 저장도 확인하지 않았습니다.</li>
+<li>메뉴 글자 세 개(RAW File Format, PEF, DNG)가 리소스 표에서 글자 객체로 만들어지는 과정을 실행했습니다. 언어에 따라 16비트 글리프 배열로 준비되는 과정도 실행했습니다. 화면에 그리는 단계는 실행하지 않았습니다.</li>
+<li>이 메뉴는 K-3 III에도 같은 이름으로 있습니다. 그러나 이 문서의 번호와 객체 구조는 K-3 II의 것이고 다른 기종과 호환된다는 근거는 없습니다. 실제 버튼, LCD 표시, 플래시 저장도 확인하지 않았습니다.</li>
 </ul>
 </section>
 
@@ -66,16 +66,16 @@
 </dl>
 <p>이 문서는 두 형식의 파일 내용을 다루지 않습니다. 다루는 것은 메뉴에서 형식을 고르는 동작과 메뉴 글자입니다. 임시값, 현재값과 미러, 뱅크, 논리 동작 같은 용어는 <a href="color-ui.html#background">색공간 메뉴 문서의 배경</a>과 같은 뜻으로 씁니다. 추가로 쓰는 말은 아래와 같습니다.</p>
 <dl class="kv">
-<dt>글리프 코드</dt><dd>글자 하나를 가리키는 펌웨어 내부 번호입니다. 글꼴 안의 그림 번호에 해당하며, 표준 문자 코드라고 확정하지 않았습니다.</dd>
+<dt>글리프 코드</dt><dd>글자 하나를 가리키는 펌웨어 내부 번호입니다. 글꼴 안의 그림 번호에 해당하며 표준 문자 코드라고 확정하지 않았습니다.</dd>
 <dt>언어 표</dt><dd>같은 문구의 언어별 글리프 데이터 주소를 모아 둔 표입니다. 언어 인덱스로 한 칸을 고릅니다.</dd>
-<dt>글자 객체와 래퍼</dt><dd>글자 객체는 문구 하나를 준비하는 객체이고, 래퍼는 그 객체를 위젯으로 감싼 객체입니다. 원문 검증기에서는 각각 renderer, wrapper라고 부릅니다.</dd>
+<dt>글자 객체와 래퍼</dt><dd>글자 객체는 문구 하나를 준비하는 객체이고 래퍼는 그 객체를 위젯으로 감싼 객체입니다. 원문 검증기에서는 각각 renderer, wrapper라고 부릅니다.</dd>
 <dt>주소 표기</dt><dd>코드와 표의 위치는 복호화한 펌웨어 파일의 오프셋입니다. <code>screen+0xF9</code>, <code>renderer+0x90</code>처럼 쓴 것은 객체 안의 필드 위치입니다.</dd>
 </dl>
 </section>
 
 <section id="mapping">
 <h2>분석 대상은 제조사 대응표에 공통으로 있는 항목입니다</h2>
-<p class="takeaway">리코의 메뉴 대비표는 K-3 II와 K-3 III의 RAW 파일 형식 항목을 서로 대응시킵니다. 이것은 기능이 같다는 근거이고, 내부 번호나 코드가 호환된다는 근거는 아닙니다.</p>
+<p class="takeaway">리코의 메뉴 대비표는 K-3 II와 K-3 III의 RAW 파일 형식 항목을 서로 대응시킵니다. 이것은 기능이 같다는 근거이고 내부 번호나 코드가 호환된다는 근거는 아닙니다.</p>
 <p>리코가 공개한 K-3 Mark III 메뉴 대비표(K-3 II 편) 1쪽에는 K-3 II의 촬영 메뉴 1 → 記録設定(영문 설명서의 Image Capture Settings) → RAWファイル形式이 K-3 III의 촬영 메뉴 5 → RAWファイル形式과 같은 줄에 놓여 있습니다(<a href="https://www.ricoh-imaging.co.jp/japan/support/pdf/k-3-3_09.pdf">대비표 PDF</a>, <a href="https://www.ricoh-imaging.co.jp/japan/support/product_support_k-3-3_correlation_table.html">대비표 안내 페이지</a>). 두 기종에 모두 있는 메뉴라서 비교의 출발점으로 골랐습니다.</p>
 
 <div class="table-wrap"><table>
@@ -158,9 +158,9 @@
 <li><strong>취소로 처리되는 이벤트는 3과 <code>0xF</code>입니다.</strong> 설정은 그대로 두고 임시값을 기존 값으로 되돌렸습니다.</li>
 <li><strong>다른 항목 번호로 온 이벤트는 무시됩니다.</strong> 설정도 임시값도 바뀌지 않아, 고른 값이 임시값에 남았습니다.</li>
 <li><strong>고른 뒤 다른 위젯으로 옮겨 가도 임시값은 남습니다.</strong> 모든 사례에서 반대쪽 위젯을 떠나는 동작을 넣었고 임시값은 그대로였습니다.</li>
-<li><strong>기록은 고른 뱅크에만 합니다.</strong> 활성 인덱스 0~7의 뱅크는 0, 0, 2, 3, 4, 5, 6, 7입니다. 현재값과 미러의 해당 뱅크 바이트만 바뀌었고, 표식값을 넣어 둔 다른 뱅크는 그대로였습니다.</li>
+<li><strong>기록은 고른 뱅크에만 합니다.</strong> 활성 인덱스 0~7의 뱅크는 0, 0, 2, 3, 4, 5, 6, 7입니다. 현재값과 미러의 해당 뱅크 바이트만 바뀌었고 표식값을 넣어 둔 다른 뱅크는 그대로였습니다.</li>
 </ul>
-<p>저장값을 위젯 번호로 바꿔 주는 조회 함수도 실행했습니다. 0이면 PEF 위젯, 1이면 DNG 위젯을 돌려주고, 대조로 넣은 값 2에서는 “해당 위젯 없음”을 뜻하는 0을 돌려줬습니다.</p>
+<p>저장값을 위젯 번호로 바꿔 주는 조회 함수도 실행했습니다. 0이면 PEF 위젯, 1이면 DNG 위젯을 돌려주고 대조로 넣은 값 2에서는 “해당 위젯 없음”을 뜻하는 0을 돌려줬습니다.</p>
 <div class="callout"><strong class="label">참고</strong>
 <p><a href="color-ui.html#state">색공간 메뉴</a>와 견주면 구조는 같고 세부가 다릅니다. 색공간 화면은 취소해도 임시값이 남고 다시 열 때 저장값으로 덮어씁니다. 이 화면은 기존 값을 따로 들고 있다가 취소 이벤트에서 곧바로 되돌립니다. <a href="superresolution-lifecycle.html#menu">Pixel Shift Resolution 메뉴</a>도 고르기와 적용이 나뉘어 있고 같은 설정 쓰기 함수를 씁니다.</p></div>
 
@@ -190,7 +190,7 @@
 
 <section id="text">
 <h2>메뉴 글자는 리소스에서 글리프 배열로 준비됩니다</h2>
-<p class="takeaway">위젯 번호로 리소스 레코드를 찾아 글자 객체를 만들고, 글자 객체는 언어에 맞는 글리프 데이터를 16비트 배열로 펼칩니다. 두 구간을 각각 실행했고, 화면에 그리는 단계는 실행하지 않았습니다.</p>
+<p class="takeaway">위젯 번호로 리소스 레코드를 찾아 글자 객체를 만들고 글자 객체는 언어에 맞는 글리프 데이터를 16비트 배열로 펼칩니다. 두 구간을 각각 실행했고 화면에 그리는 단계는 실행하지 않았습니다.</p>
 
 <figure class="diagram">
 <figcaption>글자 리소스가 글리프 배열이 되기까지: 실행한 두 구간</figcaption>
@@ -256,10 +256,10 @@
 </figure>
 
 <h3>글자 객체에 들어가는 값</h3>
-<p>리소스 레코드는 20바이트이고, 위젯 번호, 종류(4), 언어 표 주소, 3, 0 순서로 들어 있습니다. 글자 객체가 만들어지면 객체의 <code>+0x90</code>에 언어 표 주소가, <code>+0x84</code>에 16비트 스타일 값이 기록됩니다. 세 레코드의 스타일 값은 모두 4였습니다.</p>
+<p>리소스 레코드는 20바이트이고 위젯 번호, 종류(4), 언어 표 주소, 3, 0 순서로 들어 있습니다. 글자 객체가 만들어지면 객체의 <code>+0x90</code>에 언어 표 주소가, <code>+0x84</code>에 16비트 스타일 값이 기록됩니다. 세 레코드의 스타일 값은 모두 4였습니다.</p>
 
 <h3>언어에 따라 달라지는 글리프 준비</h3>
-<p>준비 함수는 활성 언어 인덱스로 언어 표의 한 칸을 고릅니다. 언어마다 글리프 데이터가 1바이트 단위인지 2바이트 단위인지는 별도의 표가 정합니다. 어느 쪽이든 결과는 16비트 배열이고, 길이에는 끝 표시(0)가 포함됩니다. 글자 객체의 <code>+0xAC</code>가 0이 아니면 활성 언어와 상관없이 인덱스 0을 씁니다.</p>
+<p>준비 함수는 활성 언어 인덱스로 언어 표의 한 칸을 고릅니다. 언어마다 글리프 데이터가 1바이트 단위인지 2바이트 단위인지는 별도의 표가 정합니다. 어느 쪽이든 결과는 16비트 배열이고 길이에는 끝 표시(0)가 포함됩니다. 글자 객체의 <code>+0xAC</code>가 0이 아니면 활성 언어와 상관없이 인덱스 0을 씁니다.</p>
 <div class="table-wrap"><table>
 <caption>글리프 준비 12건: 준비된 16비트 단위 수(끝 표시 포함)</caption>
 <thead><tr><th>문구</th><th class="n">언어 인덱스 0<br>(1바이트 소스)</th><th class="n">언어 인덱스 9<br>(1바이트 소스, 빈 문구)</th><th class="n">언어 인덱스 10<br>(2바이트 소스)</th><th class="n">인덱스 10에서<br>인덱스 0 강제</th></tr></thead>
@@ -284,7 +284,7 @@
 <tr><th scope="row">화면 설정 코드</th><td>RAW File Format <code>0x3E4320</code>, PEF <code>0x3E4368</code>, DNG <code>0x3E4380</code></td></tr>
 <tr><th scope="row">글자 객체의 가상 함수 표</th><td><code>0xA5D1AC</code>, 슬롯 <code>+0xC</code>가 준비 진입 <code>0x873A1C</code>, 준비 함수 <code>0x873964</code></td></tr>
 <tr><th scope="row">글자 객체의 필드</th><td><code>renderer+0x90</code> 언어 표 주소, <code>renderer+0x84</code> 16비트 스타일, <code>renderer+0xAC</code> 인덱스 0 강제 플래그</td></tr>
-<tr><th scope="row">언어별 단위 표</th><td><code>0xDDDB88</code>. 언어마다 1바이트이고, 0이 아니면 1바이트 소스</td></tr>
+<tr><th scope="row">언어별 단위 표</th><td><code>0xDDDB88</code>. 언어마다 1바이트이고 0이 아니면 1바이트 소스</td></tr>
 <tr><th scope="row">준비 결과</th><td>배열 주소(<code>+0</code>)와 16비트 단위 수(<code>+4</code>)</td></tr>
 <tr><th scope="row">래퍼의 필드와 함수</th><td><code>+0x5C</code>·<code>+0x60</code> 언어 표, <code>+0x64</code> 스타일. 첫째 표 설정 <code>0x82DE20</code>, 둘째 표 설정 <code>0x82DE2C</code>(둘 다 넘긴 주소가 0이면 쓰지 않음), 상태 선택 <code>0x82DE38</code>. 화면의 <code>0x3E4630</code> → <code>0x82DE2C</code>가 제목의 둘째 언어 표를 설정</td></tr>
 <tr><th scope="row">같은 언어 표를 쓰는 다른 레코드</th><td><code>0x9938E8</code>의 type 3 레코드(위젯 <code>0x01500049</code>)도 언어 표 <code>0xE3FE34</code>를 가리킴</td></tr>
@@ -305,10 +305,10 @@
 <section id="limits">
 <h2>한계와 남은 과제</h2>
 <ul>
-<li><strong>입력</strong> — 이벤트 번호를 화면의 가상 함수에 직접 전달했습니다. 버튼을 누른 시험이 아니고, 이벤트 번호가 어느 버튼인지도 모릅니다.</li>
-<li><strong>표시</strong> — 리소스 검색에서 글자 객체 생성까지, 글자 객체에서 글리프 배열까지를 각각 실행했습니다. 두 구간을 이어 화면 전체를 그린 것이 아닙니다. 글꼴 그리기와 LCD 출력은 실행하지 않았습니다.</li>
-<li><strong>저장과 효과</strong> — RAM의 현재값과 미러까지만 확인했습니다. 플래시 저장은 <a href="settings-storage.html#save">보존 섹터의 설정 저장</a>에서 따로 다루며, 그 검증에서 PEF를 DNG로 바꾼 설정이 섹터 쓰기 요청에 도달했습니다. 이 설정이 실제 RAW 파일 기록을 어떻게 바꾸는지는 이 문서의 범위가 아닙니다.</li>
-<li><strong>다른 기종</strong> — K-3 III와 Q7의 번호와 글자 준비 방식은 이 결과로 대신할 수 없습니다. 지금은 기능 대응표를 바탕으로 각 기종의 고르기·적용 규칙을 비교하는 단계입니다. 메뉴를 옮겨 실행하거나 펌웨어를 고친 적은 없습니다. 세 기종 비교는 <a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/ui-port-contract.html">K-3 III 저장소의 UI 이식 설계</a>에 있습니다.</li>
+<li><strong>입력</strong>: 이벤트 번호를 화면의 가상 함수에 직접 전달했습니다. 버튼을 누른 시험이 아니고 이벤트 번호가 어느 버튼인지도 모릅니다.</li>
+<li><strong>표시</strong>: 리소스 검색에서 글자 객체 생성까지, 글자 객체에서 글리프 배열까지를 각각 실행했습니다. 두 구간을 이어 화면 전체를 그리지는 않았습니다. 글꼴 그리기와 LCD 출력은 실행하지 않았습니다.</li>
+<li><strong>저장과 효과</strong>: RAM의 현재값과 미러까지만 확인했습니다. 플래시 저장은 <a href="settings-storage.html#save">보존 섹터의 설정 저장</a>에서 따로 다룹니다. 그 검증에서 PEF를 DNG로 바꾼 설정이 섹터 쓰기 요청에 도달했습니다. 이 설정이 실제 RAW 파일 기록을 어떻게 바꾸는지는 이 문서의 범위가 아닙니다.</li>
+<li><strong>다른 기종</strong>: K-3 III와 Q7의 번호와 글자 준비 방식은 이 결과로 대신할 수 없습니다. 지금은 기능 대응표를 바탕으로 각 기종의 고르기·적용 규칙을 비교하는 단계입니다. 메뉴를 옮겨 실행하거나 펌웨어를 고친 적은 없습니다. 세 기종 비교는 <a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/ui-port-contract.html">K-3 III 저장소의 UI 이식 설계</a>에 있습니다.</li>
 </ul>
 </section>
 
@@ -318,7 +318,7 @@
 <pre><code>python verify_ui_resources.py decoded.bin --compare analysis/ui-resources.json
 python -m unittest discover -s tests -v
 python verify_publication.py</code></pre>
-<p>첫 명령은 리소스 레코드, 분기, 가상 함수 표를 파일 바이트로 확인한 뒤 원본 코드를 실행합니다. 리소스 검색, 글리프 준비, 화면의 가상 함수, 뱅크 계산, RAM 쓰기는 원본 명령으로 실행하고, 결과가 저장소의 <code>ui-resources.json</code>과 다르면 실패합니다. 나머지 두 명령은 펌웨어 없이 돌아가는 단위 테스트와 문서 검사입니다.</p>
+<p>첫 명령은 리소스 레코드, 분기, 가상 함수 표를 파일 바이트로 확인한 뒤 원본 코드를 실행합니다. 리소스 검색, 글리프 준비, 화면의 가상 함수, 뱅크 계산, RAM 쓰기는 원본 명령으로 실행합니다. 결과가 저장소의 <code>ui-resources.json</code>과 다르면 실패합니다. 나머지 두 명령은 펌웨어 없이 돌아가는 단위 테스트와 문서 검사입니다.</p>
 </section>
 
 <section id="refs">

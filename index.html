@@ -50,7 +50,7 @@
 <p class="state">처리 경로와 설정값을 추적</p>
 <dl>
 <dt>알아낸 것</dt><dd>RAW에서 JPEG까지 가는 처리 단계와 톤 곡선·화이트밸런스·색 행렬 설정을 추적했습니다. 메뉴의 Reversal Film, Pixel Shift Resolution 같은 선택이 내부 값으로 이어지는 경로도 확인했습니다.</dd>
-<dt>아직 모르는 것</dt><dd>실제 픽셀이 처리되는 순서와 결과. Lightroom 프로파일로 카메라 색에 얼마나 다가갈 수 있는지는 RAW 한 장으로만 쟀습니다.</dd>
+<dt>아직 모르는 것</dt><dd>실제 픽셀이 처리되는 순서와 결과. Lightroom 프로파일로 카메라 색에 얼마나 다가갈 수 있는지는 RAW 두 장(차트 한 장과 야외 장면 한 장)으로만 쟀습니다.</dd>
 </dl>
 </li>
 <li class="card goal">
@@ -76,7 +76,7 @@
 
 <section class="band wrap" id="inside">
 <h2>펌웨어 파일 안에 든 것</h2>
-<p class="sub">배포 파일 <code>fwdc230b.bin</code>은 압축되어 있지 않고, 단순한 XOR 방식으로 난독화되어 있습니다. 풀어도 크기와 위치가 그대로입니다. 파일은 헤더 두 개와 난독화된 구간 세 개로 나뉩니다.</p>
+<p class="sub">배포 파일 <code>fwdc230b.bin</code>은 압축되어 있지 않고 단순한 XOR 방식으로 난독화되어 있습니다. 풀어도 크기와 위치가 그대로입니다. 파일은 헤더 두 개와 난독화된 구간 세 개로 나뉩니다.</p>
 <ul class="facts">
 <li><b>16,838,656바이트</b><span>파일 크기 (풀기 전후 같음)</span></li>
 <li><b>3개</b><span>XOR 난독화 구간</span></li>
@@ -127,7 +127,7 @@
 <div class="panel">
 <h3>어떤 CPU인가</h3>
 <p>시작 코드는 CPU의 식별 레지스터(<dfn title="Main ID Register. ARM CPU가 자신의 종류를 알려 주는 레지스터">MIDR</dfn>)를 읽어 부품 번호가 <code>0xC09</code>인지 검사합니다. Arm 문서에서 이 번호는 Cortex-A9입니다. 리코는 이 카메라의 영상 엔진을 PRIME III라고 부릅니다.</p>
-<p class="small muted">확인한 것은 펌웨어 안의 검사 코드입니다. 실제 카메라에서 레지스터 값을 읽은 것이 아니며, 칩의 부품 번호·코어 수·동작 클럭은 확인하지 못했습니다.</p>
+<p class="small muted">확인한 것은 펌웨어 안의 검사 코드입니다. 실제 카메라에서 레지스터 값을 읽은 것이 아니며 칩의 부품 번호·코어 수·동작 클럭은 확인하지 못했습니다.</p>
 </div>
 <div class="panel">
 <h3>K-3 Mark III와 무엇이 다른가</h3>
@@ -144,7 +144,7 @@
 <li><span class="badge ok">확인</span>
 <p>원본 펌웨어의 기계어를 PC의 CPU 에뮬레이터에서 실제로 실행해 관측했거나, 파일의 바이트를 직접 읽어 구조와 해시를 대조한 결과입니다.</p></li>
 <li><span class="badge static">정적 분석</span>
-<p>코드를 실행하지 않고, 기계어를 사람이 읽을 수 있게 바꾼 결과를 읽어서 판단한 내용입니다.</p></li>
+<p>코드를 실행하지 않고 기계어를 사람이 읽을 수 있게 바꾼 결과를 읽어서 판단한 내용입니다.</p></li>
 <li><span class="badge model">모델</span>
 <p>하드웨어의 응답이나 입력 데이터처럼, 실물 대신 연구자가 정해서 넣은 값입니다. 그 조건에서만 성립합니다.</p></li>
 <li><span class="badge open">미확인</span>
@@ -187,14 +187,14 @@
 </div>
 <ul class="dg-legend"><li><i class="ok"></i>확인</li><li><i class="model"></i>모델</li><li><i class="open"></i>미확인</li></ul>
 </figure>
-<p class="wrap-note small muted">이 기종의 RAW로 한 Lightroom 색 프로파일 실험은 성격이 다릅니다. 실제 RAW 파일을 실제 Adobe Lightroom Classic에 넣어 얻은 측정값이며, <a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/lightroom-bridge.html">K-3 Mark III 저장소의 Lightroom 색 프로파일 문서</a>에 세 기종을 함께 정리했습니다.</p>
+<p class="wrap-note small muted">이 기종의 RAW로 한 Lightroom 색 프로파일 실험은 성격이 다릅니다. 실제 RAW 파일을 실제 Adobe Lightroom Classic에 넣어 얻은 측정값입니다. <a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/lightroom-bridge.html">K-3 Mark III 저장소의 Lightroom 색 프로파일 문서</a>에 세 기종을 함께 정리했습니다.</p>
 </section>
 
 <section class="band wrap" id="map">
 <h2>문서 지도</h2>
 <p class="sub">주제마다 “안내” 문서가 먼저 있습니다. 안내 문서에서 전체 그림을 본 뒤 세부 문서로 들어가면 읽기 쉽습니다. 낯선 용어는 <a href="glossary.html">용어집</a>에서 찾을 수 있습니다.</p>
 <!-- chrome:map -->
-<div class="sitemap"><section><h3 id="map-start">시작하기</h3><ol><li><a href="analysis/firmware-structure.html">펌웨어 파일 구조와 복호화</a><span>XOR 해제, 코드·주소 검증, 재현 절차</span></li><li><a href="analysis/deep-analysis.html">하드웨어 식별과 RAW 현상 개관</a><span>CPU 근거, 톤 곡선 생성</span></li><li><a href="glossary.html">용어집</a></li></ol></section><section><h3 id="map-pipeline">영상 처리와 저장 경로</h3><ol><li><a href="analysis/guide-pipeline.html">영상 처리 경로 안내</a></li><li><a href="analysis/pipeline-analysis.html">RAW 이후의 톤·WB·색 행렬</a></li><li><a href="analysis/tone-provenance.html">톤 문맥과 곡선 생산자의 연결</a><span>원본 포인터·정수 계산·곡선 생성의 분리 재현</span></li><li><a href="analysis/tone-inputs.html">톤 입력의 원본 생산자</a><span>생성자·상위 job 입력·기존값 유지 조건</span></li><li><a href="analysis/tone-scale.html">recipe+9C 정수 생산자와 내장 입력 복사</a><span>정수 계산 20조건과 원본 바이트 전달 3조건</span></li><li><a href="analysis/tone-upstream.html">R5 상위 입력과 0 소비자</a><span>원본 생성자·기술자·ROM 표와 0 분모 경계</span></li><li><a href="analysis/tone-manager.html">톤 설정 관리자와 내부 버퍼 기록</a><span>두 호출점·48바이트 복사·busy 상태의 정적 순서</span></li><li><a href="analysis/tone-selectors.html">selector 5·6의 직접 생산 경로</a><span>입력 halfword에서 하위 8비트까지·5개 원본 구간 재현</span></li><li><a href="analysis/output-menu-analysis.html">JPEG 출력 버퍼와 Reversal Film 메뉴</a></li><li><a href="analysis/storage-dma-analysis.html">파일시스템에서 SD·DMA까지</a></li><li><a href="analysis/backend-b-cpp-analysis.html">백엔드 B와 두 번째 CPP 출력</a></li><li><a href="analysis/masked-cpp-analysis.html">마스크 CPP와 보조 JPEG 입력</a></li><li><a href="analysis/superresolution-lifecycle.html">Pixel Shift 메뉴와 버퍼 수명</a></li></ol></section><section><h3 id="map-capture">촬영 준비와 보존 레코드</h3><ol><li><a href="analysis/guide-capture.html">촬영 준비·보존 레코드 안내</a></li><li><a href="analysis/pixel-records.html">보존 픽셀 레코드와 촬영 패킷</a></li><li><a href="analysis/pixel-policy.html">픽셀 보정 활성값과 준비 분기</a></li><li><a href="analysis/capture-prepare.html">촬영 준비의 연속 호출</a></li><li><a href="analysis/store-image-records.html">JPEG 완료값과 저장 레코드</a></li><li><a href="analysis/preserved-sector20.html">보존 섹터 20·21과 정책 입력</a></li><li><a href="analysis/preserved-config.html">정책 플래그의 생산자</a></li><li><a href="analysis/preserved-dispatch.html">보존 레코드의 상위 명령 경로</a></li><li><a href="analysis/preserved-continuity.html">작업자 매개변수와 목록 응답</a></li><li><a href="analysis/register-dma.html">보정 결과 레지스터와 DMA 준비</a><span>두 채널의 별도 원본 실행</span></li><li><a href="analysis/preserved-record.html">보존 섹터 14의 진단 레코드</a></li><li><a href="analysis/settings-storage.html">보존 섹터의 설정 저장</a></li></ol></section><section><h3 id="map-rebuild">재구축과 업데이트</h3><ol><li><a href="analysis/guide-rebuild.html">재구축·업데이트 안내</a></li><li><a href="analysis/rebuild.html">무손실 재포장과 업데이트 검사</a></li><li><a href="analysis/installation.html">업데이트 전송과 기록 오류</a></li><li><a href="analysis/tone-rebuild.html">톤 보간 함수 C 재구현</a></li></ol></section><section><h3 id="map-af">AF와 렌즈 제어</h3><ol><li><a href="analysis/guide-af.html">AF와 렌즈 제어 안내</a></li><li><a href="analysis/af-drive.html">렌즈 능력과 구동 분기</a></li><li><a href="analysis/af-control.html">AF 요청 계산과 구동 준비</a></li><li><a href="analysis/af-input.html">AF 카운터와 보정값</a></li></ol></section><section><h3 id="map-ui">메뉴와 UI</h3><ol><li><a href="analysis/guide-ui.html">메뉴·UI 안내</a></li><li><a href="analysis/color-ui.html">색공간 메뉴와 표시</a></li><li><a href="analysis/ui-resources.html">RAW 형식 메뉴와 텍스트</a></li><li><a href="analysis/ui-dispatch.html">색공간 메뉴 알림과 화면 전환</a></li></ol></section></div>
+<div class="sitemap"><section><h3 id="map-start">시작하기</h3><ol><li><a href="analysis/firmware-structure.html">펌웨어 파일 구조와 복호화</a><span>XOR 해제, 코드·주소 검증, 재현 절차</span></li><li><a href="analysis/deep-analysis.html">하드웨어 식별과 RAW 현상 개관</a><span>CPU 근거, 톤 곡선 생성</span></li><li><a href="glossary.html">용어집</a></li></ol></section><section><h3 id="map-pipeline">영상 처리와 저장 경로</h3><ol><li><a href="analysis/guide-pipeline.html">영상 처리 경로 안내</a></li><li><a href="analysis/pipeline-analysis.html">RAW 이후의 톤·WB·색 행렬</a></li><li><a href="analysis/tone-provenance.html">톤 문맥과 곡선 생산자의 연결</a><span>포인터·정수 계산·곡선 생성</span></li><li><a href="analysis/tone-inputs.html">톤 입력의 원본 생산자</a><span>초기값과 갱신·유지 조건</span></li><li><a href="analysis/tone-scale.html">recipe+9C 정수 생산자와 내장 입력 복사</a><span>정수 계산 20조건, 바이트 전달 3조건</span></li><li><a href="analysis/tone-upstream.html">R5 상위 입력과 0 소비자</a><span>상위 입력 7건과 0 분모</span></li><li><a href="analysis/tone-manager.html">톤 설정 관리자와 내부 버퍼 기록</a><span>두 호출자와 48바이트 설정 레코드</span></li><li><a href="analysis/tone-selectors.html">selector 5·6의 직접 생산 경로</a><span>하위 8비트 저장, 5사례</span></li><li><a href="analysis/output-menu-analysis.html">JPEG 출력 버퍼와 Reversal Film 메뉴</a></li><li><a href="analysis/storage-dma-analysis.html">파일시스템에서 SD·DMA까지</a></li><li><a href="analysis/backend-b-cpp-analysis.html">백엔드 B와 두 번째 CPP 출력</a></li><li><a href="analysis/masked-cpp-analysis.html">마스크 CPP와 보조 JPEG 입력</a></li><li><a href="analysis/superresolution-lifecycle.html">Pixel Shift 메뉴와 버퍼 수명</a></li><li><a href="analysis/raw-nr-feasibility.html">RAW 노이즈 감소를 끌 수 있는가</a></li></ol></section><section><h3 id="map-capture">촬영 준비와 보존 레코드</h3><ol><li><a href="analysis/guide-capture.html">촬영 준비·보존 레코드 안내</a></li><li><a href="analysis/pixel-records.html">보존 픽셀 레코드와 촬영 패킷</a></li><li><a href="analysis/pixel-policy.html">픽셀 보정 활성값과 준비 분기</a></li><li><a href="analysis/capture-prepare.html">촬영 준비의 연속 호출</a></li><li><a href="analysis/store-image-records.html">JPEG 완료값과 저장 레코드</a></li><li><a href="analysis/preserved-sector20.html">보존 섹터 20·21과 정책 입력</a></li><li><a href="analysis/preserved-config.html">정책 플래그의 생산자</a></li><li><a href="analysis/preserved-dispatch.html">보존 레코드의 상위 명령 경로</a></li><li><a href="analysis/preserved-continuity.html">작업자 매개변수와 목록 응답</a></li><li><a href="analysis/register-dma.html">검출 결과 레지스터와 DMA 준비</a><span>두 실험: 결과 레지스터, DMA 인수</span></li><li><a href="analysis/preserved-record.html">보존 섹터 14의 진단 레코드</a></li><li><a href="analysis/settings-storage.html">보존 섹터의 설정 저장</a></li></ol></section><section><h3 id="map-rebuild">재구축과 업데이트</h3><ol><li><a href="analysis/guide-rebuild.html">재구축·업데이트 안내</a></li><li><a href="analysis/rebuild.html">무손실 재포장과 업데이트 검사</a></li><li><a href="analysis/installation.html">업데이트 전송과 기록 오류</a></li><li><a href="analysis/tone-rebuild.html">톤 보간 함수 C 재구현</a></li></ol></section><section><h3 id="map-af">AF와 렌즈 제어</h3><ol><li><a href="analysis/guide-af.html">AF와 렌즈 제어 안내</a></li><li><a href="analysis/af-drive.html">렌즈 능력과 구동 분기</a></li><li><a href="analysis/af-control.html">AF 요청 계산과 구동 준비</a></li><li><a href="analysis/af-input.html">AF 카운터와 보정값</a></li></ol></section><section><h3 id="map-ui">메뉴와 UI</h3><ol><li><a href="analysis/guide-ui.html">메뉴·UI 안내</a></li><li><a href="analysis/color-ui.html">색공간 메뉴와 표시</a></li><li><a href="analysis/ui-resources.html">RAW 형식 메뉴와 텍스트</a></li><li><a href="analysis/ui-dispatch.html">색공간 메뉴 알림과 화면 전환</a></li></ol></section></div>
 <!-- /chrome:map -->
 </section>
 

@@ -27,8 +27,8 @@
 <section class="summary">
 <h2 data-toc="no">핵심 요약</h2>
 <ul>
-<li>보존 섹터 15~19(640KiB)는 <strong>64KiB 묶음 10개</strong>로 나뉘고, 등록 객체 10개가 하나씩 맡습니다. 묶음의 첫 워드가 유효 마커일 때만 내용이 RAM으로 복사됩니다.</li>
-<li>레코드 하나는 6바이트(x, y, 플래그)입니다. 보정 코드는 플래그가 가리키는 방향의 <strong>이웃 픽셀을 최대 두 개 읽어 평균을 같은 버퍼에 씁니다</strong>. 그래서 뒤의 레코드는 앞에서 고친 값을 읽고, 순서가 바뀌면 결과도 달라집니다.</li>
+<li>보존 섹터 15~19(640KiB)는 <strong>64KiB 묶음 10개</strong>로 나뉘고 등록 객체 10개가 하나씩 맡습니다. 묶음의 첫 워드가 유효 마커일 때만 내용이 RAM으로 복사됩니다.</li>
+<li>레코드 하나는 6바이트(x, y, 플래그)입니다. 보정 코드는 플래그가 가리키는 방향의 <strong>이웃 픽셀을 최대 두 개 읽어 평균을 같은 버퍼에 씁니다</strong>. 그래서 뒤의 레코드는 앞에서 고친 값을 읽고 순서가 바뀌면 결과도 달라집니다.</li>
 <li>보정이 실행되는지는 촬영 패킷의 활성 바이트가 정합니다. 0이면 이미지가 그대로였고 1이면 같은 버퍼가 고쳐졌습니다.</li>
 <li>원본 코드는 중심 좌표만 검사하고 <strong>이웃 좌표는 검사하지 않습니다</strong>. 시험용 좌표 여섯 개로, 이웃 주소가 다음 행이나 이미지 밖으로 나갈 수 있음을 확인했습니다.</li>
 <li>모든 입력은 시험용으로 만든 값입니다. 실제 카메라에 어떤 레코드가 들어 있는지, 플래시에 실제로 기록되는지는 확인하지 않았습니다.</li>
@@ -59,18 +59,18 @@
 
 <section id="background">
 <h2>배경: 결함 픽셀 보정과 보존 섹터</h2>
-<p>이미지 센서에는 늘 지나치게 밝거나 어둡게 읽히는 픽셀이 생길 수 있습니다. K-3 II 사용설명서는 이런 픽셀을 찾아 보정하는 기능을 설정 메뉴의 <strong>Pixel Mapping</strong>으로 안내합니다. 설명서의 문구는 “Maps out and corrects any defective pixels on the sensor”이며, 문제 해결 표에서는 밝은 점이나 어두운 점이 보일 때 이 기능을 실행하라고 적습니다.</p>
-<p>이 문서는 펌웨어 안에서 그와 같은 종류의 일을 하는 코드를 다룹니다. 좌표가 적힌 레코드를 읽어 해당 픽셀을 이웃 값으로 바꾸는 코드이며, 펌웨어의 진단 문자열도 이 데이터를 “Pixel Correct Data”라고 부릅니다. 다만 메뉴의 Pixel Mapping 기능이 이 레코드를 만드는지는 이 연구에서 확인하지 않았습니다.</p>
+<p>이미지 센서에는 늘 지나치게 밝거나 어둡게 읽히는 픽셀이 생길 수 있습니다. K-3 II 사용설명서는 이런 픽셀을 찾아 보정하는 기능을 설정 메뉴의 <strong>Pixel Mapping</strong>으로 안내합니다. 설명서의 문구는 “Maps out and corrects any defective pixels on the sensor”입니다. 문제 해결 표에서는 밝은 점이나 어두운 점이 보일 때 이 기능을 실행하라고 적습니다.</p>
+<p>이 문서는 펌웨어 안에서 그와 같은 종류의 일을 하는 코드를 다룹니다. 좌표가 적힌 레코드를 읽어 해당 픽셀을 이웃 값으로 바꾸는 코드이며 펌웨어의 진단 문자열도 이 데이터를 “Pixel Correct Data”라고 부릅니다. 다만 메뉴의 Pixel Mapping 기능이 이 레코드를 만드는지는 이 연구에서 확인하지 않았습니다.</p>
 <p>레코드가 놓이는 곳은 <dfn title="펌웨어 업데이트가 덮어쓰지 않고 남겨 두는 플래시 구역. 이 연구에서는 섹터 13~22가 해당합니다.">보존 섹터</dfn>입니다. 펌웨어 업데이트 코드는 128KiB 섹터 13~22를 건너뛰며(<a href="installation.html">업데이트 전송과 기록 오류</a>), 그 가운데 15~19가 픽셀 레코드 자리입니다. 보존 섹터 전체의 지도는 <a href="guide-capture.html">촬영 준비·보존 레코드 안내</a>에 있습니다.</p>
 <div class="callout"><strong class="label">표기 규칙</strong>
-<p>섹터 번호는 플래시를 128KiB 단위로 잘라 0부터 센 번호입니다. 함수 주소는 복호화한 펌웨어 파일 안의 위치(파일 오프셋)이고, 플래시·RAM 주소는 실행 주소입니다. 파일 오프셋에 <code>0x02000000</code>을 더하면 실행 주소가 되므로, 섹터 15의 시작은 <code>0x021E0000</code>입니다.</p></div>
+<p>섹터 번호는 플래시를 128KiB 단위로 잘라 0부터 센 번호입니다. 함수 주소는 복호화한 펌웨어 파일 안의 위치(파일 오프셋)이고 플래시·RAM 주소는 실행 주소입니다. 파일 오프셋에 <code>0x02000000</code>을 더하면 실행 주소가 되므로, 섹터 15의 시작은 <code>0x021E0000</code>입니다.</p></div>
 <div class="callout warn"><strong class="label">주의</strong>
 <p>이 보정 경로를 보조 스케일러의 활성 경로나 SuperResolution(Pixel Shift Resolution) 전용 처리라고 단정하지 않았습니다.</p></div>
 </section>
 
 <section id="banks">
 <h2>등록 객체 10개가 보존 섹터 다섯 개를 나누어 맡습니다</h2>
-<p class="takeaway">섹터 15~19는 64KiB 묶음 10개이며, 유효 마커가 있는 묶음만 RAM으로 복사되어 보정 객체의 설명자에 연결됩니다.</p>
+<p class="takeaway">섹터 15~19는 64KiB 묶음 10개이며 유효 마커가 있는 묶음만 RAM으로 복사되어 보정 객체의 설명자에 연결됩니다.</p>
 
 <figure class="diagram">
 <figcaption>플래시의 묶음에서 보정 객체의 설명자까지</figcaption>
@@ -135,19 +135,19 @@
 <tr><th scope="row">+8부터</th><td>레코드마다 6바이트</td><td>16비트 값 세 개: x, y, 플래그</td></tr>
 </tbody></table></div>
 <ul>
-<li><strong>유효한 묶음</strong> — 64KiB 전체가 RAM으로 복사됩니다.</li>
-<li><strong>무효인 묶음</strong> — RAM은 마커 <code>0xFFFFFFFF</code>, 다음 워드 <code>0x00003FFE</code>, 나머지 0으로 초기화됩니다. 배포 펌웨어 파일의 같은 위치에는 <code>0xFFFFFFFF</code>와 <code>0x3FFE0000</code>이 들어 있어 둘째 워드가 서로 다릅니다.</li>
-<li><strong>레코드 수 상한</strong> — 둘째 워드에 <code>0xA5A52A93</code>, <code>0x2A94</code>, <code>0xFFFF</code>를 넣은 세 묶음의 설명자에는 <code>0x2A93</code>, <code>0x2A94</code>, <code>0x2A94</code>가 들어갔습니다. 상한 10,900개 × 6바이트에 머리 8바이트를 더하면 65,408바이트로, 64KiB(65,536바이트) 안에 들어갑니다.</li>
+<li><strong>유효한 묶음</strong>: 64KiB 전체가 RAM으로 복사됩니다.</li>
+<li><strong>무효인 묶음</strong>: RAM은 마커 <code>0xFFFFFFFF</code>, 다음 워드 <code>0x00003FFE</code>, 나머지 0으로 초기화됩니다. 배포 펌웨어 파일의 같은 위치에는 <code>0xFFFFFFFF</code>와 <code>0x3FFE0000</code>이 들어 있어 둘째 워드가 서로 다릅니다.</li>
+<li><strong>레코드 수 상한</strong>: 둘째 워드에 <code>0xA5A52A93</code>, <code>0x2A94</code>, <code>0xFFFF</code>를 넣은 세 묶음의 설명자에는 <code>0x2A93</code>, <code>0x2A94</code>, <code>0x2A94</code>가 들어갔습니다. 상한 10,900개 × 6바이트에 머리 8바이트를 더하면 65,408바이트입니다. 64KiB(65,536바이트) 안에 들어갑니다.</li>
 </ul>
 <div class="callout"><strong class="label">배포 파일과 실물은 다를 수 있습니다</strong>
 <p>배포 펌웨어 파일에서 이 열 묶음의 첫 워드는 유효 마커가 아닙니다. 그러나 업데이트는 이 구역을 건너뛰므로, 실제 카메라의 플래시에는 다른 내용이 남아 있을 수 있습니다. 이 연구는 배포 파일과 실물의 보존 데이터가 같다고 가정하지 않았습니다.</p></div>
 
-<h3>적재는 한 번만 일어나고, 첫 무효 묶음에서 순회가 끝납니다</h3>
+<h3>적재는 한 번만 일어나고 첫 무효 묶음에서 순회가 끝납니다</h3>
 <ul>
-<li><strong>새 객체</strong> — 보정 객체를 원본 생성자로 만들면 설명자는 모두 0입니다. 보정 함수는 처음 불릴 때 한 번 적재합니다.</li>
-<li><strong>첫 무효에서 종료</strong> — 0번과 2번 묶음만 유효하게 둔 사례에서, 보정 함수는 0번만 처리하고 끝났습니다. 2번의 레코드는 쓰이지 않았습니다.</li>
-<li><strong>적재 캐시</strong> — 객체의 초기화 바이트(<code>+0x12</code>)가 1이면 다시 적재하지 않습니다. 플래시 쪽을 무효로 바꾼 뒤 같은 객체로 다시 실행해도 처음 적재한 레코드로 보정했습니다.</li>
-<li><strong>명시적 재적재</strong> — 적재 함수를 직접 다시 부르면 RAM은 기본값으로 바뀌지만, 객체의 기존 설명자 필드는 그대로 남았습니다.</li>
+<li><strong>새 객체</strong>: 보정 객체를 원본 생성자로 만들면 설명자는 모두 0입니다. 보정 함수는 처음 불릴 때 한 번 적재합니다.</li>
+<li><strong>첫 무효에서 종료</strong>: 0번과 2번 묶음만 유효하게 둔 사례에서 보정 함수는 0번만 처리하고 끝났습니다. 2번의 레코드는 쓰이지 않았습니다.</li>
+<li><strong>적재 캐시</strong>: 객체의 초기화 바이트(<code>+0x12</code>)가 1이면 다시 적재하지 않습니다. 플래시 쪽을 무효로 바꾼 뒤 같은 객체로 다시 실행해도 처음 적재한 레코드로 보정했습니다.</li>
+<li><strong>명시적 재적재</strong>: 적재 함수를 직접 다시 부르면 RAM은 기본값으로 바뀌지만 객체의 기존 설명자 필드는 그대로 남았습니다.</li>
 </ul>
 <p>이 관측만으로 실제 촬영마다 객체를 새로 만든다거나, 무효 레코드를 안전하게 건너뛴다고 해석할 수는 없습니다.</p>
 
@@ -282,14 +282,14 @@
 </figure>
 
 <ul>
-<li><strong>수준과 임계값</strong> — 플래그의 위쪽 2비트에 1을 더한 값이 객체의 임계값보다 크면 그 레코드를 건너뜁니다. 플래그 <code>0x4001</code>은 임계값 1에서 건너뛰었고 임계값 2에서는 적용됐습니다.</li>
-<li><strong>하위 묶음 우선</strong> — 아래 8비트가 0이 아니면 그 비트만 씁니다. 0이면 비트 8~13을 씁니다. 플래그 <code>0x0301</code>은 비트 0의 이웃 하나만 읽어 200을 썼고, <code>0x0300</code>은 4픽셀 떨어진 좌우 이웃 120과 401의 평균 260을 썼습니다.</li>
-<li><strong>최대 두 개</strong> — 고른 방향 가운데 앞의 두 이웃까지만 읽어 평균을 냅니다. 플래그 <code>0x0007</code>은 비트 0과 1의 이웃만 써서 300이 됐습니다.</li>
-<li><strong>반환값</strong> — 순회 함수가 돌려주는 값은 기록한 픽셀 수가 아니라 방문한 레코드 수입니다. 임계값이나 중심 좌표 때문에 기록을 건너뛴 사례에서도 1을 돌려주었습니다.</li>
+<li><strong>수준과 임계값</strong>: 플래그의 위쪽 2비트에 1을 더한 값이 객체의 임계값보다 크면 그 레코드를 건너뜁니다. 플래그 <code>0x4001</code>은 임계값 1에서 건너뛰었고 임계값 2에서는 적용됐습니다.</li>
+<li><strong>하위 묶음 우선</strong>: 아래 8비트가 0이 아니면 그 비트만 씁니다. 0이면 비트 8~13을 씁니다. 플래그 <code>0x0301</code>은 비트 0의 이웃 하나만 읽어 200을 썼고 <code>0x0300</code>은 4픽셀 떨어진 좌우 이웃 120과 401의 평균 260을 썼습니다.</li>
+<li><strong>최대 두 개</strong>: 고른 방향 가운데 앞의 두 이웃까지만 읽어 평균을 냅니다. 플래그 <code>0x0007</code>은 비트 0과 1의 이웃만 써서 300이 됐습니다.</li>
+<li><strong>반환값</strong>: 순회 함수가 돌려주는 값은 기록한 픽셀 수가 아니라 방문한 레코드 수입니다. 임계값이나 중심 좌표 때문에 기록을 건너뛴 사례에서도 1을 돌려주었습니다.</li>
 </ul>
 
 <details class="evidence"><summary>픽셀 보정 12회의 입력과 결과</summary>
-<p class="small">레코드는 (x, y, 플래그)입니다. “적재”는 그 실행에서 적재 함수가 불린 횟수입니다. 기본 이미지는 0~255가 차례로 든 16×16 배열에 (6, 8) = 200, (10, 8) = 400, (8, 8) = 9999, (8, 12) = 600, (8, 10) = 8888을 넣은 것입니다. 9번만 (4, 8) = 120, (12, 8) = 401을 넣은 다른 이미지입니다.</p>
+<p class="small">레코드는 (x, y, 플래그)입니다. “적재”는 그 실행에서 적재 함수가 불린 횟수입니다. 기본 이미지는 0~255가 차례로 든 16×16 배열입니다. 여기에 (6, 8) = 200, (10, 8) = 400, (8, 8) = 9999, (8, 12) = 600, (8, 10) = 8888을 넣었습니다. 9번만 (4, 8) = 120, (12, 8) = 401을 넣은 다른 이미지를 씁니다.</p>
 <div class="table-wrap"><table class="compact">
 <thead><tr><th class="n">#</th><th>조건</th><th class="n">임계값</th><th>핵심 함수에 전달된 레코드</th><th class="n">방문</th><th class="n">기록</th><th class="n">적재</th><th>바뀐 픽셀</th></tr></thead>
 <tbody>
@@ -306,7 +306,7 @@
 <tr><td class="n">11</td><td>수준 비트 1, 임계값 2</td><td class="n">2</td><td>(8, 8, <code>0x4001</code>)</td><td class="n">1</td><td class="n">1</td><td class="n">1</td><td>(8, 8): 9999 → 200</td></tr>
 <tr><td class="n">12</td><td>중심 x = 16</td><td class="n">1</td><td>(16, 8, <code>0x0001</code>)</td><td class="n">1</td><td class="n">0</td><td class="n">1</td><td>변화 없음</td></tr>
 </tbody></table></div>
-<p class="small">이 12회에서 쓰인 이웃 좌표는 모두 이미지 안에 있습니다. 경계 사례는 다음 절의 별도 입력입니다. 이웃 오프셋 표는 파일 <code>0x9E7328</code>(가로)과 <code>0x9E7368</code>(세로)에 32비트 값 16개씩 있습니다. 가로는 −2, 2, 0, 0, −2, 2, −2, 2, −4, 4, −4, 4, −4, 4, 0, 0이고 세로는 0, 0, −2, 2, −2, −2, 2, 2, 0, 0, −2, −2, 2, 2, 0, 0입니다. 방향 비트가 하나도 없는 경우에 쓰는 진단 문자열 “Adjust Data Err! Pixel Correct Data Around All Dead.”는 파일 <code>0x73A4B0</code>에 있습니다.</p>
+<p class="small">이 12회에서 쓰인 이웃 좌표는 모두 이미지 안에 있습니다. 경계 사례는 다음 절의 별도 입력입니다. 이웃 오프셋 표는 파일 <code>0x9E7328</code>(가로)과 <code>0x9E7368</code>(세로)에 32비트 값 16개씩 있습니다. 가로는 −2, 2, 0, 0, −2, 2, −2, 2, −4, 4, −4, 4, −4, 4, 0, 0입니다. 세로는 0, 0, −2, 2, −2, −2, 2, 2, 0, 0, −2, −2, 2, 2, 0, 0입니다. 방향 비트가 하나도 없는 경우에 쓰는 진단 문자열 “Adjust Data Err! Pixel Correct Data Around All Dead.”는 파일 <code>0x73A4B0</code>에 있습니다.</p>
 </details>
 </section>
 
@@ -346,7 +346,7 @@
 <ul class="dg-legend"><li><i class="key"></i>레코드가 가리킨 중심 (쓰기)</li><li><i class="model"></i>시험용으로 값을 넣어 둔 위치 (읽기)</li><li><i></i>이미지의 다른 픽셀</li></ul>
 </figure>
 
-<p>원본 <code>0x739F44</code>는 중심 좌표가 이미지 안에 있는지 검사합니다. x = 16 또는 y = 16인 중심은 거부했고, 읽기와 쓰기가 일어나지 않았습니다. 그러나 이웃 오프셋을 더한 뒤에는 좌표를 16비트로 자르는 명령(<code>UXTH</code>)만 있고, 계산된 주소는 범위 검사 없이 읽힙니다.</p>
+<p>원본 <code>0x739F44</code>는 중심 좌표가 이미지 안에 있는지 검사합니다. x = 16 또는 y = 16인 중심은 거부했고 읽기와 쓰기가 일어나지 않았습니다. 그러나 이웃 오프셋을 더한 뒤에는 좌표를 16비트로 자르는 명령(<code>UXTH</code>)만 있고 계산된 주소는 범위 검사 없이 읽힙니다.</p>
 
 <div class="table-wrap"><table>
 <caption>좌표 경계를 시험한 여섯 사례 (오프셋은 이미지 시작 기준 바이트)</caption>
@@ -360,8 +360,8 @@
 <tr><th scope="row">행 오프셋을 더해 y가 넘침</th><td>레코드 (8, 65535, <code>0x0002</code>), 객체의 행 오프셋 2</td><td>+52</td><td>+48</td><td>26</td></tr>
 </tbody></table></div>
 <ul>
-<li><strong>평균 계산</strong> — 이웃 값 65535와 65534의 평균이 65534로 나왔습니다. 합을 먼저 16비트로 잘라 낸 뒤 나누는 계산이 아니라는 뜻입니다.</li>
-<li><strong>y의 넘침</strong> — 레코드의 y = 65535에 객체의 행 오프셋 2를 더하면 16비트 절단 뒤 행 1이 됐고, 순회 함수는 방문 수 1을 돌려주었습니다.</li>
+<li><strong>평균 계산</strong>: 이웃 값 65535와 65534의 평균이 65534로 나왔습니다. 합을 먼저 16비트로 잘라 낸 뒤 나누는 계산이라면 이 값이 나오지 않습니다.</li>
+<li><strong>y의 넘침</strong>: 레코드의 y = 65535에 객체의 행 오프셋 2를 더하면 16비트 절단 뒤 행 1이 됐고 순회 함수는 방문 수 1을 돌려주었습니다.</li>
 </ul>
 <div class="callout warn"><strong class="label">이 결과의 뜻과 한계</strong>
 <p>이 코드를 C로 다시 만들거나 다른 곳에 옮길 때, 중심 검사만으로 이웃 접근이 안전하다고 가정할 수 없습니다. 보정표의 좌표 제약과 버퍼의 여백을 확인하거나 이웃 접근을 따로 검사해야 합니다.</p>
@@ -371,17 +371,17 @@
 <dl class="kv">
 <dt>중심 좌표 검사</dt><dd><code>0x739F44</code></dd>
 <dt>이웃 좌표의 16비트 절단</dt><dd><code>0x73A028</code>·<code>0x73A034</code>(첫째 이웃), <code>0x73A080</code>·<code>0x73A090</code>(둘째 이웃)</dd>
-<dt>픽셀 읽기 명령</dt><dd><code>0x739F38</code> — 추가 범위 검사 없음</dd>
+<dt>픽셀 읽기 명령</dt><dd><code>0x739F38</code>: 추가 범위 검사 없음</dd>
 <dt>픽셀 쓰기 명령</dt><dd><code>0x739F18</code></dd>
 <dt>논리 이미지 크기</dt><dd>512바이트 (16 × 16 × 2)</dd>
 </dl>
-<p class="small">앞의 다섯 사례는 핵심 함수 <code>0x739F80</code>을 좌표·플래그와 함께 직접 불렀고, 마지막 사례는 이미 적재된 설명자를 준비해 순회 함수 <code>0x73A5EC</code>를 불렀습니다.</p>
+<p class="small">앞의 다섯 사례는 핵심 함수 <code>0x739F80</code>을 좌표·플래그와 함께 직접 불렀고 마지막 사례는 이미 적재된 설명자를 준비해 순회 함수 <code>0x73A5EC</code>를 불렀습니다.</p>
 </details>
 </section>
 
 <section id="packet">
 <h2>촬영 패킷의 활성 바이트가 보정 실행을 정합니다</h2>
-<p class="takeaway">촬영 객체의 활성 바이트가 패킷으로 복사되고, 처리기는 그 바이트가 1일 때만 같은 이미지 포인터로 보정 함수를 부릅니다.</p>
+<p class="takeaway">촬영 객체의 활성 바이트가 패킷으로 복사되고 처리기는 그 바이트가 1일 때만 같은 이미지 포인터로 보정 함수를 부릅니다.</p>
 
 <ol class="flow">
 <li class="model"><strong>촬영 객체</strong><span>이미지 포인터 <code>CAP+0x13C</code>, 활성 바이트 <code>CAP+0x49</code>, 임계값 <code>CAP+0x1646C</code>를 시험값으로 준비</span></li>
@@ -405,10 +405,10 @@
 
 <p>원본 설정 함수 <code>0x597AB4</code>로 처리기와 보정 객체를 연결한 뒤, 같은 메모리 상태에서 패킷 생산 구간과 처리기 구간을 차례로 실행했습니다.</p>
 <ul>
-<li><strong>활성 0</strong> — 이미지 전체가 그대로였습니다. 그래도 원본 조회 함수가 프레임에서 크기(16×16)를, 패킷에서 임계값을 가져와 보정 객체에 넣는 부분은 실행됐습니다.</li>
-<li><strong>활성 1</strong> — 같은 이미지 포인터가 보정 객체의 <code>+0xC</code>에 들어갔고, 중심 값 두 개가 300과 450으로 바뀌었습니다.</li>
+<li><strong>활성 0</strong>: 이미지 전체가 그대로였습니다. 그래도 원본 조회 함수가 프레임에서 크기(16×16)를, 패킷에서 임계값을 가져와 보정 객체에 넣는 부분은 실행됐습니다.</li>
+<li><strong>활성 1</strong>: 같은 이미지 포인터가 보정 객체의 <code>+0xC</code>에 들어갔고 중심 값 두 개가 300과 450으로 바뀌었습니다.</li>
 </ul>
-<p>패킷의 +8과 +9가 켜는 다른 보정은 두 값을 0으로 두어 건너뛰었습니다. 활성 바이트를 만드는 정책 함수는 <a href="pixel-policy.html">픽셀 보정 활성값과 준비 분기</a>에서 다루며, 정책 → 패킷 → 보정을 이어 실행한 결과도 그 문서에 있습니다.</p>
+<p>패킷의 +8과 +9가 켜는 다른 보정은 두 값을 0으로 두어 건너뛰었습니다. 활성 바이트를 만드는 정책 함수는 <a href="pixel-policy.html">픽셀 보정 활성값과 준비 분기</a>에서 다루며 정책 → 패킷 → 보정을 이어 실행한 결과도 그 문서에 있습니다.</p>
 <div class="callout model"><strong class="label">시험 조건</strong>
 <p>촬영 객체의 플래그, 프레임, 이벤트 봉투는 입력으로 준비했습니다. 처리기의 기본 생성자와 작업 스케줄러는 실행하지 않았습니다. 보정 실행에서는 시간 조회 함수 <code>0x785F70</code>만 0을 돌려주게 바꿨습니다. 따라서 이 결과는 두 원본 구간 사이의 포인터와 분기 연결을 보여 줄 뿐, 실제 센서 입력이나 촬영 모드에서의 도달을 보여 주지 않습니다. 메뉴와 버퍼 수명은 <a href="superresolution-lifecycle.html">Pixel Shift 메뉴와 버퍼 수명</a>에서 따로 다룹니다.</p></div>
 </section>
@@ -437,7 +437,7 @@
 </tbody></table></div>
 
 <div class="callout model"><strong class="label">시험 조건</strong>
-<p>저장 함수의 동기화 두 곳(<code>0x599F20</code>, <code>0x599F6C</code>), 특권 CPU 보조 함수(<code>0x72C988</code>), 플래시 백엔드(<code>0x599914</code>)를 대체했습니다. 백엔드 자리에는 상태값 배열 세 가지를 넣었고, 저장 함수는 각각 그 최댓값인 2, 3, 0을 돌려주었습니다. 원본 섹터와 등록 객체의 RAM은 바뀌지 않았습니다. 백엔드 입구에 도달한 요청을 확인한 것이며, 실제 플래시 기록이 성공했다는 뜻이 아닙니다.</p></div>
+<p>저장 함수의 동기화 두 곳(<code>0x599F20</code>, <code>0x599F6C</code>), 특권 CPU 보조 함수(<code>0x72C988</code>), 플래시 백엔드(<code>0x599914</code>)를 대체했습니다. 백엔드 자리에는 상태값 배열 세 가지를 넣었고 저장 함수는 각각 그 최댓값인 2, 3, 0을 돌려주었습니다. 원본 섹터와 등록 객체의 RAM은 바뀌지 않았습니다. 백엔드 입구에 도달한 요청을 확인한 것이며 실제 플래시 기록이 성공했다는 뜻이 아닙니다.</p></div>
 
 <details class="evidence"><summary>저장 요청과 코드 구간의 해시</summary>
 <div class="table-wrap"><table class="compact fit">
@@ -484,11 +484,11 @@
 <section id="limits">
 <h2>한계와 남은 과제</h2>
 <ul>
-<li><strong>실물 데이터</strong> — 플래시 내용과 이미지는 모두 합성 입력입니다. 배포 펌웨어 파일과 실제 카메라에 남아 있는 보존 데이터가 같다고 가정하지 않았습니다.</li>
-<li><strong>레코드의 출처</strong> — 누가 언제 이 레코드를 만드는지, 사용자 메뉴의 Pixel Mapping과 관계가 있는지는 확인하지 않았습니다.</li>
-<li><strong>도달 경로</strong> — 시작 코드 전체, 작업 스케줄러, 실제 촬영 모드에서 이 보정에 도달하는 이력은 실행하지 않았습니다. 준비한 소유자 객체와 싱글턴 가드로 전체 시작 과정을 건너뛰었습니다.</li>
-<li><strong>이웃 경계</strong> — 좌표 경계 사례는 원본의 주소 계산을 보여 줄 뿐입니다. 실제 보정표에 그런 좌표가 들어갈 수 있는지는 알 수 없습니다.</li>
-<li><strong>물리 기록</strong> — 저장은 백엔드 입구까지입니다. 플래시에 실제로 쓰이는지, 전원이 꺼진 뒤 유지되는지는 확인하지 않았습니다.</li>
+<li><strong>실물 데이터</strong>: 플래시 내용과 이미지는 모두 합성 입력입니다. 배포 펌웨어 파일과 실제 카메라에 남아 있는 보존 데이터가 같다고 가정하지 않았습니다.</li>
+<li><strong>레코드의 출처</strong>: 누가 언제 이 레코드를 만드는지, 사용자 메뉴의 Pixel Mapping과 관계가 있는지는 확인하지 않았습니다.</li>
+<li><strong>도달 경로</strong>: 시작 코드 전체, 작업 스케줄러, 실제 촬영 모드에서 이 보정에 도달하는 이력은 실행하지 않았습니다. 준비한 소유자 객체와 싱글턴 가드로 전체 시작 과정을 건너뛰었습니다.</li>
+<li><strong>이웃 경계</strong>: 좌표 경계 사례는 원본의 주소 계산을 보여 줄 뿐입니다. 실제 보정표에 그런 좌표가 들어갈 수 있는지는 알 수 없습니다.</li>
+<li><strong>물리 기록</strong>: 저장은 백엔드 입구까지입니다. 플래시에 실제로 쓰이는지, 전원이 꺼진 뒤 유지되는지는 확인하지 않았습니다.</li>
 </ul>
 </section>
 
@@ -518,7 +518,7 @@
 </main>
 </div>
 <!-- chrome:bottom -->
-<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">촬영 준비와 보존 레코드 — 이 주제의 문서</h2><ol><li><a href="guide-capture.html">촬영 준비·보존 레코드 안내</a></li><li><a href="pixel-records.html" aria-current="page">보존 픽셀 레코드와 촬영 패킷</a></li><li><a href="pixel-policy.html">픽셀 보정 활성값과 준비 분기</a></li><li><a href="capture-prepare.html">촬영 준비의 연속 호출</a></li><li><a href="store-image-records.html">JPEG 완료값과 저장 레코드</a></li><li><a href="preserved-sector20.html">보존 섹터 20·21과 정책 입력</a></li><li><a href="preserved-config.html">정책 플래그의 생산자</a></li><li><a href="preserved-dispatch.html">보존 레코드의 상위 명령 경로</a></li><li><a href="preserved-continuity.html">작업자 매개변수와 목록 응답</a></li><li><a href="register-dma.html">보정 결과 레지스터와 DMA 준비<span>두 채널의 별도 원본 실행</span></a></li><li><a href="preserved-record.html">보존 섹터 14의 진단 레코드</a></li><li><a href="settings-storage.html">보존 섹터의 설정 저장</a></li></ol></nav>
+<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">촬영 준비와 보존 레코드 — 이 주제의 문서</h2><ol><li><a href="guide-capture.html">촬영 준비·보존 레코드 안내</a></li><li><a href="pixel-records.html" aria-current="page">보존 픽셀 레코드와 촬영 패킷</a></li><li><a href="pixel-policy.html">픽셀 보정 활성값과 준비 분기</a></li><li><a href="capture-prepare.html">촬영 준비의 연속 호출</a></li><li><a href="store-image-records.html">JPEG 완료값과 저장 레코드</a></li><li><a href="preserved-sector20.html">보존 섹터 20·21과 정책 입력</a></li><li><a href="preserved-config.html">정책 플래그의 생산자</a></li><li><a href="preserved-dispatch.html">보존 레코드의 상위 명령 경로</a></li><li><a href="preserved-continuity.html">작업자 매개변수와 목록 응답</a></li><li><a href="register-dma.html">검출 결과 레지스터와 DMA 준비<span>두 실험: 결과 레지스터, DMA 인수</span></a></li><li><a href="preserved-record.html">보존 섹터 14의 진단 레코드</a></li><li><a href="settings-storage.html">보존 섹터의 설정 저장</a></li></ol></nav>
 <nav class="pager" aria-label="이전·다음 문서"><a class="prev" href="guide-capture.html"><small>← 이전</small>촬영 준비·보존 레코드 안내</a><a class="next" href="pixel-policy.html"><small>다음 →</small>픽셀 보정 활성값과 준비 분기</a></nav>
 <footer class="sitefoot"><div class="sitefoot-in"><nav aria-label="사이트"><a href="../index.html#map">문서 지도</a><a href="../index.html#levels">검증 수준 읽는 법</a><a href="../glossary.html">용어집</a><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/research-program.html">세 기종 연구 본부</a><a href="https://github.com/yunhyok/pentax-k3ii-firmware-analysis">GitHub 저장소</a></nav><p>PENTAX K-3 II 펌웨어 1.12 분석 문서. PC에서 수행한 정적 분석과 에뮬레이션 결과이며, 카메라 실기에서 검증한 내용이 아닙니다. 원본 펌웨어와 복호화한 바이너리는 포함하지 않습니다.</p></div></footer>
 <!-- /chrome:bottom -->

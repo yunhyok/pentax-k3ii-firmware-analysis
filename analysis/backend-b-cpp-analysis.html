@@ -28,8 +28,8 @@
 <h2 data-toc="no">핵심 요약</h2>
 <ul>
 <li>저장 구현 두 개 가운데 <strong>백엔드 B의 파일 쓰기</strong>를 따라갔습니다. B도 백엔드 A와 같은 SD 카드 객체의 같은 쓰기 함수로 내려갑니다. 원본 코드가 SD 쓰기 명령과 DMA 설명자를 만드는 곳까지 실행했습니다.</li>
-<li>파일 쓰기 한 번은 512바이트 섹터 단위로 나뉩니다. 섹터를 꽉 채우는 부분은 <strong>원래 데이터 주소를 그대로</strong> 넘기고, 섹터 일부만 바꾸는 앞뒤 조각은 기존 섹터를 읽어 캐시에서 합친 뒤 씁니다.</li>
-<li>색 처리 모듈(CPP)이 두 번째로 내는 출력은 <strong>모듈 17의 합성 입력</strong>이 됩니다. 기본 분기에서는 합성 결과가 놓이는 버퍼가 스케일러의 입력과 같고, 스케일러의 출력은 JPEG 압축기의 입력과 같습니다.</li>
+<li>파일 쓰기 한 번은 512바이트 섹터 단위로 나뉩니다. 섹터를 꽉 채우는 부분은 <strong>원래 데이터 주소를 그대로</strong> 넘기고 섹터 일부만 바꾸는 앞뒤 조각은 기존 섹터를 읽어 캐시에서 합친 뒤 씁니다.</li>
+<li>색 처리 모듈(CPP)이 두 번째로 내는 출력은 <strong>모듈 17의 합성 입력</strong>이 됩니다. 기본 분기에서는 합성 결과가 놓이는 버퍼가 스케일러의 입력과 같고 스케일러의 출력은 JPEG 압축기의 입력과 같습니다.</li>
 <li>마스크 분기에서는 합성 결과가 다른 버퍼로 갑니다. 그 버퍼를 읽는 보조 스케일러는 확인한 경로에서 모두 꺼져 있었습니다.</li>
 <li>모두 PC 에뮬레이터에서 합성 메모리로 실행한 결과입니다. 실제 카드 기록, 픽셀 처리, JPEG 생성은 확인하지 않았습니다.</li>
 </ul>
@@ -66,8 +66,8 @@
 <h2>배경: 저장 경로와 영상 버퍼 경로의 빈 구간</h2>
 <p>이 주제의 다른 문서가 이미 두 줄기를 따라갔습니다. <a href="output-menu-analysis.html">JPEG 출력 버퍼 문서</a>는 색 처리 출력이 스케일러와 JPEG 압축기를 거쳐 파일시스템 어댑터에 닿는 과정을 다룹니다. <a href="storage-dma-analysis.html">파일시스템에서 SD·DMA까지 문서</a>는 저장 구현 A가 SD 카드 명령으로 내려가는 과정을 다룹니다. 두 문서가 다루지 않는 구간이 둘 있습니다.</p>
 <ul>
-<li><strong>저장 구현 B의 아래쪽</strong> — B가 파일 쓰기를 어떤 카드 함수로 넘기는지</li>
-<li><strong>CPP의 두 번째 출력</strong> — 색 처리가 한 번 더 돌 때 나오는 영상이 어디로 가는지</li>
+<li><strong>저장 구현 B의 아래쪽</strong>: B가 파일 쓰기를 어떤 카드 함수로 넘기는지</li>
+<li><strong>CPP의 두 번째 출력</strong>: 색 처리가 한 번 더 돌 때 나오는 영상이 어디로 가는지</li>
 </ul>
 <p>전체 흐름은 <a href="guide-pipeline.html">영상 처리 경로 안내</a>에 있습니다. 아래 표는 이 문서에서 쓰는 이름입니다.</p>
 
@@ -76,7 +76,7 @@
 <thead><tr><th>이름</th><th>뜻</th></tr></thead>
 <tbody>
 <tr><th scope="row">백엔드 A·B</th><td>파일시스템 객체에 등록된 두 저장 구현입니다. 카드를 마운트할 때 섹터 수가 <code>0x04040000</code>(약 32.125 GiB)보다 작으면 A, 같거나 크면 B를 고릅니다. 분석하려고 붙인 이름이며 파일시스템 종류를 뜻하지 않습니다.</td></tr>
-<tr><th scope="row">섹터, LBA</th><td>SD 카드는 512바이트 블록 단위로 읽고 씁니다. 이 블록을 섹터라 하고, 블록 번호를 LBA라 합니다.</td></tr>
+<tr><th scope="row">섹터, LBA</th><td>SD 카드는 512바이트 블록 단위로 읽고 씁니다. 이 블록을 섹터라 하고 블록 번호를 LBA라 합니다.</td></tr>
 <tr><th scope="row">CMD24, CMD25</th><td>SD 카드의 쓰기 명령입니다. CMD24는 블록 하나, CMD25는 여러 블록을 씁니다.</td></tr>
 <tr><th scope="row">ADMA 설명자</th><td>SD 호스트 컨트롤러가 <dfn title="CPU를 거치지 않고 장치가 메모리의 데이터를 직접 옮기는 방식">DMA</dfn>로 옮길 메모리 조각을 적은 8바이트 레코드입니다. 속성, 길이, 버퍼 주소가 들어갑니다.</td></tr>
 <tr><th scope="row">작업(job)</th><td>사진 한 장을 처리하는 동안 버퍼 주소와 설정을 담는 객체입니다. <code>job+0x…</code>는 이 객체 안의 위치입니다.</td></tr>
@@ -160,16 +160,16 @@
 <ul class="dg-legend"><li><i class="ok"></i>원본 코드를 실행해 지나간 단계</li><li><i class="key"></i>A와 B가 만나는 함수</li><li><i class="model"></i>합성 메모리로 대체한 장치</li><li><i></i>다른 문서에서 다루는 경로</li></ul>
 </figure>
 
-<p>디스패처는 파일 핸들에서 드라이브를 찾은 뒤 파일시스템 함수표에서 쓰기 함수를 꺼내 부릅니다. 시험에서는 함수표의 첫 행을 썼습니다. 블록 브리지는 볼륨 이름으로 카드 객체를 찾고, 그 객체의 함수표에서 쓰기 칸을 부릅니다. 이 칸에 든 함수가 <a href="storage-dma-analysis.html">백엔드 A의 경로</a>에서 확인한 것과 같은 <code>0x7589E8</code>입니다.</p>
+<p>디스패처는 파일 핸들에서 드라이브를 찾은 뒤 파일시스템 함수표에서 쓰기 함수를 꺼내 부릅니다. 시험에서는 함수표의 첫 행을 썼습니다. 블록 브리지는 볼륨 이름으로 카드 객체를 찾고 그 객체의 함수표에서 쓰기 칸을 부릅니다. 이 칸에 든 함수가 <a href="storage-dma-analysis.html">백엔드 A의 경로</a>에서 확인한 것과 같은 <code>0x7589E8</code>입니다.</p>
 
 <div class="table-wrap"><table>
 <caption>단계별 코드 위치</caption>
 <thead><tr><th>단계</th><th>코드 위치</th><th>하는 일</th></tr></thead>
 <tbody>
 <tr><th scope="row">B 쓰기 래퍼</th><td><code>0x5CB860</code> → <code>0x5CB814</code></td><td>파일 쓰기 요청을 받아 디스패처 <code>0xE86818</code>을 부릅니다.</td></tr>
-<tr><th scope="row">함수표 디스패처</th><td><code>0xE86818</code></td><td>함수표(VA <code>0x02F1394C</code>, 행 크기 <code>0x84</code>)에서 쓰기 칸 <code>+0x20</code>을 부릅니다. 첫 행의 값은 <code>0xEAFFAC</code>의 VA이고, 둘째 행의 같은 칸은 0입니다.</td></tr>
+<tr><th scope="row">함수표 디스패처</th><td><code>0xE86818</code></td><td>함수표(VA <code>0x02F1394C</code>, 행 크기 <code>0x84</code>)에서 쓰기 칸 <code>+0x20</code>을 부릅니다. 첫 행의 값은 <code>0xEAFFAC</code>의 VA이고 둘째 행의 같은 칸은 0입니다.</td></tr>
 <tr><th scope="row">파일 쓰기 본체</th><td><code>0xEAFFAC</code> → <code>0xEB1A94</code></td><td>길이 0을 거르고 파일 위치·길이·영역을 계산합니다.</td></tr>
-<tr><th scope="row">섹터 단위 처리</th><td><code>0xEADE54</code>, <code>0xEAE0F4</code></td><td>섹터 경계에 맞춰 요청을 나눕니다. 앞의 것은 기존 내용을 보존하고, 뒤의 것은 나머지를 0으로 채웁니다.</td></tr>
+<tr><th scope="row">섹터 단위 처리</th><td><code>0xEADE54</code>, <code>0xEAE0F4</code></td><td>섹터 경계에 맞춰 요청을 나눕니다. 앞의 것은 기존 내용을 보존하고 뒤의 것은 나머지를 0으로 채웁니다.</td></tr>
 <tr><th scope="row">블록 브리지</th><td><code>0xE8623C</code> → <code>0x5CB380</code> → <code>0x5CB30C</code></td><td>볼륨 이름으로 카드 객체를 조회하고 카드 함수표의 <code>+0x18</code> 칸을 부릅니다.</td></tr>
 <tr><th scope="row">카드 쓰기</th><td><code>0x7589E8</code> → <code>0x758914</code></td><td>카드 함수표(VA <code>0x02A5D20C</code>)의 쓰기 칸입니다. 단일 블록과 다중 블록 쓰기로 갈라집니다.</td></tr>
 </tbody></table></div>
@@ -180,10 +180,10 @@
 <caption>포트 레지스터에 기록된 값 (오프셋은 포트 기준)</caption>
 <thead><tr><th>레지스터</th><th>1블록 쓰기</th><th>2블록 쓰기</th><th>뜻</th></tr></thead>
 <tbody>
-<tr><th scope="row"><code>+0x58</code> 설명자 표 주소</th><td>첫 설명자: 속성 <code>0x23</code>, 길이 512</td><td>첫 설명자: 속성 <code>0x23</code>, 길이 1,024</td><td>표의 주소를 기록합니다. 설명자에는 넘겨받은 포인터가 그대로 들어가고, 속성 <code>0x23</code>은 “유효, 전송, 마지막”입니다.</td></tr>
+<tr><th scope="row"><code>+0x58</code> 설명자 표 주소</th><td>첫 설명자: 속성 <code>0x23</code>, 길이 512</td><td>첫 설명자: 속성 <code>0x23</code>, 길이 1,024</td><td>표의 주소를 기록합니다. 설명자에는 넘겨받은 포인터가 그대로 들어가고 속성 <code>0x23</code>은 “유효, 전송, 마지막”입니다.</td></tr>
 <tr><th scope="row"><code>+0x04</code> 블록 크기·개수</th><td><code>0x10200</code></td><td><code>0x20200</code></td><td>아래 16비트가 블록 크기 512, 위 16비트가 블록 수입니다.</td></tr>
 <tr><th scope="row"><code>+0x08</code> 인수</th><td colspan="2">시작 블록 번호 (첫 요청은 <code>0x120</code>)</td><td>카드에 보내는 주소입니다.</td></tr>
-<tr><th scope="row"><code>+0x0C</code> 명령·전송 모드</th><td><code>0x183A0001</code></td><td><code>0x193A0027</code></td><td>위 16비트의 <code>0x18</code>·<code>0x19</code>가 명령 번호 24·25입니다. 아래 16비트는 DMA 사용이고, CMD25에는 다중 블록·블록 수 사용·자동 종료 명령이 더해집니다.</td></tr>
+<tr><th scope="row"><code>+0x0C</code> 명령·전송 모드</th><td><code>0x183A0001</code></td><td><code>0x193A0027</code></td><td>위 16비트의 <code>0x18</code>·<code>0x19</code>가 명령 번호 24·25입니다. 아래 16비트는 DMA 사용이고 CMD25에는 다중 블록·블록 수 사용·자동 종료 명령이 더해집니다.</td></tr>
 </tbody></table></div>
 <p class="small muted">관측한 레지스터는 이 네 개뿐입니다. <code>+0x04</code>는 요청마다 두 번 기록됩니다. 먼저 직전 요청의 블록 수가 든 값이, 이어서 이번 블록 수가 든 값이 기록됩니다. 두 SD 포트 전체의 검증은 <a href="storage-dma-analysis.html">SD·DMA 문서</a>에 있습니다.</p>
 
@@ -295,7 +295,7 @@
 <p>가운데 조각의 주소 <code>0x100101F9</code>는 정렬되지 않은 합성 주소입니다. 코드가 그 주소를 고치지 않고 넘긴다는 사실만 알 수 있습니다. 실제 장치가 이런 주소를 받아들이는지, CPU 캐시와 버스 사이의 데이터가 일치하는지는 알 수 없습니다. 카드 읽기는 <code>0xCC</code>로 채운 데이터로 대체했습니다.</p></div>
 
 <div class="callout"><strong class="label">백엔드 A와 다른 점</strong>
-<p><a href="storage-dma-analysis.html">백엔드 A의 시험</a>에서는 부분 섹터 쓰기가 캐시에만 반영되고, 따로 실행한 비우기(flush) 함수에서 카드로 나갔습니다. B의 시험에서는 같은 쓰기 호출 안에서 읽기와 쓰기가 일어났습니다. 두 결과 모두 각자의 시험 조건에서 관측한 것이므로, 두 구현의 일반적인 차이라고 단정하지 않습니다.</p></div>
+<p><a href="storage-dma-analysis.html">백엔드 A의 시험</a>에서는 부분 섹터 쓰기가 캐시에만 반영되고 따로 실행한 비우기(flush) 함수에서 카드로 나갔습니다. B의 시험에서는 같은 쓰기 호출 안에서 읽기와 쓰기가 일어났습니다. 두 결과 모두 각자의 시험 조건에서 관측한 것이므로, 두 구현의 일반적인 차이라고 단정하지 않습니다.</p></div>
 
 <h3>끝을 0으로 채우는 함수는 따로 확인했습니다</h3>
 <p><code>0xEAE0F4</code>는 부분 섹터의 나머지를 0으로 채웁니다. 이 동작은 함수에 직접 들어가서 확인했습니다. 그런데 파일 쓰기 본체가 이 함수를 부르는 곳(<code>0xEB23E0</code>부터 <code>0xEB2404</code>까지)은 길이를 512바이트 단위로 올린 뒤 부릅니다. 그래서 이 결과만으로 “파일 끝에 덧붙여 쓰면 나머지가 항상 0으로 채워진다”고 말할 수 없습니다.</p>
@@ -303,8 +303,8 @@
 
 <section id="cpp">
 <h2>두 번째 CPP 출력은 모듈 17의 합성 입력이 됩니다</h2>
-<p class="takeaway">CPP가 두 번째 패스에서 내는 세 평면은 모듈 17이 둘째 입력으로 읽습니다. 기본 분기에서 모듈 17은 결과를 첫 번째 영상의 평면에 다시 쓰고, 스케일러가 그 평면을 읽습니다. 스케일러의 출력은 JPEG 모듈의 입력과 같은 디스크립터입니다.</p>
-<p>CPP는 보통 한 번 실행됩니다. 작업의 <code>job+0x59</code>가 0이 아니면 한 번 더 실행되고, 그때는 출력 주소가 <code>job+0x2194</code> 디스크립터의 평면으로 바뀝니다. 이 값을 켜는 경로로 확인한 것은 <a href="masked-cpp-analysis.html#fringe">RAW 현상의 Color Fringe Correction 메뉴</a>입니다. 두 번째 출력을 누가 읽는지가 이 절의 질문입니다.</p>
+<p class="takeaway">CPP가 두 번째 패스에서 내는 세 평면은 모듈 17이 둘째 입력으로 읽습니다. 기본 분기에서 모듈 17은 결과를 첫 번째 영상의 평면에 다시 쓰고 스케일러가 그 평면을 읽습니다. 스케일러의 출력은 JPEG 모듈의 입력과 같은 디스크립터입니다.</p>
+<p>CPP는 보통 한 번 실행됩니다. 작업의 <code>job+0x59</code>가 0이 아니면 한 번 더 실행되고 그때는 출력 주소가 <code>job+0x2194</code> 디스크립터의 평면으로 바뀝니다. 이 값을 켜는 경로로 확인한 것은 <a href="masked-cpp-analysis.html#fringe">RAW 현상의 Color Fringe Correction 메뉴</a>입니다. 두 번째 출력을 누가 읽는지가 이 절의 질문입니다.</p>
 
 <figure class="diagram">
 <figcaption>기본 분기에서 모듈과 버퍼가 이어지는 관계</figcaption>
@@ -374,7 +374,7 @@
 <p>기본 평면의 실제 주소는 작업의 <code>+0x160</code>, <code>+0x164</code>, <code>+0x168</code>에 있습니다. 스케일러의 첫 출력을 켜는 값은 <code>job+0x45</code>에서 스케일러 <code>payload+0x2A</code>로 복사됩니다. JPEG 쪽에서는 디스크립터의 세 평면 주소(<code>+4</code>, <code>+8</code>, <code>+0xC</code>)가 압축 함수 인수로 넘어가는 것까지 확인했습니다.</p>
 
 <h3>합성 요청의 수는 내부 모드에 따라 달라집니다</h3>
-<p>모듈 17은 평면마다 합성 요청을 하나씩 만듭니다. 색차 평면 둘은 항상 요청하고, 내부 모드가 1, 2, 4 가운데 하나이면 Y 평면도 요청합니다. 이 모드는 시험에서 넣어 준 내부 값이며, 메뉴 이름과 연결한 값이 아닙니다.</p>
+<p>모듈 17은 평면마다 합성 요청을 하나씩 만듭니다. 색차 평면 둘은 항상 요청하고 내부 모드가 1, 2, 4 가운데 하나이면 Y 평면도 요청합니다. 이 모드는 시험에서 넣어 준 내부 값이며 메뉴 이름과 연결한 값이 아닙니다.</p>
 <div class="table-wrap"><table>
 <caption>버퍼 전달 사례 4건</caption>
 <thead><tr><th>마스크 바이트</th><th>두 번째 패스</th><th>넣어 준 합성 모드</th><th>합성 요청</th><th>합성 목적지</th></tr></thead>
@@ -384,7 +384,7 @@
 <tr><td><code>0</code></td><td>있음</td><td>2</td><td>색차 2개 + Y 1개</td><td>기본 평면. 스케일러 입력과 같음</td></tr>
 <tr><td><code>0x44</code></td><td>있음</td><td>4</td><td>색차 2개 + Y 1개</td><td>마스크 평면. 스케일러 입력과 다름</td></tr>
 </tbody></table></div>
-<p>네 사례 모두에서 모듈 17은 완료 메시지 <code>0x05022001</code>을 보냈고, 스케일러 입력은 기본 평면, JPEG 입력은 스케일러 출력 평면이었습니다.</p>
+<p>네 사례 모두에서 모듈 17은 완료 메시지 <code>0x05022001</code>을 보냈고 스케일러 입력은 기본 평면, JPEG 입력은 스케일러 출력 평면이었습니다.</p>
 
 <h3>레시피에서의 순서</h3>
 <p>원본 레시피 생성 함수 <code>0x76E7AC</code>를 실행해 네 레시피의 행 번호를 얻었습니다. 번호는 0부터 셉니다.</p>
@@ -405,7 +405,7 @@
 <dt>B2Y 출력 레지스터</dt><dd>두 번째 패스의 세 평면 주소는 장치 주소 <code>0x20022440</code>, <code>0x20022450</code>, <code>0x20022460</code>에 기록됩니다.</dd>
 <dt>모듈 17 설정</dt><dd><code>0x65D564</code>부터 <code>0x65D628</code>까지. <code>payload+0x18</code>·<code>+0x1C</code>·<code>+0x20</code>에 첫째 입력, 둘째 입력, 목적지를 넣습니다.</dd>
 <dt>수신 경로</dt><dd><code>0x589904</code> → <code>0x589888</code> → <code>0x58980C</code> → <code>0x5AB310</code>. 수신 함수표의 칸은 <code>0xA700F8</code>과 <code>0xA70124</code>입니다. 두 번째 패스가 없으면 합성 작업 함수 <code>0x5AB310</code>을 부르지 않습니다.</dd>
-<dt>평면별 요청</dt><dd><code>0x5AF684</code>부터 <code>0x5AF798</code>까지. 색차 평면 둘의 요청을 만들고, 모드가 1·2·4이면 Y 평면 요청도 만듭니다.</dd>
+<dt>평면별 요청</dt><dd><code>0x5AF684</code>부터 <code>0x5AF798</code>까지. 색차 평면 둘의 요청을 만들고 모드가 1·2·4이면 Y 평면 요청도 만듭니다.</dd>
 <dt>요청 조립</dt><dd><code>0x5AA4E0</code>이 명령 <code>0x010E0001</code>을 제출하고 완료를 기다립니다.</dd>
 <dt>장치 주소 기록</dt><dd>요청의 <code>+0x1C</code>, <code>+0x28</code>, <code>+0x38</code>을 각각 읽어 공통 쓰기 함수 <code>0x6E0CBC</code>로 보냅니다. 이 함수는 주소의 아래 3비트를 지웁니다. 시험에는 정렬된 합성 주소와 합성 레지스터를 썼습니다.</dd>
 <dt>완료</dt><dd>완료 메시지 <code>0x05022001</code>을 받은 컨트롤러는 <code>0x6DBEFC</code> → <code>0x6DBD0C</code>로 갑니다. 완료 콜백은 실행했지만 RTOS의 큐와 스케줄링은 실행하지 않았습니다.</dd>
@@ -418,7 +418,7 @@
 
 <section id="masked">
 <h2>마스크 분기에서는 합성 결과가 다른 버퍼로 갑니다</h2>
-<p class="takeaway">작업의 마스크 바이트에 <code>0x44</code> 비트가 있으면 모듈 17은 입력과 목적지를 마스크용 디스크립터로 바꿉니다. 일반 스케일러는 여전히 기본 평면을 읽습니다. 마스크 쪽 버퍼를 읽는 보조 스케일러는 활성값이 0이면 건너뛰는데, 0이 아닌 값을 쓰는 코드는 찾지 못했습니다.</p>
+<p class="takeaway">작업의 마스크 바이트에 <code>0x44</code> 비트가 있으면 모듈 17은 입력과 목적지를 마스크용 디스크립터로 바꿉니다. 일반 스케일러는 여전히 기본 평면을 읽습니다. 마스크 쪽 버퍼를 읽는 보조 스케일러는 활성값이 0이면 건너뛰는데 0이 아닌 값을 쓰는 코드는 찾지 못했습니다.</p>
 
 <figure class="diagram">
 <figcaption>마스크 바이트에 따라 갈라지는 두 경로</figcaption>
@@ -477,13 +477,13 @@
 </figure>
 
 <p>CPP가 처음 출력 주소를 고를 때 <code>job+0x20B4 &amp; 0x44</code>가 0이 아니면 <code>job+0x7F</code>에 1을 씁니다. 모듈 17은 이 값이 1이면 첫째 입력과 목적지를 모두 <code>job+0x2354</code>로 바꿉니다. 일반 스케일러는 이 디스크립터를 읽지 않고 <code>job+0x2140</code>을 읽습니다.</p>
-<p>보조 스케일러는 <code>job+0x2354</code>를 입력(<code>payload+0x18</code>)으로 삼고 <code>job+0x238C</code>에 출력합니다. 다만 스케일러의 활성 바이트 <code>payload+0x38</code>이 0이면 이 처리를 건너뜁니다. 설정 코드는 이 바이트를 0으로 초기화합니다. 값을 1로 바꿔 넣었을 때에만 보조 스케일러 호출이 일어났습니다. 이 실행은 읽는 쪽 코드의 동작을 확인한 것이며, 실제 작업이 그 상태에 이른다는 근거가 아닙니다.</p>
+<p>보조 스케일러는 <code>job+0x2354</code>를 입력(<code>payload+0x18</code>)으로 삼고 <code>job+0x238C</code>에 출력합니다. 다만 스케일러의 활성 바이트 <code>payload+0x38</code>이 0이면 이 처리를 건너뜁니다. 설정 코드는 이 바이트를 0으로 초기화합니다. 값을 1로 바꿔 넣었을 때에만 보조 스케일러 호출이 일어났습니다. 이 실행은 읽는 쪽 코드의 동작을 확인한 것이며 실제 작업이 그 상태에 이른다는 근거가 아닙니다.</p>
 
 <h3>이 분기의 현재 상태</h3>
 <ul>
-<li><strong>활성값</strong> — 스케일러 설정을 처음부터 큐 호출 직전까지 실행한 64건에서도 활성 바이트는 0이었습니다. 0이 아닌 값을 쓰는 코드는 아직 찾지 못했습니다. (<a href="superresolution-lifecycle.html#gate">활성값 추적</a>)</li>
-<li><strong>JPEG 보조 입력</strong> — JPEG 모듈은 <code>job+0x21E8</code>과 <code>job+0x2204</code>도 읽습니다. 보조 스케일러 출력과 JPEG 보조 입력은 서로 다른 디스크립터를 씁니다. 활성값을 1로 넣고 일반 배치 뒤에 같은 기준 주소로 마스크 배치를 만든 합성 사례에서 두 쌍의 평면 주소가 일치했습니다. (<a href="masked-cpp-analysis.html#jpeg">조건부 주소 공유</a>)</li>
-<li><strong>마스크 값의 변화</strong> — 모듈 20이 끝나면 마스크 값에서 <code>0x44</code> 비트가 사라지고, 그 뒤의 CPP는 기본 평면에 출력합니다. Pixel Shift 레시피에서는 모듈 20이 CPP보다 앞에 있습니다. (<a href="masked-cpp-analysis.html#module20">모듈 20</a>, <a href="superresolution-lifecycle.html#recipe">레시피 순서</a>)</li>
+<li><strong>활성값</strong>: 스케일러 설정을 처음부터 큐 호출 직전까지 실행한 64건에서도 활성 바이트는 0이었습니다. 0이 아닌 값을 쓰는 코드는 아직 찾지 못했습니다. (<a href="superresolution-lifecycle.html#gate">활성값 추적</a>)</li>
+<li><strong>JPEG 보조 입력</strong>: JPEG 모듈은 <code>job+0x21E8</code>과 <code>job+0x2204</code>도 읽습니다. 보조 스케일러 출력과 JPEG 보조 입력은 서로 다른 디스크립터를 씁니다. 활성값을 1로 넣고 일반 배치 뒤에 같은 기준 주소로 마스크 배치를 만든 합성 사례에서 두 쌍의 평면 주소가 일치했습니다. (<a href="masked-cpp-analysis.html#jpeg">조건부 주소 공유</a>)</li>
+<li><strong>마스크 값의 변화</strong>: 모듈 20이 끝나면 마스크 값에서 <code>0x44</code> 비트가 사라지고 그 뒤의 CPP는 기본 평면에 출력합니다. Pixel Shift 레시피에서는 모듈 20이 CPP보다 앞에 있습니다. (<a href="masked-cpp-analysis.html#module20">모듈 20</a>, <a href="superresolution-lifecycle.html#recipe">레시피 순서</a>)</li>
 </ul>
 <div class="callout warn"><strong class="label">기본 분기 결론의 범위</strong>
 <p>모듈 17 안에는 기능·설정 검사와 메모리 준비 단계가 있습니다. 합성 요청 검증은 그 뒤의 디스크립터 읽기와 요청 조립 구간에서 시작했습니다. 그래서 기본 분기의 결론은 “필요한 조건이 성립하면 같은 버퍼로 이어진다”까지입니다. 디스크립터가 다르다는 사실만으로 실제 평면 메모리가 겹칠 가능성을 배제할 수도 없습니다.</p></div>
@@ -492,10 +492,10 @@
 <section id="limits">
 <h2>한계와 남은 과제</h2>
 <ul>
-<li><strong>백엔드 B</strong> — 대표적인 쓰기 경로 하나를 SD 명령과 ADMA 설정까지 이었습니다. 파일 전체의 클러스터 할당, 마운트, 복구 분기는 실행하지 않았습니다.</li>
-<li><strong>CPP 기본 분기</strong> — 합성 목적지와 스케일러 입력, 스케일러 목적지와 JPEG 입력의 주소가 같다는 것까지 확인했습니다. 메뉴 조작에서 출발해 이 조건이 모두 성립하는 경로, 사이의 레시피 단계가 주소나 내용을 바꾸는지는 남아 있습니다.</li>
-<li><strong>마스크 분기</strong> — 보조 스케일러를 켜는 코드, 실제 작업에서 보조 출력과 JPEG 보조 입력이 같은 평면을 쓰는지, 모듈 17 앞단의 기능 검사가 남아 있습니다.</li>
-<li><strong>하드웨어</strong> — RAW 픽셀 처리, JPEG 생성, Exif에서 SD 매체까지의 연속 실행, DMA 데이터 전송과 캐시 일관성은 확인하지 않았습니다. SoC와 보조 MCU의 정확한 부품 번호도 정해지지 않았습니다.</li>
+<li><strong>백엔드 B</strong>: 대표적인 쓰기 경로 하나를 SD 명령과 ADMA 설정까지 이었습니다. 파일 전체의 클러스터 할당, 마운트, 복구 분기는 실행하지 않았습니다.</li>
+<li><strong>CPP 기본 분기</strong>: 합성 목적지와 스케일러 입력, 스케일러 목적지와 JPEG 입력의 주소가 같다는 것까지 확인했습니다. 메뉴 조작에서 출발해 이 조건이 모두 성립하는 경로, 사이의 레시피 단계가 주소나 내용을 바꾸는지는 남아 있습니다.</li>
+<li><strong>마스크 분기</strong>: 보조 스케일러를 켜는 코드, 실제 작업에서 보조 출력과 JPEG 보조 입력이 같은 평면을 쓰는지, 모듈 17 앞단의 기능 검사가 남아 있습니다.</li>
+<li><strong>하드웨어</strong>: RAW 픽셀 처리, JPEG 생성, Exif에서 SD 매체까지의 연속 실행, DMA 데이터 전송과 캐시 일관성은 확인하지 않았습니다. SoC와 보조 MCU의 정확한 부품 번호도 정해지지 않았습니다.</li>
 </ul>
 </section>
 
@@ -539,7 +539,7 @@ python verify_publication.py</code></pre>
 </main>
 </div>
 <!-- chrome:bottom -->
-<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">영상 처리와 저장 경로 — 이 주제의 문서</h2><ol><li><a href="guide-pipeline.html">영상 처리 경로 안내</a></li><li><a href="pipeline-analysis.html">RAW 이후의 톤·WB·색 행렬</a></li><li><a href="tone-provenance.html">톤 문맥과 곡선 생산자의 연결<span>원본 포인터·정수 계산·곡선 생성의 분리 재현</span></a></li><li><a href="tone-inputs.html">톤 입력의 원본 생산자<span>생성자·상위 job 입력·기존값 유지 조건</span></a></li><li><a href="tone-scale.html">recipe+9C 정수 생산자와 내장 입력 복사<span>정수 계산 20조건과 원본 바이트 전달 3조건</span></a></li><li><a href="tone-upstream.html">R5 상위 입력과 0 소비자<span>원본 생성자·기술자·ROM 표와 0 분모 경계</span></a></li><li><a href="tone-manager.html">톤 설정 관리자와 내부 버퍼 기록<span>두 호출점·48바이트 복사·busy 상태의 정적 순서</span></a></li><li><a href="tone-selectors.html">selector 5·6의 직접 생산 경로<span>입력 halfword에서 하위 8비트까지·5개 원본 구간 재현</span></a></li><li><a href="output-menu-analysis.html">JPEG 출력 버퍼와 Reversal Film 메뉴</a></li><li><a href="storage-dma-analysis.html">파일시스템에서 SD·DMA까지</a></li><li><a href="backend-b-cpp-analysis.html" aria-current="page">백엔드 B와 두 번째 CPP 출력</a></li><li><a href="masked-cpp-analysis.html">마스크 CPP와 보조 JPEG 입력</a></li><li><a href="superresolution-lifecycle.html">Pixel Shift 메뉴와 버퍼 수명</a></li></ol></nav>
+<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">영상 처리와 저장 경로 — 이 주제의 문서</h2><ol><li><a href="guide-pipeline.html">영상 처리 경로 안내</a></li><li><a href="pipeline-analysis.html">RAW 이후의 톤·WB·색 행렬</a></li><li><a href="tone-provenance.html">톤 문맥과 곡선 생산자의 연결<span>포인터·정수 계산·곡선 생성</span></a></li><li><a href="tone-inputs.html">톤 입력의 원본 생산자<span>초기값과 갱신·유지 조건</span></a></li><li><a href="tone-scale.html">recipe+9C 정수 생산자와 내장 입력 복사<span>정수 계산 20조건, 바이트 전달 3조건</span></a></li><li><a href="tone-upstream.html">R5 상위 입력과 0 소비자<span>상위 입력 7건과 0 분모</span></a></li><li><a href="tone-manager.html">톤 설정 관리자와 내부 버퍼 기록<span>두 호출자와 48바이트 설정 레코드</span></a></li><li><a href="tone-selectors.html">selector 5·6의 직접 생산 경로<span>하위 8비트 저장, 5사례</span></a></li><li><a href="output-menu-analysis.html">JPEG 출력 버퍼와 Reversal Film 메뉴</a></li><li><a href="storage-dma-analysis.html">파일시스템에서 SD·DMA까지</a></li><li><a href="backend-b-cpp-analysis.html" aria-current="page">백엔드 B와 두 번째 CPP 출력</a></li><li><a href="masked-cpp-analysis.html">마스크 CPP와 보조 JPEG 입력</a></li><li><a href="superresolution-lifecycle.html">Pixel Shift 메뉴와 버퍼 수명</a></li><li><a href="raw-nr-feasibility.html">RAW 노이즈 감소를 끌 수 있는가</a></li></ol></nav>
 <nav class="pager" aria-label="이전·다음 문서"><a class="prev" href="storage-dma-analysis.html"><small>← 이전</small>파일시스템에서 SD·DMA까지</a><a class="next" href="masked-cpp-analysis.html"><small>다음 →</small>마스크 CPP와 보조 JPEG 입력</a></nav>
 <footer class="sitefoot"><div class="sitefoot-in"><nav aria-label="사이트"><a href="../index.html#map">문서 지도</a><a href="../index.html#levels">검증 수준 읽는 법</a><a href="../glossary.html">용어집</a><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/research-program.html">세 기종 연구 본부</a><a href="https://github.com/yunhyok/pentax-k3ii-firmware-analysis">GitHub 저장소</a></nav><p>PENTAX K-3 II 펌웨어 1.12 분석 문서. PC에서 수행한 정적 분석과 에뮬레이션 결과이며, 카메라 실기에서 검증한 내용이 아닙니다. 원본 펌웨어와 복호화한 바이너리는 포함하지 않습니다.</p></div></footer>
 <!-- /chrome:bottom -->

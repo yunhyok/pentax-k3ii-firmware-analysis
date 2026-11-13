@@ -66,12 +66,12 @@
 <h2>배경: 앞 문서에서 남은 두 가지 물음</h2>
 <p><a href="af-control.html#body">AF 요청 계산 문서</a>에서 바디 경로의 요청값은 “정규화한 입력 − 차감값 + 보정값”이었습니다. 그 문서의 시험에서는 입력 반워드와 보정값을 연구자가 정해서 넣었습니다. 남은 물음은 둘입니다.</p>
 <ul>
-<li><strong>입력은 어디서 읽는가</strong> — 모터 객체에서 포인터를 세 번 따라간 곳이라는 것만 알았습니다.</li>
-<li><strong>보정값은 누가 쓰는가</strong> — 공유 메모리의 한 칸(VA <code>0x0010316E</code>)에 들어 있다는 것만 알았습니다.</li>
+<li><strong>입력은 어디서 읽는가</strong>: 모터 객체에서 포인터를 세 번 따라간 곳이라는 것만 알았습니다.</li>
+<li><strong>보정값은 누가 쓰는가</strong>: 공유 메모리의 한 칸(VA <code>0x0010316E</code>)에 들어 있다는 것만 알았습니다.</li>
 </ul>
 <p>이 문서에서 “카운터”는 32비트 레지스터의 값을 가리킵니다. AF 코드는 그 하위 16비트만 씁니다. 카운터가 실제로 무엇을 세는지는 이 연구에서 알아내지 못했습니다.</p>
 <div class="callout"><strong class="label">주소와 이름</strong>
-<p>기본 주소 표기는 복호화한 파일의 오프셋이고, 실행 주소에는 VA를 붙였습니다. <code>VA 0x26E4</code>처럼 작은 주소는 펌웨어가 시작할 때 주소 0번지 근처로 복사해 실행하는 코드입니다(원문 표기는 ITCM). <code>CAfMotor</code>, <code>CAfDriver</code>, <code>CUdcDriver</code>, <code>C32bitReloadTimerDriver</code>는 펌웨어의 RTTI 문자열에서 확인한 클래스 이름입니다. UDC가 무엇의 약어인지는 펌웨어에서 확인하지 못했습니다.</p></div>
+<p>기본 주소 표기는 복호화한 파일의 오프셋이고 실행 주소에는 VA를 붙였습니다. <code>VA 0x26E4</code>처럼 작은 주소는 펌웨어가 시작할 때 주소 0번지 근처로 복사해 실행하는 코드입니다(원문 표기는 ITCM). <code>CAfMotor</code>, <code>CAfDriver</code>, <code>CUdcDriver</code>, <code>C32bitReloadTimerDriver</code>는 펌웨어의 RTTI 문자열에서 확인한 클래스 이름입니다. UDC가 무엇의 약어인지는 펌웨어에서 확인하지 못했습니다.</p></div>
 </section>
 
 <section id="binding">
@@ -120,9 +120,9 @@
 
 <p>이 연결은 연구자가 포인터를 손으로 이어 붙인 것이 아닙니다. 펌웨어의 드라이버 생성 코드와 등록 코드, 조회 코드를 실행해서 원본 명령이 직접 포인터를 채우게 했습니다.</p>
 <ul>
-<li><strong>타이머</strong> — 생성 코드 <code>0x3221C</code>…<code>0x322AC</code>가 등록 ID <code>0xD1</code>과 이벤트 슬롯 <code>0x82</code>를 지정합니다. 생성자 <code>0x32DE0</code>이 레지스터 주소 VA <code>0x30011024</code>를 타이머 객체의 <code>+0x24</code>에 적습니다.</li>
-<li><strong>UDC</strong> — 생성 코드 <code>0x3391C</code>…<code>0x339B4</code>가 등록 ID <code>0x117</code>과 이벤트 슬롯 <code>0x5F</code>를 씁니다. 생성자 <code>0x33BF8</code>이 VA <code>0x30014060</code>을 UDC 객체의 <code>+0x1C</code>에 연결합니다.</li>
-<li><strong>읽기 함수</strong> — <code>VA 0x26E4</code>는 선택 인수가 0이면 타이머 쪽을, 그 밖이면 UDC 쪽을 부릅니다.</li>
+<li><strong>타이머</strong>: 생성 코드 <code>0x3221C</code>…<code>0x322AC</code>가 등록 ID <code>0xD1</code>과 이벤트 슬롯 <code>0x82</code>를 지정합니다. 생성자 <code>0x32DE0</code>이 레지스터 주소 VA <code>0x30011024</code>를 타이머 객체의 <code>+0x24</code>에 적습니다.</li>
+<li><strong>UDC</strong>: 생성 코드 <code>0x3391C</code>…<code>0x339B4</code>가 등록 ID <code>0x117</code>과 이벤트 슬롯 <code>0x5F</code>를 씁니다. 생성자 <code>0x33BF8</code>이 VA <code>0x30014060</code>을 UDC 객체의 <code>+0x1C</code>에 연결합니다.</li>
+<li><strong>읽기 함수</strong>: <code>VA 0x26E4</code>는 선택 인수가 0이면 타이머 쪽을, 그 밖이면 UDC 쪽을 부릅니다.</li>
 </ul>
 
 <div class="table-wrap"><table>
@@ -138,7 +138,7 @@
 <details class="evidence"><summary>생성·등록·조회 코드의 세부</summary>
 <ul>
 <li><code>CAfDriver</code>는 VA <code>0x4000B25C</code>의 단일 객체입니다. 상위 객체의 <code>+0x20</code>에 이 포인터가 들어가고(<code>0x48EE8</code>), 모터 객체의 <code>+8</code>로 복사됩니다(<code>0x51E08</code>…<code>0x51E14</code>).</li>
-<li>등록 표는 VA <code>0x40006944</code>에 있고 항목 하나가 12바이트입니다. 항목에는 사용 표시 1, 등록 ID, 객체 포인터가 차례로 들어갑니다. 조회 코드 <code>0x46BC4</code>…<code>0x46BD4</code>가 ID <code>0xD1</code>의 객체를 <code>CAfDriver+4</code>에, <code>0x46C04</code>…<code>0x46C14</code>가 ID <code>0x117</code>의 객체를 <code>CAfDriver+0x18</code>에 적습니다.</li>
+<li>등록 표는 VA <code>0x40006944</code>에 있고 항목 하나가 12바이트입니다. 항목에는 사용 표시 1, 등록 ID, 객체 포인터가 차례로 들어갑니다. 조회 코드 <code>0x46BC4</code>…<code>0x46BD4</code>는 ID <code>0xD1</code>의 객체를 <code>CAfDriver+4</code>에 적습니다. <code>0x46C04</code>…<code>0x46C14</code>는 ID <code>0x117</code>의 객체를 <code>CAfDriver+0x18</code>에 적습니다.</li>
 <li>타이머 객체에는 레지스터 포인터가 네 개 들어갑니다: <code>+0x18</code>에 VA <code>0x30011020</code>, <code>+0x1C</code>에 <code>0x30011028</code>, <code>+0x20</code>에 <code>0x3001102C</code>, <code>+0x24</code>에 <code>0x30011024</code>.</li>
 <li>이벤트 표는 VA <code>0x40007820</code>부터이고 슬롯 하나가 4바이트입니다. 슬롯 <code>0x82</code>와 <code>0x5F</code>에는 각 드라이버 객체의 <code>+8</code> 주소가 들어갑니다.</li>
 <li>생성자가 요청하는 메모리 크기는 타이머 <code>0x2C</code>바이트, UDC <code>0x30</code>바이트입니다. 할당 함수 <code>0xAB71C</code>는 대체했습니다.</li>
@@ -149,7 +149,7 @@
 
 <section id="producer">
 <h2>보정값의 출처: 조건을 통과하면 그 시점의 카운터로 만듭니다</h2>
-<p class="takeaway">보정값을 쓰는 코드는 AF 모터 객체의 함수 <code>0x54284</code>입니다. 조건을 모두 통과했을 때만 새 값을 저장하고, 그렇지 않으면 이전 값이 남습니다.</p>
+<p class="takeaway">보정값을 쓰는 코드는 AF 모터 객체의 함수 <code>0x54284</code>입니다. 조건을 모두 통과했을 때만 새 값을 저장하고 그렇지 않으면 이전 값이 남습니다.</p>
 
 <figure class="diagram">
 <figcaption>보정값 생산 함수 0x54284의 판단</figcaption>
@@ -195,7 +195,7 @@
 <ul class="dg-legend"><li><i class="ok"></i>원본 코드 실행으로 확인한 판단</li><li><i class="key"></i>이 문서가 찾던 쓰기 지점</li><li><i class="model"></i>연구자가 넣은 값</li><li><i></i>확인한 결과</li></ul>
 </figure>
 
-<p>상위 루틴의 호출 <code>VA 0x2140</code>이 함수 <code>0x54284</code>로 이어집니다. 렌즈 능력 비트 6이 꺼진 경로에서 이 함수는 먼저 카운터를 읽고, 다음 네 가지를 확인합니다.</p>
+<p>상위 루틴의 호출 <code>VA 0x2140</code>이 함수 <code>0x54284</code>로 이어집니다. 렌즈 능력 비트 6이 꺼진 경로에서 이 함수는 먼저 카운터를 읽고 다음 네 가지를 확인합니다.</p>
 <ul>
 <li>전역 모드 플래그 VA <code>0x001030AB</code>가 0일 것</li>
 <li>상태 판정이 참일 것(시험에서는 상태값 1과 2가 통과, 0과 5는 통과하지 못함)</li>
@@ -211,14 +211,14 @@
 <tr><th scope="row">VA <code>0x00103120</code> = 0 또는 VA <code>0x0010311A</code> = 2</th><td>(0, <code>0xFFFF</code>), (1, 0)</td><td>초기 카운터</td></tr>
 </tbody></table></div>
 
-<p>보정값은 두 곳에 반영됩니다. 먼저 <code>pulse+0xBA</code>의 값에서 보정값을 뺀 하위 16비트가 다시 저장됩니다. 이어서 저장 함수 <code>VA 0x397C</code>가 호출되고, 그 안의 저장 명령 <code>VA 0x3980</code>이 공유 반워드 VA <code>0x0010316E</code>에 보정값을 씁니다. 초기화 단계의 호출 <code>VA 0x19F4</code>도 같은 저장 함수에 0을 넘깁니다.</p>
+<p>보정값은 두 곳에 반영됩니다. 먼저 <code>pulse+0xBA</code>의 값에서 보정값을 뺀 하위 16비트가 다시 저장됩니다. 이어서 저장 함수 <code>VA 0x397C</code>가 호출되고 그 안의 저장 명령 <code>VA 0x3980</code>이 공유 반워드 VA <code>0x0010316E</code>에 보정값을 씁니다. 초기화 단계의 호출 <code>VA 0x19F4</code>도 같은 저장 함수에 0을 넘깁니다.</p>
 
 <h3>경계와 조건을 하나씩 바꿔 본 결과</h3>
 <ul>
-<li><strong>경계값</strong> — 카운터가 40이면 저장하지 않아 이전 보정값 12가 남았습니다. 41이면 새 보정값 1을 기록했습니다.</li>
-<li><strong>조건 불충족</strong> — 상태 판정 실패, 모터 플래그가 켜진 경우, 모드 플래그가 켜진 경우, 렌즈 능력 비트 6이 켜진 경우 모두 새 보정값을 쓰지 않았습니다. 값을 지우는 것이 아니라 쓰기 호출 자체를 건너뜁니다.</li>
-<li><strong>16비트 순환</strong> — 카운터 65,535에서 보정값은 65,495가 됩니다. 여기에 다음 카운터 42를 더하면 16비트를 넘어 요청값은 1이 됩니다.</li>
-<li><strong>부호 경계</strong> — 요청값 32,767은 그대로 유지되고, 32,768은 음수로 해석되어 0이 됩니다.</li>
+<li><strong>경계값</strong>: 카운터가 40이면 저장하지 않아 이전 보정값 12가 남았습니다. 41이면 새 보정값 1을 기록했습니다.</li>
+<li><strong>조건 불충족</strong>: 상태 판정 실패, 모터 플래그가 켜진 경우, 모드 플래그가 켜진 경우, 렌즈 능력 비트 6이 켜진 경우 모두 새 보정값을 쓰지 않았습니다. 값을 지우지 않고 쓰기 호출 자체를 건너뜁니다.</li>
+<li><strong>16비트 순환</strong>: 카운터 65,535에서 보정값은 65,495가 됩니다. 여기에 다음 카운터 42를 더하면 16비트를 넘어 요청값은 1이 됩니다.</li>
+<li><strong>부호 경계</strong>: 요청값 32,767은 그대로 유지되고 32,768은 음수로 해석되어 0이 됩니다.</li>
 </ul>
 <p>이 실행은 상위 루틴의 상태 분기를 지난 지점인 <code>VA 0x213C</code>에서 시작합니다. AF 작업 전체가 어떤 조건에서 이 지점에 도달하는지는 확인하지 않았습니다.</p>
 
@@ -254,7 +254,7 @@
 
 <section id="handoff">
 <h2>이어 붙이기: 저장된 보정값이 요청값이 되어 구동 준비 입구에 도착합니다</h2>
-<p class="takeaway">보정값을 만든 실행의 결과(방향 플래그, 상태, 보정값)를 그대로 둔 채 다음 단계를 실행했더니, 같은 모터 객체에서 요청값이 계산되어 구동 준비 함수의 입구까지 전달됐습니다.</p>
+<p class="takeaway">보정값을 만든 실행의 결과(방향 플래그, 상태, 보정값)를 그대로 둔 채 다음 단계를 실행했습니다. 그러자 같은 모터 객체에서 요청값이 계산되어 구동 준비 함수의 입구까지 전달됐습니다.</p>
 
 <figure class="diagram">
 <figcaption>앞 단계의 상태를 그대로 이어서 실행한 두 사례</figcaption>
@@ -311,16 +311,16 @@
 <ul class="dg-legend"><li><i class="ok"></i>원본 코드를 실행한 단계</li><li><i class="open"></i>실행하지 않은 구간</li></ul>
 </figure>
 
-<p>두 사례는 보정값 생산 함수가 복귀할 때까지 실행했습니다. 대체 사례에서는 원본 명령(<code>0x54414</code>)이 방향 플래그 VA <code>0x00103116</code>에 1을 썼고, 일반 사례에서는 미리 넣어 둔 0이 유지됐습니다. 두 사례 모두 <code>0x54424</code>에서 <code>0xB7130</code>을 거쳐 상태 VA <code>0x001030E2</code>에 2를 기록했습니다. 뒤따르는 계산은 이 방향과 상태를 그대로 썼습니다.</p>
-<p>요청값 계산은 <code>VA 0x2258</code>의 호출로 함수 <code>0x5455C</code>에 들어가며, 같은 모터 객체와 타이머(ID <code>0xD1</code>)를 씁니다. 함수 <code>0x544EC</code>가 새 카운터를 방향에 따라 정규화하고, <code>0x54640</code>의 호출이 읽기 함수 <code>0xB7530</code>으로 앞서 저장된 보정값을 읽습니다. 계산 플래그와 모드 조건을 고정한 12건에서 요청값을 확인했습니다. 앞부분만 실행한 사례는 방향과 상태를 따로 넣었으므로 위의 두 사례와 구분했습니다.</p>
-<p>두 사례는 <code>VA 0x2348</code>부터 원본 소비자 코드를 더 실행해 구동 준비 함수 <code>0x52E38</code>의 입구에 도달했습니다. 요청값 367과 40이 <code>pulse+0x9E</code>와 <code>position+0x166</code>에 남았고, 호출 인수는 같은 모터 객체와 8이었습니다. 이 문서의 실행은 함수 입구에서 멈춥니다. 함수 안의 바디·렌즈 분기는 <a href="af-control.html#body">AF 요청 계산 문서</a>에서 따로 확인했습니다.</p>
+<p>두 사례는 보정값 생산 함수가 복귀할 때까지 실행했습니다. 대체 사례에서는 원본 명령(<code>0x54414</code>)이 방향 플래그 VA <code>0x00103116</code>에 1을 썼고 일반 사례에서는 미리 넣어 둔 0이 유지됐습니다. 두 사례 모두 <code>0x54424</code>에서 <code>0xB7130</code>을 거쳐 상태 VA <code>0x001030E2</code>에 2를 기록했습니다. 뒤따르는 계산은 이 방향과 상태를 그대로 썼습니다.</p>
+<p>요청값 계산은 <code>VA 0x2258</code>의 호출로 함수 <code>0x5455C</code>에 들어가며 같은 모터 객체와 타이머(ID <code>0xD1</code>)를 씁니다. 함수 <code>0x544EC</code>가 새 카운터를 방향에 따라 정규화하고 <code>0x54640</code>의 호출이 읽기 함수 <code>0xB7530</code>으로 앞서 저장된 보정값을 읽습니다. 계산 플래그와 모드 조건을 고정한 12건에서 요청값을 확인했습니다. 앞부분만 실행한 사례는 방향과 상태를 따로 넣었으므로 위의 두 사례와 구분했습니다.</p>
+<p>두 사례는 <code>VA 0x2348</code>부터 원본 소비자 코드를 더 실행해 구동 준비 함수 <code>0x52E38</code>의 입구에 도달했습니다. 요청값 367과 40이 <code>pulse+0x9E</code>와 <code>position+0x166</code>에 남았고 호출 인수는 같은 모터 객체와 8이었습니다. 이 문서의 실행은 함수 입구에서 멈춥니다. 함수 안의 바디·렌즈 분기는 <a href="af-control.html#body">AF 요청 계산 문서</a>에서 따로 확인했습니다.</p>
 
 <details class="evidence"><summary>이어 붙인 실행의 세부</summary>
 <ul>
-<li>대체 사례에서는 완료 리셋 함수(<code>VA 0x2A60</code>, 파일 <code>0xD7E7C</code>)가 인수 0으로 한 번 호출됐습니다. 이 함수는 대체했고, 그 뒤 방향 플래그에 1을 쓰는 명령은 원본으로 실행했습니다.</li>
+<li>대체 사례에서는 완료 리셋 함수(<code>VA 0x2A60</code>, 파일 <code>0xD7E7C</code>)가 인수 0으로 한 번 호출됐습니다. 이 함수는 대체했고 그 뒤 방향 플래그에 1을 쓰는 명령은 원본으로 실행했습니다.</li>
 <li>끝까지 실행한 두 사례에서는 position 객체의 <code>+0x40</code>에 <code>0x400</code>이 기록됐습니다.</li>
-<li>요청값 계산 뒤 방향 플래그는 12건 모두 0이었고, 보정값은 계산 중에 바뀌지 않았습니다.</li>
-<li>소비자 쪽 호출은 <code>VA 0x234C</code>이고, 구동 준비 호출은 파일 <code>0x5493C</code>에서 일어납니다.</li>
+<li>요청값 계산 뒤 방향 플래그는 12건 모두 0이었고 보정값은 계산 중에 바뀌지 않았습니다.</li>
+<li>소비자 쪽 호출은 <code>VA 0x234C</code>이고 구동 준비 호출은 파일 <code>0x5493C</code>에서 일어납니다.</li>
 <li>근거는 <a href="af-input.json">af-input.json</a>의 <code>normal</code>과 <code>alternate_state_2</code> 사례입니다.</li>
 </ul>
 </details>
@@ -329,11 +329,11 @@
 <section id="limits">
 <h2>한계와 남은 과제</h2>
 <ul>
-<li><strong>카운터의 정체</strong> — 레지스터 주소와 드라이버 연결은 확인했지만, 이 카운터가 어떤 물리 신호를 세는지와 값의 단위는 알지 못합니다. 요청값의 물리 단위도 마찬가지입니다.</li>
-<li><strong>시간의 흐름</strong> — 두 시점의 카운터 값은 각각 넣어 준 것입니다. 하드웨어가 값을 바꾸는 과정, 실행 구간 사이의 스케줄링은 실행하지 않았습니다.</li>
-<li><strong>대체한 함수</strong> — 메모리 할당 <code>0xAB71C</code>, 바디 구동 준비 <code>0x5234C</code>, 대체 분기의 완료 리셋 <code>VA 0x2A60</code> 세 곳입니다. 바디 구동 준비는 인수만 기록하고 돌아오게 했으므로 하드웨어 준비 동작은 실행되지 않았습니다.</li>
-<li><strong>합성 상태</strong> — 드라이버 생성 코드에 들어갈 때의 스택과 객체, 등록 표의 초기화 표시, 카운터 입력은 검증기에 적어 둔 합성 값입니다.</li>
-<li><strong>다루지 않은 것</strong> — 광학 센서에서 초점 오차를 만드는 과정과 실제 모터의 움직임.</li>
+<li><strong>카운터의 정체</strong>: 레지스터 주소와 드라이버 연결은 확인했지만 이 카운터가 어떤 물리 신호를 세는지와 값의 단위는 알지 못합니다. 요청값의 물리 단위도 마찬가지입니다.</li>
+<li><strong>시간의 흐름</strong>: 두 시점의 카운터 값은 각각 넣어 준 것입니다. 하드웨어가 값을 바꾸는 과정, 실행 구간 사이의 스케줄링은 실행하지 않았습니다.</li>
+<li><strong>대체한 함수</strong>: 메모리 할당 <code>0xAB71C</code>, 바디 구동 준비 <code>0x5234C</code>, 대체 분기의 완료 리셋 <code>VA 0x2A60</code> 세 곳입니다. 바디 구동 준비는 인수만 기록하고 돌아오게 했으므로 하드웨어 준비 동작은 실행되지 않았습니다.</li>
+<li><strong>합성 상태</strong>: 드라이버 생성 코드에 들어갈 때의 스택과 객체, 등록 표의 초기화 표시, 카운터 입력은 검증기에 적어 둔 합성 값입니다.</li>
+<li><strong>다루지 않은 것</strong>: 광학 센서에서 초점 오차를 만드는 과정과 실제 모터의 움직임.</li>
 </ul>
 <p>미해결 항목은 <a href="hq-status.json">hq-status.json</a>의 <code>af_and_lens_drive</code>에 정리되어 있습니다.</p>
 </section>

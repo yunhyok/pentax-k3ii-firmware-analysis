@@ -27,9 +27,9 @@
 <section class="summary">
 <h2 data-toc="no">핵심 요약</h2>
 <ul>
-<li>RAW 현상 작업은 작업 목록에 등록된 뒤, <strong>레시피</strong>라는 명령 배열에 적힌 순서대로 모듈에 전달됩니다. 원본 레시피 생성 함수를 실행해 11종의 순서를 얻었고, 그중 3종에 RAW 입력·톤·스케일러·저장 단계가 모두 들어 있습니다.</li>
-<li>톤 곡선을 고르는 내부 선택값 6은 Custom Image의 <strong>Reversal Film</strong>입니다. 펌웨어가 이 값을 사진 메타데이터의 ImageTone 값 7로 바꿔 적는 것을 실행해 확인했고, 공개된 메타데이터 정의에서 7이 Reversal Film입니다.</li>
-<li>화이트 밸런스 값은 설정 레코드의 채널 순서(RR, GR, GB, BB)와 다른 순서(RR/BB, GR/GB)로 레지스터에 묶여 기록됩니다. 색 행렬은 세 벌이 있고, 그중 한 벌의 계수를 만드는 정수 계산식을 원본 명령 실행 결과와 맞췄습니다.</li>
+<li>RAW 현상 작업은 작업 목록에 등록된 뒤, <strong>레시피</strong>라는 명령 배열에 적힌 순서대로 모듈에 전달됩니다. 원본 레시피 생성 함수를 실행해 11종의 순서를 얻었고 그중 3종에 RAW 입력·톤·스케일러·저장 단계가 모두 들어 있습니다.</li>
+<li>톤 곡선을 고르는 내부 선택값 6은 Custom Image의 <strong>Reversal Film</strong>입니다. 펌웨어가 이 값을 사진 메타데이터의 ImageTone 값 7로 바꿔 적는 것을 실행해 확인했고 공개된 메타데이터 정의에서 7이 Reversal Film입니다.</li>
+<li>화이트 밸런스 값은 설정 레코드의 채널 순서(RR, GR, GB, BB)와 다른 순서(RR/BB, GR/GB)로 레지스터에 묶여 기록됩니다. 색 행렬은 세 벌이 있고 그중 한 벌의 계수를 만드는 정수 계산식을 원본 명령 실행 결과와 맞췄습니다.</li>
 <li>확인한 범위는 <strong>CPU가 설정값을 계산해 레지스터에 쓰는 데까지</strong>입니다. 영상 처리 회로가 그 값으로 픽셀을 어떻게 처리하는지, 실제 JPEG의 색이 어떻게 나오는지는 관측하지 않았습니다.</li>
 </ul>
 </section>
@@ -72,15 +72,15 @@
 <tbody>
 <tr><th scope="row">톤 곡선</th><td>밝기 값을 다른 밝기 값으로 바꾸는 표입니다. Custom Image(사진의 마무리 느낌)를 바꾸면 곡선이 달라집니다.</td><td>RAW 작업이 톤 설정 함수까지 어떻게 전달되는가. 내부 선택값 6은 어떤 Custom Image인가.</td></tr>
 <tr><th scope="row">화이트 밸런스(WB)</th><td>색 채널마다 곱하는 게인과 더하는 오프셋입니다. 광원의 색을 상쇄합니다.</td><td>설정 레코드의 값이 어느 레지스터의 어느 비트에 들어가는가.</td></tr>
-<tr><th scope="row">색 행렬</th><td>세 색 값을 섞어 새 세 값을 만드는 3×3 계수입니다.</td><td>계수를 어디서 가져오고, CPU가 어떤 계산을 거쳐 기록하는가.</td></tr>
+<tr><th scope="row">색 행렬</th><td>세 색 값을 섞어 새 세 값을 만드는 3×3 계수입니다.</td><td>계수를 어디서 가져오고 CPU가 어떤 계산을 거쳐 기록하는가.</td></tr>
 </tbody></table></div>
 
 <h3>읽기 전에 알아 둘 용어와 표기</h3>
 <ul>
-<li><strong>작업(job)과 레시피</strong> — 펌웨어는 사진 한 장의 처리를 작업 객체 하나로 다룹니다. 작업마다 “어느 모듈을 어떤 순서로 부를지” 적은 명령 배열이 붙는데, 이 문서에서는 이를 레시피라고 부릅니다.</li>
-<li><strong>모듈</strong> — 레시피가 호출하는 처리 단위입니다. 번호로 구분합니다. 모듈 0은 톤과 색 행렬을 적용하는 색 처리 모듈이고, 같은 주제의 다른 문서에서는 CPP라고 부릅니다.</li>
-<li><strong>B2Y</strong> — 펌웨어의 진단 문자열(<code>IO_B2Y</code>)에 나오는 레지스터 묶음의 이름입니다. 화이트 밸런스, 색 행렬, 톤 레지스터가 여기에 모여 있습니다.</li>
-<li><strong>주소 표기</strong> — 코드 주소는 따로 적지 않으면 복호화한 펌웨어 이미지의 파일 오프셋입니다. 분석용 가상 주소는 여기에 <code>0x02000000</code>을 더한 값입니다. <code>0x2002…</code>로 시작하는 주소는 코드가 값을 쓰는 <dfn title="메모리 주소처럼 읽고 쓰는 하드웨어 제어 레지스터">장치 레지스터</dfn> 주소입니다.</li>
+<li><strong>작업(job)과 레시피</strong>: 펌웨어는 사진 한 장의 처리를 작업 객체 하나로 다룹니다. 작업마다 “어느 모듈을 어떤 순서로 부를지” 적은 명령 배열이 붙습니다. 이 문서에서는 이를 레시피라고 부릅니다.</li>
+<li><strong>모듈</strong>: 레시피가 호출하는 처리 단위입니다. 번호로 구분합니다. 모듈 0은 톤과 색 행렬을 적용하는 색 처리 모듈이고 같은 주제의 다른 문서에서는 CPP라고 부릅니다.</li>
+<li><strong>B2Y</strong>: 펌웨어의 진단 문자열(<code>IO_B2Y</code>)에 나오는 레지스터 묶음의 이름입니다. 화이트 밸런스, 색 행렬, 톤 레지스터가 여기에 모여 있습니다.</li>
+<li><strong>주소 표기</strong>: 코드 주소는 따로 적지 않으면 복호화한 펌웨어 이미지의 파일 오프셋입니다. 분석용 가상 주소는 여기에 <code>0x02000000</code>을 더한 값입니다. <code>0x2002…</code>로 시작하는 주소는 코드가 값을 쓰는 <dfn title="메모리 주소처럼 읽고 쓰는 하드웨어 제어 레지스터">장치 레지스터</dfn> 주소입니다.</li>
 </ul>
 <div class="callout warn"><strong class="label">그림을 읽을 때 주의</strong>
 <p>이 문서의 화살표는 CPU가 함수를 부르고 값을 넘기는 관계입니다. 영상 처리 회로 안에서 픽셀이 지나가는 순서를 뜻하지 않습니다.</p></div>
@@ -89,7 +89,7 @@
 
 <section id="flow">
 <h2>RAW 작업은 레시피를 따라 톤 설정 함수에 전달됩니다</h2>
-<p class="takeaway">RAW 현상 함수가 만든 작업은 목록에 등록되고, 작업자가 레시피의 명령을 하나씩 꺼내 모듈로 보냅니다. 색 처리 모듈이 받은 명령은 톤과 색 행렬의 준비·적용 함수로 이어집니다.</p>
+<p class="takeaway">RAW 현상 함수가 만든 작업은 목록에 등록되고 작업자가 레시피의 명령을 하나씩 꺼내 모듈로 보냅니다. 색 처리 모듈이 받은 명령은 톤과 색 행렬의 준비·적용 함수로 이어집니다.</p>
 
 <figure class="diagram">
 <figcaption>RAW 작업이 톤·색 행렬 적용 함수에 닿기까지</figcaption>
@@ -177,11 +177,11 @@
 <ul class="dg-legend"><li><i class="static"></i>코드를 읽어 확인한 호출 관계</li><li><i class="ok"></i>원본 코드를 실행해 확인</li><li><i class="model"></i>시험용으로 대체한 장치</li></ul>
 </figure>
 
-<p>작업은 세 단계의 상태를 거칩니다. 생성 함수가 목록에 넣으며 상태 1을 쓰고, 컨트롤러에 제출될 때 상태 2가 됩니다. 작업자는 상태 2인 작업을 골라 상태 3으로 바꾼 뒤 레시피를 처리합니다. 컨트롤러와 RAW 보조 객체가 같은 목록 객체를 가리킨다는 점은 두 객체의 생성 코드에서 확인했습니다.</p>
-<p>색 처리 객체의 적용 함수는 상태 바이트에 따라 색 행렬 하위 객체와 톤 하위 객체를 각각 호출합니다. 두 설정을 한 객체가 함께 관리한다는 뜻입니다. 하드웨어 안에서 두 블록이 어떤 순서로 동작하는지, 같은 프레임에서 언제 끝나는지를 말해 주지는 않습니다.</p>
+<p>작업은 세 단계의 상태를 거칩니다. 생성 함수가 목록에 넣으며 상태 1을 쓰고 컨트롤러에 제출될 때 상태 2가 됩니다. 작업자는 상태 2인 작업을 골라 상태 3으로 바꾼 뒤 레시피를 처리합니다. 컨트롤러와 RAW 보조 객체가 같은 목록 객체를 가리킨다는 점은 두 객체의 생성 코드에서 확인했습니다.</p>
+<p>색 처리 객체의 적용 함수는 상태 바이트에 따라 색 행렬 하위 객체와 톤 하위 객체를 각각 호출합니다. 두 설정은 한 객체가 함께 관리합니다. 다만 하드웨어 안에서 두 블록이 어떤 순서로 동작하는지, 같은 프레임에서 언제 끝나는지는 이 호출 관계로 알 수 없습니다.</p>
 
 <h3>레시피 11종의 단계 순서</h3>
-<p>레시피 생성 함수에 레시피 ID <code>0x0B</code>부터 <code>0x15</code>까지 11개를 넣어 실행했습니다. 메모리 할당 함수만 대체했고, 만들어진 명령 배열의 128개 항목을 읽었습니다. 표의 숫자는 0부터 세는 배열 위치입니다.</p>
+<p>레시피 생성 함수에 레시피 ID <code>0x0B</code>부터 <code>0x15</code>까지 11개를 넣어 실행했습니다. 메모리 할당 함수만 대체했고 만들어진 명령 배열의 128개 항목을 읽었습니다. 표의 숫자는 0부터 세는 배열 위치입니다.</p>
 <div class="table-wrap"><table class="compact">
 <caption>레시피별 모듈 호출 위치 (operation 5 기준)</caption>
 <thead><tr><th>레시피 ID</th><th class="n">채워진 길이</th><th class="n">RAW 입력<br>모듈 10</th><th class="n">톤·색 처리<br>모듈 0</th><th class="n">별도 톤 호출<br>operation 6</th><th class="n">스케일러<br>모듈 2</th><th class="n">StoreImage<br>모듈 9</th></tr></thead>
@@ -204,10 +204,10 @@
 <li><code>0x14</code>에는 두 종류의 톤 호출이 모두 없습니다.</li>
 </ul>
 <div class="callout"><strong class="label">번호 체계를 섞지 않기</strong>
-<p>레시피 ID는 다음 절의 톤 선택값과 다른 번호 체계입니다. 그리고 이 표는 배열에 적힌 순서일 뿐입니다. 실제 스레드와 장치가 모든 조건 분기를 지나 끝까지 실행되는 상황을 돌려 본 것은 아니며, 모든 RAW 작업이 같은 경로를 지난다고 일반화하지도 않습니다.</p></div>
+<p>레시피 ID는 다음 절의 톤 선택값과 다른 번호 체계입니다. 그리고 이 표는 배열에 적힌 순서일 뿐입니다. 실제 스레드와 장치가 모든 조건 분기를 지나 끝까지 실행되는 상황을 돌려 본 것은 아니며 모든 RAW 작업이 같은 경로를 지난다고 일반화하지도 않습니다.</p></div>
 
 <h3>톤 처리가 끝나면 컨트롤러로 돌아옵니다</h3>
-<p>톤 수신부는 처리를 마치면 완료 메시지를 컨트롤러에 보냅니다. 컨트롤러는 해당 작업의 모듈 0 완료 상태를 기록하고, 조건이 맞으면 작업을 다시 제출해 레시피의 다음 명령으로 넘어갑니다. 톤 호출에서 끝나지 않고 컨트롤러로 되돌아오는 연결까지 확인했습니다.</p>
+<p>톤 수신부는 처리를 마치면 완료 메시지를 컨트롤러에 보냅니다. 컨트롤러는 해당 작업의 모듈 0 완료 상태를 기록하고 조건이 맞으면 작업을 다시 제출해 레시피의 다음 명령으로 넘어갑니다. 톤 호출에서 끝나지 않고 컨트롤러로 되돌아오는 연결까지 확인했습니다.</p>
 
 <details class="evidence"><summary>작업 전달 경로의 함수 위치</summary>
 <div class="table-wrap"><table class="compact">
@@ -215,7 +215,7 @@
 <tbody>
 <tr><th scope="row">RAW 현상 함수</th><td><code>0x529664</code></td><td>RAW 작업을 준비해 아래 생성 함수와 제출 함수를 부릅니다.</td></tr>
 <tr><th scope="row">작업 생성</th><td><code>0x5A1618</code></td><td>목록에 노드를 넣고 상태 1을 씁니다.</td></tr>
-<tr><th scope="row">컨트롤러 제출</th><td><code>0x6DB894</code> → <code>0x5A11F8</code></td><td>상태 2를 쓰고, 컨트롤러 <code>+0x340</code>의 신호 객체에 신호를 보냅니다. 작업자는 같은 객체를 기다립니다.</td></tr>
+<tr><th scope="row">컨트롤러 제출</th><td><code>0x6DB894</code> → <code>0x5A11F8</code></td><td>상태 2를 쓰고 컨트롤러 <code>+0x340</code>의 신호 객체에 신호를 보냅니다. 작업자는 같은 객체를 기다립니다.</td></tr>
 <tr><th scope="row">작업자</th><td><code>0x6DCB14</code> → <code>0x5A12A4</code></td><td>상태 2인 노드를 골라 상태 3으로 바꿉니다.</td></tr>
 <tr><th scope="row">명령 분배</th><td><code>0x6DC2D0</code></td><td>명령 종류와 모듈 번호로 분기합니다.</td></tr>
 <tr><th scope="row">색 처리 모듈 0 수신</th><td><code>0x57C4D8</code> → <code>0x57BAC4</code></td><td>메시지 <code>0x00600002</code>. 작업 <code>+0xA41C</code>의 전달 데이터(payload) 안 <code>+0x88</code>에서 설정 포인터를 읽습니다.</td></tr>
@@ -239,7 +239,7 @@
 <div class="callout"><strong class="label">이어지는 문서</strong>
 <p>RAW 레시피가 실제로 쓰는 JPEG 모듈은 모듈 8이 아닌 <strong>모듈 16</strong>이었습니다. 색 처리 출력 → 스케일러 → 모듈 16 → StoreImage → Exif 작성기로 버퍼 주소와 길이가 넘어가는 경로는 <a href="output-menu-analysis.html#buffers">JPEG 출력 버퍼와 Reversal Film 메뉴</a>에 있습니다. 레시피에 모듈 8 호출이 없다는 사실은 JPEG 압축이 실행되지 않는다는 뜻이 아닙니다.</p></div>
 <div class="callout warn"><strong class="label">혼동하기 쉬운 호출</strong>
-<p>StoreImage 처리부의 조건부 호출은 출력 대상을 고르는 함수로 이어지고, 그 함수는 가상 함수표의 <code>+0x6C</code>로 전달합니다. 일반 저장 슬롯에서 이 호출이 닿는 곳은 저장 준비 명령이며, 이미지 데이터를 쓰는 호출이 아닙니다. 근거는 <a href="output-menu-analysis.html#writer">다음 문서의 Exif 출력 절</a>에 있습니다.</p></div>
+<p>StoreImage 처리부의 조건부 호출은 출력 대상을 고르는 함수로 이어지고 그 함수는 가상 함수표의 <code>+0x6C</code>로 전달합니다. 일반 저장 슬롯에서 이 호출이 닿는 곳은 저장 준비 명령이며 이미지 데이터를 쓰는 호출이 아닙니다. 근거는 <a href="output-menu-analysis.html#writer">다음 문서의 Exif 출력 절</a>에 있습니다.</p></div>
 
 <details class="evidence"><summary>저장·코덱·작성기의 위치</summary>
 <div class="table-wrap"><table class="compact">
@@ -255,7 +255,7 @@
 
 <section id="selector">
 <h2>톤 선택값 6은 Reversal Film입니다</h2>
-<p class="takeaway">저장된 설정 레코드의 한 바이트가 톤 곡선 선택과 사진 메타데이터 기록 양쪽에 쓰입니다. 값 6은 톤 쪽에서 전용 곡선 생산자를 고르고, 메타데이터 쪽에서는 ImageTone 7로 바뀌어 기록됩니다.</p>
+<p class="takeaway">저장된 설정 레코드의 한 바이트가 톤 곡선 선택과 사진 메타데이터 기록 양쪽에 쓰입니다. 값 6은 톤 쪽에서 전용 곡선 생산자를 고르고 메타데이터 쪽에서는 ImageTone 7로 바뀌어 기록됩니다.</p>
 
 <figure class="diagram">
 <figcaption>같은 설정 바이트를 읽는 두 경로</figcaption>
@@ -310,8 +310,8 @@
 
 <p>이름을 메뉴에 나열된 순서에서 짐작하지 않았습니다. 근거는 두 가지입니다.</p>
 <ol>
-<li><strong>펌웨어 안의 값 변환</strong> — 메타데이터 처리기가 태그 <code>0x004F</code>를 기록할 때 선택값 6을 7로 바꿉니다. 태그 분배 함수부터 16비트 값을 쓰는 명령까지 원본 코드로 실행했습니다.</li>
-<li><strong>공개된 태그 정의</strong> — <a href="https://github.com/exiftool/exiftool/blob/9b8664dfcf2c609d3cc8925d380e98ad2a379f9b/lib/Image/ExifTool/Pentax.pm#L2199-L2215">ExifTool의 Pentax 태그 정의</a>에서 <code>0x004F</code>는 ImageTone이고 값 7은 Reversal Film입니다. 리코의 <a href="https://www.ricoh-imaging.co.jp/english/products/k-3-2/spec/">K-3 II 사양</a>도 Custom Image 항목에 Reversal Film을 적고 있습니다.</li>
+<li><strong>펌웨어 안의 값 변환</strong>: 메타데이터 처리기가 태그 <code>0x004F</code>를 기록할 때 선택값 6을 7로 바꿉니다. 태그 분배 함수부터 16비트 값을 쓰는 명령까지 원본 코드로 실행했습니다.</li>
+<li><strong>공개된 태그 정의</strong>: <a href="https://github.com/exiftool/exiftool/blob/9b8664dfcf2c609d3cc8925d380e98ad2a379f9b/lib/Image/ExifTool/Pentax.pm#L2199-L2215">ExifTool의 Pentax 태그 정의</a>에서 <code>0x004F</code>는 ImageTone이고 값 7은 Reversal Film입니다. 리코의 <a href="https://www.ricoh-imaging.co.jp/english/products/k-3-2/spec/">K-3 II 사양</a>도 Custom Image 항목에 Reversal Film을 적고 있습니다.</li>
 </ol>
 <p>이 결론은 뒤에 화면 쪽에서도 확인했습니다. 메뉴 이벤트 <code>0x01205010</code>이 설정값 6을 기록하는 경로와 펌웨어에 든 <em>Reversal Film</em> 문자열은 <a href="output-menu-analysis.html#menu">다음 문서의 메뉴 절</a>에 있습니다.</p>
 
@@ -334,7 +334,7 @@
 <p>톤 선택값, 메뉴의 표시 순서, ImageTone은 서로 다른 번호 체계입니다. 표에서 보듯 5 이후로는 값이 어긋납니다.</p>
 
 <h3>기본 프로필이 돌려주는 선택값</h3>
-<p>기본 설정을 초기화하는 함수와 프로필 조회 함수를 실행해 프로필 ID 0~41의 기본 선택값을 읽었습니다. ID 0~10은 자기 번호와 같은 선택값을 돌려줍니다. ID 41도 선택값 6을 돌려주는데, 이 프로필이 화면에서 어떤 이름인지는 확인하지 못했습니다.</p>
+<p>기본 설정을 초기화하는 함수와 프로필 조회 함수를 실행해 프로필 ID 0~41의 기본 선택값을 읽었습니다. ID 0~10은 자기 번호와 같은 선택값을 돌려줍니다. ID 41도 선택값 6을 돌려주는데 이 프로필이 화면에서 어떤 이름인지는 확인하지 못했습니다.</p>
 <div class="callout warn"><strong class="label">주의</strong>
 <p>이것은 초기값을 읽은 결과입니다. 사용자가 카메라에 저장해 둔 현재 설정값과는 다릅니다.</p></div>
 
@@ -370,7 +370,7 @@
 
 <section id="wb">
 <h2>화이트 밸런스 값은 채널 순서를 바꿔 레지스터에 기록됩니다</h2>
-<p class="takeaway">설정 레코드는 RR, GR, GB, BB 순서로 값을 담지만, 레지스터에는 RR과 BB가 한 워드에, GR과 GB가 다른 워드에 묶입니다. 레코드 순서 그대로 레지스터를 읽으면 채널을 잘못 대응시키게 됩니다.</p>
+<p class="takeaway">설정 레코드는 RR, GR, GB, BB 순서로 값을 담지만 레지스터에는 RR과 BB가 한 워드에, GR과 GB가 다른 워드에 묶입니다. 레코드 순서 그대로 레지스터를 읽으면 채널을 잘못 대응시키게 됩니다.</p>
 
 <figure class="diagram">
 <figcaption>레코드의 네 채널이 레지스터 워드 두 개에 들어가는 순서</figcaption>
@@ -426,10 +426,10 @@
 </tbody></table></div>
 
 <h3>게인이 들어오는 두 경로</h3>
-<p>게인을 레지스터에 넣는 적용 함수는 하나지만, 값을 가져오는 호출 구간은 둘입니다.</p>
+<p>게인을 레지스터에 넣는 적용 함수는 하나지만 값을 가져오는 호출 구간은 둘입니다.</p>
 <ul>
-<li><strong>직접 경로</strong> — 설정 레코드의 16비트 게인과 오프셋을 그대로 적용 함수에 넘깁니다.</li>
-<li><strong>우측 이동 경로</strong> — 부모 객체에 든 다른 레코드에서 게인 네 개를 읽고, 오른쪽으로 5비트 이동한 뒤 같은 게인 적용 함수에 넘깁니다.</li>
+<li><strong>직접 경로</strong>: 설정 레코드의 16비트 게인과 오프셋을 그대로 적용 함수에 넘깁니다.</li>
+<li><strong>우측 이동 경로</strong>: 부모 객체에 든 다른 레코드에서 게인 네 개를 읽고 오른쪽으로 5비트 이동한 뒤 같은 게인 적용 함수에 넘깁니다.</li>
 </ul>
 <p>두 경로를 각각 4건씩, 모두 8건 실행했습니다. 입력은 0과 필드 경계값, 필드 폭을 넘는 값, 5비트 이동의 경계값, 채널마다 다른 값입니다. 매번 장치 주소를 대신한 메모리 4,096바이트 전체를 기대값과 비교해, 쓰려던 필드 밖의 비트가 그대로인지도 확인했습니다.</p>
 <div class="callout warn"><strong class="label">해석의 한계</strong>
@@ -450,37 +450,37 @@
 
 <section id="matrix">
 <h2>색 행렬 세 벌의 준비와 적용</h2>
-<p class="takeaway">펌웨어는 CC0, CC1, YC라는 이름의 3×3 계수 세 벌을 서로 다른 출처에서 준비해 서로 다른 레지스터에 씁니다. CC0은 행렬을 여러 번 곱하고 게인으로 조정한 결과이고, CC1은 저장된 값을 그대로 복사합니다.</p>
+<p class="takeaway">펌웨어는 CC0, CC1, YC라는 이름의 3×3 계수 세 벌을 서로 다른 출처에서 준비해 서로 다른 레지스터에 씁니다. CC0은 행렬을 여러 번 곱하고 게인으로 조정한 결과이고 CC1은 저장된 값을 그대로 복사합니다.</p>
 <div class="table-wrap"><table>
 <caption>색 행렬 세 벌</caption>
 <thead><tr><th>이름</th><th>계수를 준비하는 방법</th><th>준비 함수</th><th>적용 함수</th><th>레지스터와 폭</th></tr></thead>
 <tbody>
 <tr><th scope="row">CC0</th><td>준비 인자의 하위 바이트로 설정 묶음 <code>+0xC</code>의 배열에서 행렬을 고른 뒤 아래 계산을 거칩니다.</td><td><code>0x4C2598</code></td><td><code>0x4C2BA0</code></td><td><code>0x20020120</code>~<code>0x20020130</code><br>9개 × 12비트</td></tr>
 <tr><th scope="row">CC1</th><td>설정 묶음 <code>+0x8C</code>의 포인터가 가리키는 16비트 값 9개를 복사합니다.</td><td><code>0x4C2158</code></td><td><code>0x4C27D4</code></td><td><code>0x200208A0</code>~<code>0x200208B0</code><br>9개 × 12비트</td></tr>
-<tr><th scope="row">YC</th><td>준비 인자를 8비트 오른쪽으로 민 값으로 설정 묶음 <code>+0x1C</code>의 배열에서 행렬을 고르고, 행렬곱 함수를 한 번 거칩니다.</td><td><code>0x4C255C</code></td><td><code>0x4C2B44</code></td><td><code>0x20020900</code>~<code>0x20020910</code><br>9개 × 13비트</td></tr>
+<tr><th scope="row">YC</th><td>준비 인자를 8비트 오른쪽으로 민 값으로 설정 묶음 <code>+0x1C</code>의 배열에서 행렬을 고르고 행렬곱 함수를 한 번 거칩니다.</td><td><code>0x4C255C</code></td><td><code>0x4C2B44</code></td><td><code>0x20020900</code>~<code>0x20020910</code><br>9개 × 13비트</td></tr>
 </tbody></table></div>
 <p class="small muted">CC0, CC1, YC는 펌웨어의 진단 이름입니다. 어느 행렬이 어떤 색 공간 변환을 맡는지는 이 결과만으로 정하지 않았습니다.</p>
 
 <h3>CC0 계수를 만드는 계산</h3>
 <ol class="flow">
-<li class="ok"><strong>3×3 행렬곱 연속</strong><span>A×B를 구하고, 조건에 따라 ROM 행렬을 한 번 더 곱한 뒤, 셋째 입력 행렬을 곱합니다.</span></li>
+<li class="ok"><strong>3×3 행렬곱 연속</strong><span>A×B를 구하고 조건에 따라 ROM 행렬을 한 번 더 곱한 뒤, 셋째 입력 행렬을 곱합니다.</span></li>
 <li class="ok"><strong>게인 조정</strong><span>각 계수 × factor ÷ 4,096. 나머지는 0 쪽으로 버립니다.</span></li>
 <li class="ok"><strong>대각 성분 재계산</strong><span>대각 = 2 × factor − 같은 행의 나머지 두 계수</span></li>
 <li class="ok"><strong>포화와 기록</strong><span>−2,048 이상 2,047 이하로 제한해 12비트 필드에 씁니다.</span></li>
 </ol>
 <ul>
-<li><strong>행렬곱 한 번</strong> — 부호 있는 16비트 값 세 쌍의 곱을 32비트로 더하고, <code>0x1000</code>을 더한 뒤 오른쪽으로 13비트 밀어 하위 16비트를 남깁니다. 1.0을 8,192로 나타내는 <dfn title="실수 1.0을 정수 8192(2의 13제곱)로 나타내는 고정소수점 표기">Q13 고정소수점</dfn> 곱셈에 반올림을 더한 형태입니다.</li>
-<li><strong>factor</strong> — <code>factor = floor(gain × multiplier ÷ 256)</code>입니다. 객체에 든 선택값 0~4가 multiplier 64, 91, 128, 181, 256에 대응하고, 그 밖의 값은 128을 씁니다.</li>
-<li><strong>중간값의 폭</strong> — 단계마다 하위 16비트만 남기고 부호 있는 값으로 다시 읽습니다. 이 절단과 부호 해석까지 넣어야 펌웨어 결과와 일치합니다.</li>
+<li><strong>행렬곱 한 번</strong>: 부호 있는 16비트 값 세 쌍의 곱을 32비트로 더하고 <code>0x1000</code>을 더한 뒤 오른쪽으로 13비트 밀어 하위 16비트를 남깁니다. 1.0을 8,192로 나타내는 <dfn title="실수 1.0을 정수 8192(2의 13제곱)로 나타내는 고정소수점 표기">Q13 고정소수점</dfn> 곱셈에 반올림을 더한 형태입니다.</li>
+<li><strong>factor</strong>: <code>factor = floor(gain × multiplier ÷ 256)</code>입니다. 객체에 든 선택값 0~4가 multiplier 64, 91, 128, 181, 256에 대응하고 그 밖의 값은 128을 씁니다.</li>
+<li><strong>중간값의 폭</strong>: 단계마다 하위 16비트만 남기고 부호 있는 값으로 다시 읽습니다. 이 절단과 부호 해석까지 넣어야 펌웨어 결과와 일치합니다.</li>
 </ul>
 <p>대각 성분을 다시 계산하면 행의 합이 맞춰집니다. 그러나 뒤따르는 16비트 절단과 포화를 거친 뒤에도 행의 합이 늘 보존된다고 말할 수는 없습니다.</p>
 
 <h3>실행해 확인한 사례</h3>
 <ul>
-<li><strong>준비와 적용 10건</strong> — multiplier 선택값, 게인, CC1 우회 여부를 바꿔 가며 레지스터 영역 전체를 대조했습니다. 게인이 0이면 CC0 계수가 모두 0이 되고, 게인이 크면 여러 계수가 포화 한계에 닿습니다.</li>
-<li><strong>행렬곱 3건</strong> — 반올림이 절반에 걸리는 값, 32비트 누산이 넘치는 값(양수·음수)을 넣었습니다.</li>
-<li><strong>포화 경계 9개</strong> — −32,768, −2,049, −2,048, −2,047, −1, 0, 2,047, 2,048, 32,767을 넣어 −2,048과 2,047에서 잘리는 것을 확인했습니다.</li>
-<li><strong>CC1 제어값</strong> — CC1의 제어값이 0이 아니면 제어 비트만 기록하고 계수와 클립 설정을 건너뜁니다. 이 분기도 실행했습니다.</li>
+<li><strong>준비와 적용 10건</strong>: multiplier 선택값, 게인, CC1 우회 여부를 바꿔 가며 레지스터 영역 전체를 대조했습니다. 게인이 0이면 CC0 계수가 모두 0이 되고 게인이 크면 여러 계수가 포화 한계에 닿습니다.</li>
+<li><strong>행렬곱 3건</strong>: 반올림이 절반에 걸리는 값, 32비트 누산이 넘치는 값(양수·음수)을 넣었습니다.</li>
+<li><strong>포화 경계 9개</strong>: −32,768, −2,049, −2,048, −2,047, −1, 0, 2,047, 2,048, 32,767을 넣어 −2,048과 2,047에서 잘리는 것을 확인했습니다.</li>
+<li><strong>CC1 제어값</strong>: CC1의 제어값이 0이 아니면 제어 비트만 기록하고 계수와 클립 설정을 건너뜁니다. 이 분기도 실행했습니다.</li>
 </ul>
 
 <details class="evidence"><summary>색 행렬 계산의 위치와 사례별 계수</summary>
@@ -546,7 +546,7 @@
 <tr><th scope="row">CC1_CLP</th><td><code>0x200208C0</code>, <code>0x200208C4</code>, <code>0x200208C8</code></td><td>객체 <code>+0x1F8</code>의 포인터. 레코드의 16비트 값 3쌍</td></tr>
 <tr><th scope="row">YC_CLP</th><td><code>0x20020920</code>, <code>0x20020924</code>, <code>0x20020928</code></td><td>객체 <code>+0x38</code>의 포인터. 레코드의 16비트 값 3쌍</td></tr>
 <tr><th scope="row">MC_CLP</th><td><code>0x2002078C</code>, <code>0x20020790</code>, <code>0x20020794</code></td><td>객체 <code>+0x1E0</code>의 포인터. 레코드의 16비트 값 3쌍</td></tr>
-<tr><th scope="row">TC_CLP.word[0…3]</th><td><code>0x2002086C</code>, <code>0x20020870</code>, <code>0x20020874</code>, <code>0x20020878</code></td><td>톤 객체 <code>+0x208</code>의 포인터. 설정 묶음의 32비트 값 쌍이 <code>+0x74</code>, <code>+0x7C</code>, <code>+0x84</code>, <code>+0x8C</code>에서 시작하고, 둘째 값은 각 시작 위치 +4</td></tr>
+<tr><th scope="row">TC_CLP.word[0…3]</th><td><code>0x2002086C</code>, <code>0x20020870</code>, <code>0x20020874</code>, <code>0x20020878</code></td><td>톤 객체 <code>+0x208</code>의 포인터. 설정 묶음의 32비트 값 쌍이 <code>+0x74</code>, <code>+0x7C</code>, <code>+0x84</code>, <code>+0x8C</code>에서 시작하고 둘째 값은 각 시작 위치 +4</td></tr>
 </tbody></table></div>
 <p>다섯 종류 모두 위 그림의 방식으로 기록합니다. 톤 쪽의 TC_CLP는 범위를 넘는 값과 비트 15의 보존을 포함한 1건을 실행해 네 워드를 대조했습니다.</p>
 <div class="callout warn"><strong class="label">필드 폭이 알려 주지 않는 것</strong>
@@ -569,12 +569,12 @@
 <section id="limits">
 <h2 id="remaining">한계와 남은 과제</h2>
 <ul>
-<li><strong>회로 안의 동작</strong> — 레지스터 주소에는 일반 RAM을 놓았습니다. 실행 결과는 CPU 명령이 값을 어떻게 바꿔 어디에 쓰는지를 보여 줄 뿐, 영상 처리 회로가 프레임을 처리하는 데 성공했다는 증거가 아닙니다.</li>
-<li><strong>실제 사진과의 대조</strong> — 최종 JPEG의 픽셀이 일치하는지, 회로 안에서 감마와 클립이 어떤 순서로 적용되는지 정하려면 같은 장면의 RAW·JPEG 쌍과 촬영 설정, 장치에서 관측한 완료 이벤트와 레지스터 값이 필요합니다.</li>
-<li><strong>부품 식별</strong> — 보드 사진이나 실제 칩 식별값이 없어 SoC와 보조 MCU의 정확한 부품 번호는 <a href="deep-analysis.html#hardware">하드웨어 식별 절</a>의 미확정 상태 그대로입니다.</li>
-<li><strong>프로필 ID 41</strong> — 기본 선택값 6을 돌려주지만 화면 이름을 모릅니다.</li>
+<li><strong>회로 안의 동작</strong>: 레지스터 주소에는 일반 RAM을 놓았습니다. 실행 결과로 알 수 있는 것은 CPU 명령이 값을 어떻게 바꿔 어디에 쓰는지까지입니다. 영상 처리 회로가 프레임을 처리하는 데 성공했다는 증거는 아닙니다.</li>
+<li><strong>실제 사진과의 대조</strong>: 최종 JPEG의 픽셀이 일치하는지, 회로 안에서 감마와 클립이 어떤 순서로 적용되는지 정하려면 같은 장면의 RAW·JPEG 쌍과 촬영 설정, 장치에서 관측한 완료 이벤트와 레지스터 값이 필요합니다.</li>
+<li><strong>부품 식별</strong>: 보드 사진이나 실제 칩 식별값이 없어 SoC와 보조 MCU의 정확한 부품 번호는 <a href="deep-analysis.html#hardware">하드웨어 식별 절</a>의 미확정 상태 그대로입니다.</li>
+<li><strong>프로필 ID 41</strong>: 기본 선택값 6을 돌려주지만 화면 이름을 모릅니다.</li>
 </ul>
-<p>추적 방법은 K-3 Mark III 연구에서 쓴 것과 같습니다. 설정값을 따라가고, 수신 객체와 가상 함수표를 잇고, 정수 연산을 실행해 대조했습니다. 다만 모드 번호, 주소, 칩 구조는 K-3 II 이미지에서 따로 확인했습니다. K-3 Mark III의 UI 값 6이나 공통 모드 번호를 이 문서의 선택값 6에 대입하지 않았습니다(<a href="https://github.com/yunhyok/pentax-k3iii-firmware-analysis/blob/b51d680202336a5872a66f99ca2924a2cb7c75fa/analysis/color-lightroom.html">비교한 K-3 Mark III 모드 분석</a>).</p>
+<p>추적 방법은 K-3 Mark III 연구에서 쓴 것과 같습니다. 설정값을 따라가고 수신 객체와 가상 함수표를 잇고 정수 연산을 실행해 대조했습니다. 다만 모드 번호, 주소, 칩 구조는 K-3 II 이미지에서 따로 확인했습니다. K-3 Mark III의 UI 값 6이나 공통 모드 번호를 이 문서의 선택값 6에 대입하지 않았습니다(<a href="https://github.com/yunhyok/pentax-k3iii-firmware-analysis/blob/b51d680202336a5872a66f99ca2924a2cb7c75fa/analysis/color-lightroom.html">비교한 K-3 Mark III 모드 분석</a>).</p>
 </section>
 
 <section id="reproduce">
@@ -622,7 +622,7 @@ python verify_publication.py</code></pre>
 </main>
 </div>
 <!-- chrome:bottom -->
-<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">영상 처리와 저장 경로 — 이 주제의 문서</h2><ol><li><a href="guide-pipeline.html">영상 처리 경로 안내</a></li><li><a href="pipeline-analysis.html" aria-current="page">RAW 이후의 톤·WB·색 행렬</a></li><li><a href="tone-provenance.html">톤 문맥과 곡선 생산자의 연결<span>원본 포인터·정수 계산·곡선 생성의 분리 재현</span></a></li><li><a href="tone-inputs.html">톤 입력의 원본 생산자<span>생성자·상위 job 입력·기존값 유지 조건</span></a></li><li><a href="tone-scale.html">recipe+9C 정수 생산자와 내장 입력 복사<span>정수 계산 20조건과 원본 바이트 전달 3조건</span></a></li><li><a href="tone-upstream.html">R5 상위 입력과 0 소비자<span>원본 생성자·기술자·ROM 표와 0 분모 경계</span></a></li><li><a href="tone-manager.html">톤 설정 관리자와 내부 버퍼 기록<span>두 호출점·48바이트 복사·busy 상태의 정적 순서</span></a></li><li><a href="tone-selectors.html">selector 5·6의 직접 생산 경로<span>입력 halfword에서 하위 8비트까지·5개 원본 구간 재현</span></a></li><li><a href="output-menu-analysis.html">JPEG 출력 버퍼와 Reversal Film 메뉴</a></li><li><a href="storage-dma-analysis.html">파일시스템에서 SD·DMA까지</a></li><li><a href="backend-b-cpp-analysis.html">백엔드 B와 두 번째 CPP 출력</a></li><li><a href="masked-cpp-analysis.html">마스크 CPP와 보조 JPEG 입력</a></li><li><a href="superresolution-lifecycle.html">Pixel Shift 메뉴와 버퍼 수명</a></li></ol></nav>
+<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">영상 처리와 저장 경로 — 이 주제의 문서</h2><ol><li><a href="guide-pipeline.html">영상 처리 경로 안내</a></li><li><a href="pipeline-analysis.html" aria-current="page">RAW 이후의 톤·WB·색 행렬</a></li><li><a href="tone-provenance.html">톤 문맥과 곡선 생산자의 연결<span>포인터·정수 계산·곡선 생성</span></a></li><li><a href="tone-inputs.html">톤 입력의 원본 생산자<span>초기값과 갱신·유지 조건</span></a></li><li><a href="tone-scale.html">recipe+9C 정수 생산자와 내장 입력 복사<span>정수 계산 20조건, 바이트 전달 3조건</span></a></li><li><a href="tone-upstream.html">R5 상위 입력과 0 소비자<span>상위 입력 7건과 0 분모</span></a></li><li><a href="tone-manager.html">톤 설정 관리자와 내부 버퍼 기록<span>두 호출자와 48바이트 설정 레코드</span></a></li><li><a href="tone-selectors.html">selector 5·6의 직접 생산 경로<span>하위 8비트 저장, 5사례</span></a></li><li><a href="output-menu-analysis.html">JPEG 출력 버퍼와 Reversal Film 메뉴</a></li><li><a href="storage-dma-analysis.html">파일시스템에서 SD·DMA까지</a></li><li><a href="backend-b-cpp-analysis.html">백엔드 B와 두 번째 CPP 출력</a></li><li><a href="masked-cpp-analysis.html">마스크 CPP와 보조 JPEG 입력</a></li><li><a href="superresolution-lifecycle.html">Pixel Shift 메뉴와 버퍼 수명</a></li><li><a href="raw-nr-feasibility.html">RAW 노이즈 감소를 끌 수 있는가</a></li></ol></nav>
 <nav class="pager" aria-label="이전·다음 문서"><a class="prev" href="guide-pipeline.html"><small>← 이전</small>영상 처리 경로 안내</a><a class="next" href="tone-provenance.html"><small>다음 →</small>톤 문맥과 곡선 생산자의 연결</a></nav>
 <footer class="sitefoot"><div class="sitefoot-in"><nav aria-label="사이트"><a href="../index.html#map">문서 지도</a><a href="../index.html#levels">검증 수준 읽는 법</a><a href="../glossary.html">용어집</a><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/research-program.html">세 기종 연구 본부</a><a href="https://github.com/yunhyok/pentax-k3ii-firmware-analysis">GitHub 저장소</a></nav><p>PENTAX K-3 II 펌웨어 1.12 분석 문서. PC에서 수행한 정적 분석과 에뮬레이션 결과이며, 카메라 실기에서 검증한 내용이 아닙니다. 원본 펌웨어와 복호화한 바이너리는 포함하지 않습니다.</p></div></footer>
 <!-- /chrome:bottom -->

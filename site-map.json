@@ -15,17 +15,18 @@
     {"id": "pipeline", "title": "영상 처리와 저장 경로", "nav": "영상 처리", "hub": "analysis/guide-pipeline.html", "pages": [
       {"file": "analysis/guide-pipeline.html", "label": "영상 처리 경로 안내"},
       {"file": "analysis/pipeline-analysis.html", "label": "RAW 이후의 톤·WB·색 행렬"},
-      {"file": "analysis/tone-provenance.html", "label": "톤 문맥과 곡선 생산자의 연결", "note": "원본 포인터·정수 계산·곡선 생성의 분리 재현"},
-      {"file": "analysis/tone-inputs.html", "label": "톤 입력의 원본 생산자", "note": "생성자·상위 job 입력·기존값 유지 조건"},
-      {"file": "analysis/tone-scale.html", "label": "recipe+9C 정수 생산자와 내장 입력 복사", "note": "정수 계산 20조건과 원본 바이트 전달 3조건"},
-      {"file": "analysis/tone-upstream.html", "label": "R5 상위 입력과 0 소비자", "note": "원본 생성자·기술자·ROM 표와 0 분모 경계"},
-      {"file": "analysis/tone-manager.html", "label": "톤 설정 관리자와 내부 버퍼 기록", "note": "두 호출점·48바이트 복사·busy 상태의 정적 순서"},
-      {"file": "analysis/tone-selectors.html", "label": "selector 5·6의 직접 생산 경로", "note": "입력 halfword에서 하위 8비트까지·5개 원본 구간 재현"},
+      {"file": "analysis/tone-provenance.html", "label": "톤 문맥과 곡선 생산자의 연결", "note": "포인터·정수 계산·곡선 생성"},
+      {"file": "analysis/tone-inputs.html", "label": "톤 입력의 원본 생산자", "note": "초기값과 갱신·유지 조건"},
+      {"file": "analysis/tone-scale.html", "label": "recipe+9C 정수 생산자와 내장 입력 복사", "note": "정수 계산 20조건, 바이트 전달 3조건"},
+      {"file": "analysis/tone-upstream.html", "label": "R5 상위 입력과 0 소비자", "note": "상위 입력 7건과 0 분모"},
+      {"file": "analysis/tone-manager.html", "label": "톤 설정 관리자와 내부 버퍼 기록", "note": "두 호출자와 48바이트 설정 레코드"},
+      {"file": "analysis/tone-selectors.html", "label": "selector 5·6의 직접 생산 경로", "note": "하위 8비트 저장, 5사례"},
       {"file": "analysis/output-menu-analysis.html", "label": "JPEG 출력 버퍼와 Reversal Film 메뉴"},
       {"file": "analysis/storage-dma-analysis.html", "label": "파일시스템에서 SD·DMA까지"},
       {"file": "analysis/backend-b-cpp-analysis.html", "label": "백엔드 B와 두 번째 CPP 출력"},
       {"file": "analysis/masked-cpp-analysis.html", "label": "마스크 CPP와 보조 JPEG 입력"},
-      {"file": "analysis/superresolution-lifecycle.html", "label": "Pixel Shift 메뉴와 버퍼 수명"}
+      {"file": "analysis/superresolution-lifecycle.html", "label": "Pixel Shift 메뉴와 버퍼 수명"},
+      {"file": "analysis/raw-nr-feasibility.html", "label": "RAW 노이즈 감소를 끌 수 있는가"}
     ]},
     {"id": "capture", "title": "촬영 준비와 보존 레코드", "nav": "촬영·보존 레코드", "hub": "analysis/guide-capture.html", "pages": [
       {"file": "analysis/guide-capture.html", "label": "촬영 준비·보존 레코드 안내"},
@@ -37,7 +38,7 @@
       {"file": "analysis/preserved-config.html", "label": "정책 플래그의 생산자"},
       {"file": "analysis/preserved-dispatch.html", "label": "보존 레코드의 상위 명령 경로"},
       {"file": "analysis/preserved-continuity.html", "label": "작업자 매개변수와 목록 응답"},
-      {"file": "analysis/register-dma.html", "label": "보정 결과 레지스터와 DMA 준비", "note": "두 채널의 별도 원본 실행"},
+      {"file": "analysis/register-dma.html", "label": "검출 결과 레지스터와 DMA 준비", "note": "두 실험: 결과 레지스터, DMA 인수"},
       {"file": "analysis/preserved-record.html", "label": "보존 섹터 14의 진단 레코드"},
       {"file": "analysis/settings-storage.html", "label": "보존 섹터의 설정 저장"}
     ]},

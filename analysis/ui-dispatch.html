@@ -31,7 +31,7 @@
 <li>필터는 앱 객체에 <strong>복사해 둔 1바이트</strong>를 봅니다. 원본인 공유 상태가 바뀌어도, 앱이 다시 복사하기 전에는 예전 값으로 판단합니다.</li>
 <li>요청은 대기 레코드에 적혔다가, 작업 루프가 깨움 신호를 확인하면 처리 중 레코드로 옮겨집니다. 대기 레코드가 이미 차 있으면 색공간 요청은 기존 요청을 덮어쓰지 않습니다.</li>
 <li>전환 함수는 허용 판정을 통과해야 화면 등록부를 부릅니다. 판정에 쓰이는 바이트 하나는 다른 깨움 신호가 1이나 0으로 바꿉니다.</li>
-<li>깨움 신호는 직접 넣었고, 작업 구간 사이의 스케줄링은 실행하지 않았습니다. 실제 버튼, RTOS의 전달, 화면 생성 완료는 확인하지 않았습니다.</li>
+<li>깨움 신호는 직접 넣었고 작업 구간 사이의 스케줄링은 실행하지 않았습니다. 실제 버튼, RTOS의 전달, 화면 생성 완료는 확인하지 않았습니다.</li>
 </ul>
 </section>
 
@@ -246,7 +246,7 @@
 <p>캐시 바이트를 “모든 메뉴의 허용 여부”로 읽으면 안 됩니다. 캐시가 0일 때 필터는 바로 거부하지 않고 뒤의 조건으로 넘어갑니다. 위 표의 거부는 그 뒤 조건에 쓰이는 값을 따로 준비한 상태(<code>app+0x18C</code> = 6, <code>app+0x198</code> = 0)에서 나온 결과입니다.</p></div>
 
 <h3>실행 중에 캐시를 1로 만드는 경로</h3>
-<p>복사 구간 말고도 캐시를 1로 만드는 경로가 있습니다. 앱 객체의 가상 호출이 갱신 함수로 이어지고, 키 <code>0x1D</code>가 1이면서 키 <code>0x52</code>를 부호 있는 32비트로 읽은 값이 양수일 때만 캐시에 1을 기록했습니다.</p>
+<p>복사 구간 말고도 캐시를 1로 만드는 경로가 있습니다. 앱 객체의 가상 호출이 갱신 함수로 이어지고 키 <code>0x1D</code>가 1이면서 키 <code>0x52</code>를 부호 있는 32비트로 읽은 값이 양수일 때만 캐시에 1을 기록했습니다.</p>
 <div class="table-wrap"><table class="fit">
 <caption>실행 중 갱신 조건 5건</caption>
 <thead><tr><th class="n">키 <code>0x1D</code></th><th class="n">키 <code>0x52</code>의 값</th><th class="n">실행 뒤 캐시</th><th>기록 명령 <code>0x2FE498</code></th></tr></thead>
@@ -269,8 +269,8 @@
 <tr><th scope="row">키 <code>0x1D</code>의 표 항목</th><td>표 위치 <code>0x9DFA98</code>. 데이터 오프셋 6, 마스크 <code>0x04</code>, 시프트 2. 4바이트 헤더를 포함하면 뱅크 객체의 <code>+0xA</code></td></tr>
 <tr><th scope="row">함께 확인한 다른 키</th><td>키 <code>0x2A</code>: 표 위치 <code>0x9DFB00</code>, 데이터 오프셋 10, 마스크 <code>0x08</code>, 시프트 3. 키 <code>0x52</code>: 표 위치 <code>0x9DEA88</code>, 바이트 오프셋 29</td></tr>
 <tr><th scope="row">상태 쓰기</th><td>호출 <code>0x523D3C</code> → <code>0x69B61C</code>, 인수 1. 활성 뱅크의 데이터를 반대 뱅크에 복사하면서 해당 비트만 바꾸고 활성 뱅크를 전환합니다.</td></tr>
-<tr><th scope="row">쓰기 대조</th><td>활성 데이터의 바이트 <code>0xA3</code>이 반대 뱅크에서 <code>0xA7</code>이 됐습니다. 13바이트 복사 대조에서는 <code class="wrap">11233547596ba37d8f91adbecf</code>가 <code class="wrap">11233547596ba77d8f91adbecf</code>로 바뀌어, 키 <code>0x1D</code>의 bit 2만 달라졌습니다. 원본 뱅크는 그대로였습니다.</td></tr>
-<tr><th scope="row">앱의 복사 구간</th><td><code>0x30A3A8</code>–<code>0x30A3D0</code>. <code>0x30A3C4</code>에서 <code>0x6F8360</code>을 불러 활성 뱅크의 키를 읽고, <code>0x30A3CC</code>에서 <code>app+0x14B4</code>에 기록</td></tr>
+<tr><th scope="row">쓰기 대조</th><td>활성 데이터의 바이트 <code>0xA3</code>이 반대 뱅크에서 <code>0xA7</code>이 됐습니다. 13바이트 복사 대조에서는 <code class="wrap">11233547596ba37d8f91adbecf</code>가 <code class="wrap">11233547596ba77d8f91adbecf</code>로 바뀌었습니다. 키 <code>0x1D</code>의 bit 2만 달라졌습니다. 원본 뱅크는 그대로였습니다.</td></tr>
+<tr><th scope="row">앱의 복사 구간</th><td><code>0x30A3A8</code>–<code>0x30A3D0</code>. <code>0x30A3C4</code>에서 <code>0x6F8360</code>을 불러 활성 뱅크의 키를 읽고 <code>0x30A3CC</code>에서 <code>app+0x14B4</code>에 기록</td></tr>
 <tr><th scope="row">캐시 지우기</th><td>이벤트 <code>0x0112005E</code> → <code>0x30AF2C</code></td></tr>
 <tr><th scope="row">실행 중 갱신</th><td>가상 호출 <code>0x3097E8</code> → <code>0x2FE2F8</code>, 기록 명령 <code>0x2FE498</code>. 실행 구간 <code>0x3097B4</code>–<code>0x3097EC</code></td></tr>
 <tr><th scope="row">필터</th><td><code>0x2FB408</code>. 통과 경로는 <code>0x2FB440</code> → <code>0x2FB524</code>, 캐시 0의 거부 경로는 <code>0x2FB440</code> → <code>0x2FB450</code> → <code>0x2FB520</code> → <code>0x2FB524</code>, 대상 <code>0xBE</code>의 거부 경로는 <code>0x2FB520</code> → <code>0x2FB524</code></td></tr>
@@ -283,7 +283,7 @@
 <section id="pending">
 <h2>필터를 통과한 요청은 대기 레코드에 적힙니다</h2>
 <p class="takeaway">알림 수신자는 요청을 <code>app+0xB0</code>의 대기 레코드에 적고 깨움 <code>0x800</code>을 요청합니다. 대기 레코드에 이미 요청이 있으면 색공간 요청은 덮어쓰지 않습니다.</p>
-<p>메뉴 화면은 자신의 <code>+0xC4</code> 필드에 들어 있는 창구로 알림을 보냅니다. 화면 등록부의 연결 코드는 이 필드에 <code>app+0x4C</code>, 즉 앱 객체의 보조 인터페이스를 넣습니다. 보조 인터페이스의 함수는 앱 객체의 원래 주소를 되찾은 뒤 필터를 부르고, 통과하면 대기 레코드 기록 함수로 넘깁니다.</p>
+<p>메뉴 화면은 자신의 <code>+0xC4</code> 필드에 들어 있는 창구로 알림을 보냅니다. 화면 등록부의 연결 코드는 이 필드에 <code>app+0x4C</code>, 즉 앱 객체의 보조 인터페이스를 넣습니다. 보조 인터페이스의 함수는 앱 객체의 원래 주소를 되찾은 뒤 필터를 부르고 통과하면 대기 레코드 기록 함수로 넘깁니다.</p>
 
 <div class="table-wrap"><table class="compact">
 <caption>요청 레코드 24바이트의 구성</caption>
@@ -311,7 +311,7 @@
 <tr><th scope="row">캐시가 1, 대기 레코드가 비어 있음</th><td>대상 <code>0xB4</code>, 출발 <code>0x42</code>, 종류 1, 동작 <code>0x1D</code>, 인수 0이 적힘</td><td><code>0x2</code>, <code>0x800</code></td></tr>
 <tr><th scope="row">캐시가 1, 대기 레코드에 다른 요청(대상 <code>0x55</code>)이 있음</th><td>바뀌지 않음</td><td><code>0x2</code>, <code>0x800</code></td></tr>
 </tbody></table></div>
-<p>깨움 <code>0x2</code>는 보조 인터페이스의 함수에 들어가기 전에 요청됩니다. 깨움 <code>0x800</code>은 기록 함수가 돌아온 뒤에 요청되며, 요청을 덮어쓰지 못한 경우에도 나왔습니다.</p>
+<p>깨움 <code>0x2</code>는 보조 인터페이스의 함수에 들어가기 전에 요청됩니다. 깨움 <code>0x800</code>은 기록 함수가 돌아온 뒤에 요청되며 요청을 덮어쓰지 못한 경우에도 나왔습니다.</p>
 
 <h3>이미 요청이 있을 때 덮어쓰는 조건</h3>
 <p>기록 함수를 직접 불러, 대기 레코드가 차 있을 때 어떤 요청이 기존 요청을 바꾸는지 확인했습니다. 종류가 1이고 동작이 <code>0x0B</code> 또는 <code>0x2E</code>인 요청만 덮어썼습니다.</p>
@@ -329,7 +329,7 @@
 <details class="evidence"><summary>알림 경로와 연결 코드의 위치</summary>
 <ul>
 <li>알림 경로: <code>0x4A5888</code>(상위 화면 처리기) → <code>0x6D5FF0</code> → <code>0x30BE40</code>(보조 인터페이스의 함수) → <code>0x2FB408</code>(필터) → <code>0x30B904</code>(대기 레코드 기록). 동작은 공통 진입점 <code>0x6D5F38</code>에 넣었습니다.</li>
-<li>보조 인터페이스의 가상 함수 표는 <code>0xA63DC4</code>이고, <code>0xA63DCC</code>의 항목이 <code>0x30BE40</code>을 가리킵니다.</li>
+<li>보조 인터페이스의 가상 함수 표는 <code>0xA63DC4</code>이고 <code>0xA63DCC</code>의 항목이 <code>0x30BE40</code>을 가리킵니다.</li>
 <li>화면의 <code>+0xC4</code>에 <code>app+0x4C</code>를 넣는 등록부 연결 코드는 구간 <code>0x6DA188</code>–<code>0x6DA1A4</code>입니다.</li>
 <li>상위 메뉴의 위젯 <code>0x0140B043</code>은 표 위치 <code>0x9B48DC</code>에, 분류 13의 경로 행은 <code>0x9B5EF4</code>에 있습니다.</li>
 <li>깨움 요청 함수 <code>0x70C3CC</code>는 받는 쪽(<code>app+0x14D4</code>)과 깨움 값을 기록하고 0을 돌려주는 코드로 대신했습니다.</li>
@@ -397,7 +397,7 @@
 </figure>
 
 <h3>깨움 값에 따라 달라지는 복사와 초기화</h3>
-<p>복사 함수는 레코드 24바이트를 통째로 복사하지 않습니다. 대상, 출발 화면, 종류, 동작, 1바이트 인수, 두 워드 인수만 옮기고, 첫 워드와 빈 자리는 건드리지 않습니다. “초기화”는 대상을 0, 종류를 <code>0x17</code>, 나머지 필드를 0으로 만드는 것입니다.</p>
+<p>복사 함수는 레코드 24바이트를 통째로 복사하지 않습니다. 대상, 출발 화면, 종류, 동작, 1바이트 인수, 두 워드 인수만 옮기고 첫 워드와 빈 자리는 건드리지 않습니다. “초기화”는 대상을 0, 종류를 <code>0x17</code>, 나머지 필드를 0으로 만드는 것입니다.</p>
 <div class="table-wrap"><table>
 <caption>작업 구간에 넣은 깨움 값과 관찰한 결과</caption>
 <thead><tr><th>넣은 깨움 값</th><th>관찰한 결과</th></tr></thead>
@@ -445,10 +445,10 @@
 <h2>한계와 남은 과제</h2>
 <p>이 문서는 “조건이 이렇게 준비되면 원본 코드가 이렇게 움직인다”는 것까지 확인했습니다. 실제 카메라에서 그 조건이 언제 만들어지는지는 다루지 못했습니다.</p>
 <ul>
-<li><strong>입력</strong> — 상위 메뉴 동작은 함수 입구에 직접 넣었습니다. 버튼이 이 동작으로 바뀌는 과정은 확인하지 않았습니다.</li>
-<li><strong>작업 루프</strong> — 깨움 값을 넣은 구간만 따로 실행했습니다. RTOS가 깨움 요청을 작업에 전달하는 과정과 구간 사이의 코드는 실행하지 않았습니다.</li>
-<li><strong>화면 생성</strong> — 할당 함수 입구에서 멈췄습니다. 생성자를 따로 실행한 결과는 <a href="color-ui.html#route">색공간 메뉴 문서</a>에 있지만, 두 실행을 하나로 잇지는 않았습니다. 생성 뒤의 초기화와 LCD 표시도 실행하지 않았습니다.</li>
-<li><strong>조건의 동시 성립</strong> — 필터 캐시, 허용 바이트, 현재 화면 ID는 각각 준비한 값입니다. 실기에서 이 값들이 함께 성립하는 시점은 확인하지 않았습니다.</li>
+<li><strong>입력</strong>: 상위 메뉴 동작은 함수 입구에 직접 넣었습니다. 버튼이 이 동작으로 바뀌는 과정은 확인하지 않았습니다.</li>
+<li><strong>작업 루프</strong>: 깨움 값을 넣은 구간만 따로 실행했습니다. RTOS가 깨움 요청을 작업에 전달하는 과정과 구간 사이의 코드는 실행하지 않았습니다.</li>
+<li><strong>화면 생성</strong>: 할당 함수 입구에서 멈췄습니다. 생성자를 따로 실행한 결과는 <a href="color-ui.html#route">색공간 메뉴 문서</a>에 있지만 두 실행을 하나로 잇지는 않았습니다. 생성 뒤의 초기화와 LCD 표시도 실행하지 않았습니다.</li>
+<li><strong>조건의 동시 성립</strong>: 필터 캐시, 허용 바이트, 현재 화면 ID는 각각 준비한 값입니다. 실기에서 이 값들이 함께 성립하는 시점은 확인하지 않았습니다.</li>
 </ul>
 <h3>다른 기종과 비교할 때 쓸 수 있는 것</h3>
 <p>비교할 수 있는 것은 동작의 뜻입니다. 메뉴 항목이 무엇을 요청하는지, 요청을 대기시키는 규칙, 상태를 복사하는 시점이 여기에 해당합니다. 키 번호, 화면 ID, 객체 필드 위치는 K-3 II 펌웨어의 내부 값이므로, K-3 III와 Q7에서는 각 펌웨어에서 다시 확인해야 합니다. 이 문서는 이식한 결과가 아닙니다. 세 기종 비교는 <a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/ui-port-contract.html">K-3 III 저장소의 UI 이식 설계</a>에 있습니다.</p>

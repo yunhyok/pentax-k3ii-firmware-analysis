@@ -1,25 +1,267 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>원본 톤 입력 생산자 재현 — PENTAX K-3 II</title><link rel="stylesheet" href="../assets/site.css"><style>main.doc{width:calc(100% - 2rem);max-width:64rem;min-width:0;margin:auto;padding:1.5rem}section,figure{min-width:0;max-width:100%}.scroll{max-width:100%;overflow-x:auto;overscroll-behavior-x:contain}.scroll svg{min-width:900px;max-width:none}.scroll table{min-width:650px}.hash{overflow-wrap:anywhere}pre{white-space:pre-wrap}pre code{white-space:pre-wrap}main.doc header nav{display:flex;flex-wrap:wrap;gap:1rem;margin:1rem 0}svg text{fill:var(--ink)}@media print{main.doc{width:100%}.scroll svg{min-width:0;max-width:100%}.scroll table{min-width:0}}</style></head><body data-camera="k3ii"><!-- chrome:top -->
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>톤 입력의 원본 생산자 — PENTAX K-3 II 펌웨어 연구</title>
+<meta name="description" content="K-3 II 펌웨어 1.12에서 톤 문맥 계산이 읽는 recipe·문맥 값을 원본 생성자와 원본 생산 코드가 직접 쓰게 하고 8개 경우를 에뮬레이터에서 실행한 기록입니다. 상위 작업 필드 15개는 시험값이며 실제 촬영 순서는 확인하지 않았습니다.">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body data-camera="k3ii">
+<!-- chrome:top -->
 <a class="skip" href="#main">본문 바로가기</a>
 <div class="topbar"><div class="topbar-in"><a class="brand" href="../index.html">PENTAX <b>펌웨어 연구</b></a><div class="cams" aria-label="기종 선택"><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/">K-3 III</a><a href="../index.html" aria-current="true">K-3 II</a><a href="https://yunhyok.github.io/pentax-q7-firmware-analysis/">Q7</a></div><nav class="topnav" aria-label="주제"><a href="../index.html">개요</a><a href="guide-pipeline.html" aria-current="true">영상 처리</a><a href="guide-capture.html">촬영·보존 레코드</a><a href="guide-rebuild.html">재구축·업데이트</a><a href="guide-af.html">AF</a><a href="guide-ui.html">UI</a></nav></div></div>
 <nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../index.html">PENTAX K-3 II</a></li><li><a href="guide-pipeline.html">영상 처리와 저장 경로</a></li><li aria-current="page">톤 입력의 원본 생산자</li></ol></nav>
-<!-- /chrome:top --><main class="doc" id="main"><header><p>K-3 II · 원본 톤 입력의 공개 재현 · 2026-11-13</p><h1>톤 입력의 원본 생산자</h1><p>이 검증기는 원본 생성자와 recipe 입력 생산자의 8개 재현을 실행합니다. 생성자만 사용하는 1건과 상위 job 필드 15개를 하네스가 공급하는 7건을 구분했습니다. recipe와 문맥의 대상 입력에는 하네스가 직접 값을 쓰지 않습니다. 같은 VM에서 별도로 진입한 소비자가 기존값을 유지하거나 갱신하는지 확인합니다. 실제 촬영 작업의 버퍼 재사용 이력은 검증하지 않았습니다.</p><nav aria-label="문서 탐색"><a href="#source">생산자</a><a href="#replay">재현 결과</a><a href="#boundary">남은 경계</a><a href="#evidence">검증 자료</a></nav></header><p>원본 생성자와 recipe 입력 생산자를 연결해 톤 계산에 쓰이는 입력의 출처를 한 단계 더 확인했습니다. 촬영 작업 객체의 recipe는 job+E0C4, 문맥은 job+E608입니다. 이번 재현에서는 recipe의 +92·+A4·+BC·+9C와 문맥의 +8·+A·+C·+E·+60DC·+7A68에 호스트가 직접 값을 쓰지 않았습니다. 대신 원본 생성자를 실행한 뒤 recipe를 갱신하는 원본 명령을 이어 실행했습니다.</p><div class="scroll" tabindex="0" role="region" aria-label="입력 생산자 연결도 가로 스크롤"><svg viewBox="0 0 900 430" width="900" height="430" role="img" aria-labelledby="flow-title flow-desc">
-<title id="flow-title">원본 생성자와 recipe 생산자가 문맥 계산에 공급하는 값</title><desc id="flow-desc">생성자는 recipe와 문맥의 초기값을 쓴다. 준비된 job 입력은 원본 분기와 저장 명령을 거쳐 recipe BC와 A4가 된다. 문맥 계산은 A4에 따라 기존값을 유지하거나 갱신하고 결과를 7A74에 쓴다. 실제 촬영과 서비스 연결은 검증 밖이다.</desc>
-<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8Z" fill="var(--edge)"/></marker></defs>
-<g fill="var(--paper)" stroke="var(--line-strong)"><rect x="20" y="20" width="275" height="90" rx="6"/><rect x="335" y="20" width="275" height="90" rx="6"/><rect x="20" y="160" width="275" height="90" rx="6"/><rect x="335" y="160" width="275" height="90" rx="6"/><rect x="650" y="160" width="225" height="90" rx="6"/><rect x="335" y="315" width="540" height="85" rx="6"/></g>
-<g fill="var(--ink)" font-family="Malgun Gothic,system-ui,sans-serif" font-size="16">
-<text x="36" y="45">원본 recipe 생성자</text><text x="36" y="73">92/A4/BC = 0</text><text x="36" y="96">9C = 8192</text>
-<text x="351" y="45">원본 문맥 생성자</text><text x="351" y="73">반워드 420 / 256 / 256 / 320</text><text x="351" y="96">60DC=8192, 7A68=4096</text>
-<text x="36" y="185">하네스가 공급한 job 필드</text><text x="36" y="213">3C / 6D / 2080</text><text x="36" y="236">반워드 264…26A, 274…282</text>
-<text x="351" y="185">원본 분기 659048</text><text x="351" y="213">784CA0 → recipe+BC</text><text x="351" y="236">7198C4 → recipe+A4</text>
-<text x="666" y="185">원본 계산 4DF834</text><text x="666" y="213">A4=0: 갱신</text><text x="666" y="236">A4≠0: 기존값 유지</text>
-<text x="351" y="342">원본 출력 72D094 → context+7A74</text><text x="351" y="368">원본 getter 4FA83C가 같은 값을 반환</text><text x="351" y="390">서비스·스케줄·촬영 이력: 미검증</text></g>
-<g fill="none" stroke="var(--edge)" stroke-width="2" marker-end="url(#arrow)"><path d="M295 205H335"/><path d="M610 205H650"/><path d="M762 250V315"/><path d="M610 65H762V160"/><path d="M157 110V135H635V185H650"/></g></svg></div><p>화살표는 구분된 실행 구간 사이의 값 전달을 나타냅니다. 4DF834는 같은 VM에서 별도로 진입한 함수이며, 전체 촬영 작업을 연속 실행한 것은 아닙니다.</p><section id="source"><h2>생성자와 같은 객체의 후속 쓰기</h2><p>문맥 생성자 859ACC는 네 반워드에 420·256·256·320을 쓰고 +60DC에는 8192, +7A68에는 4096을 씁니다. recipe 생성자 7B1D4C는 +92·+A4·+BC를 0으로, +9C를 8192로 초기화합니다. 이 값들은 생성자 출력입니다. 실제 촬영에서 기본값으로 유지되는지는 확인하지 못했습니다. 이후 처리 분기가 이 반워드들을 다시 쓸 수 있습니다.</p><p>659048의 분기는 job+3C와 job+6D를 읽습니다. 어느 한쪽이 0이 아니면 job+264·266·268·26A의 최대 반워드를 10으로 나누고 100을 더합니다. 둘 다 0이면 네 쌍의 합을 각각 16비트로 잘라 그중 최대값을 고릅니다. 784CA0은 이 결과를 recipe+BC에 워드로 씁니다. 이어 7198C4가 job+2080의 바이트를 recipe+A4에 복사합니다.</p><p>4DF834는 recipe+A4가 0이면 +BC와 +9C로 문맥의 +7A68·+60DC를 갱신합니다. 0이 아니면 두 값을 유지합니다. 원본 생성자 출력에서 시작한 유지 분기의 계산 결과는 32765였습니다. 이 재현에서는 임의로 넣었던 문맥 입력을 원본 생성자 출력으로 대체했습니다. 실제 촬영 설정값이나 물리적 단위는 확인하지 못했습니다.</p><p>근거: <a href="../tools/tone_provenance/input-ranges.json">생성자·계산 구간 해시</a>, <a href="../tools/tone_provenance/inputs.py">생산자 분기</a>, <a href="tone-inputs-contract.json">동일 객체와 정적 추적의 범위</a>. 주소는 파일 오프셋이며 VA = 0x02000000 + 오프셋입니다.</p></section><section id="replay"><h2>8개 입력 경계 재현</h2><p>이번 실행은 context+7A74 계산과 getter 4FA83C에서 끝납니다. 톤 곡선 생성은 실행하지 않았습니다.</p><div class="scroll" tabindex="0" role="region" aria-label="재현 결과 표 가로 스크롤"><table><caption>초기 네 반워드·이전 문맥값은 원본 생성자 출력</caption><thead><tr><th scope="col">조건</th><th scope="col">A4</th><th scope="col">BC</th><th scope="col">계산에 쓴 7A68</th><th scope="col">7A74 결과</th></tr></thead><tbody><tr><th scope="row">constructors</th><td>0</td><td>0</td><td>16382</td><td>8192</td></tr><tr><th scope="row">sum</th><td>0</td><td>12</td><td>16379</td><td>8193</td></tr><tr><th scope="row">sum_wrap</th><td>0</td><td>4</td><td>16381</td><td>8192</td></tr><tr><th scope="row">divide_3c</th><td>0</td><td>6653</td><td>14719</td><td>9117</td></tr><tr><th scope="row">divide_6d</th><td>0</td><td>6653</td><td>14719</td><td>9117</td></tr><tr><th scope="row">retain</th><td>1</td><td>12</td><td>4096</td><td>32765</td></tr><tr><th scope="row">retain_nonboolean</th><td>255</td><td>12</td><td>4096</td><td>32765</td></tr><tr><th scope="row">relocated</th><td>0</td><td>6653</td><td>14719</td><td>9117</td></tr></tbody></table></div><p>sum_wrap은 합을 16비트로 자르는 순서를, divide_3c·divide_6d는 두 조건의 대체 관계를 확인합니다. retain_nonboolean은 255도 유지 분기를 고르는지, relocated는 다른 job 주소에서도 같은 계산을 하는지 검사합니다. 준비한 값과 주요 쓰기 명령, 전체 쓰기 건수와 해시는 <a href="tone-inputs.json">결과 JSON</a>에 기록했습니다.</p><p>재현은 구분된 원본 코드 구간을 실행했습니다. 658EBC의 스택 프레임과 같은 job에서 유도한 포인터는 유지했지만 중간 분류기·서비스 호출은 생략했습니다. 준비한 입력은 상위 job 필드에만 기록했습니다. 모든 실행 명령의 원본 바이트와 허용 쓰기 범위를 검사했습니다. 계산값에는 독립 정수식 검증을 적용했습니다. 일반 실행, 최적화 실행, 독립 검토 실행의 JSON이 바이트 단위로 일치했습니다.</p></section><section id="boundary"><h2>정적으로 연결한 경로와 다음 입력</h2><p>정적 분석에서는 같은 job+E0C4의 +92를 다시 0으로 쓰는 경로와 +9C를 쓰는 별도 작업 단계도 찾았습니다. +9C 생산자 65EED0은 같은 스택의 임시값을 초기화하거나 조건부로 덮어쓴 뒤 7198D4로 전달합니다. 이 단계는 가상 호출 결과, ROM 표 인덱스, 전역 블록, 구성 서비스의 영향을 받습니다. 이 단계는 정적으로만 추적했으며 관련 서비스를 실행 재현하지 않았습니다. 다른 객체의 같은 오프셋에 쓰는 명령은 같은 생산자로 취급하지 않았습니다.</p><p>다음 추적 대상은 job+24C0의 입력 반워드, job+25C와 네 보정 반워드의 생산자, job+2080의 실제 호출 인자와 중간 변경 이력입니다. +9C에서는 전역 블록 4041F420과 구성 서비스 ID 0x42·0x53이 제공하는 값을 먼저 확인해야 합니다. 이 경계가 남아 있어 실제 촬영 작업의 연속 실행, 버퍼 재사용 이력, SuperResolution 메뉴 도달을 이번 결과만으로 확정할 수 없습니다.</p><p>근거: <a href="../tools/tone_provenance/input-ranges.json">정적 원본 구간 55개의 해시</a>. +9C의 서비스 입력 및 +92 후속 쓰기는 이번 실행 재현의 일부가 아닙니다.</p></section><section id="evidence"><h2>공개 재현 코드와 결과</h2><p>공개 JSON은 전체 관측의 일치를 확인한 뒤 만듭니다. 먼저 8건의 모든 기록을 타입을 구분하는 JSON으로 직렬화한 뒤 기존 검증 결과의 해시와 대조합니다. 검사를 통과하면 반복 쓰기 기록 133546건을 건수와 순서가 반영된 해시로 줄입니다. 문맥 생성자 쓰기 48건, recipe 생성자 쓰기, 입력 생산자의 저장 명령, 소비자의 조건부 쓰기는 그대로 남깁니다. 원본 명령은 실행할 때마다 바이트를 대조합니다. 입력 파일 전체와 코드 구간의 해시도 검사합니다.</p><p>재현 코드는 decoded 파일의 경로를 명시적으로 받습니다. 파일 크기와 전체 SHA-256이 다르면 실행을 거부합니다. 기존 출력 파일이나 그 별칭을 덮어쓰지 않습니다. 공개 자료에는 원본 펌웨어 바이트와 자산이 없습니다. 실행 함수와 소스 목록, 구간 해시, 수치 결과를 제공합니다. 생성자 초기값이 현재 촬영 기본값인지는 확인하지 않았습니다. 정적으로 추적한 후속 생산자와 실제 실행 구간을 구분해서 읽어야 합니다.</p><p>전체 비공개 관측 파일은 21,140,898바이트였으며 공개 요약 JSON은 172,506바이트입니다. 요약 전에 검사하는 값은 8건의 모든 관측을 포함한 canonical JSON 해시입니다. 원본 실행 함수는 동일하고, 파일 경로와 소스 캡처를 공개 저장소 구조에 맞췄습니다.</p><ul><li><a href="../verify_tone_inputs.py">실행 검증기</a> · <a href="../tools/tone_provenance/inputs.py">원본 구간 실행 함수</a></li><li><a href="tone-inputs.json">공개 수치 결과</a> · <a href="tone-inputs-contract.json">검증 범위와 해시</a></li><li><a href="../tools/tone_provenance/inputs-sources.json">캡처할 소스 목록</a> · <a href="../tools/tone_provenance/input-ranges.json">허용 실행 구간 140개·정적 원본 구간 55개</a></li><li><a href="../tests/test_tone_inputs.py">입출력 경계 시험</a> · <a href="tone-provenance.html">앞선 문맥·곡선 연결 분석</a></li></ul><h3>실행 방법</h3><p>검증 환경은 Python 3.12.3과 Unicorn 2.1.4입니다. 기존 원본 파일을 보유한 사용자가 별도로 준비한 decoded 파일을 지정합니다. 저장소 루트에서 실행하며 출력에는 새 경로를 사용하십시오. 아래 경로는 예시입니다.</p><pre><code>python -B verify_tone_inputs.py /path/to/decoded.bin --output tone-inputs-new.json --compare analysis/tone-inputs.json
-python -B -O verify_tone_inputs.py /path/to/decoded.bin --output tone-inputs-opt-new.json --compare analysis/tone-inputs.json
-python -B -m unittest discover -s tests -p test_tone_inputs.py</code></pre><p>후보 파일을 별도 디렉터리에 둘 때만 <code>--repository</code>에 기존 검증기와 보조 소스가 있는 저장소를 지정합니다. 공개 저장소에 통합한 배치에서는 이 옵션이 필요하지 않습니다. 소스와 입력 검사는 최적화 실행에서도 유지되며, 비교 실패 시 출력 파일을 만들지 않습니다.</p><p class="hash">입력 SHA-256: 1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc</p><p class="hash">전체 8건 관측 SHA-256: 61e819bd5300c37259b03b31d46b5df225b8cd5ce5636082472f01b7fc55767a</p><p class="hash">공개 JSON SHA-256: 866e6c071bf48db942a0dbb8ebf931d06edef70c078bafe0d4232945023a1023</p><p>분리된 실행 구간의 연결을 검증한 결과입니다. 후속 +92·+9C 생산자는 정적 추적이며, 입력 서비스·작업 스케줄·중간 덮어쓰기·실제 촬영의 버퍼 재사용·SuperResolution 메뉴 도달은 확인하지 않았습니다. 카메라·모터·부팅 동작과 물리적 EV·Q 형식·감마 특성도 이 검증의 범위 밖입니다.</p></section><p>후속 <a href="tone-scale.html">recipe+9C 정수 생산자와 내장 입력 복사</a>에서는 같은 스택 슬롯의 산술·저장 20조건과 별도의 바이트 전달 3조건을 원본으로 대조했습니다. 각 문서의 실행 범위는 구분합니다.</p>
+<!-- /chrome:top -->
+<header class="page-head">
+<p class="eyebrow">영상 처리와 저장 경로 · 톤 곡선의 입력 추적 2</p>
+<h1>톤 입력의 원본 생산자</h1>
+<p class="lead">톤 곡선에 들어가는 정수는 recipe 객체와 문맥의 값으로 계산됩니다. 그 값을 시험 프로그램이 넣지 않고 원본 생성자와 원본 생산 코드가 쓰게 해, 입력이 어디서 오는지 한 단계 더 거슬러 올라갔습니다.</p>
+</header>
+<div class="layout">
+<!-- chrome:toc -->
+<nav class="toc" aria-label="이 문서의 목차"><h2 data-toc="no">이 문서에서</h2><ol><li><a href="#background">배경: 생성자 값과 나중에 쓰는 값</a></li><li><a href="#source">생성자와 생산 코드가 쓰는 값</a></li><li><a href="#replay">8개 경우의 실행 결과</a></li><li><a href="#boundary">정적으로만 찾은 경로와 다음 입력</a></li><li><a href="#limits">한계</a></li><li><a href="#evidence">재현 방법과 근거 파일</a></li></ol></nav>
+<!-- /chrome:toc -->
+<main class="doc" id="main">
+
+<section class="summary">
+<h2 data-toc="no">핵심 요약</h2>
+<ul>
+<li>문맥 계산이 읽는 recipe 필드 4개와 문맥 필드 6개에 <strong>시험 프로그램이 값을 직접 쓰지 않았습니다</strong>. 원본 생성자와 원본 생산 코드가 쓴 값만으로 8개 경우를 실행했습니다.</li>
+<li>recipe+BC는 작업 객체의 halfword 값에서 계산됩니다. recipe+A4는 작업 객체의 한 바이트를 그대로 복사한 값입니다. A4가 0이면 문맥 계산이 입력을 새로 만듭니다. 0이 아니면(255 포함) <strong>이전 문맥 값을 그대로 씁니다</strong>.</li>
+<li>결과 정수는 생성자 값만 쓴 경우 8192, 나눗셈 분기 9117, 유지 분기 32765였습니다. 이 시험은 정수 계산과 getter에서 끝나며 곡선은 다시 만들지 않았습니다.</li>
+<li>상위 작업 필드 15개는 시험용으로 넣은 값입니다. recipe+92와 +9C를 다시 쓰는 코드는 정적으로만 찾았습니다. 실제 촬영의 실행 순서, 버퍼 재사용, 값의 물리 단위는 확인하지 않았고 카메라에서 실행한 것도 없습니다.</li>
+</ul>
+</section>
+
+<div class="scope">
+<div class="ok"><h3><span class="badge ok">확인</span> 원본 코드 실행으로 확인</h3>
+<ul>
+<li>recipe 생성자와 문맥 생성자가 쓰는 초기값</li>
+<li>작업 필드에서 recipe+BC·+A4를 만드는 분기와 저장 명령</li>
+<li>문맥 계산의 유지·갱신 분기, <code>context+7A74</code> 저장, getter 반환</li>
+<li>일반·최적화·독립 실행의 JSON이 바이트 단위로 같음</li>
+</ul></div>
+<div class="static"><h3><span class="badge static">정적 분석</span> 코드를 읽어 판단</h3>
+<ul>
+<li>같은 recipe의 +92를 다시 0으로 쓰는 경로</li>
+<li>+9C를 쓰는 별도 단계(<code>65EED0</code> → <code>7198D4</code>)</li>
+<li>정적 원본 구간 55개의 해시</li>
+</ul></div>
+<div class="model"><h3><span class="badge model">모델</span> 시험 조건으로 정한 것</h3>
+<ul>
+<li>상위 작업 필드 15개의 값(7건)</li>
+<li>생략한 중간 분류기·서비스 호출</li>
+<li>CPU는 Unicorn의 Cortex-A9 설정</li>
+</ul></div>
+<div class="open"><h3><span class="badge open">미확인</span> 확인하지 않은 것</h3>
+<ul>
+<li>상위 작업 필드를 실제로 쓰는 코드와 그 값</li>
+<li>실제 촬영의 연속 실행, 중간 덮어쓰기, 버퍼 재사용</li>
+<li>SuperResolution 메뉴 도달, 물리적 EV·Q 형식·감마</li>
+</ul></div>
+</div>
+
+<section id="background">
+<h2>배경: 생성자 값과 나중에 쓰는 값</h2>
+<p><a href="tone-provenance.html">톤 문맥과 곡선 생산자의 연결</a>에서는 문맥 계산 함수 <code>4DF834</code>가 recipe와 문맥의 값으로 정수 하나를 만들어 <code>context+7A74</code>에 쓰는 것을 확인했습니다. 곡선 생산자는 이 정수로 <a href="../glossary.html#gamma">톤 곡선</a>을 만듭니다. 다만 그 시험에서는 recipe와 문맥의 입력값을 시험 프로그램이 넣었습니다.</p>
+<p>이 문서는 그 입력을 원본 코드에게 맡깁니다. 객체의 값은 두 단계로 정해집니다.</p>
+<dl class="kv">
+<dt>생성자</dt><dd>객체를 처음 만들 때 초기값을 쓰는 함수입니다. 여기서는 recipe 생성자 <code>7B1D4C</code>와 문맥 생성자 <code>859ACC</code>입니다.</dd>
+<dt>생산 코드</dt><dd>객체가 만들어진 뒤 필드를 다시 쓰는 코드입니다. 작업 객체의 다른 필드를 읽어 계산하거나 복사합니다.</dd>
+<dt>recipe 객체</dt><dd>작업 객체(job) 안 <code>job+E0C4</code>에 있는 톤 설정 객체입니다. 용어집의 <a href="../glossary.html#recipe">레시피</a>(모듈 호출 순서 목록)와는 다릅니다. 문맥은 <code>job+E608</code>에 있습니다.</dd>
+</dl>
+<p>문맥 계산에는 "이전 값을 그대로 쓰는" 분기가 있습니다. 그래서 어떤 값이 언제 쓰였는지가 결과를 바꿉니다. 주소는 16진수 파일 오프셋이며 실행 주소(VA)는 <code>0x02000000</code>을 더한 값입니다.</p>
+</section>
+
+<section id="source">
+<h2>생성자와 생산 코드가 쓰는 값</h2>
+<p class="takeaway">recipe+BC와 +A4는 원본 생산 코드가 작업 객체의 필드로 만듭니다. 문맥 계산은 A4 하나로 새 값을 쓸지 이전 값을 쓸지 정합니다.</p>
+
+<figure class="diagram">
+<figcaption>생성자·생산 코드에서 문맥 정수까지</figcaption>
+<div class="dg-scroll">
+<svg class="dg" viewBox="0 0 800 420" role="img" aria-labelledby="flow-title flow-desc">
+<title id="flow-title">원본 생성자와 recipe 생산 코드가 문맥 계산에 공급하는 값</title>
+<desc id="flow-desc">왼쪽 열은 값을 쓰는 코드입니다. 원본 recipe 생성자 7B1D4C가 recipe의 +92, +A4, +BC를 0으로, +9C를 8192로 씁니다. 준비한 작업 필드 15개는 659048 분기에 들어가고, 그 결과를 784CA0이 recipe+BC에 씁니다. 7198C4는 job+2080 바이트를 recipe+A4에 복사합니다. 원본 문맥 생성자 859ACC는 halfword 4개와 +60DC=8192, +7A68=4096을 씁니다. 가운데 열은 recipe 객체와 문맥 객체입니다. 오른쪽에서 4DF834가 recipe+A4가 0인지 봅니다. 0이면 BC와 9C로 새로 계산하고, 0이 아니면 문맥의 +7A68과 +60DC를 그대로 씁니다. 두 경우 모두 72D094가 결과를 context+7A74에 쓰고 getter 4FA83C가 같은 값을 반환합니다. 전체 촬영과 서비스 연결은 검증하지 않았습니다.</desc>
+<defs><marker id="flow-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker></defs>
+
+<rect class="b ok" x="8" y="20" width="190" height="56" rx="8"/>
+<text class="t" x="20" y="43">원본 recipe 생성자</text>
+<text class="s" x="20" y="63">7B1D4C</text>
+<rect class="b model" x="8" y="92" width="190" height="66" rx="8"/>
+<text class="t" x="20" y="114">준비한 job 필드</text>
+<text class="s" x="20" y="132">+3C·+6D·+2080 바이트</text>
+<text class="s" x="20" y="149">halfword 12개</text>
+<rect class="b ok" x="8" y="176" width="190" height="52" rx="8"/>
+<text class="t" x="20" y="198">659048 분기</text>
+<text class="s" x="20" y="217">결과를 784CA0이 저장</text>
+<rect class="b ok" x="8" y="244" width="190" height="52" rx="8"/>
+<text class="t" x="20" y="266">7198C4 복사</text>
+<text class="s" x="20" y="285">job+2080 → recipe+A4</text>
+<rect class="b ok" x="8" y="320" width="190" height="66" rx="8"/>
+<text class="t" x="20" y="342">원본 문맥 생성자</text>
+<text class="s" x="20" y="360">859ACC</text>
+<text class="s" x="20" y="377">halfword 420·256·256·320</text>
+<path class="e" d="M103 158V174" marker-end="url(#flow-ah)"/>
+
+<rect class="b key" x="238" y="20" width="200" height="276" rx="8"/>
+<text class="t" x="250" y="43">recipe 객체</text>
+<text class="s mono" x="250" y="62">job+E0C4</text>
+<text class="s" x="250" y="88">생성자 초기값</text>
+<text class="s" x="250" y="106">+92·+A4·+BC = 0</text>
+<text class="s" x="250" y="124">+9C = 8192</text>
+<text class="s" x="250" y="206">+BC ← 784CA0</text>
+<text class="s" x="250" y="274">+A4 ← 7198C4</text>
+<rect class="b key" x="238" y="320" width="200" height="66" rx="8"/>
+<text class="t" x="250" y="342">문맥 객체</text>
+<text class="s mono" x="250" y="360">job+E608</text>
+<text class="s" x="250" y="377">+60DC=8192 · +7A68=4096</text>
+
+<path class="e" d="M198 48H236" marker-end="url(#flow-ah)"/>
+<path class="e" d="M198 202H236" marker-end="url(#flow-ah)"/>
+<path class="e" d="M198 270H236" marker-end="url(#flow-ah)"/>
+<path class="e" d="M198 353H236" marker-end="url(#flow-ah)"/>
+
+<rect class="b ok" x="478" y="150" width="150" height="64" rx="8"/>
+<text class="t" x="490" y="174">4DF834 계산</text>
+<text class="s" x="490" y="194">recipe+A4 = 0 ?</text>
+<rect class="b ok" x="478" y="56" width="150" height="56" rx="8"/>
+<text class="t" x="490" y="79">0이면 갱신</text>
+<text class="s" x="490" y="99">BC·9C로 새로 계산</text>
+<rect class="b ok" x="478" y="252" width="150" height="56" rx="8"/>
+<text class="t" x="490" y="275">0이 아니면 유지</text>
+<text class="s" x="490" y="295">+7A68·+60DC 사용</text>
+<path class="e" d="M438 182H476" marker-end="url(#flow-ah)"/>
+<path class="e" d="M553 150V114" marker-end="url(#flow-ah)"/>
+<path class="e" d="M553 214V250" marker-end="url(#flow-ah)"/>
+<path class="e" d="M438 353H553V310" marker-end="url(#flow-ah)"/>
+
+<rect class="b key" x="660" y="146" width="132" height="72" rx="8"/>
+<text class="t" x="672" y="170">context+7A74</text>
+<text class="s" x="672" y="189">72D094 저장</text>
+<text class="s" x="672" y="206">getter 4FA83C</text>
+<path class="e" d="M628 84H726V144" marker-end="url(#flow-ah)"/>
+<path class="e" d="M628 280H726V220" marker-end="url(#flow-ah)"/>
+<text class="n" x="8" y="410">화살표는 구분된 실행 구간 사이의 값 전달입니다. 4DF834는 같은 VM에서 따로 진입했고, 전체 촬영 작업을 이어서 실행한 것이 아닙니다.</text>
+</svg>
+</div>
+<ul class="dg-legend"><li><i class="ok"></i>원본 코드 실행으로 확인</li><li><i class="model"></i>시험용으로 넣은 값</li><li><i class="key"></i>값이 모이는 객체와 결과</li></ul>
+</figure>
+
+<h3>생성자가 쓰는 초기값</h3>
+<p>문맥 생성자 <code>859ACC</code>는 halfword 4개(+8, +A, +C, +E)에 420·256·256·320을 씁니다. +60DC에는 8192, +7A68에는 4096을 씁니다. recipe 생성자 <code>7B1D4C</code>는 +92·+A4·+BC를 0으로, +9C를 8192로 초기화합니다. 이 값들은 생성자 출력일 뿐입니다. 실제 촬영에서 기본값으로 남는지는 확인하지 못했습니다. 뒤의 분기가 이 halfword를 다시 쓸 수도 있습니다.</p>
+
+<h3>recipe+BC와 +A4를 만드는 코드</h3>
+<p><code>659048</code>의 분기는 <code>job+3C</code>와 <code>job+6D</code> 두 바이트를 읽고 결과를 고릅니다.</p>
+<ul>
+<li>둘 중 하나라도 0이 아니면: <code>job+264</code>·<code>266</code>·<code>268</code>·<code>26A</code>의 최대 halfword를 10으로 나누고 100을 더합니다.</li>
+<li>둘 다 0이면: <code>job+274</code>~<code>282</code>의 halfword 8개를 네 쌍으로 더합니다. 각 합을 16비트로 자른 뒤 최대값을 고릅니다.</li>
+</ul>
+<p><code>784CA0</code>이 이 결과를 recipe+BC에 워드로 씁니다. 이어서 <code>7198C4</code>가 <code>job+2080</code>의 바이트를 recipe+A4에 복사합니다.</p>
+
+<h3>문맥 계산의 유지와 갱신</h3>
+<p><code>4DF834</code>는 recipe+A4가 0이면 +BC와 +9C로 문맥의 +7A68·+60DC를 갱신합니다. 0이 아니면 두 값을 그대로 둡니다. 원본 생성자 출력에서 시작한 유지 분기의 결과는 32765였습니다. 앞 문서에서 임의로 넣었던 문맥 입력을 이번에는 원본 생성자 출력으로 바꾼 것입니다. 실제 촬영 설정값이나 물리적 단위는 여전히 모릅니다.</p>
+</section>
+
+<section id="replay">
+<h2>8개 경우의 실행 결과</h2>
+<p class="takeaway">8개 경우 모두 원본 코드의 결과가 독립 정수식과 같았습니다. A4가 0이 아니면 255여도 유지 분기를 탔습니다.</p>
+<p>이 실행은 <code>context+7A74</code> 계산과 getter <code>4FA83C</code>에서 끝납니다. 톤 곡선 생성은 실행하지 않았습니다. 초기 halfword 4개와 이전 문맥값은 모든 경우에 원본 생성자 출력입니다.</p>
+<div class="table-wrap"><table class="compact">
+<caption>입력 경계 8건 (상위 작업 필드는 시험값)</caption>
+<thead><tr><th>경우</th><th>준비한 작업 입력</th><th class="n">A4</th><th class="n">BC</th><th class="n">계산에 쓴 d(+7A68)</th><th class="n">+7A74 결과</th><th>side halfword</th></tr></thead>
+<tbody>
+<tr><th scope="row"><code>constructors</code></th><td>없음(생성자만)</td><td class="n">0</td><td class="n">0</td><td class="n">16382</td><td class="n">8192</td><td>420, 256, 256, 320</td></tr>
+<tr><th scope="row"><code>sum</code></th><td>두 바이트 0, 쌍 합 최대 12</td><td class="n">0</td><td class="n">12</td><td class="n">16379</td><td class="n">8193</td><td>420, 256, 256, 320</td></tr>
+<tr><th scope="row"><code>sum_wrap</code></th><td>쌍 합이 16비트를 넘음</td><td class="n">0</td><td class="n">4</td><td class="n">16381</td><td class="n">8192</td><td>420, 256, 256, 320</td></tr>
+<tr><th scope="row"><code>divide_3c</code></th><td><code>job+3C</code>=1</td><td class="n">0</td><td class="n">6653</td><td class="n">14719</td><td class="n">9117</td><td>467, 284, 284, 356</td></tr>
+<tr><th scope="row"><code>divide_6d</code></th><td><code>job+6D</code>=1</td><td class="n">0</td><td class="n">6653</td><td class="n">14719</td><td class="n">9117</td><td>467, 284, 284, 356</td></tr>
+<tr><th scope="row"><code>retain</code></th><td><code>job+2080</code>=1</td><td class="n">1</td><td class="n">12</td><td class="n">4096</td><td class="n">32765</td><td>1679, 1023, 1023, 1279</td></tr>
+<tr><th scope="row"><code>retain_nonboolean</code></th><td><code>job+2080</code>=255</td><td class="n">255</td><td class="n">12</td><td class="n">4096</td><td class="n">32765</td><td>1679, 1023, 1023, 1279</td></tr>
+<tr><th scope="row"><code>relocated</code></th><td><code>divide_3c</code>와 같음, 작업 주소 이동</td><td class="n">0</td><td class="n">6653</td><td class="n">14719</td><td class="n">9117</td><td>467, 284, 284, 356</td></tr>
+</tbody></table></div>
+<ul>
+<li><code>sum_wrap</code>은 합을 16비트로 자르는 순서를 확인합니다. 65535+2가 1이 되는 식입니다.</li>
+<li><code>divide_3c</code>와 <code>divide_6d</code>는 두 바이트 중 어느 쪽이 켜져도 같은 나눗셈 분기로 가는지 봅니다(65535/10+100 = 6653).</li>
+<li><code>retain_nonboolean</code>은 255도 유지 분기를 고르는지, <code>relocated</code>는 작업 주소가 <code>0x10200000</code>이어도 같은 계산을 하는지 검사합니다.</li>
+</ul>
+
+<details class="evidence"><summary>실행 범위와 검사 방법</summary>
+<ul>
+<li>재현은 구분된 원본 코드 구간을 실행했습니다. <code>658EBC</code>의 스택 프레임과 같은 job에서 유도한 포인터는 유지하되 중간 분류기·서비스 호출은 생략했습니다.</li>
+<li>준비한 입력을 기록한 곳은 상위 job 필드뿐입니다. recipe의 +92·+A4·+BC·+9C와 문맥의 +8·+A·+C·+E·+60DC·+7A68에는 호스트가 직접 쓰지 않았습니다.</li>
+<li>모든 실행 명령의 원본 바이트와 허용 쓰기 범위를 검사했습니다. 계산값은 독립 정수식으로 다시 확인했습니다.</li>
+<li>쓰기 기록: 문맥 생성자 48건(경우당 6건), recipe 생성자 32건, recipe 생산 코드의 저장 14건(생성자만 쓴 경우 제외 7건 × 2).</li>
+<li>준비한 값, 주요 쓰기 명령, 전체 쓰기 건수와 해시는 <a href="tone-inputs.json">결과 JSON</a>에 있습니다.</li>
+</ul>
+</details>
+</section>
+
+<section id="boundary">
+<h2>정적으로만 찾은 경로와 다음 입력</h2>
+<p class="takeaway">recipe+92와 +9C를 다시 쓰는 코드는 코드를 읽어서만 찾았습니다. 그 앞의 입력은 아직 모릅니다.</p>
+<p>정적 분석에서 같은 <code>job+E0C4</code>의 +92를 다시 0으로 쓰는 경로를 찾았습니다. +9C를 쓰는 별도 작업 단계도 있습니다. +9C 생산 코드 <code>65EED0</code>은 같은 스택의 임시값을 초기화하거나 조건부로 덮어쓴 뒤 <code>7198D4</code>로 넘깁니다. 이 단계는 가상 호출 결과, ROM 표 인덱스, 전역 블록, 구성 서비스의 영향을 받습니다. 관련 서비스는 실행하지 않았습니다. 다른 객체의 같은 오프셋에 쓰는 명령은 같은 생산 코드로 치지 않았습니다.</p>
+<div class="table-wrap"><table class="fit">
+<caption>아직 확인하지 않은 상위 입력</caption>
+<thead><tr><th>대상</th><th>모르는 것</th></tr></thead>
+<tbody>
+<tr><td><code>job+24C0</code></td><td>입력 halfword를 쓰는 코드</td></tr>
+<tr><td><code>job+25C</code>와 보정 halfword 4개</td><td>생산 코드</td></tr>
+<tr><td><code>job+2080</code></td><td>실제 호출 인자와 중간 변경 이력</td></tr>
+<tr><td>recipe+9C</td><td>전역 블록 <code>4041F420</code>과 구성 서비스 ID <code>0x42</code>·<code>0x53</code>이 주는 값</td></tr>
+</tbody></table></div>
+<p>이 경계가 남아 있으므로 실제 촬영 작업의 연속 실행, 버퍼 재사용 이력, SuperResolution 메뉴 도달은 이 결과만으로 정할 수 없습니다. +9C 생산 코드의 제한된 실행은 <a href="tone-scale.html">recipe+9C 정수 생산자와 내장 입력 복사</a>에 있습니다. 그 문서는 같은 스택 슬롯의 산술·저장 20조건과 별도의 바이트 전달 3조건을 원본으로 대조했습니다. 실행 범위는 이 문서와 따로 읽어야 합니다.</p>
+</section>
+
+<section id="limits">
+<h2>한계</h2>
+<ul>
+<li>분리된 실행 구간의 연결을 검증한 결과입니다. 입력 서비스, 작업 스케줄, 중간 덮어쓰기, 실제 촬영의 버퍼 재사용은 확인하지 않았습니다.</li>
+<li>생성자 초기값이 현재 촬영 기본값인지 확인하지 않았습니다. 네 halfword에는 물리 채널 대응이 확인되지 않았습니다.</li>
+<li>카메라·모터·부팅 동작과 물리적 EV·Q 형식·감마 특성은 이 검증의 범위 밖입니다.</li>
+</ul>
+</section>
+
+<section id="evidence">
+<h2>재현 방법과 근거 파일</h2>
+<p>검증 환경은 Python 3.12.3과 Unicorn 2.1.4입니다. 원본 파일을 가진 사용자가 따로 준비한 decoded 파일을 지정합니다. 저장소 루트에서 실행하고 출력에는 새 경로를 씁니다. 아래 경로는 예시입니다.</p>
+<pre><code>python -B verify_tone_inputs.py /path/to/decoded.bin --output tone-inputs-new.json \
+  --compare analysis/tone-inputs.json
+python -B -O verify_tone_inputs.py /path/to/decoded.bin --output tone-inputs-opt-new.json \
+  --compare analysis/tone-inputs.json
+python -B -m unittest discover -s tests -p test_tone_inputs.py</code></pre>
+<p>줄 끝의 역슬래시는 줄을 잇는 표시입니다. 후보 파일을 별도 디렉터리에 둘 때만 <code>--repository</code>로 기존 검증기와 보조 소스가 있는 저장소를 지정합니다. 소스와 입력 검사는 최적화 실행에서도 유지됩니다. 비교에 실패하면 출력 파일을 만들지 않습니다.</p>
+
+<details class="evidence"><summary>공개 JSON을 만드는 방법과 해시</summary>
+<p>공개 JSON은 전체 관측이 맞는지 확인한 뒤 만듭니다. 8건의 모든 기록을 타입을 구분하는 JSON으로 직렬화해 기존 검증 결과의 해시와 먼저 대조합니다. 통과하면 반복 쓰기 기록 133,546건을 건수와 순서가 반영된 해시로 줄입니다. 문맥 생성자 쓰기 48건, recipe 생성자 쓰기, 입력 생산 코드의 저장 명령, 소비 코드의 조건부 쓰기는 그대로 둡니다.</p>
+<p>재현 코드는 decoded 파일 경로를 명시적으로 받습니다. 파일 크기와 전체 SHA-256이 다르면 실행을 거부합니다. 기존 출력 파일이나 그 별칭은 덮어쓰지 않습니다. 원본 명령은 실행할 때마다 바이트를 대조하고 코드 구간의 해시도 검사합니다. 원본 실행 함수는 그대로이며 파일 경로와 소스 캡처만 공개 저장소 구조에 맞췄습니다.</p>
+<dl class="kv">
+<dt>입력 SHA-256</dt><dd><code class="wrap">1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc</code></dd>
+<dt>8건 전체 관측 SHA-256</dt><dd><code class="wrap">61e819bd5300c37259b03b31d46b5df225b8cd5ce5636082472f01b7fc55767a</code> (canonical JSON 기준)</dd>
+<dt>전체 비공개 관측 파일</dt><dd>21,140,898바이트</dd>
+<dt>공개 JSON</dt><dd>172,506바이트, SHA-256 <code class="wrap">866e6c071bf48db942a0dbb8ebf931d06edef70c078bafe0d4232945023a1023</code></dd>
+</dl>
+</details>
+
+<ul class="refs">
+<li><a href="../verify_tone_inputs.py">verify_tone_inputs.py</a> — 실행 검증기</li>
+<li><a href="../tools/tone_provenance/inputs.py">tools/tone_provenance/inputs.py</a> — 원본 구간 실행 함수와 생산 코드 분기</li>
+<li><a href="tone-inputs.json">tone-inputs.json</a> — 공개 수치 결과</li>
+<li><a href="tone-inputs-contract.json">tone-inputs-contract.json</a> — 검증 범위, 같은 객체와 정적 추적의 범위, 해시</li>
+<li><a href="../tools/tone_provenance/inputs-sources.json">inputs-sources.json</a> — 캡처할 소스 목록</li>
+<li><a href="../tools/tone_provenance/input-ranges.json">input-ranges.json</a> — 허용 실행 구간 140개와 정적 원본 구간 55개의 해시</li>
+<li><a href="../tests/test_tone_inputs.py">tests/test_tone_inputs.py</a> — 입출력 경계 시험</li>
+<li><a href="tone-provenance.html">톤 문맥과 곡선 생산자의 연결</a> — 문맥·곡선 연결 분석</li>
+</ul>
+</section>
+
 </main>
+</div>
 <!-- chrome:bottom -->
-<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">영상 처리와 저장 경로 — 이 주제의 문서</h2><ol><li><a href="guide-pipeline.html">영상 처리 경로 안내</a></li><li><a href="pipeline-analysis.html">RAW 이후의 톤·WB·색 행렬</a></li><li><a href="tone-provenance.html">톤 문맥과 곡선 생산자의 연결<span>원본 포인터·정수 계산·곡선 생성의 분리 재현</span></a></li><li><a href="tone-inputs.html" aria-current="page">톤 입력의 원본 생산자<span>생성자·상위 job 입력·기존값 유지 조건</span></a></li><li><a href="tone-scale.html">recipe+9C 정수 생산자와 내장 입력 복사<span>정수 계산 20조건과 원본 바이트 전달 3조건</span></a></li><li><a href="tone-upstream.html">R5 상위 입력과 0 소비자<span>원본 생성자·기술자·ROM 표와 0 분모 경계</span></a></li><li><a href="tone-manager.html">톤 설정 관리자와 내부 버퍼 기록<span>두 호출점·48바이트 복사·busy 상태의 정적 순서</span></a></li><li><a href="tone-selectors.html">selector 5·6의 직접 생산 경로<span>입력 halfword에서 하위 8비트까지·5개 원본 구간 재현</span></a></li><li><a href="output-menu-analysis.html">JPEG 출력 버퍼와 Reversal Film 메뉴</a></li><li><a href="storage-dma-analysis.html">파일시스템에서 SD·DMA까지</a></li><li><a href="backend-b-cpp-analysis.html">백엔드 B와 두 번째 CPP 출력</a></li><li><a href="masked-cpp-analysis.html">마스크 CPP와 보조 JPEG 입력</a></li><li><a href="superresolution-lifecycle.html">Pixel Shift 메뉴와 버퍼 수명</a></li></ol></nav>
+<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">영상 처리와 저장 경로 — 이 주제의 문서</h2><ol><li><a href="guide-pipeline.html">영상 처리 경로 안내</a></li><li><a href="pipeline-analysis.html">RAW 이후의 톤·WB·색 행렬</a></li><li><a href="tone-provenance.html">톤 문맥과 곡선 생산자의 연결<span>포인터·정수 계산·곡선 생성</span></a></li><li><a href="tone-inputs.html" aria-current="page">톤 입력의 원본 생산자<span>초기값과 갱신·유지 조건</span></a></li><li><a href="tone-scale.html">recipe+9C 정수 생산자와 내장 입력 복사<span>정수 계산 20조건, 바이트 전달 3조건</span></a></li><li><a href="tone-upstream.html">R5 상위 입력과 0 소비자<span>상위 입력 7건과 0 분모</span></a></li><li><a href="tone-manager.html">톤 설정 관리자와 내부 버퍼 기록<span>두 호출자와 48바이트 설정 레코드</span></a></li><li><a href="tone-selectors.html">selector 5·6의 직접 생산 경로<span>하위 8비트 저장, 5사례</span></a></li><li><a href="output-menu-analysis.html">JPEG 출력 버퍼와 Reversal Film 메뉴</a></li><li><a href="storage-dma-analysis.html">파일시스템에서 SD·DMA까지</a></li><li><a href="backend-b-cpp-analysis.html">백엔드 B와 두 번째 CPP 출력</a></li><li><a href="masked-cpp-analysis.html">마스크 CPP와 보조 JPEG 입력</a></li><li><a href="superresolution-lifecycle.html">Pixel Shift 메뉴와 버퍼 수명</a></li><li><a href="raw-nr-feasibility.html">RAW 노이즈 감소를 끌 수 있는가</a></li></ol></nav>
 <nav class="pager" aria-label="이전·다음 문서"><a class="prev" href="tone-provenance.html"><small>← 이전</small>톤 문맥과 곡선 생산자의 연결</a><a class="next" href="tone-scale.html"><small>다음 →</small>recipe+9C 정수 생산자와 내장 입력 복사</a></nav>
 <footer class="sitefoot"><div class="sitefoot-in"><nav aria-label="사이트"><a href="../index.html#map">문서 지도</a><a href="../index.html#levels">검증 수준 읽는 법</a><a href="../glossary.html">용어집</a><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/research-program.html">세 기종 연구 본부</a><a href="https://github.com/yunhyok/pentax-k3ii-firmware-analysis">GitHub 저장소</a></nav><p>PENTAX K-3 II 펌웨어 1.12 분석 문서. PC에서 수행한 정적 분석과 에뮬레이션 결과이며, 카메라 실기에서 검증한 내용이 아닙니다. 원본 펌웨어와 복호화한 바이너리는 포함하지 않습니다.</p></div></footer>
 <!-- /chrome:bottom -->
-</body></html>
+</body>
+</html>
