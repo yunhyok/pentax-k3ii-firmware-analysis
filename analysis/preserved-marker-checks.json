@@ -1,0 +1,3570 @@
+{
+  "schema_version": 1,
+  "firmware_version": "1.12",
+  "cpu_model": "Unicorn Cortex-A9; not a full camera emulator",
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "code_va_base": 33554432,
+  "unicorn_version": "2.1.4",
+  "original_instruction_checks": {
+    "width_counts": {
+      "4": 155040,
+      "2": 1014
+    },
+    "ordered_pc_bytes_sha256": "bfbf23bc0aac2c33748bf1e815920e992e1c36b127f7949ebc93da37a07a3eb3"
+  },
+  "static_caller_checks": {
+    "branches": 35,
+    "words": 28,
+    "mask_table_halfwords": 10
+  },
+  "baseline_replay_unchanged": true,
+  "execution_replacements": [],
+  "connected_cases": [
+    {
+      "case": "C_count_suppressed",
+      "selector": 0,
+      "request_va": 269287088,
+      "caller_frame_va": 269287088,
+      "worker_frame_va": 269221360,
+      "config_va": 268566528,
+      "prepared_result_flag": 0,
+      "prepared_counts": [
+        2,
+        3
+      ],
+      "prepared_lengths": [
+        4,
+        4
+      ],
+      "prepared_wait_result": 0,
+      "native_setters": [
+        [
+          7665988,
+          268566528,
+          0,
+          4
+        ],
+        [
+          7665988,
+          268566528,
+          1,
+          4
+        ]
+      ],
+      "native_flag_writes": [
+        [
+          7663164,
+          268566540,
+          1,
+          1
+        ],
+        [
+          7663176,
+          268566541,
+          1,
+          1
+        ]
+      ],
+      "validated_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        24,
+        25
+      ],
+      "native_flags": [
+        1,
+        1
+      ],
+      "marker_controls": [
+        {
+          "case": "both_valid",
+          "live_ram_markers": [
+            2774162085,
+            2774162085
+          ],
+          "native_config_flags": [
+            1,
+            1
+          ],
+          "capture_4a": 1,
+          "neighbor_getter_r0": 1,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ]
+          ],
+          "config_flag_reads": [
+            [
+              7666132,
+              268566540,
+              1,
+              1
+            ],
+            [
+              7666192,
+              268566541,
+              1,
+              1
+            ]
+          ],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              1
+            ]
+          ],
+          "config_sha256_unchanged": "4e716d164fc86d302a35f8b2ad8d964fac2a0369ed2ca26961c5156edc5070c5",
+          "backing_sha256_unchanged": "8f29eb728a916330f99bede8943964e555a81447df7c697d3854090bc36d9276"
+        },
+        {
+          "case": "first_invalid",
+          "live_ram_markers": [
+            0,
+            2774162085
+          ],
+          "native_config_flags": [
+            1,
+            1
+          ],
+          "capture_4a": 0,
+          "neighbor_getter_r0": 0,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              0
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              0
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ]
+          ],
+          "config_flag_reads": [],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              0
+            ]
+          ],
+          "config_sha256_unchanged": "4e716d164fc86d302a35f8b2ad8d964fac2a0369ed2ca26961c5156edc5070c5",
+          "backing_sha256_unchanged": "b0a05768ea78e0f3ef3dacd99dc4b6e7c8ccbb201f1dd5ed1956fde3af8f8ea7"
+        },
+        {
+          "case": "second_invalid",
+          "live_ram_markers": [
+            2774162085,
+            0
+          ],
+          "native_config_flags": [
+            1,
+            1
+          ],
+          "capture_4a": 0,
+          "neighbor_getter_r0": 0,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              0
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              0
+            ]
+          ],
+          "config_flag_reads": [
+            [
+              7666132,
+              268566540,
+              1,
+              1
+            ],
+            [
+              7666192,
+              268566541,
+              1,
+              1
+            ]
+          ],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              0
+            ]
+          ],
+          "config_sha256_unchanged": "4e716d164fc86d302a35f8b2ad8d964fac2a0369ed2ca26961c5156edc5070c5",
+          "backing_sha256_unchanged": "fa9e96660cdfa0c685e3c2a142f201dea0e724c087146ab9b080a80416ffcd8d"
+        },
+        {
+          "case": "both_invalid",
+          "live_ram_markers": [
+            0,
+            0
+          ],
+          "native_config_flags": [
+            1,
+            1
+          ],
+          "capture_4a": 0,
+          "neighbor_getter_r0": 0,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              0
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              0
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              0
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              0
+            ]
+          ],
+          "config_flag_reads": [],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              0
+            ]
+          ],
+          "config_sha256_unchanged": "4e716d164fc86d302a35f8b2ad8d964fac2a0369ed2ca26961c5156edc5070c5",
+          "backing_sha256_unchanged": "80ffd8c273cd62d3a7e2883ba83252b3465f3e9ec5d97c0d812e9d738f8f4a2f"
+        },
+        {
+          "case": "restored",
+          "live_ram_markers": [
+            2774162085,
+            2774162085
+          ],
+          "native_config_flags": [
+            1,
+            1
+          ],
+          "capture_4a": 1,
+          "neighbor_getter_r0": 1,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ]
+          ],
+          "config_flag_reads": [
+            [
+              7666132,
+              268566540,
+              1,
+              1
+            ],
+            [
+              7666192,
+              268566541,
+              1,
+              1
+            ]
+          ],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              1
+            ]
+          ],
+          "config_sha256_unchanged": "4e716d164fc86d302a35f8b2ad8d964fac2a0369ed2ca26961c5156edc5070c5",
+          "backing_sha256_unchanged": "8f29eb728a916330f99bede8943964e555a81447df7c697d3854090bc36d9276"
+        }
+      ]
+    },
+    {
+      "case": "C_count_invalid",
+      "selector": 0,
+      "request_va": 269287088,
+      "caller_frame_va": 269287088,
+      "worker_frame_va": 269221360,
+      "config_va": 268566528,
+      "prepared_result_flag": 1,
+      "prepared_counts": [
+        2,
+        1
+      ],
+      "prepared_lengths": [
+        4,
+        4
+      ],
+      "prepared_wait_result": 0,
+      "native_setters": [
+        [
+          7666036,
+          268566528,
+          0,
+          2
+        ],
+        [
+          7666036,
+          268566528,
+          1,
+          1
+        ],
+        [
+          7665988,
+          268566528,
+          0,
+          4
+        ],
+        [
+          7665988,
+          268566528,
+          1,
+          4
+        ]
+      ],
+      "native_flag_writes": [
+        [
+          7663164,
+          268566540,
+          1,
+          0
+        ],
+        [
+          7663176,
+          268566541,
+          1,
+          1
+        ]
+      ],
+      "validated_indices": [
+        0,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        24,
+        25
+      ],
+      "native_flags": [
+        0,
+        1
+      ],
+      "marker_controls": [
+        {
+          "case": "both_valid",
+          "live_ram_markers": [
+            2774162085,
+            2774162085
+          ],
+          "native_config_flags": [
+            0,
+            1
+          ],
+          "capture_4a": 0,
+          "neighbor_getter_r0": 1,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ]
+          ],
+          "config_flag_reads": [
+            [
+              7666132,
+              268566540,
+              1,
+              0
+            ],
+            [
+              7666192,
+              268566541,
+              1,
+              1
+            ]
+          ],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              0
+            ]
+          ],
+          "config_sha256_unchanged": "e745abb928de353ad03542b7c6f18cbcc695a88096e2362d53b6f06fb72c074d",
+          "backing_sha256_unchanged": "c03a5bff1894dcf0b361909da0c7de1ee8231ab6fb23787ffdce0646b1f2df36"
+        },
+        {
+          "case": "first_invalid",
+          "live_ram_markers": [
+            0,
+            2774162085
+          ],
+          "native_config_flags": [
+            0,
+            1
+          ],
+          "capture_4a": 0,
+          "neighbor_getter_r0": 0,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              0
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              0
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ]
+          ],
+          "config_flag_reads": [],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              0
+            ]
+          ],
+          "config_sha256_unchanged": "e745abb928de353ad03542b7c6f18cbcc695a88096e2362d53b6f06fb72c074d",
+          "backing_sha256_unchanged": "af3c4bd223c4647159c44d3ed2d2b6b1b170e86ebc40a31c7f55778295add2d0"
+        },
+        {
+          "case": "second_invalid",
+          "live_ram_markers": [
+            2774162085,
+            0
+          ],
+          "native_config_flags": [
+            0,
+            1
+          ],
+          "capture_4a": 0,
+          "neighbor_getter_r0": 0,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              0
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              0
+            ]
+          ],
+          "config_flag_reads": [
+            [
+              7666132,
+              268566540,
+              1,
+              0
+            ],
+            [
+              7666192,
+              268566541,
+              1,
+              1
+            ]
+          ],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              0
+            ]
+          ],
+          "config_sha256_unchanged": "e745abb928de353ad03542b7c6f18cbcc695a88096e2362d53b6f06fb72c074d",
+          "backing_sha256_unchanged": "61b8e4361f0c3e463a4c0353d35c997e8547d5276a8a8d99ddfbf1775fd3cf2d"
+        },
+        {
+          "case": "both_invalid",
+          "live_ram_markers": [
+            0,
+            0
+          ],
+          "native_config_flags": [
+            0,
+            1
+          ],
+          "capture_4a": 0,
+          "neighbor_getter_r0": 0,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              0
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              0
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              0
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              0
+            ]
+          ],
+          "config_flag_reads": [],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              0
+            ]
+          ],
+          "config_sha256_unchanged": "e745abb928de353ad03542b7c6f18cbcc695a88096e2362d53b6f06fb72c074d",
+          "backing_sha256_unchanged": "3fafad1811760633f0edda2af8543a70a9d00bb3c24bc96a3ef8e0c82bc85b34"
+        },
+        {
+          "case": "restored",
+          "live_ram_markers": [
+            2774162085,
+            2774162085
+          ],
+          "native_config_flags": [
+            0,
+            1
+          ],
+          "capture_4a": 0,
+          "neighbor_getter_r0": 1,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ]
+          ],
+          "config_flag_reads": [
+            [
+              7666132,
+              268566540,
+              1,
+              0
+            ],
+            [
+              7666192,
+              268566541,
+              1,
+              1
+            ]
+          ],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              0
+            ]
+          ],
+          "config_sha256_unchanged": "e745abb928de353ad03542b7c6f18cbcc695a88096e2362d53b6f06fb72c074d",
+          "backing_sha256_unchanged": "c03a5bff1894dcf0b361909da0c7de1ee8231ab6fb23787ffdce0646b1f2df36"
+        }
+      ]
+    },
+    {
+      "case": "C_restored",
+      "selector": 0,
+      "request_va": 269287088,
+      "caller_frame_va": 269287088,
+      "worker_frame_va": 269221360,
+      "config_va": 268566528,
+      "prepared_result_flag": 1,
+      "prepared_counts": [
+        1,
+        1
+      ],
+      "prepared_lengths": [
+        4,
+        4
+      ],
+      "prepared_wait_result": 1023,
+      "native_setters": [
+        [
+          7666036,
+          268566528,
+          0,
+          1
+        ],
+        [
+          7666036,
+          268566528,
+          1,
+          1
+        ],
+        [
+          7665988,
+          268566528,
+          0,
+          4
+        ],
+        [
+          7665988,
+          268566528,
+          1,
+          4
+        ]
+      ],
+      "native_flag_writes": [
+        [
+          7663164,
+          268566540,
+          1,
+          1
+        ],
+        [
+          7663176,
+          268566541,
+          1,
+          1
+        ]
+      ],
+      "validated_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        24,
+        25
+      ],
+      "native_flags": [
+        1,
+        1
+      ],
+      "marker_controls": [
+        {
+          "case": "both_valid",
+          "live_ram_markers": [
+            2774162085,
+            2774162085
+          ],
+          "native_config_flags": [
+            1,
+            1
+          ],
+          "capture_4a": 1,
+          "neighbor_getter_r0": 1,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ]
+          ],
+          "config_flag_reads": [
+            [
+              7666132,
+              268566540,
+              1,
+              1
+            ],
+            [
+              7666192,
+              268566541,
+              1,
+              1
+            ]
+          ],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              1
+            ]
+          ],
+          "config_sha256_unchanged": "4e716d164fc86d302a35f8b2ad8d964fac2a0369ed2ca26961c5156edc5070c5",
+          "backing_sha256_unchanged": "8f29eb728a916330f99bede8943964e555a81447df7c697d3854090bc36d9276"
+        },
+        {
+          "case": "first_invalid",
+          "live_ram_markers": [
+            0,
+            2774162085
+          ],
+          "native_config_flags": [
+            1,
+            1
+          ],
+          "capture_4a": 0,
+          "neighbor_getter_r0": 0,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              0
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              0
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ]
+          ],
+          "config_flag_reads": [],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              0
+            ]
+          ],
+          "config_sha256_unchanged": "4e716d164fc86d302a35f8b2ad8d964fac2a0369ed2ca26961c5156edc5070c5",
+          "backing_sha256_unchanged": "b0a05768ea78e0f3ef3dacd99dc4b6e7c8ccbb201f1dd5ed1956fde3af8f8ea7"
+        },
+        {
+          "case": "second_invalid",
+          "live_ram_markers": [
+            2774162085,
+            0
+          ],
+          "native_config_flags": [
+            1,
+            1
+          ],
+          "capture_4a": 0,
+          "neighbor_getter_r0": 0,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              0
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              0
+            ]
+          ],
+          "config_flag_reads": [
+            [
+              7666132,
+              268566540,
+              1,
+              1
+            ],
+            [
+              7666192,
+              268566541,
+              1,
+              1
+            ]
+          ],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              0
+            ]
+          ],
+          "config_sha256_unchanged": "4e716d164fc86d302a35f8b2ad8d964fac2a0369ed2ca26961c5156edc5070c5",
+          "backing_sha256_unchanged": "fa9e96660cdfa0c685e3c2a142f201dea0e724c087146ab9b080a80416ffcd8d"
+        },
+        {
+          "case": "both_invalid",
+          "live_ram_markers": [
+            0,
+            0
+          ],
+          "native_config_flags": [
+            1,
+            1
+          ],
+          "capture_4a": 0,
+          "neighbor_getter_r0": 0,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              0
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              0
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              0
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              0
+            ]
+          ],
+          "config_flag_reads": [],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              0
+            ]
+          ],
+          "config_sha256_unchanged": "4e716d164fc86d302a35f8b2ad8d964fac2a0369ed2ca26961c5156edc5070c5",
+          "backing_sha256_unchanged": "80ffd8c273cd62d3a7e2883ba83252b3465f3e9ec5d97c0d812e9d738f8f4a2f"
+        },
+        {
+          "case": "restored",
+          "live_ram_markers": [
+            2774162085,
+            2774162085
+          ],
+          "native_config_flags": [
+            1,
+            1
+          ],
+          "capture_4a": 1,
+          "neighbor_getter_r0": 1,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ]
+          ],
+          "config_flag_reads": [
+            [
+              7666132,
+              268566540,
+              1,
+              1
+            ],
+            [
+              7666192,
+              268566541,
+              1,
+              1
+            ]
+          ],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              1
+            ]
+          ],
+          "config_sha256_unchanged": "4e716d164fc86d302a35f8b2ad8d964fac2a0369ed2ca26961c5156edc5070c5",
+          "backing_sha256_unchanged": "8f29eb728a916330f99bede8943964e555a81447df7c697d3854090bc36d9276"
+        }
+      ]
+    },
+    {
+      "case": "D_count_invalid",
+      "selector": 1,
+      "request_va": 269287088,
+      "caller_frame_va": 269287088,
+      "worker_frame_va": 269221360,
+      "config_va": 268566528,
+      "prepared_result_flag": 1,
+      "prepared_counts": [
+        2,
+        1
+      ],
+      "prepared_lengths": [
+        4,
+        4
+      ],
+      "prepared_wait_result": 0,
+      "native_setters": [
+        [
+          7666036,
+          268566528,
+          6,
+          2
+        ],
+        [
+          7666036,
+          268566528,
+          7,
+          1
+        ],
+        [
+          7665988,
+          268566528,
+          6,
+          4
+        ],
+        [
+          7665988,
+          268566528,
+          7,
+          4
+        ]
+      ],
+      "native_flag_writes": [
+        [
+          7663164,
+          268566540,
+          1,
+          1
+        ],
+        [
+          7663176,
+          268566541,
+          1,
+          0
+        ]
+      ],
+      "validated_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "native_flags": [
+        1,
+        0
+      ],
+      "marker_controls": [
+        {
+          "case": "both_valid",
+          "live_ram_markers": [
+            2774162085,
+            2774162085
+          ],
+          "native_config_flags": [
+            1,
+            0
+          ],
+          "capture_4a": 1,
+          "neighbor_getter_r0": 0,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ]
+          ],
+          "config_flag_reads": [
+            [
+              7666132,
+              268566540,
+              1,
+              1
+            ],
+            [
+              7666192,
+              268566541,
+              1,
+              0
+            ]
+          ],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              1
+            ]
+          ],
+          "config_sha256_unchanged": "6579b75ee46ea6aa9ec97d6f64d75f658ff6725e03ffc915c7959581a1abc4d0",
+          "backing_sha256_unchanged": "e484b93ba1fe5567ff516084a7f1b7cd59fca82cd7e3e1487cdb34bf51043be7"
+        },
+        {
+          "case": "first_invalid",
+          "live_ram_markers": [
+            0,
+            2774162085
+          ],
+          "native_config_flags": [
+            1,
+            0
+          ],
+          "capture_4a": 0,
+          "neighbor_getter_r0": 0,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              0
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              0
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ]
+          ],
+          "config_flag_reads": [],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              0
+            ]
+          ],
+          "config_sha256_unchanged": "6579b75ee46ea6aa9ec97d6f64d75f658ff6725e03ffc915c7959581a1abc4d0",
+          "backing_sha256_unchanged": "be73316e59e77a01ecedf77b54dc4ce7becd4d8af370a8203b4931c9791a1f05"
+        },
+        {
+          "case": "second_invalid",
+          "live_ram_markers": [
+            2774162085,
+            0
+          ],
+          "native_config_flags": [
+            1,
+            0
+          ],
+          "capture_4a": 0,
+          "neighbor_getter_r0": 0,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              0
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              0
+            ]
+          ],
+          "config_flag_reads": [
+            [
+              7666132,
+              268566540,
+              1,
+              1
+            ],
+            [
+              7666192,
+              268566541,
+              1,
+              0
+            ]
+          ],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              0
+            ]
+          ],
+          "config_sha256_unchanged": "6579b75ee46ea6aa9ec97d6f64d75f658ff6725e03ffc915c7959581a1abc4d0",
+          "backing_sha256_unchanged": "bffa616af65a837840e318ee3f1a157248d1cae1fe4c0e56587834b160991450"
+        },
+        {
+          "case": "both_invalid",
+          "live_ram_markers": [
+            0,
+            0
+          ],
+          "native_config_flags": [
+            1,
+            0
+          ],
+          "capture_4a": 0,
+          "neighbor_getter_r0": 0,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              0
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              0
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              0
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              0
+            ]
+          ],
+          "config_flag_reads": [],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              0
+            ]
+          ],
+          "config_sha256_unchanged": "6579b75ee46ea6aa9ec97d6f64d75f658ff6725e03ffc915c7959581a1abc4d0",
+          "backing_sha256_unchanged": "38c80fade52b30528fdd4dd6049c70338ffa41c99a8fc8a40a03a33964662408"
+        },
+        {
+          "case": "restored",
+          "live_ram_markers": [
+            2774162085,
+            2774162085
+          ],
+          "native_config_flags": [
+            1,
+            0
+          ],
+          "capture_4a": 1,
+          "neighbor_getter_r0": 0,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ]
+          ],
+          "config_flag_reads": [
+            [
+              7666132,
+              268566540,
+              1,
+              1
+            ],
+            [
+              7666192,
+              268566541,
+              1,
+              0
+            ]
+          ],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              1
+            ]
+          ],
+          "config_sha256_unchanged": "6579b75ee46ea6aa9ec97d6f64d75f658ff6725e03ffc915c7959581a1abc4d0",
+          "backing_sha256_unchanged": "e484b93ba1fe5567ff516084a7f1b7cd59fca82cd7e3e1487cdb34bf51043be7"
+        }
+      ]
+    },
+    {
+      "case": "D_restored",
+      "selector": 1,
+      "request_va": 269287088,
+      "caller_frame_va": 269287088,
+      "worker_frame_va": 269221360,
+      "config_va": 268566528,
+      "prepared_result_flag": 1,
+      "prepared_counts": [
+        1,
+        1
+      ],
+      "prepared_lengths": [
+        4,
+        4
+      ],
+      "prepared_wait_result": 1023,
+      "native_setters": [
+        [
+          7666036,
+          268566528,
+          6,
+          1
+        ],
+        [
+          7666036,
+          268566528,
+          7,
+          1
+        ],
+        [
+          7665988,
+          268566528,
+          6,
+          4
+        ],
+        [
+          7665988,
+          268566528,
+          7,
+          4
+        ]
+      ],
+      "native_flag_writes": [
+        [
+          7663164,
+          268566540,
+          1,
+          1
+        ],
+        [
+          7663176,
+          268566541,
+          1,
+          1
+        ]
+      ],
+      "validated_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        24,
+        25
+      ],
+      "native_flags": [
+        1,
+        1
+      ],
+      "marker_controls": [
+        {
+          "case": "both_valid",
+          "live_ram_markers": [
+            2774162085,
+            2774162085
+          ],
+          "native_config_flags": [
+            1,
+            1
+          ],
+          "capture_4a": 1,
+          "neighbor_getter_r0": 1,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ]
+          ],
+          "config_flag_reads": [
+            [
+              7666132,
+              268566540,
+              1,
+              1
+            ],
+            [
+              7666192,
+              268566541,
+              1,
+              1
+            ]
+          ],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              1
+            ]
+          ],
+          "config_sha256_unchanged": "4e716d164fc86d302a35f8b2ad8d964fac2a0369ed2ca26961c5156edc5070c5",
+          "backing_sha256_unchanged": "8f29eb728a916330f99bede8943964e555a81447df7c697d3854090bc36d9276"
+        },
+        {
+          "case": "first_invalid",
+          "live_ram_markers": [
+            0,
+            2774162085
+          ],
+          "native_config_flags": [
+            1,
+            1
+          ],
+          "capture_4a": 0,
+          "neighbor_getter_r0": 0,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              0
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              0
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ]
+          ],
+          "config_flag_reads": [],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              0
+            ]
+          ],
+          "config_sha256_unchanged": "4e716d164fc86d302a35f8b2ad8d964fac2a0369ed2ca26961c5156edc5070c5",
+          "backing_sha256_unchanged": "b0a05768ea78e0f3ef3dacd99dc4b6e7c8ccbb201f1dd5ed1956fde3af8f8ea7"
+        },
+        {
+          "case": "second_invalid",
+          "live_ram_markers": [
+            2774162085,
+            0
+          ],
+          "native_config_flags": [
+            1,
+            1
+          ],
+          "capture_4a": 0,
+          "neighbor_getter_r0": 0,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              0
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              0
+            ]
+          ],
+          "config_flag_reads": [
+            [
+              7666132,
+              268566540,
+              1,
+              1
+            ],
+            [
+              7666192,
+              268566541,
+              1,
+              1
+            ]
+          ],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              0
+            ]
+          ],
+          "config_sha256_unchanged": "4e716d164fc86d302a35f8b2ad8d964fac2a0369ed2ca26961c5156edc5070c5",
+          "backing_sha256_unchanged": "fa9e96660cdfa0c685e3c2a142f201dea0e724c087146ab9b080a80416ffcd8d"
+        },
+        {
+          "case": "both_invalid",
+          "live_ram_markers": [
+            0,
+            0
+          ],
+          "native_config_flags": [
+            1,
+            1
+          ],
+          "capture_4a": 0,
+          "neighbor_getter_r0": 0,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              0
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              0
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              0
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              0
+            ]
+          ],
+          "config_flag_reads": [],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              0
+            ]
+          ],
+          "config_sha256_unchanged": "4e716d164fc86d302a35f8b2ad8d964fac2a0369ed2ca26961c5156edc5070c5",
+          "backing_sha256_unchanged": "80ffd8c273cd62d3a7e2883ba83252b3465f3e9ec5d97c0d812e9d738f8f4a2f"
+        },
+        {
+          "case": "restored",
+          "live_ram_markers": [
+            2774162085,
+            2774162085
+          ],
+          "native_config_flags": [
+            1,
+            1
+          ],
+          "capture_4a": 1,
+          "neighbor_getter_r0": 1,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ]
+          ],
+          "config_flag_reads": [
+            [
+              7666132,
+              268566540,
+              1,
+              1
+            ],
+            [
+              7666192,
+              268566541,
+              1,
+              1
+            ]
+          ],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              1
+            ]
+          ],
+          "config_sha256_unchanged": "4e716d164fc86d302a35f8b2ad8d964fac2a0369ed2ca26961c5156edc5070c5",
+          "backing_sha256_unchanged": "8f29eb728a916330f99bede8943964e555a81447df7c697d3854090bc36d9276"
+        }
+      ]
+    },
+    {
+      "case": "D_count_suppressed",
+      "selector": 1,
+      "request_va": 269287088,
+      "caller_frame_va": 269287088,
+      "worker_frame_va": 269221360,
+      "config_va": 268566528,
+      "prepared_result_flag": 0,
+      "prepared_counts": [
+        2,
+        3
+      ],
+      "prepared_lengths": [
+        4,
+        4
+      ],
+      "prepared_wait_result": 0,
+      "native_setters": [
+        [
+          7665988,
+          268566528,
+          6,
+          4
+        ],
+        [
+          7665988,
+          268566528,
+          7,
+          4
+        ]
+      ],
+      "native_flag_writes": [
+        [
+          7663164,
+          268566540,
+          1,
+          1
+        ],
+        [
+          7663176,
+          268566541,
+          1,
+          1
+        ]
+      ],
+      "validated_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        24,
+        25
+      ],
+      "native_flags": [
+        1,
+        1
+      ],
+      "marker_controls": [
+        {
+          "case": "both_valid",
+          "live_ram_markers": [
+            2774162085,
+            2774162085
+          ],
+          "native_config_flags": [
+            1,
+            1
+          ],
+          "capture_4a": 1,
+          "neighbor_getter_r0": 1,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ]
+          ],
+          "config_flag_reads": [
+            [
+              7666132,
+              268566540,
+              1,
+              1
+            ],
+            [
+              7666192,
+              268566541,
+              1,
+              1
+            ]
+          ],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              1
+            ]
+          ],
+          "config_sha256_unchanged": "4e716d164fc86d302a35f8b2ad8d964fac2a0369ed2ca26961c5156edc5070c5",
+          "backing_sha256_unchanged": "8f29eb728a916330f99bede8943964e555a81447df7c697d3854090bc36d9276"
+        },
+        {
+          "case": "first_invalid",
+          "live_ram_markers": [
+            0,
+            2774162085
+          ],
+          "native_config_flags": [
+            1,
+            1
+          ],
+          "capture_4a": 0,
+          "neighbor_getter_r0": 0,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              0
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              0
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ]
+          ],
+          "config_flag_reads": [],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              0
+            ]
+          ],
+          "config_sha256_unchanged": "4e716d164fc86d302a35f8b2ad8d964fac2a0369ed2ca26961c5156edc5070c5",
+          "backing_sha256_unchanged": "b0a05768ea78e0f3ef3dacd99dc4b6e7c8ccbb201f1dd5ed1956fde3af8f8ea7"
+        },
+        {
+          "case": "second_invalid",
+          "live_ram_markers": [
+            2774162085,
+            0
+          ],
+          "native_config_flags": [
+            1,
+            1
+          ],
+          "capture_4a": 0,
+          "neighbor_getter_r0": 0,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              0
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              0
+            ]
+          ],
+          "config_flag_reads": [
+            [
+              7666132,
+              268566540,
+              1,
+              1
+            ],
+            [
+              7666192,
+              268566541,
+              1,
+              1
+            ]
+          ],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              0
+            ]
+          ],
+          "config_sha256_unchanged": "4e716d164fc86d302a35f8b2ad8d964fac2a0369ed2ca26961c5156edc5070c5",
+          "backing_sha256_unchanged": "fa9e96660cdfa0c685e3c2a142f201dea0e724c087146ab9b080a80416ffcd8d"
+        },
+        {
+          "case": "both_invalid",
+          "live_ram_markers": [
+            0,
+            0
+          ],
+          "native_config_flags": [
+            1,
+            1
+          ],
+          "capture_4a": 0,
+          "neighbor_getter_r0": 0,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              0
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              0
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              0
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              0
+            ]
+          ],
+          "config_flag_reads": [],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              0
+            ]
+          ],
+          "config_sha256_unchanged": "4e716d164fc86d302a35f8b2ad8d964fac2a0369ed2ca26961c5156edc5070c5",
+          "backing_sha256_unchanged": "80ffd8c273cd62d3a7e2883ba83252b3465f3e9ec5d97c0d812e9d738f8f4a2f"
+        },
+        {
+          "case": "restored",
+          "live_ram_markers": [
+            2774162085,
+            2774162085
+          ],
+          "native_config_flags": [
+            1,
+            1
+          ],
+          "capture_4a": 1,
+          "neighbor_getter_r0": 1,
+          "neighbor_stop_before": 5846860,
+          "marker_reads": [
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ],
+            [
+              7528452,
+              2147483648,
+              4,
+              2774162085
+            ],
+            [
+              7527916,
+              2147549184,
+              4,
+              2774162085
+            ]
+          ],
+          "config_flag_reads": [
+            [
+              7666132,
+              268566540,
+              1,
+              1
+            ],
+            [
+              7666192,
+              268566541,
+              1,
+              1
+            ]
+          ],
+          "native_writes": [
+            [
+              6679168,
+              268632135,
+              1,
+              1
+            ],
+            [
+              6679176,
+              268632136,
+              1,
+              1
+            ],
+            [
+              6679180,
+              268632137,
+              1,
+              0
+            ],
+            [
+              6679200,
+              268632138,
+              1,
+              1
+            ]
+          ],
+          "config_sha256_unchanged": "4e716d164fc86d302a35f8b2ad8d964fac2a0369ed2ca26961c5156edc5070c5",
+          "backing_sha256_unchanged": "8f29eb728a916330f99bede8943964e555a81447df7c697d3854090bc36d9276"
+        }
+      ]
+    }
+  ],
+  "execution_segments": [
+    {
+      "entry": 8083796,
+      "stop_va": 40053976,
+      "prepared_sp": 269287424,
+      "prepared_args": [
+        268697600,
+        0,
+        268828672
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6491588,
+      "stop_va": 40046036,
+      "prepared_sp": 269287424,
+      "prepared_args": [],
+      "prepared_registers": {
+        "r4": 268763136,
+        "r5": 2
+      }
+    },
+    {
+      "entry": 6514324,
+      "stop_va": 40063700,
+      "prepared_sp": 269221888,
+      "prepared_args": [
+        268763136
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6509876,
+      "stop_va": 40064436,
+      "prepared_sp": 269221360,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 8081704,
+      "stop_va": 41636176,
+      "prepared_sp": 269287088,
+      "prepared_args": [
+        0
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 8083796,
+      "stop_va": 40053976,
+      "prepared_sp": 269287424,
+      "prepared_args": [
+        268697600,
+        0,
+        268828672
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6491588,
+      "stop_va": 40046036,
+      "prepared_sp": 269287424,
+      "prepared_args": [],
+      "prepared_registers": {
+        "r4": 268763136,
+        "r5": 2
+      }
+    },
+    {
+      "entry": 6514324,
+      "stop_va": 40063700,
+      "prepared_sp": 269221888,
+      "prepared_args": [
+        268763136
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6509876,
+      "stop_va": 40064436,
+      "prepared_sp": 269221360,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 8081704,
+      "stop_va": 41636176,
+      "prepared_sp": 269287088,
+      "prepared_args": [
+        0
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 8083796,
+      "stop_va": 40053976,
+      "prepared_sp": 269287424,
+      "prepared_args": [
+        268697600,
+        0,
+        268828672
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6491588,
+      "stop_va": 40046036,
+      "prepared_sp": 269287424,
+      "prepared_args": [],
+      "prepared_registers": {
+        "r4": 268763136,
+        "r5": 2
+      }
+    },
+    {
+      "entry": 6514324,
+      "stop_va": 40063700,
+      "prepared_sp": 269221888,
+      "prepared_args": [
+        268763136
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6509876,
+      "stop_va": 40064436,
+      "prepared_sp": 269221360,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 8081704,
+      "stop_va": 41636176,
+      "prepared_sp": 269287088,
+      "prepared_args": [
+        1023
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 8083796,
+      "stop_va": 40053976,
+      "prepared_sp": 269287424,
+      "prepared_args": [
+        268697600,
+        0,
+        268828672
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6491588,
+      "stop_va": 40046036,
+      "prepared_sp": 269287424,
+      "prepared_args": [],
+      "prepared_registers": {
+        "r4": 268763136,
+        "r5": 2
+      }
+    },
+    {
+      "entry": 6514324,
+      "stop_va": 40063700,
+      "prepared_sp": 269221888,
+      "prepared_args": [
+        268763136
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6509876,
+      "stop_va": 40064436,
+      "prepared_sp": 269221360,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 8081704,
+      "stop_va": 41636176,
+      "prepared_sp": 269287088,
+      "prepared_args": [
+        0
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 8083796,
+      "stop_va": 40053976,
+      "prepared_sp": 269287424,
+      "prepared_args": [
+        268697600,
+        0,
+        268828672
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6491588,
+      "stop_va": 40046036,
+      "prepared_sp": 269287424,
+      "prepared_args": [],
+      "prepared_registers": {
+        "r4": 268763136,
+        "r5": 2
+      }
+    },
+    {
+      "entry": 6514324,
+      "stop_va": 40063700,
+      "prepared_sp": 269221888,
+      "prepared_args": [
+        268763136
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6509876,
+      "stop_va": 40064436,
+      "prepared_sp": 269221360,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 8081704,
+      "stop_va": 41636176,
+      "prepared_sp": 269287088,
+      "prepared_args": [
+        1023
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 8083796,
+      "stop_va": 40053976,
+      "prepared_sp": 269287424,
+      "prepared_args": [
+        268697600,
+        0,
+        268828672
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6491588,
+      "stop_va": 40046036,
+      "prepared_sp": 269287424,
+      "prepared_args": [],
+      "prepared_registers": {
+        "r4": 268763136,
+        "r5": 2
+      }
+    },
+    {
+      "entry": 6514324,
+      "stop_va": 40063700,
+      "prepared_sp": 269221888,
+      "prepared_args": [
+        268763136
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6509876,
+      "stop_va": 40064436,
+      "prepared_sp": 269221360,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 8081704,
+      "stop_va": 41636176,
+      "prepared_sp": 269287088,
+      "prepared_args": [
+        0
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 6679144,
+      "stop_va": 40233636,
+      "prepared_sp": 269418496,
+      "prepared_args": [
+        268632064
+      ],
+      "prepared_registers": {}
+    },
+    {
+      "entry": 5846848,
+      "stop_va": 39401292,
+      "prepared_sp": 269418496,
+      "prepared_args": [],
+      "prepared_registers": {}
+    }
+  ],
+  "limits": [
+    "Same VM and native config object; original provider load/init and caller plan/copy/worker update/commit/consumer slices execute in prepared call frames.",
+    "Only the first request from each original copied list is executed by the worker prefix/tail. Remaining planned requests and the full processing loop are unrun.",
+    "Controller worker link, command inputs, result flag/counts/lengths, post-lock bit inputs and wait return are supplied; computation, lock/wake/wait scheduling and actual transport are unrun.",
+    "Live marker words are changed by the host fixture only between consumer runs. Native flag bytes are produced by original validators; consumers do not rewrite the flags or backing.",
+    "The +0xC/+0xD bytes are config validity flags, distinct from the 32-bit marker words at80000000/80010000. D count-error and both live-marker branches execute, but this does not establish real event/menu/camera reachability.",
+    "Neighbor R0 is the original74F9F8 getter result observed before59374C; the enclosing caller does not return. Capture execution stops before65EAA4 after four stores at+47/+48/+49/+4A; the whole capture is unrun.",
+    "No physical Flash, DMA, SD, UART, camera operation or device I/O occurs. The input image is read-only; the CLI rechecks its complete identity before emitting evidence."
+  ],
+  "input_file_rechecked": true
+}
