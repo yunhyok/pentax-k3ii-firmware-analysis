@@ -1,0 +1,101 @@
+{
+  "schema": "k3ii-tone-scale-contract-v1",
+  "input": {
+    "bytes": 16838656,
+    "sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+    "explicit_argument_required": true,
+    "distributed": false
+  },
+  "accepted_observations": {
+    "frozen_scale_snapshot_sha256": "8b6c2a5eca684ca2a17750390730bea7c05f6ec0fd5ae53ebcc3a8eefc116212",
+    "frozen_ownership_snapshot_sha256": "2a1bcffc9d92958b4f7475de6477c9c5dbc6ef1cb88610347825e86aa7ff2d6f",
+    "complete_scale_cases_sha256": "5c52f6208ab1ee433f988e0b771aa10dd0db21c620b4e8fc83da1aa7472750c0",
+    "complete_ownership_cases_sha256": "c49b4651e0e79e68265950e7e2b48b88e895e09831ad03ae20b2fcd910ca0b68",
+    "gate_before_new_metadata": true,
+    "all_observation_fields_preserved": true,
+    "original_frozen_metadata_unchanged": true
+  },
+  "artifacts": {
+    "analysis/tone-scale.json": {
+      "sha256": "a2ad3f087e270410bb7a59fa3d32dbaa097a5bbee0302e355ad64bf2a1231db8",
+      "bytes": 565847
+    },
+    "tests/test_tone_scale.py": {
+      "sha256": "b9c6940f8095c08c67012845996062d8a565da40bcc1cda96275d792bd547e00",
+      "bytes": 8941
+    },
+    "tools/tone_provenance/ownership.py": {
+      "sha256": "19af4f8a32764f24a759cdf222a06b4cba88cdad4f9d0d3fe52878e1664a0c25",
+      "bytes": 3301
+    },
+    "tools/tone_provenance/scale-ranges.json": {
+      "sha256": "5fd357b524d38f44c38a19c4dbd6dca0a7dac4d4c606653c957393b8dd4271dd",
+      "bytes": 29361
+    },
+    "tools/tone_provenance/scale-sources.json": {
+      "sha256": "4ee458eda62f059e75e072ff1093387b8167cd81f296d00d5042e1f556921444",
+      "bytes": 1257
+    },
+    "tools/tone_provenance/scale.py": {
+      "sha256": "490be7a171d3635d913050668ed264405af82859e045bcb9c7c0e23de77acac4",
+      "bytes": 7948
+    },
+    "verify_tone_scale.py": {
+      "sha256": "6d276a2622e7348dcc7cebd2d784fabae33ae4e5999f29a49b0107c5d6d3e318",
+      "bytes": 7019
+    }
+  },
+  "replay": {
+    "scale_cases": 20,
+    "ownership_cases": 3,
+    "scale_target_stores": 19,
+    "seed_overwrites": 9,
+    "seed_retains": 10,
+    "negative_cases": [
+      "zero_r8_low"
+    ],
+    "side_R6_equality_store_exercised_in_this_set": false,
+    "independent_review_only_case_merged": false,
+    "normal_optimized_independent_matches": 4,
+    "original_replay_and_model_AST_unchanged": true,
+    "original_requirement_checks_AST_unchanged": true,
+    "python": "3.12.3",
+    "unicorn": "2.1.4",
+    "default_repository_layout_independently_executed": true
+  },
+  "checks": {
+    "new_boundary_tests_normal": 7,
+    "new_boundary_tests_optimized": 7,
+    "shared_verifier_tests_normal": 9,
+    "shared_verifier_tests_optimized": 9,
+    "source_capture_before_execution": true,
+    "exact_image_before_emulator_import": true,
+    "original_code_RX": true,
+    "complete_typed_case_gates_before_public_metadata": true,
+    "typed_full_result_compare_before_output": true,
+    "output_exclusive_atomic_publish": true
+  },
+  "input_roles": {
+    "native": "Recipe constructor, original stack frame and seed, R8 RAM reader/reset, integer arithmetic and target setter; separate continuous ownership prefix.",
+    "supplied": "R5 at65F008, global magic/u16, config0x53 response; ownership caller pointer/source byte/canary.",
+    "static_only_in_frozen_cases": "R6==0x4000 side store; upstream R5/config/global producer and live job scheduling."
+  },
+  "limits": [
+    "Separated scale entries preserve the original frame, with LR reset per entry; omitted classifier/config/selector services and unrelated recipe stores.",
+    "R5, global magic/halfword and config0x53 response are fixtures. Original instructions produce R8 from the supplied RAM and response.",
+    "The native setter can write 0 to recipe+0x9C. Low R8=0 stops before the Thumb2E0486 handler body; high R8=0 can complete a store of8192.",
+    "The R6==0x4000 side store is static-only in these unchanged twenty cases. No additional review-only case is merged.",
+    "The three ownership cases use separate VMs and prepared owner+220 pointers/source bytes. They do not establish capture ordering or buffer reuse.",
+    "F154 reads unrelated SP+8; F188 replaces R1 from SP+18. No selector9 field provenance is inferred.",
+    "No current shooting defaults, physical units, Q format, gamma, SuperResolution menu reach, boot or camera behavior are established.",
+    "No firmware bytes/assets are distributed. The caller supplies the exact decoded input independently."
+  ],
+  "camera_executed": false,
+  "browser_checked": false,
+  "report_source_before_shared_navigation": {
+    "path": "analysis/tone-scale.html",
+    "sha256": "0cdaabb66d6d1a57eaa9b104a9dfe6e9fafc0bc8a8bc43ad72ac1655469d0cb6",
+    "bytes": 20208,
+    "scope": "Frozen publication candidate before HQ navigation and related links; not a hash of the final served HTML."
+  }
+}

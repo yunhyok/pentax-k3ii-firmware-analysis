@@ -1,0 +1,37 @@
+{
+  "loader": {
+    "path": "verify_tone_provenance.py",
+    "sha256": "e33f0ba7693c1cf08cfe4ecc51bb2d01c1ba0da8c66ea9104ee922673982d692"
+  },
+  "modules": {
+    "inspect_firmware": {
+      "path": "inspect_firmware.py",
+      "sha256": "5813ab545e4c5bd14b9c52b47e0c0af4ad34e3ca06aa7c843d9cd3a2238cf871",
+      "location": "repository"
+    },
+    "verify_findings": {
+      "path": "verify_findings.py",
+      "sha256": "9086a9ec89aee7932799353278e1c666d8defc9e55d3c72923388d555fec7a41",
+      "location": "repository"
+    },
+    "verify_tone_path": {
+      "path": "verify_tone_path.py",
+      "sha256": "b1c01007af2dd921077289d05204a6c846ea57059f0aceda6c5101149358f344",
+      "location": "repository"
+    },
+    "tone_scale": {
+      "path": "tools/tone_provenance/scale.py",
+      "sha256": "490be7a171d3635d913050668ed264405af82859e045bcb9c7c0e23de77acac4",
+      "location": "candidate"
+    },
+    "tone_ownership": {
+      "path": "tools/tone_provenance/ownership.py",
+      "sha256": "19af4f8a32764f24a759cdf222a06b4cba88cdad4f9d0d3fe52878e1664a0c25",
+      "location": "candidate"
+    }
+  },
+  "ranges": {
+    "path": "tools/tone_provenance/scale-ranges.json",
+    "sha256": "5fd357b524d38f44c38a19c4dbd6dca0a7dac4d4c606653c957393b8dd4271dd"
+  }
+}
