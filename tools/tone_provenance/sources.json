@@ -1,0 +1,42 @@
+{
+  "tone_rom": {
+    "path": "tools/tone_provenance/rom.py",
+    "sha256": "9e50cc6be69083712f6d339fa7b516a871fda0acf3b8ab6c9d096be413fdfbab",
+    "location": "candidate"
+  },
+  "tone_context": {
+    "path": "tools/tone_provenance/context.py",
+    "sha256": "a6164498e3768b39069853f33e9200446eaa1310217364d6e29c0df08aeb8960",
+    "location": "candidate"
+  },
+  "tone_identity": {
+    "path": "tools/tone_provenance/identity.py",
+    "sha256": "68d609450216d0820ce8a4344558d93f8f01821662aacbb91863bae5f299ded9",
+    "location": "candidate"
+  },
+  "tone_copy": {
+    "path": "tools/tone_provenance/copy.py",
+    "sha256": "13d1a3ad9c57c4fc58985fdfdf8b9bca86de4ad45b891a6274f03f92fa3a7242",
+    "location": "candidate"
+  },
+  "inspect_firmware": {
+    "path": "inspect_firmware.py",
+    "sha256": "5813ab545e4c5bd14b9c52b47e0c0af4ad34e3ca06aa7c843d9cd3a2238cf871",
+    "location": "repository"
+  },
+  "verify_findings": {
+    "path": "verify_findings.py",
+    "sha256": "9086a9ec89aee7932799353278e1c666d8defc9e55d3c72923388d555fec7a41",
+    "location": "repository"
+  },
+  "verify_tone_path": {
+    "path": "verify_tone_path.py",
+    "sha256": "b1c01007af2dd921077289d05204a6c846ea57059f0aceda6c5101149358f344",
+    "location": "repository"
+  },
+  "verify_tone_numeric": {
+    "path": "verify_tone_numeric.py",
+    "sha256": "df88d7183cfcc00a686fc51aecb5ba083586a0e7a3a78cbeca1ef7bc8b421e40",
+    "location": "repository"
+  }
+}

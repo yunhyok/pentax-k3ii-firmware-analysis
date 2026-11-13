@@ -1,0 +1,27 @@
+/* Local containment keeps wide evidence scrollable without widening the page. */
+main.doc.prov-main{width:calc(100% - 2rem);max-width:64rem;min-width:0;margin:auto;padding:clamp(1rem,3vw,2rem)}
+.prov-main section,.prov-main figure{min-width:0;max-width:100%}
+.prov-main .table-wrap,.prov-main .dg-scroll,.prov-main pre{max-width:100%;overflow-x:auto;overscroll-behavior-x:contain}
+.prov-main .dg-scroll{border-radius:4px}
+.prov-main svg.dg{min-width:760px;max-width:none}
+.prov-main table{min-width:620px}
+.prov-main .hash{overflow-wrap:anywhere;word-break:break-all}
+.prov-main pre{white-space:pre-wrap;overflow-wrap:anywhere}
+.prov-main pre code{white-space:pre-wrap}
+.prov-main [tabindex="0"]:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+.prov-nav{display:flex;flex-wrap:wrap;gap:.4rem 1rem;max-width:64rem;margin:1rem auto;padding:0 1rem}
+@media print{.prov-main{width:100%;padding:0}.prov-main svg.dg{min-width:0;max-width:100%}.prov-main table{min-width:0}}
+.prov-main {
+    --tone-natural: #087d75;
+    --tone-bright: #b45913;
+    --tone-reversal: #7450a5;
+    --tone-context: #be3b49;
+  }
+@media (prefers-color-scheme: dark) {
+  .prov-main {
+    --tone-natural: #5fd0a0;
+    --tone-bright: #f0c060;
+    --tone-reversal: #b3a6ff;
+    --tone-context: #ff9a88;
+  }
+}

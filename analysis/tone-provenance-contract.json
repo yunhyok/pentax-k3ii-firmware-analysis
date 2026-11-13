@@ -1,0 +1,486 @@
+{
+  "schema": "k3ii-tone-provenance-contract-v1",
+  "scope": "Separate original-code replays; data relationships, not continuous capture execution.",
+  "input": {
+    "size": 16838656,
+    "sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc"
+  },
+  "accepted_stage_sha256": {
+    "rom_producer": "37d3399572710a1e0c85ac2ec28baf5790b7b35c9445c81b228ae9293bd0c499",
+    "context_producer": "765834c96dc1cb340ecde4d8d298fb6523a4de9b70c0cfb277428a5027227bd8",
+    "shared_identity": "7e50957fd65616761feee55ed30e7d5cff708be169f31d892551444f8f7dae70",
+    "conditional_copy": "57ce6bb1e2b11b04ccea552c89b1c884ddef0c80ec803ae34200c015f85f07d8"
+  },
+  "stage_cases": {
+    "rom_producer": 8,
+    "context_producer": 8,
+    "shared_identity": 2,
+    "conditional_copy": 6
+  },
+  "source_capture": {
+    "canonicalization": "CRLF to LF before SHA and compilation",
+    "capture_all_before_execute": true,
+    "project_imports": "captured bytes only; no sys.modules, pyc or search-path project lookup",
+    "manifest_sha256": "d423ba10d254257e05837cb4520f11cd232b773c7149296c15cc982d39b94435",
+    "standard_library_and_installed_unicorn_are_environment_dependencies": true
+  },
+  "output": {
+    "existing_alias_hardlink_symlink_rejected": true,
+    "temporary_file_flushed_and_fsynced": true,
+    "publish": "atomic exclusive hardlink to new target; no replacement fallback",
+    "cleanup_on_write_or_publish_failure": true,
+    "typed_compare": true,
+    "optimized_mode_supported": true
+  },
+  "replay": {
+    "json_sha256": "9d7dd3927cce2fafc94b70b8dd1797704b94fc5c3c83c80e242b6663b1ef77a4",
+    "four_byte_equal_runs": true,
+    "source_model": "Unicorn 2.1.4, Cortex-A9 emulation configuration; this setting is not new physical SoC identification",
+    "tested_python": "3.12.3",
+    "python310_syntax_only": true
+  },
+  "erratum": {
+    "reference_field": "job+26C0",
+    "superseded_reference_field": "job+225C",
+    "native_frame": [
+      "SP+20=job+2684",
+      "SP+28=job+2220"
+    ],
+    "native_store": "[job+D828]=job+2730",
+    "copy_destination": "job+E608",
+    "existing_shared_identity_unchanged": true
+  },
+  "static_route": {
+    "message_type": 1,
+    "payload_offset": 8,
+    "manager_stage_offset": 52,
+    "stage_interface_offset": 8,
+    "vtable_offset": 10948584,
+    "callback_thunk": 5793972,
+    "callback": 5793716,
+    "sender": 7334456,
+    "receiver_loop": 7334480,
+    "queue_offset_from_interface": 16,
+    "delivery_or_order_executed": false
+  },
+  "independently_reviewed_static_range_hashes": [
+    {
+      "start": 6634188,
+      "end_exclusive": 6634208,
+      "sha256": "8f6a4cabb854e8b61ee2d85c8bad7fbbacbac681d2470a0295c7c9dbf1a72342"
+    },
+    {
+      "start": 7447488,
+      "end_exclusive": 7447576,
+      "sha256": "b08a147c3334ea54531a7dfdf48d51d25e56a175bf68cb8c6b3f281fc8451a10"
+    },
+    {
+      "start": 7524872,
+      "end_exclusive": 7524972,
+      "sha256": "eabc29857775037fd15dea308239135bca4931102521225b800ff4a07a73eba9"
+    },
+    {
+      "start": 6634452,
+      "end_exclusive": 6634472,
+      "sha256": "a68591d3af410db0866b0e67620bc73504f316d2629d06d414ac944cd4babf9c"
+    },
+    {
+      "start": 7448204,
+      "end_exclusive": 7448272,
+      "sha256": "79148058d907fdacb5e19d92cbd84466005b8d046b7e32f9b8e3d6124250dbfd"
+    },
+    {
+      "start": 8576944,
+      "end_exclusive": 8577056,
+      "sha256": "1acfb606c92013f8cf00f01bc6e9403b8950de170b64d08849ace7bcb76035ee"
+    },
+    {
+      "start": 6657004,
+      "end_exclusive": 6657020,
+      "sha256": "4b06b977c32b60b85bd9a1c810524aaf9de1e290607d2b47ab5c7b2a8f8fedab"
+    },
+    {
+      "start": 6657060,
+      "end_exclusive": 6657140,
+      "sha256": "7048512f3e564f4d0c1eae2fa64c15578fe1918e5f9185d1650da99d636acf38"
+    },
+    {
+      "start": 6657180,
+      "end_exclusive": 6657256,
+      "sha256": "426c0728245252995f54f85fca01b1b36f1d721be7b76fa8d0fc759482caca76"
+    },
+    {
+      "start": 6661248,
+      "end_exclusive": 6661300,
+      "sha256": "7528f7857a4d1caf033c6bbbda58f5dd5ae22ad05635a15ae3b7a9b0cafe1b6a"
+    },
+    {
+      "start": 6661496,
+      "end_exclusive": 6661524,
+      "sha256": "12351c8754029e6ef1f215135939f184dacc8ca9e07de2a5462fd611a9f07a00"
+    },
+    {
+      "start": 6661660,
+      "end_exclusive": 6661692,
+      "sha256": "501c3872056b8d98e2233247be047d390fa213455c57dcc8f55968d658e81c70"
+    },
+    {
+      "start": 6662004,
+      "end_exclusive": 6662028,
+      "sha256": "a769db52ab8d29b414d8428f15c5a657fe1f365f799238551d302c3f25c9ebdd"
+    },
+    {
+      "start": 7444864,
+      "end_exclusive": 7444880,
+      "sha256": "bac7a8768b5f048bdb9266ccae8cf52db915d5576eafe32bfcf6183030844c16"
+    },
+    {
+      "start": 7447428,
+      "end_exclusive": 7447444,
+      "sha256": "417cb65f1c167600ae4988f8c85fc3e963f152de42423147c817e2b0f049341b"
+    },
+    {
+      "start": 7454316,
+      "end_exclusive": 7454324,
+      "sha256": "fdc1710f100ccf2b13937a27e7f23ccda5a1973826c8d8f3b7db09e6988fe8a4"
+    },
+    {
+      "start": 7447416,
+      "end_exclusive": 7447428,
+      "sha256": "7db926ff4ab46052471fcaec27ca6c1f366eab942d965928035e0496e0594414"
+    },
+    {
+      "start": 7454852,
+      "end_exclusive": 7454864,
+      "sha256": "959aa15048e7381e0acc68d3a6598efbbcd7105c292a2e86c77e1233899e349a"
+    },
+    {
+      "start": 6646148,
+      "end_exclusive": 6646216,
+      "sha256": "bbb0ca2af53a7d3da553b54300fc5a80860ca50be3f6de1bc5605b3d6880482d"
+    },
+    {
+      "start": 6646296,
+      "end_exclusive": 6646312,
+      "sha256": "9a2c72fcbfe531b7be0d10176ce99ab2ecdff225b34fc04b9d2a7b8e189dccab"
+    },
+    {
+      "start": 6646420,
+      "end_exclusive": 6646428,
+      "sha256": "56eeb0ac7539614529362b4b31072ff5fd932d29b62dd1022bbf9769d715857b"
+    },
+    {
+      "start": 7193296,
+      "end_exclusive": 7193444,
+      "sha256": "7d87e93f7dc0bca728e6e0c286748ed6714d05017c4a053687505fe4fabdc694"
+    },
+    {
+      "start": 7189916,
+      "end_exclusive": 7189932,
+      "sha256": "2b67b78f1aee69afe95ccd4abe91420ad982ff3bbd360b3e6a66075e5e4fd250"
+    },
+    {
+      "start": 7190028,
+      "end_exclusive": 7190056,
+      "sha256": "7869e5f3ae68ee92afc4d4340ad7f67ec87d29141c28788a92598aac41c99e77"
+    },
+    {
+      "start": 8508308,
+      "end_exclusive": 8508316,
+      "sha256": "ffe014f6eeeba0be14666f8531dd52e07886b87c26688fc23df953b96f0bfd37"
+    },
+    {
+      "start": 5661084,
+      "end_exclusive": 5661188,
+      "sha256": "6002d2bbb34198af837f9fa12dd26b1dc12668e3c1584e345c5a4efa6a4455ba"
+    },
+    {
+      "start": 5783120,
+      "end_exclusive": 5783200,
+      "sha256": "a7f78b98f58d30c6c74a1e1f1e4627d07e5a6050a817b8d6ed8365b8b097db44"
+    },
+    {
+      "start": 5793972,
+      "end_exclusive": 5793980,
+      "sha256": "2f8a2b838190716b1df5b8a800cc9ab5aee5539a99fd907112664583f19e0f12"
+    },
+    {
+      "start": 5793716,
+      "end_exclusive": 5793764,
+      "sha256": "bb2a663234ec90fb5f1078994a5e9cde949139556151c5b6e8eb972659ca72a4"
+    },
+    {
+      "start": 5793888,
+      "end_exclusive": 5793932,
+      "sha256": "b133e0571940023fc8686e2cc3173ea8552bada05d245919cd1eb5b94e34494e"
+    },
+    {
+      "start": 5793624,
+      "end_exclusive": 5793660,
+      "sha256": "6957577543d8f607de459716fd09d430fccdbd46567e8f86094ccbb206d3bdd8"
+    },
+    {
+      "start": 5791280,
+      "end_exclusive": 5791320,
+      "sha256": "64d9056b45f5c2e4974a853873e6c0879dc5508f33acf76585ab49e9c5a96aaf"
+    },
+    {
+      "start": 5791336,
+      "end_exclusive": 5791452,
+      "sha256": "5631174d4c80f7b03dfaa421f73c705bc6e322f777aa753dbdfcc314878b5cea"
+    },
+    {
+      "start": 5791532,
+      "end_exclusive": 5791544,
+      "sha256": "4ddcc6e40a852e4f5e8de5d70b37900bebc2bc32c0f6e10180cad7002154584e"
+    },
+    {
+      "start": 7525684,
+      "end_exclusive": 7525692,
+      "sha256": "0a363d8a8e51caf18e3f2c8aeb2defd9f5462b2f6a0d25f128171330d4c76acc"
+    },
+    {
+      "start": 5791716,
+      "end_exclusive": 5791736,
+      "sha256": "87a0340258ae089c4f14b1b1156dfa61e205e3b1308fd9801ecbe9cdab67d5ff"
+    },
+    {
+      "start": 8895148,
+      "end_exclusive": 8895160,
+      "sha256": "576a68bf45dc35a033309945c5c199ee2ec49bdcf0d240328d483e6292e4e51b"
+    },
+    {
+      "start": 6663796,
+      "end_exclusive": 6663984,
+      "sha256": "dffdd47b1fe165c7cf65735447b0194a0263a9fc71cdb8c13a0e241a05c9ddba"
+    },
+    {
+      "start": 7884320,
+      "end_exclusive": 7884332,
+      "sha256": "292ff2801ad34a2d0c8ac5f729ed3a150aad68e734d40527537083161b38de4c"
+    },
+    {
+      "start": 8239952,
+      "end_exclusive": 8239960,
+      "sha256": "92f335664f9caada2abd208a9061cdb065afcf2da705b356624beeeadc489397"
+    },
+    {
+      "start": 8340168,
+      "end_exclusive": 8340480,
+      "sha256": "52769e26a7968d352d877dcdc3502a0d4cf00b78cb22b3603a4ec2bbdea0c9fc"
+    },
+    {
+      "start": 7444000,
+      "end_exclusive": 7444032,
+      "sha256": "f4e94f3829a4ab0137969a78f8996087c44460a1ec7251b4631bebe3e6d35ac2"
+    },
+    {
+      "start": 5183520,
+      "end_exclusive": 5183544,
+      "sha256": "02914e37884e94c32f0e6e4d1dafa6ededfb03175b53aaa25d8217f01664d4bb"
+    },
+    {
+      "start": 7996060,
+      "end_exclusive": 7996116,
+      "sha256": "3ff85ab659b23e11c915e8b851745a9d8886424de715b20ab33edf3ef78cc3c2"
+    },
+    {
+      "start": 7996360,
+      "end_exclusive": 7996388,
+      "sha256": "d9d7067504a50b69a225d675f5a97fc9a1b0668dc117736b29cc5939d21ce4a1"
+    },
+    {
+      "start": 8601372,
+      "end_exclusive": 8601380,
+      "sha256": "f97b82eff06f3455a7a831dfaa38d39255e289563ff5fe9fe5430f13e3727496"
+    },
+    {
+      "start": 6695968,
+      "end_exclusive": 6695988,
+      "sha256": "898474a207b603187b2ffba0210d9fd31a1279f8cc7caae8cd6fc4b0a62a195c"
+    },
+    {
+      "start": 6713324,
+      "end_exclusive": 6713336,
+      "sha256": "e63330007c20404b392b72339470300678e8dfd9a202e2496292dc1611ab04ae"
+    },
+    {
+      "start": 8502656,
+      "end_exclusive": 8502664,
+      "sha256": "b0d2b943cbb5a4c2566f4fbbcc5dfabf6977f081b2a344ee232e2340ee5220a2"
+    },
+    {
+      "start": 6713668,
+      "end_exclusive": 6713688,
+      "sha256": "98eeb05359af2645c4ebf5a820800bde2403701705644824f9c66d84c3ce94e3"
+    },
+    {
+      "start": 8014300,
+      "end_exclusive": 8014364,
+      "sha256": "480f0ef37fbebc89cb402c6151fed78b1690c4141850ad36e62ae0355f32b07b"
+    },
+    {
+      "start": 8014136,
+      "end_exclusive": 8014160,
+      "sha256": "92da544d792ee6c8dd952abc62ee7b7bfd8d0073bd99c9adc16afbd7454b6e7a"
+    },
+    {
+      "start": 8013244,
+      "end_exclusive": 8013268,
+      "sha256": "cd17cd380dd004d00865bf833af20cbf8dc2ff192c5dcc07ce77d7085543f197"
+    },
+    {
+      "start": 8013896,
+      "end_exclusive": 8013924,
+      "sha256": "1cf02e56c4e85745b82aea7972cc54bd3c1a12085d7ad21d03d6c75649fcf982"
+    },
+    {
+      "start": 8002740,
+      "end_exclusive": 8002760,
+      "sha256": "f2fee24d9f6b729369fb31c439f4e991ed56adf4781a036cdaa9d589676e8a16"
+    },
+    {
+      "start": 8004020,
+      "end_exclusive": 8004040,
+      "sha256": "f3f0f55e5ff616bbf1539b62b112c156e55e4072664df447ca2acfab9b8e06d7"
+    },
+    {
+      "start": 8893564,
+      "end_exclusive": 8893572,
+      "sha256": "7f682f8b4ab97e294275b4d0e590ddc8129025fd9b6b8bc83e0d3638a19ff8ad"
+    },
+    {
+      "start": 6635392,
+      "end_exclusive": 6635404,
+      "sha256": "93c74fcdeb3019ba92a853c930411bc606cd62cbd7da0fa450e87816d3fbdd9d"
+    },
+    {
+      "start": 7334456,
+      "end_exclusive": 7334464,
+      "sha256": "f139c338bc63bce7cec3f8f94b52eedb09b5ea7ff8156fe8be1e1c276894d6c9"
+    },
+    {
+      "start": 7441128,
+      "end_exclusive": 7441248,
+      "sha256": "c93bc236901b2c4cf2f46af9305752d1134bee689a176d3c39968f991c167b6a"
+    },
+    {
+      "start": 7441248,
+      "end_exclusive": 7441332,
+      "sha256": "639924f78c1476a7a750222e8bdb9bbb937a0fe112729737f757da58f08cb401"
+    },
+    {
+      "start": 7334480,
+      "end_exclusive": 7334548,
+      "sha256": "d41fd92abf841cf2c86258c85b465662a34d45ac8aa061ff6e9d13a7202001e1"
+    },
+    {
+      "start": 5791372,
+      "end_exclusive": 5791404,
+      "sha256": "ad9eeac0c8690837acbecef574599ba976bd86aee51b16e04d76e81a8949707c"
+    },
+    {
+      "start": 7447456,
+      "end_exclusive": 7447464,
+      "sha256": "b77067177e2cd4f7aab57202cca9d6a8fff0ef2551d1d0367b58c2cafdf2d8d0"
+    },
+    {
+      "start": 8073368,
+      "end_exclusive": 8073376,
+      "sha256": "06e8dc288d8ea32942cbc0f97d084e15c62302fa853fe894b1e6d9e313d888e8"
+    },
+    {
+      "start": 7887972,
+      "end_exclusive": 7887980,
+      "sha256": "82330c7d7147b71b86f7342efcca86639bd0e7c0d856e7821b8993ae3ca3a7e2"
+    }
+  ],
+  "review": {
+    "public_boundary_tests": 9,
+    "independent_boundary_tests": 9,
+    "normal_and_optimized_tests_pass": true,
+    "default_portable_layout_replay_pass": true,
+    "html_viewports": [
+      320,
+      680,
+      1280
+    ],
+    "html_validation": "Final integration checked statically: shared navigation, links, SVG label separation and theme contrast. The final patched page has not been browser-rendered.",
+    "browser_rendered": false,
+    "keyboard_actually_operated": false,
+    "hq_original_code_replay_sha256": "9d7dd3927cce2fafc94b70b8dd1797704b94fc5c3c83c80e242b6663b1ef77a4",
+    "pre_patch_browser_observation": {
+      "scope": "Original candidate and a separately generated shared-navigation overlay, before label/theme fixes",
+      "candidate_sha256": "d2d03411071b8cee6e1cda52fb70e6cecbd534b7ecd3648703e6a30f82a0b2a0",
+      "overlay_sha256": "f09f576e7d73b679637926c0a31ee891232d3522cd17aaf34eba241de8191383",
+      "viewports": [
+        320,
+        680,
+        1280
+      ],
+      "document_overflow": false,
+      "five_scroll_regions_keyboard_operated": true,
+      "applies_to_final_patched_html": false
+    }
+  },
+  "limits": [
+    "Separated original-code entries, prepared allocations/inputs, omitted services and allocators; no continuous capture or queue-order proof.",
+    "Original context constructors and their values are not established capture defaults. Physical input/output domains, EV, Q format and gamma are unknown.",
+    "Producer cap 0x4000 does not make every downstream kernel a universal saturator; synthetic FFFF control gives interpolator65535 and expander tail65535.",
+    "Selector3 command job+2684 reference is job+26C0, correcting earlier job+225C. Native writer stores job+2730 at job+D828; selector4 copies into job+E608.",
+    "Actual same-job scheduling, intervening overwrites, source-value history, pixel buffer reuse, SuperResolution menu reach and hardware output are unproven here."
+  ],
+  "files": [
+    {
+      "path": "analysis/tone-provenance.html",
+      "bytes": 42335,
+      "sha256": "738a1603d1b5210a309b60154576ce94e64c214e7f22601f34493e0f4ee77a77"
+    },
+    {
+      "path": "analysis/tone-provenance.json",
+      "bytes": 1674225,
+      "sha256": "9d7dd3927cce2fafc94b70b8dd1797704b94fc5c3c83c80e242b6663b1ef77a4"
+    },
+    {
+      "path": "assets/tone-provenance.css",
+      "bytes": 1293,
+      "sha256": "c3d841e7fd36dce3621dbe1eb9f19cb4f03b147904bb044dae3c9f8e1d49fcb7"
+    },
+    {
+      "path": "tests/test_tone_provenance.py",
+      "bytes": 4808,
+      "sha256": "e366d8e25f8703977d689daf2c2d618a132facab0e152db8186cb1935ff84bc1"
+    },
+    {
+      "path": "tools/tone_provenance/context.py",
+      "bytes": 11350,
+      "sha256": "a6164498e3768b39069853f33e9200446eaa1310217364d6e29c0df08aeb8960"
+    },
+    {
+      "path": "tools/tone_provenance/copy.py",
+      "bytes": 6401,
+      "sha256": "13d1a3ad9c57c4fc58985fdfdf8b9bca86de4ad45b891a6274f03f92fa3a7242"
+    },
+    {
+      "path": "tools/tone_provenance/identity.py",
+      "bytes": 6941,
+      "sha256": "68d609450216d0820ce8a4344558d93f8f01821662aacbb91863bae5f299ded9"
+    },
+    {
+      "path": "tools/tone_provenance/rom.py",
+      "bytes": 8548,
+      "sha256": "9e50cc6be69083712f6d339fa7b516a871fda0acf3b8ab6c9d096be413fdfbab"
+    },
+    {
+      "path": "tools/tone_provenance/sources.json",
+      "bytes": 1427,
+      "sha256": "d423ba10d254257e05837cb4520f11cd232b773c7149296c15cc982d39b94435"
+    },
+    {
+      "path": "verify_tone_provenance.py",
+      "bytes": 10967,
+      "sha256": "e33f0ba7693c1cf08cfe4ecc51bb2d01c1ba0da8c66ea9104ee922673982d692"
+    }
+  ],
+  "files_byte_convention": "Exact UTF-8 public files with LF line endings; hashes include the generated shared navigation."
+}

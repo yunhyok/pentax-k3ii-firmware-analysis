@@ -77,6 +77,7 @@ python verify_findings.py .private/decoded/decoded.bin
 python verify_hardware.py .private/decoded/decoded.bin --compare analysis/hardware.json
 python verify_raw_path.py .private/decoded/decoded.bin --compare analysis/raw-path.json
 python verify_tone_path.py .private/decoded/decoded.bin --compare analysis/tone-path.json
+python verify_tone_provenance.py .private/decoded/decoded.bin --compare analysis/tone-provenance.json --output .private/tone-provenance-replay.json
 python verify_pipeline_flow.py .private/decoded/decoded.bin --compare analysis/pipeline-flow.json
 python verify_selector_path.py .private/decoded/decoded.bin --emulate --compare analysis/selector-path.json
 python verify_isp_paths.py .private/decoded/decoded.bin --compare analysis/isp-paths.json
