@@ -1,0 +1,86 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>검출 결과 레지스터와 DMA 준비 — PENTAX K-3 II 펌웨어 연구</title>
+<meta name="description" content="공급한 MMIO 결과의 읽기와 원본 기본 버퍼의 DMA 패킷 전달을 독립적으로 재현했습니다. 실제 전송·완료·촬영 도달은 미확정입니다.">
+<link rel="stylesheet" href="../assets/site.css"></head><body data-camera="k3ii">
+<!-- chrome:top -->
+<a class="skip" href="#main">본문 바로가기</a>
+<div class="topbar"><div class="topbar-in"><a class="brand" href="../index.html">PENTAX <b>펌웨어 연구</b></a><div class="cams" aria-label="기종 선택"><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/">K-3 III</a><a href="../index.html" aria-current="true">K-3 II</a><a href="https://yunhyok.github.io/pentax-q7-firmware-analysis/">Q7</a></div><nav class="topnav" aria-label="주제"><a href="../index.html">개요</a><a href="guide-pipeline.html">영상 처리</a><a href="guide-capture.html" aria-current="true">촬영·보존 레코드</a><a href="guide-rebuild.html">재구축·업데이트</a><a href="guide-af.html">AF</a><a href="guide-ui.html">UI</a></nav></div></div>
+<nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../index.html">PENTAX K-3 II</a></li><li><a href="guide-capture.html">촬영 준비와 보존 레코드</a></li><li aria-current="page">보정 결과 레지스터와 DMA 준비</li></ol></nav>
+<!-- /chrome:top -->
+<header class="page-head"><p class="eyebrow">촬영 준비와 보존 레코드 · 레지스터·버퍼 경계</p><h1>검출 결과 레지스터와 DMA 준비</h1><p class="lead">공급한 결과값의 읽기 규칙과 기본 버퍼의 DMA 패킷 전달을 별도 실험으로 재현했습니다.</p></header>
+<div class="layout"><!-- chrome:toc -->
+<nav class="toc" aria-label="이 문서의 목차"><h2 data-toc="no">이 문서에서</h2><ol><li><a href="#boundary">두 실험의 경계</a></li><li><a href="#registers">결과 레지스터 읽기</a></li><li><a href="#dma">기본 버퍼와 DMA 준비</a></li><li><a href="#limits">확인하지 않은 연결</a></li><li><a href="#reproduce">재현과 검증</a></li></ol></nav>
+<!-- /chrome:toc -->
+<main id="main" class="doc">
+<section id="boundary"><h2>두 실험의 경계</h2><p>결과 수집 실험과 DMA 준비 실험을 분리해 재현했다. 첫 실험에서는 공급한 레지스터 스냅샷을 원본 코드가 읽는 과정을 확인한다. 둘째 실험에서는 원본 코드가 만든 기본 버퍼 주소가 DMA 설정 패킷까지 전달되는지 확인한다. 첫 DMA 레지스터 읽기 직전에 실행을 멈춘다. 두 실험을 하나의 실제 촬영 실행으로 연결한 것은 아니다.</p>
+<p>코드 위치는 복호화 파일 오프셋이며 코드 VA는 <code>0x02000000</code>을 더합니다. 버퍼와 MMIO 주소는 펌웨어 VA입니다. 카메라에서 직접 관측한 주소나 수치가 아닙니다. <a href="register-dma-checks.json">전체 재현 기록</a> · <a href="../verify_register_dma.py">원본 코드 실행 범위와 준비 입력</a></p>
+<figure class="diagram"><figcaption>분리된 두 시험 — 위쪽은 공급한 MMIO 읽기, 아래쪽은 MMIO 이전의 RAM 전달</figcaption><div class="dg-scroll">
+<svg class="dg" viewBox="0 0 880 574" role="img" aria-labelledby="rd-title rd-desc">
+<title id="rd-title">결과 레지스터 계약과 DMA 준비의 독립 검증</title>
+<desc id="rd-desc">결과 읽기 시험은 공급한 MMIO 스냅샷에 원본 설정과 수집 코드를 실행해 count와 length의 비트 폭을 검증합니다. DMA 준비 시험은 원본 일부가 만든 기본 버퍼를 작업자와 엔진을 거쳐 RAM 패킷에 전달하며 첫 DMA MMIO 읽기 직전에 중단합니다. 이 두 시험은 실제 촬영이나 하드웨어 완료를 재현하지 않습니다.</desc>
+<defs><marker id="rd-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10Z"/></marker></defs>
+<text class="h" x="18" y="25">A · 결과 읽기 4사례 — MMIO 값은 공급한 모델 입력</text>
+<rect class="b model" x="18" y="44" width="260" height="114" rx="8"/><text class="t" x="34" y="72">limit · count · size 공급</text><text class="mono" x="34" y="100">20004B00 / 20004C00</text><text class="s" x="34" y="128">하드웨어 계산·완료 미실행</text>
+<rect class="b ok" x="310" y="44" width="260" height="114" rx="8"/><text class="t" x="326" y="72">원본 설정과 수집</text><text class="mono" x="326" y="100">72077C / 722140</text><text class="s" x="326" y="128">limit 비트 변환 · MMIO 읽기</text>
+<rect class="b ok" x="602" y="44" width="260" height="114" rx="8"/><text class="t" x="618" y="72">엔진 결과 메타데이터</text><text class="s" x="618" y="100">count 32비트 · size 하위 32비트</text><text class="s" x="618" y="128">flag는 0 유지</text>
+<path class="e" d="M278 101H310" marker-end="url(#rd-arrow)"/><path class="e" d="M570 101H602" marker-end="url(#rd-arrow)"/>
+<text class="h" x="18" y="216">B · DMA 준비 6사례 — 기본 생산 2사례와 공급값 대조 4사례</text>
+<rect class="b ok" x="18" y="238" width="260" height="134" rx="8"/><text class="t" x="34" y="266">기본 레코드 24 / 25</text><text class="mono" x="34" y="294">80019E90 / 8001B250</text><text class="s" x="34" y="322">원본 생성 구간 · 용량 13C0씩</text><text class="s" x="34" y="350">전체 기동·선택 조건은 미실행</text>
+<rect class="b model" x="310" y="238" width="260" height="134" rx="8"/><text class="t" x="326" y="266">작업자 → 코어 → 엔진</text><text class="mono" x="326" y="294">+54 / +58 / +70</text><text class="s" x="326" y="322">72077C는 같은 엔진으로 별도 진입</text><text class="s" x="326" y="350">이전 PixelDetect MMIO 생략</text>
+<rect class="b ok" x="602" y="238" width="260" height="134" rx="8"/><text class="t" x="618" y="266">원본 DMA RAM 패킷</text><text class="mono" x="618" y="294">+4 = raw pointer / +8 = 0</text><text class="s" x="618" y="322">DMA 객체 7 / 8</text><text class="s" x="618" y="350">MMIO·대상 버퍼 접근 0건</text>
+<path class="e" d="M278 305H310" marker-end="url(#rd-arrow)"/><path class="e dash" d="M570 305H602" marker-end="url(#rd-arrow)"/>
+<rect class="b open" x="18" y="420" width="844" height="114" rx="8"/><text class="t" x="34" y="448">DMA 시험 중단 경계 · 71DC38 실행 직전</text><text class="mono" x="34" y="476">pending read: 20005404 / 20005504</text><text class="s" x="34" y="504">실제 DMA 전송·완료·촬영 간 재사용·SuperResolution 메뉴 연결은 미확정</text>
+<path class="e open" d="M732 372V420" marker-end="url(#rd-arrow)"/>
+</svg></div></figure>
+</section>
+<section id="registers"><h2>결과 레지스터 읽기</h2><p>결과 수집에서 count의 마지막 입력은 채널 기준 주소 +0x24의 NRDNCNT이고, length의 마지막 입력은 +0x28/+0x2C의 64비트 NRDNSIZE다. 원본 코드는 count를 32비트로 전달하고 size는 하위 32비트만 엔진 결과에 저장했다. 스냅샷은 시험자가 공급한 값이며 하드웨어가 계산한 결과가 아니다. 결과 flag는 수치가 저장된 뒤에도 0으로 남았다.</p><p>입력 용량은 NRDNLIMIT 설정에 사용된다. 원본 코드는 하위 워드의 bit 0–2를 지우고, 상위 워드의 bit 0–1만 지운다. 상위 초기값 0xA5A50003은 0xA5A50000으로 바뀌며 나머지 비트는 보존됐다. 이 값은 비트 보존 규칙을 확인하기 위한 입력으로, 실제 장치에서 유효한 설정임을 뜻하지 않는다.</p>
+<div class="table-wrap"><table><caption>채널 0·1의 결과 입력과 엔진 필드</caption><thead><tr><th>항목</th><th>MMIO 채널 0 / 1</th><th>변환·저장</th></tr></thead><tbody>
+<tr><td>NRDNCNT</td><td>20004B24 / 20004C24</td><td>32비트 → engine +FC/+100</td></tr>
+<tr><td>NRDNSIZE 하위·상위</td><td>20004B28,+2C / 20004C28,+2C</td><td>64비트 읽기 → 하위 32비트만 +104/+108</td></tr>
+<tr><td>NRDNLIMIT</td><td>20004B30,+34 / 20004C30,+34</td><td>lo &amp; FFFFFFF8 / hi &amp; FFFFFFFC</td></tr>
+</tbody></table></div>
+<p>크기 읽기는 <code>4E632C</code>에서 시작하는 함수의 <code>4E6334 LDRD</code> 경로이며, 호출부 <code>6C59E4/6C5A2C</code>에서 상위 워드가 버려집니다. 수집 게이트는 파라미터 byte <code>+B</code>의 비영 여부이며 시험에서는 1을 공급했습니다. 이는 이전 <a href="preserved-continuity.html">결과 플래그 생산</a>에서의 bit 0 조건이나 처리 완료의 증거와 구분해야 합니다. <a href="register-dma-checks.json">register_readout의 metadata_reads·native_result_writes</a></p>
+<div class="table-wrap"><table><caption>공급한 스냅샷을 읽은 결과 — 실제 검출 수치 아님</caption><thead><tr><th>사례</th><th>입력 limit</th><th>설정 limit hi:lo</th><th>count 0 / 1</th><th>length 0 / 1</th></tr></thead><tbody>
+<tr><td>zero</td><td>0</td><td>00000000:00000000</td><td>0 / 0</td><td>0 / 0</td></tr>
+<tr><td>below_alignment</td><td>7</td><td>00000000:00000000</td><td>1 / 2</td><td>7 / 8</td></tr>
+<tr><td>high_word</td><td>8</td><td>00000000:00000008</td><td>3 / 4</td><td>8 / 0</td></tr>
+<tr><td>maximum_low32_preserve_upper</td><td>FFFFFFFF</td><td>A5A50000:FFFFFFF8</td><td>5 / 6</td><td>FFFFFFFF / 1</td></tr>
+</tbody></table></div>
+<p>예를 들어 공급한 size <code>0x100000008</code>은 length 8로, <code>0x100000000</code>은 length 0으로 저장됩니다. 네 사례는 각각 469개의 A32 명령을 실행했습니다. 결과 플래그는 0인 초기 상태에서 시작했고 플래그 생산 코드는 실행하지 않았습니다. 설정 코드는 count·size 레지스터를 생산하지 않았으며 DMA 준비 구간과 실제 장치 연산을 건너뛰었습니다.</p>
+</section>
+<section id="dma"><h2>기본 버퍼와 DMA 준비</h2><p>DMA 준비 실험의 기본값 사례에서는 설정 레코드 24·25의 주소와 용량을 원본 생성자 일부와 풀 계산 코드가 만들었다. 주소는 0x80019E90과 0x8001B250, 용량은 각각 0x13C0바이트였다. 버퍼 주소는 원본 getter와 실제 작업자·코어 프레임을 거쳐 엔진 +0x54/+0x58에 전달됐다. 각 DMA 패킷 +4에는 이 주소가 그대로 저장됐다. 선택 인덱스와 상위 객체 연결은 준비한 입력이다.</p><p>원본 DMA 객체 계산과 연결은 두 채널에 테이블 인덱스 7·8을 사용했다. 기준 주소는 0x20005400과 0x20005500이다. 실행을 멈춘 지점의 읽기 대상 주소는 각각 0x20005404와 0x20005504다. MMIO와 대상 버퍼를 매핑하지 않아 DMA 준비 실험에서는 이 메모리에 접근하지 않았다. 앞선 PixelDetect 설정은 생략했고 0x72077C에는 같은 엔진을 인자로 별도 진입했다.</p>
+<p>기본 생산은 일반 배열 생성자를 생략한 <code>74E5D4</code>부터 시작하며, 풀 주소 계산은 <code>74EBF0</code>에 별도 진입해 유효성 검사 전에 멈춥니다. 이어 <code>63542C/635488</code>의 getter, <code>635528</code>의 실제 코어 호출과 <code>634F68/635070</code>의 전달 코드를 실행합니다. 실제 스택 프레임은 사용하지만 중간의 두 버퍼 초기화와 나머지 코어 처리는 생략합니다. <a href="../verify_register_dma.py">replay_dma_preparation의 실행 구간</a></p>
+<div class="table-wrap"><table><caption>여섯 독립 VM — 각 행의 채널 0·1을 별도로 실행</caption><thead><tr><th>입력 종류</th><th>레코드</th><th>패킷 +4, 채널 0 / 1</th><th>용량 +70</th><th>A32 / 채널</th></tr></thead><tbody>
+<tr><td>원본 기본 풀</td><td>24 / 25</td><td>80019E90 / 8001B250</td><td>13C0</td><td>1183</td></tr>
+<tr><td>정렬된 공급값</td><td>0 / 1</td><td>11010000 / 11020000</td><td>8</td><td>477</td></tr>
+<tr><td>비정렬 공급값</td><td>24 / 25</td><td>11010003 / 11020007</td><td>3F</td><td>477</td></tr>
+</tbody></table></div>
+<p>원본 <code>6C5914/6C5978</code>에서 만든 패킷을 <code>6C4DE8</code>에 전달합니다. 패킷 필드는 byte +0=0, word +4=선택 포인터, word +8=0, byte +C=0, byte +D=1입니다. 비정렬 공급값의 하위 비트도 RAM 패킷까지 보존됩니다. 실제 장치가 비정렬 버퍼를 사용하는 사례를 관측한 것은 아닙니다.</p>
+<p>기본 주소·용량의 산술 범위는 <code>[80019E90,8001B250)</code>와 <code>[8001B250,8001C610)</code>로 맞닿으며 겹치지 않습니다. 이 범위는 기본 배치를 설명하며 실제 DMA 전송 길이나 촬영 간 재사용을 입증하지 않습니다. <a href="register-dma-checks.json">dma_preparation의 source_buffers·capacity_bytes·relevant_native_writes</a></p>
+</section>
+<section id="limits"><h2>확인하지 않은 연결</h2><p>패킷 +8의 0은 엔진 +0x70의 용량과 다른 필드다. 이 두 값을 동일시하거나 0을 실제 전송량으로 해석할 근거는 없다. 추적한 주소는 검출 결과의 인코딩 레코드용이며 처리 픽셀이나 JPEG 영상 버퍼와의 동일성을 확인한 것은 아니다. 실제 DMA 전송, 완료 시점, 촬영 작업 간 재사용과 SuperResolution 메뉴 도달 조건도 미확정이다.</p>
+<div class="table-wrap"><table><thead><tr><th>결과 읽기 시험</th><th>DMA 준비 시험</th></tr></thead><tbody>
+<tr><td>MMIO 스냅샷, limit, 기하, 객체 연결, +B 게이트 공급</td><td>객체 연결·인덱스·기하 공급. 기본값 사례의 주소·용량만 원본 생산</td></tr>
+<tr><td>모델 메모리에서 레지스터 설정·결과 읽기 실행</td><td>모든 MMIO와 대상 버퍼 접근 미실행</td></tr>
+<tr><td>두 DMA 준비 구간·실제 계산·완료·수집 후반 생략</td><td>전체 기동·버퍼 초기화·이전 PixelDetect 설정·실제 전송 생략</td></tr>
+</tbody></table></div>
+<p>두 시험 모두 코드 매핑은 읽기·실행 전용이며 끝까지 원본 해시를 유지합니다. 다만 모의 RAM의 객체와 구간별 진입 상태를 준비하므로 실기 실행 기록과는 다릅니다. 결과의 바이트 길이, 인코딩된 엔트리 수, 설정 단계의 플래그, 유효 표시와 목록 마스크를 서로 같은 의미로 취급하지 않습니다.</p>
+<p>이 문서는 앞서 공개한 <a href="preserved-continuity.html">작업자 매개변수·목록 응답</a>의 결과 출처와 버퍼 준비 경계를 보완합니다. <a href="superresolution-lifecycle.html#buffers">버퍼 재사용 분석</a>과 <a href="superresolution-lifecycle.html#menu">SuperResolution 메뉴 분석</a>의 미확정 항목을 해결했다고 주장하지 않습니다.</p>
+</section>
+<section id="reproduce"><h2>재현과 검증</h2><p>공개용 검증기는 입력 이미지의 정확한 크기와 SHA-256을 검사한다. 세 의존 파일의 원본 바이트는 줄바꿈을 정규화해 모두 확인한다. 확인한 바이트를 직접 실행하므로 캐시된 바이트코드는 사용하지 않는다. 결과 수집 4사례와 DMA 준비 6사례의 전체 기록 및 코드 허용 범위 해시를 기존 검증 결과와 대조하며 필드는 생략하지 않는다. 출력은 새 경로에만 생성하고 -O 실행은 거부한다.</p>
+<pre><code>python -m pip install unicorn==2.1.4
+python -B verify_register_dma.py decoded.bin --output register-dma-new.json
+python -B -m unittest discover -s tests -p test_register_dma.py</code></pre>
+<p>실제 확인 환경은 Python 3.12.3과 Unicorn 2.1.4입니다. 구문은 Python 3.10 문법으로도 검사했지만 다른 Python 버전의 런타임 실행은 확인하지 않았습니다. 원본 펌웨어와 복호화 이미지는 저장소에 포함하지 않습니다. 기존 <a href="../inspect_firmware.py">분석·복호화 도구</a>로 만든 정확한 원본 이미지가 필요합니다.</p>
+<p>CLI 재실행과 독립 재실행의 결과가 바이트 단위로 일치했습니다. 펌웨어와 Unicorn 없이 실행하는 보호 검사 8개는 크기·해시 오류, 기존 출력과 입력 별칭, dangling symlink, -O, 모든 전이 의존성의 변경, LF/CRLF, 캐시 바이트코드와 결과 기록 변경을 검사합니다. 이 테스트 통과는 실제 카메라 동작을 보장하지 않습니다. <a href="../tests/test_register_dma.py">보호 검사 코드</a></p>
+<dl class="kv"><dt>입력 크기 / SHA-256</dt><dd>16,838,656바이트<br><code class="wrap">1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc</code></dd>
+<dt>결과 읽기 전체 증거 해시</dt><dd><code class="wrap">7a517f593a4eb6baa8c9fb48b5cf7f94e42e995e2b8d10d74ed04e6f20c75fde</code></dd>
+<dt>DMA 준비 전체 증거 해시</dt><dd><code class="wrap">2af9346b533ee1d43a383ea73d5a14a6e5c57e9c5ec56fae9f91bccd52128823</code></dd></dl>
+<p>증거 해시는 모든 사례 필드와 코드 허용 범위의 원본 해시를 포함한 객체를 키 정렬·공백 없는 ASCII JSON으로 직렬화한 SHA-256입니다. 출력 JSON의 <code>full_evidence_sha256</code>에서 확인할 수 있습니다. HTML·SVG는 정적 검사와 PC 브라우저 렌더링으로 확인했습니다. 카메라 실기 시험은 수행하지 않았습니다.</p>
+</section></main></div>
+<!-- chrome:bottom -->
+<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">촬영 준비와 보존 레코드 — 이 주제의 문서</h2><ol><li><a href="guide-capture.html">촬영 준비·보존 레코드 안내</a></li><li><a href="pixel-records.html">보존 픽셀 레코드와 촬영 패킷</a></li><li><a href="pixel-policy.html">픽셀 보정 활성값과 준비 분기</a></li><li><a href="capture-prepare.html">촬영 준비의 연속 호출</a></li><li><a href="store-image-records.html">JPEG 완료값과 저장 레코드</a></li><li><a href="preserved-sector20.html">보존 섹터 20·21과 정책 입력</a></li><li><a href="preserved-config.html">정책 플래그의 생산자</a></li><li><a href="preserved-dispatch.html">보존 레코드의 상위 명령 경로</a></li><li><a href="preserved-continuity.html">작업자 매개변수와 목록 응답</a></li><li><a href="register-dma.html" aria-current="page">보정 결과 레지스터와 DMA 준비<span>두 채널의 별도 원본 실행</span></a></li><li><a href="preserved-record.html">보존 섹터 14의 진단 레코드</a></li><li><a href="settings-storage.html">보존 섹터의 설정 저장</a></li></ol></nav>
+<nav class="pager" aria-label="이전·다음 문서"><a class="prev" href="preserved-continuity.html"><small>← 이전</small>작업자 매개변수와 목록 응답</a><a class="next" href="preserved-record.html"><small>다음 →</small>보존 섹터 14의 진단 레코드</a></nav>
+<footer class="sitefoot"><div class="sitefoot-in"><nav aria-label="사이트"><a href="../index.html#map">문서 지도</a><a href="../index.html#levels">검증 수준 읽는 법</a><a href="../glossary.html">용어집</a><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/research-program.html">세 기종 연구 본부</a><a href="https://github.com/yunhyok/pentax-k3ii-firmware-analysis">GitHub 저장소</a></nav><p>PENTAX K-3 II 펌웨어 1.12 분석 문서. PC에서 수행한 정적 분석과 에뮬레이션 결과이며, 카메라 실기에서 검증한 내용이 아닙니다. 원본 펌웨어와 복호화한 바이너리는 포함하지 않습니다.</p></div></footer>
+<!-- /chrome:bottom -->
+</body></html>
