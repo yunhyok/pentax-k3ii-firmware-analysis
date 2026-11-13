@@ -1,0 +1,182 @@
+{
+  "schema": "k3ii-tone-selectors-contract-v1",
+  "input": {
+    "bytes": 16838656,
+    "sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+    "supplied_separately": true
+  },
+  "historical35": {
+    "result_file_sha256": "1e6ed678c9ce1a3a2e9a2dcb5935893bab09a9ac650d4020c7d01a29b4a647c5",
+    "typed_canonical_sha256": "d0f24af070098f6ce8084f382894ca78f987cd2b00adeca5099aa3a3ff57989d",
+    "script_sha256": "bb6e7451174f9902a6991e66be91059a209f9e51fc7a2c9409f5ef8f5716a7e0",
+    "versions": {
+      "capstone": "5.0.7",
+      "unicorn": "2.1.4"
+    }
+  },
+  "historical_serialization": "JSON indent2, ensure_ascii true, Windows CRLF; exact typed canonical checked first",
+  "source_ranges": [
+    {
+      "kind": "ARM",
+      "start": "0x4ebaf8",
+      "end_exclusive": "0x4ebc00",
+      "bytes": 264,
+      "sha256": "7326ed21578898cd3d380b34ea8b2fe7a0b702d800e743260040a390a1a439cf"
+    },
+    {
+      "kind": "ARM",
+      "start": "0x4eb9e4",
+      "end_exclusive": "0x4ebaf8",
+      "bytes": 276,
+      "sha256": "3ff3011098d712d04f25d572b0a4e595e1e48d355a7003a5423943917c69b70c"
+    },
+    {
+      "kind": "ARM",
+      "start": "0x6c78c8",
+      "end_exclusive": "0x6c78e8",
+      "bytes": 32,
+      "sha256": "a87aa6d11e6a15264ef41a67dd03431831b6d01542f0ebc9ab774c10cece7d0a"
+    },
+    {
+      "kind": "ARM",
+      "start": "0x6eb284",
+      "end_exclusive": "0x6eb2d0",
+      "bytes": 76,
+      "sha256": "214e75660a4f9deb51561f45820fc33515fb1115e30291c43cedb1e122960674"
+    },
+    {
+      "kind": "ARM",
+      "start": "0x6ead78",
+      "end_exclusive": "0x6eadb8",
+      "bytes": 64,
+      "sha256": "51f1d6292b94d49c582ccee7bbb2b38130cc6a499d7f6c98155f49be3dee794b"
+    },
+    {
+      "kind": "ARM",
+      "start": "0x4e8f54",
+      "end_exclusive": "0x4e8f98",
+      "bytes": 68,
+      "sha256": "844134ec04ac858799996e4d54100e670f983c4615d1461635ac1b6da8835046"
+    },
+    {
+      "kind": "ARM",
+      "start": "0x56b3bc",
+      "end_exclusive": "0x56b3c4",
+      "bytes": 8,
+      "sha256": "5937f5681703fda310710f789fa565735c616704195eedd8c407e1391812db5f"
+    },
+    {
+      "kind": "ARM",
+      "start": "0x6eaf70",
+      "end_exclusive": "0x6eafd4",
+      "bytes": 100,
+      "sha256": "c33927004a26277bab29de5477390dfbf2b358129e43d3c893564d7394cd38c2"
+    },
+    {
+      "kind": "DATA",
+      "start": "0x4eb950",
+      "end_exclusive": "0x4eb954",
+      "bytes": 4,
+      "sha256": "37d3b5b7feed323c2bc82daf55956d9dbcf52e0cab38a83c191f08a5b56082f1"
+    },
+    {
+      "kind": "DATA",
+      "start": "0x4ebe04",
+      "end_exclusive": "0x4ebe0c",
+      "bytes": 8,
+      "sha256": "0eed6d96cca089afa025735d3707af0f6b3b0d3a4d8ad3a9ec75d6f52240191f"
+    },
+    {
+      "kind": "DATA",
+      "start": "0x6eb30c",
+      "end_exclusive": "0x6eb310",
+      "bytes": 4,
+      "sha256": "3b90e0ea25ae04fbc8de542769c7d00607a0498573bb9b051ac33c48e5c9d008"
+    },
+    {
+      "kind": "DATA",
+      "start": "0x9deab8",
+      "end_exclusive": "0x9deac8",
+      "bytes": 16,
+      "sha256": "f504232276a42b0273f80f83510a992683d944f0bc06e7287b8f39a54ef19af5"
+    },
+    {
+      "kind": "DATA",
+      "start": "0x9e659c",
+      "end_exclusive": "0x9e65a0",
+      "bytes": 4,
+      "sha256": "5e4af92d1b61923dfb73d2bb1f11c68b0be4b47ac2e0ed8390962c74df7aa6c1"
+    },
+    {
+      "kind": "DATA",
+      "start": "0x9e65bc",
+      "end_exclusive": "0x9e65c0",
+      "bytes": 4,
+      "sha256": "c9a41c78ed4170c1826be3b5da55e87f4ba32107a5595dd34baeb0cba2570eb1"
+    }
+  ],
+  "public_helper": {
+    "path": "tools/tone_provenance/selectors.py.inc",
+    "bytes": 9777,
+    "sha256": "ac537ab8894478180b7fca4317422f5d38c79b47de9b2f98a5d8854bc96dbf22"
+  },
+  "CLI_sha256": "cf6c8f4b21582b6009a5a1c02dac75f719837e79a47408207291c23fd7e5b95c",
+  "result_sha256": "6f43418175126385151fb28bfb343c513142ffe8d84937cfc4bdacea7b8dfc35",
+  "scope": {
+    "original_cases": 5,
+    "allowed_original_ranges": [
+      [
+        "0x4eba4c",
+        "0x4eba58"
+      ],
+      [
+        "0x4ebb98",
+        "0x4ebbc8"
+      ],
+      [
+        "0x6c78c8",
+        "0x6c78e8"
+      ],
+      [
+        "0x6eb284",
+        "0x6eb2d0"
+      ]
+    ],
+    "services_MMIO_CP15": false,
+    "whole_entry_menu_capture": false,
+    "input_fixture_not_camera": true,
+    "optimized_mode": "supported; explicit require checks",
+    "decoded_capture_count": 1
+  },
+  "default_tests": {
+    "cases": 11,
+    "normal": true,
+    "optimized": true,
+    "requires_firmware_or_optional_dependencies": false
+  },
+  "actual_replay": {
+    "cases": 5,
+    "whole_observation_gate": true,
+    "normal_relocated_equals_optimized": true,
+    "Python_validated": "3.12.3",
+    "only_synthetic_RAM": true
+  },
+  "output": {
+    "fresh_only": true,
+    "lexists_before_input_and_prewrite": true,
+    "mode": "xb",
+    "disassembly_output_option": false,
+    "decoded_captures": 1
+  },
+  "limits": [
+    "Only two selected direct A32 call paths admitted; all84 pattern hits remain candidates unless explicitly inspected.",
+    "No exhaustive Thumb, indirect-call, receiver-alias or alternate-entry search.",
+    "Owner+1C pointer and source leaf inputs are supplied fixtures; setup candidate does not prove same runtime object.",
+    "Default prefix and source setters are separate entries; intervening service/guard calls and preservation across them are not emulated.",
+    "No menu label, menu event, physical field name, actual capture reachability, scratch-to-job copy, full boot or buffer-reuse history established.",
+    "Existing job constructor defaults and ROM tone lookup are previous evidence, not a new continuous chain from this scratch object."
+  ],
+  "source_disassembly_or_firmware_bytes_distributed": false,
+  "II35_review98_P3": "Public source-output option removed; original35 unchanged.",
+  "public_title_does_not_assign_physical_menu_labels": true
+}
