@@ -1,0 +1,32 @@
+{
+  "loader": {
+    "path": "verify_tone_provenance.py",
+    "sha256": "e33f0ba7693c1cf08cfe4ecc51bb2d01c1ba0da8c66ea9104ee922673982d692"
+  },
+  "modules": {
+    "inspect_firmware": {
+      "path": "inspect_firmware.py",
+      "sha256": "5813ab545e4c5bd14b9c52b47e0c0af4ad34e3ca06aa7c843d9cd3a2238cf871",
+      "location": "repository"
+    },
+    "verify_findings": {
+      "path": "verify_findings.py",
+      "sha256": "9086a9ec89aee7932799353278e1c666d8defc9e55d3c72923388d555fec7a41",
+      "location": "repository"
+    },
+    "verify_tone_path": {
+      "path": "verify_tone_path.py",
+      "sha256": "b1c01007af2dd921077289d05204a6c846ea57059f0aceda6c5101149358f344",
+      "location": "repository"
+    },
+    "tone_inputs": {
+      "path": "tools/tone_provenance/inputs.py",
+      "sha256": "dfde398adae80547890116c59843c787944dbdd310a2f5b6ee2a6b8f0a4a61c8",
+      "location": "candidate"
+    }
+  },
+  "ranges": {
+    "path": "tools/tone_provenance/input-ranges.json",
+    "sha256": "b41ab61d7d9351d4264dd40042b89638c21a5756c65800760fdda609b76f5292"
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "schema": "k3ii-tone-inputs-contract-v1",
+  "input": {
+    "bytes": 16838656,
+    "sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+    "explicit_argument_required": true,
+    "distributed": false
+  },
+  "accepted_observations": {
+    "full_research_snapshot_sha256": "28c8a8478347b92d5dc89630e5a83a8ad5226a155607726487794e95a3b18244",
+    "typed_complete_cases_sha256": "61e819bd5300c37259b03b31d46b5df225b8cd5ce5636082472f01b7fc55767a",
+    "allowed_ranges_canonical_sha256": "e9e0fcc52da2060fe2df8b7c70ca389e2365e7c7c8e979c5dc12672eca62d5e9",
+    "gate_before_projection": true
+  },
+  "artifacts": {
+    "verify_tone_inputs.py": {
+      "sha256": "9948849f8aa2ebf401b63b41679dbbc8ed06ea31e67f642cf35f755e3a1ff59b",
+      "bytes": 7461
+    },
+    "tools/tone_provenance/inputs.py": {
+      "sha256": "dfde398adae80547890116c59843c787944dbdd310a2f5b6ee2a6b8f0a4a61c8",
+      "bytes": 8454
+    },
+    "tools/tone_provenance/inputs-sources.json": {
+      "sha256": "ed928e2480d2d48ff10e8cc1b473392af769a9900d30e580a98b87a1acf161fd",
+      "bytes": 1062
+    },
+    "tools/tone_provenance/input-ranges.json": {
+      "sha256": "b41ab61d7d9351d4264dd40042b89638c21a5756c65800760fdda609b76f5292",
+      "bytes": 32956
+    },
+    "analysis/tone-inputs.json": {
+      "sha256": "866e6c071bf48db942a0dbb8ebf931d06edef70c078bafe0d4232945023a1023",
+      "bytes": 172506
+    },
+    "tests/test_tone_inputs.py": {
+      "sha256": "9159c74a2458efa9dd10e531eb9061a4644a78ffb60a307b855f2d16a0aa30b1",
+      "bytes": 8267
+    }
+  },
+  "replay": {
+    "cases": 8,
+    "context_constructor_stores": 48,
+    "recipe_constructor_stores": 32,
+    "recipe_producer_stores": 14,
+    "write_events_before_projection": 133546,
+    "final_bytes": 172506,
+    "normal_optimized_independent_matches": 4,
+    "original_replay_ast_unchanged": true,
+    "original_requirement_checks_ast_unchanged": true,
+    "python": "3.12.3",
+    "unicorn": "2.1.4",
+    "default_repository_layout_independently_executed": true
+  },
+  "input_roles": {
+    "native_constructor": "recipe92/A4/BC/9C; context8/A/C/E/60DC/7A68",
+    "harness_supplied": "15 upstream job fields in seven cases; none in constructor-only case",
+    "native_later_writes": "659048 arithmetic→784CA0 recipeBC; job2080→7198C4 recipeA4; 4DF834 conditional context stores",
+    "static_only": "same-job later recipe92 zero writer; vtable+38→65EED0 recipe9C producer; upstream config0x42/0x53/global4041F420"
+  },
+  "checks": {
+    "new_boundary_tests_normal": 7,
+    "new_boundary_tests_optimized": 7,
+    "reused_verifier_tests_independent_normal": 9,
+    "reused_verifier_tests_independent_optimized": 9,
+    "source_capture_before_execution": true,
+    "original_code_rx": true,
+    "exact_image_before_emulator_import": true,
+    "output_exclusive_atomic_publish": true,
+    "typed_full_result_compare_before_output": true
+  },
+  "limits": [
+    "Separated original-code entries and prepared upstream job fields; omitted classifier/middle services. No continuous capture or scheduling proof.",
+    "Original constructor values are not established current shooting defaults. Four halfwords have no proven physical channel assignment.",
+    "Recipe+A4 is copied from job+2080; any nonzero byte retains context+7A68/+60DC in this bounded consumer.",
+    "Later recipe+92 and+9C producers are static only. Configuration IDs are hexadecimal0x42/0x53. Their live values remain unknown.",
+    "Endpoint is context+7A74 and getter4FA83C. No tone-curve rerun, SuperResolution reach, buffer reuse, motor, boot or hardware proof.",
+    "No firmware bytes/assets are included. The caller supplies the exact decoded input independently."
+  ],
+  "camera_executed": false,
+  "browser_checked": false
+}
