@@ -18,6 +18,7 @@
       {"file": "analysis/tone-provenance.html", "label": "톤 문맥과 곡선 생산자의 연결", "note": "원본 포인터·정수 계산·곡선 생성의 분리 재현"},
       {"file": "analysis/tone-inputs.html", "label": "톤 입력의 원본 생산자", "note": "생성자·상위 job 입력·기존값 유지 조건"},
       {"file": "analysis/tone-scale.html", "label": "recipe+9C 정수 생산자와 내장 입력 복사", "note": "정수 계산 20조건과 원본 바이트 전달 3조건"},
+      {"file": "analysis/tone-upstream.html", "label": "R5 상위 입력과 0 소비자", "note": "원본 생성자·기술자·ROM 표와 0 분모 경계"},
       {"file": "analysis/output-menu-analysis.html", "label": "JPEG 출력 버퍼와 Reversal Film 메뉴"},
       {"file": "analysis/storage-dma-analysis.html", "label": "파일시스템에서 SD·DMA까지"},
       {"file": "analysis/backend-b-cpp-analysis.html", "label": "백엔드 B와 두 번째 CPP 출력"},

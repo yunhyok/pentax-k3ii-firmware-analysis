@@ -1,0 +1,32 @@
+{
+  "loader": {
+    "path": "verify_tone_provenance.py",
+    "sha256": "e33f0ba7693c1cf08cfe4ecc51bb2d01c1ba0da8c66ea9104ee922673982d692"
+  },
+  "modules": {
+    "inspect_firmware": {
+      "path": "inspect_firmware.py",
+      "sha256": "5813ab545e4c5bd14b9c52b47e0c0af4ad34e3ca06aa7c843d9cd3a2238cf871",
+      "location": "repository"
+    },
+    "verify_findings": {
+      "path": "verify_findings.py",
+      "sha256": "9086a9ec89aee7932799353278e1c666d8defc9e55d3c72923388d555fec7a41",
+      "location": "repository"
+    },
+    "verify_tone_path": {
+      "path": "verify_tone_path.py",
+      "sha256": "b1c01007af2dd921077289d05204a6c846ea57059f0aceda6c5101149358f344",
+      "location": "repository"
+    },
+    "tone_upstream": {
+      "path": "tools/tone_provenance/upstream.py",
+      "sha256": "cf84d963cdfeafb8e219f98450be4da289df2b57e6447277938028ab9aa9a89e",
+      "location": "candidate"
+    }
+  },
+  "ranges": {
+    "path": "tools/tone_provenance/upstream-ranges.json",
+    "sha256": "3af1aa21c0d4e83d1d8d0d0ec8acd4da3f2c3cb9afc71d1a38b4e9bb48632ac4"
+  }
+}

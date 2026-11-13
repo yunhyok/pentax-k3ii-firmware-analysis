@@ -1,0 +1,90 @@
+{
+  "schema": "k3ii-tone-upstream-contract-v1",
+  "input": {
+    "bytes": 16838656,
+    "sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+    "capture": "regular file checked before open and on descriptor; at most size+1 bytes; exact hash before Unicorn import"
+  },
+  "research_provenance": {
+    "snapshot_bytes": 264142,
+    "snapshot_sha256": "a3f4509f2dc1c3fd34e21364e7b7290599ab2ace8613cb5663de66183c16dc27",
+    "whole_typed_sha256": "998129ae85301db78e38e0a0e2055ec01a6f5eef9e02125224ac5a7395c17bdf",
+    "probe_sha256": "91840905f60cd926760378cb879d77318d68b405f0583aa1beb42d8c473f106e",
+    "probe_hash_is_not_public_helper_hash": true
+  },
+  "public_helper_sha256": "cf84d963cdfeafb8e219f98450be4da289df2b57e6447277938028ab9aa9a89e",
+  "observations": {
+    "upstream": 7,
+    "zero_consumers": 4,
+    "whole_snapshot_checked_before_metadata": true,
+    "allowed_ranges": 158,
+    "upstream_static_windows": 43,
+    "config_static_windows": 30
+  },
+  "validation": {
+    "public_observation_bytes": 328341,
+    "public_observation_sha256": "8c5652972fed478fcaecf16e999eb9a88da2065249c23a83fd0498933b0644a0",
+    "normal_and_optimized_replay": true,
+    "independent_portable_default_layout_replay": true,
+    "guard_tests_normal": 9,
+    "guard_tests_optimized": 9,
+    "shared_guard_tests_normal": 9,
+    "shared_guard_tests_optimized": 9,
+    "original_full_snapshot_mutations_rejected": 11,
+    "html_browser_rendered": false,
+    "posix_fifo_execution": false,
+    "hq_integrated_guard_tests_normal": 10,
+    "hq_integrated_guard_tests_optimized": 10
+  },
+  "limits": [
+    "All original II31 metadata and seven upstream plus four consumer observations are checked before public metadata is added.",
+    "Original probe_sha256 identifies the frozen research script; public_source_sha256 identifies the separate portable helper.",
+    "The 43 upstream and 30 config source windows are static address/hash records, not executed paths or firmware bytes.",
+    "Config file reading, token conversion, TLS/error state, actual buffer ordering and the Thumb zero-handler body are not executed.",
+    "job+52 and setter arguments are fixtures. Optional arithmetic is entered directly; no capture predicate is established.",
+    "No physical units, Q format, gamma, actual capture defaults, buffer reuse or SuperResolution menu reach are established.",
+    "The exact decoded firmware must be supplied independently. Camera, boot and hardware behavior are not tested.",
+    "Constructor prefix, setter, getter/table and optional arithmetic use separate original entries; actual upstream updates/config services are not executed.",
+    "Optional path entered directly: no claim that job7A/service predicate allows it in a live capture. R6 fixture0 is passed to mapper but mapper replaces R0 before use.",
+    "Zero consumer uses native recipe/context constructors and native scale arithmetic/store in sameVM, with supplied R5 and omitted global/config services. Retain control uses original A4 setter with supplied1.",
+    "Stops before first Thumb handler instruction; no handler return, exception semantics or hardware result inferred."
+  ],
+  "artifacts": [
+    {
+      "path": "analysis/tone-upstream.json",
+      "bytes": 328341,
+      "sha256": "8c5652972fed478fcaecf16e999eb9a88da2065249c23a83fd0498933b0644a0"
+    },
+    {
+      "path": "tests/test_tone_upstream.py",
+      "bytes": 12947,
+      "sha256": "1b5fbab9aad284998dc00913c452f090051fca181bbedd99e4eedd047f0ec79b"
+    },
+    {
+      "path": "tools/tone_provenance/upstream-ranges.json",
+      "bytes": 38329,
+      "sha256": "3af1aa21c0d4e83d1d8d0d0ec8acd4da3f2c3cb9afc71d1a38b4e9bb48632ac4"
+    },
+    {
+      "path": "tools/tone_provenance/upstream-sources.json",
+      "bytes": 1069,
+      "sha256": "e2273e47cea6350aa8c5179298130b50ecb779e157f2b7e812701bd27d7233f6"
+    },
+    {
+      "path": "tools/tone_provenance/upstream.py",
+      "bytes": 10086,
+      "sha256": "cf84d963cdfeafb8e219f98450be4da289df2b57e6447277938028ab9aa9a89e"
+    },
+    {
+      "path": "verify_tone_upstream.py",
+      "bytes": 7818,
+      "sha256": "e56de88e25e6d78d8342c5d14a91cbab78b7c03722b18ee566042ab826b0ee5f"
+    }
+  ],
+  "report_source_before_shared_navigation": {
+    "path": "analysis/tone-upstream.html",
+    "bytes": 23080,
+    "sha256": "240025a11d7ad18943e34ca3d30fa0ed700e3f9c8cccf1cfdab76b4673ea56a6"
+  },
+  "comparison_input": "regular file checked before open and on descriptor; at most four times generated result bytes; typed comparison retained"
+}
