@@ -1,0 +1,2078 @@
+{
+  "verified": true,
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "decoded_size": 16838656,
+  "public_dependencies_sha256_lf": {
+    "inspect_firmware.py": "5813ab545e4c5bd14b9c52b47e0c0af4ad34e3ca06aa7c843d9cd3a2238cf871",
+    "verify_findings.py": "9086a9ec89aee7932799353278e1c666d8defc9e55d3c72923388d555fec7a41",
+    "verify_tone_path.py": "b1c01007af2dd921077289d05204a6c846ea57059f0aceda6c5101149358f344",
+    "verify_preserved_config.py": "16024df64a6af3c914c634303838a51d8bda202ee548bf1523cb92cbcc39f6db",
+    "analysis/preserved-config.json": "0a9e21c25e40846710732fa15ba7f252cf04a6a6d69ab94d02ef0c8899cafa9b"
+  },
+  "engine": {
+    "name": "Unicorn",
+    "version": "2.1.4",
+    "cpu": "Cortex-A9",
+    "code_base_va": 33554432
+  },
+  "trace_digest_format": "SHA-256 over compact sorted-key ASCII JSON of full case data before projection.",
+  "result_to_response": {
+    "case_trace_sha256": "c92ad83585de9ccba377b6a31ba0155e144c2a4cfb4e26d84ee15de03624263f",
+    "cpu_context_restore_order": [
+      "core",
+      "worker",
+      "submit"
+    ],
+    "response_word_store": {
+      "pc_offset": 7118380,
+      "command_offset": 8,
+      "size": 4
+    },
+    "cases": [
+      {
+        "case": "enabled_valid",
+        "mode_word": 4,
+        "parameter_byte_b": 1,
+        "prepared_counts": [
+          1,
+          1
+        ],
+        "prepared_lengths": [
+          4,
+          4
+        ],
+        "native_result_flag": 1,
+        "native_list_mask": 1,
+        "native_mailbox_halfword": 1,
+        "native_command_response": [
+          25,
+          1
+        ],
+        "native_config_flags": [
+          1,
+          1
+        ],
+        "addresses": {
+          "engine_command": 268894208,
+          "parameters": 268902400,
+          "worker_frame": 269221360,
+          "core_frame": 269221296,
+          "flag_frame": 269156272,
+          "submit_frame": 269287080,
+          "plan_frame": 269287088,
+          "request": 269287088
+        },
+        "result_bytes": "0100000001000000010000000400000004000000",
+        "native_writes": [
+          {
+            "pc_offset": 7525652,
+            "address": 268894456,
+            "size": 1,
+            "value": 0
+          },
+          {
+            "pc_offset": 7525656,
+            "address": 268894460,
+            "size": 4,
+            "value": 0
+          },
+          {
+            "pc_offset": 7525660,
+            "address": 268894464,
+            "size": 4,
+            "value": 0
+          },
+          {
+            "pc_offset": 7525664,
+            "address": 268894468,
+            "size": 4,
+            "value": 0
+          },
+          {
+            "pc_offset": 7525668,
+            "address": 268894472,
+            "size": 4,
+            "value": 0
+          },
+          {
+            "pc_offset": 7886220,
+            "address": 268894456,
+            "size": 1,
+            "value": 1
+          },
+          {
+            "pc_offset": 7416028,
+            "address": 269221608,
+            "size": 4,
+            "value": 1
+          },
+          {
+            "pc_offset": 7416028,
+            "address": 269221612,
+            "size": 4,
+            "value": 1
+          },
+          {
+            "pc_offset": 7416028,
+            "address": 269221616,
+            "size": 4,
+            "value": 1
+          },
+          {
+            "pc_offset": 7416028,
+            "address": 269221620,
+            "size": 4,
+            "value": 4
+          },
+          {
+            "pc_offset": 7416052,
+            "address": 269221624,
+            "size": 4,
+            "value": 4
+          },
+          {
+            "pc_offset": 6514408,
+            "address": 268763852,
+            "size": 2,
+            "value": 1
+          },
+          {
+            "pc_offset": 7663164,
+            "address": 268566540,
+            "size": 1,
+            "value": 1
+          },
+          {
+            "pc_offset": 7663176,
+            "address": 268566541,
+            "size": 1,
+            "value": 1
+          }
+        ],
+        "native_mailbox_reads": [
+          {
+            "pc_offset": 6499608,
+            "address": 268763852,
+            "size": 2,
+            "value": 1
+          }
+        ],
+        "host_inputs": [
+          {
+            "address": 268697648,
+            "size": 4,
+            "value": 268763136,
+            "provenance": "controller-to-worker link"
+          },
+          {
+            "address": 268830808,
+            "size": 1,
+            "value": 2,
+            "provenance": "command family"
+          },
+          {
+            "address": 268830809,
+            "size": 1,
+            "value": 4,
+            "provenance": "command type"
+          },
+          {
+            "address": 268828680,
+            "size": 4,
+            "value": 4,
+            "provenance": "native selector4 has one active request"
+          },
+          {
+            "address": 268828684,
+            "size": 4,
+            "value": 257,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828688,
+            "size": 4,
+            "value": 513,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828692,
+            "size": 4,
+            "value": 784,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828696,
+            "size": 4,
+            "value": 258,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828700,
+            "size": 4,
+            "value": 514,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828704,
+            "size": 4,
+            "value": 785,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828708,
+            "size": 4,
+            "value": 259,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828712,
+            "size": 4,
+            "value": 515,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828716,
+            "size": 4,
+            "value": 786,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268764032,
+            "size": 4,
+            "value": 0,
+            "provenance": "initial worker flags"
+          },
+          {
+            "address": 268763865,
+            "size": 1,
+            "value": 1,
+            "provenance": "no-retry state supplied; upstream lifecycle unrun"
+          },
+          {
+            "address": 268763852,
+            "size": 2,
+            "value": 42330,
+            "provenance": "stale mailbox sentinel; original STRH must replace it"
+          },
+          {
+            "address": 1078057100,
+            "size": 4,
+            "value": 1,
+            "provenance": "singleton initialization guard"
+          },
+          {
+            "address": 1078476608,
+            "size": 4,
+            "value": 1,
+            "provenance": "property0x1E already satisfied; no notification"
+          },
+          {
+            "address": 268894476,
+            "size": 4,
+            "value": 268902400,
+            "provenance": "processing parameter object link"
+          },
+          {
+            "address": 268902400,
+            "size": 4,
+            "value": 4,
+            "provenance": "parameter mode word; bit2 consumed by original UBFX"
+          },
+          {
+            "address": 268902411,
+            "size": 1,
+            "value": 1,
+            "provenance": "parameter byte+B; source production not established"
+          },
+          {
+            "address": 268894460,
+            "size": 4,
+            "value": 1,
+            "provenance": "counts/lengths remain prepared, not algorithm outputs"
+          },
+          {
+            "address": 268894464,
+            "size": 4,
+            "value": 1,
+            "provenance": "counts/lengths remain prepared, not algorithm outputs"
+          },
+          {
+            "address": 268894468,
+            "size": 4,
+            "value": 4,
+            "provenance": "counts/lengths remain prepared, not algorithm outputs"
+          },
+          {
+            "address": 268894472,
+            "size": 4,
+            "value": 4,
+            "provenance": "counts/lengths remain prepared, not algorithm outputs"
+          }
+        ],
+        "segments": [
+          {
+            "entry_offset": 8083796,
+            "stop_va": 40053976,
+            "note": "prepared invocation"
+          },
+          {
+            "entry_offset": 6491588,
+            "stop_va": 40046036,
+            "note": "prepared invocation"
+          },
+          {
+            "entry_offset": 6514324,
+            "stop_va": 40063708,
+            "note": "prepared invocation"
+          },
+          {
+            "entry_offset": 6509864,
+            "stop_va": 40061296,
+            "note": "after omitted worker parameter setup/output clearing; original BL and core prologue; before service calls"
+          },
+          {
+            "entry_offset": 7686512,
+            "stop_va": 269422592,
+            "note": "prepared invocation"
+          },
+          {
+            "entry_offset": 5832652,
+            "stop_va": 39387116,
+            "note": "prepared invocation"
+          },
+          {
+            "entry_offset": 5832688,
+            "stop_va": 39387604,
+            "note": "after omitted event clear; native flag predicate and store"
+          },
+          {
+            "entry_offset": 6509076,
+            "stop_va": 40063548,
+            "note": "omitted processing; prepared engine object; native result copy"
+          },
+          {
+            "entry_offset": 6509876,
+            "stop_va": 40068852,
+            "note": "native setters, list return, result halfword; before event signal"
+          },
+          {
+            "entry_offset": 6499604,
+            "stop_va": 41636176,
+            "note": "after omitted clear/lock/wait/clear; original mailbox read and caller commit"
+          }
+        ],
+        "original_instruction_checks": {
+          "width_counts": {
+            "4": 141462,
+            "2": 769
+          },
+          "ordered_pc_bytes_sha256": "5f0432b24ecde5c6ef82cf8b5f3adc7d153f38ab5f4c663f700958a86127aac6"
+        },
+        "mapped_image_baseline_sha256": "f4789f1e45736aad085fc42b5185caf0cd0ebee326c28fb216ae021d14c28bfe",
+        "baseline_fixture_overlays": [
+          {
+            "address": 36175872,
+            "size": 65536
+          },
+          {
+            "address": 36241408,
+            "size": 57344
+          },
+          {
+            "address": 36306944,
+            "size": 65536
+          },
+          {
+            "address": 36372480,
+            "size": 57344
+          }
+        ],
+        "guest_image_writes": [],
+        "execution_replacements": []
+      },
+      {
+        "case": "enabled_count_mismatch",
+        "mode_word": 4,
+        "parameter_byte_b": 1,
+        "prepared_counts": [
+          2,
+          1
+        ],
+        "prepared_lengths": [
+          4,
+          4
+        ],
+        "native_result_flag": 1,
+        "native_list_mask": 1,
+        "native_mailbox_halfword": 1,
+        "native_command_response": [
+          25,
+          1
+        ],
+        "native_config_flags": [
+          1,
+          0
+        ],
+        "addresses": {
+          "engine_command": 268894208,
+          "parameters": 268902400,
+          "worker_frame": 269221360,
+          "core_frame": 269221296,
+          "flag_frame": 269156272,
+          "submit_frame": 269287080,
+          "plan_frame": 269287088,
+          "request": 269287088
+        },
+        "result_bytes": "0100000002000000010000000400000004000000",
+        "native_writes": [
+          {
+            "pc_offset": 7525652,
+            "address": 268894456,
+            "size": 1,
+            "value": 0
+          },
+          {
+            "pc_offset": 7525656,
+            "address": 268894460,
+            "size": 4,
+            "value": 0
+          },
+          {
+            "pc_offset": 7525660,
+            "address": 268894464,
+            "size": 4,
+            "value": 0
+          },
+          {
+            "pc_offset": 7525664,
+            "address": 268894468,
+            "size": 4,
+            "value": 0
+          },
+          {
+            "pc_offset": 7525668,
+            "address": 268894472,
+            "size": 4,
+            "value": 0
+          },
+          {
+            "pc_offset": 7886220,
+            "address": 268894456,
+            "size": 1,
+            "value": 1
+          },
+          {
+            "pc_offset": 7416028,
+            "address": 269221608,
+            "size": 4,
+            "value": 1
+          },
+          {
+            "pc_offset": 7416028,
+            "address": 269221612,
+            "size": 4,
+            "value": 2
+          },
+          {
+            "pc_offset": 7416028,
+            "address": 269221616,
+            "size": 4,
+            "value": 1
+          },
+          {
+            "pc_offset": 7416028,
+            "address": 269221620,
+            "size": 4,
+            "value": 4
+          },
+          {
+            "pc_offset": 7416052,
+            "address": 269221624,
+            "size": 4,
+            "value": 4
+          },
+          {
+            "pc_offset": 6514408,
+            "address": 268763852,
+            "size": 2,
+            "value": 1
+          },
+          {
+            "pc_offset": 7663164,
+            "address": 268566540,
+            "size": 1,
+            "value": 1
+          },
+          {
+            "pc_offset": 7663176,
+            "address": 268566541,
+            "size": 1,
+            "value": 0
+          }
+        ],
+        "native_mailbox_reads": [
+          {
+            "pc_offset": 6499608,
+            "address": 268763852,
+            "size": 2,
+            "value": 1
+          }
+        ],
+        "host_inputs": [
+          {
+            "address": 268697648,
+            "size": 4,
+            "value": 268763136,
+            "provenance": "controller-to-worker link"
+          },
+          {
+            "address": 268830808,
+            "size": 1,
+            "value": 2,
+            "provenance": "command family"
+          },
+          {
+            "address": 268830809,
+            "size": 1,
+            "value": 4,
+            "provenance": "command type"
+          },
+          {
+            "address": 268828680,
+            "size": 4,
+            "value": 4,
+            "provenance": "native selector4 has one active request"
+          },
+          {
+            "address": 268828684,
+            "size": 4,
+            "value": 257,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828688,
+            "size": 4,
+            "value": 513,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828692,
+            "size": 4,
+            "value": 784,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828696,
+            "size": 4,
+            "value": 258,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828700,
+            "size": 4,
+            "value": 514,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828704,
+            "size": 4,
+            "value": 785,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828708,
+            "size": 4,
+            "value": 259,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828712,
+            "size": 4,
+            "value": 515,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828716,
+            "size": 4,
+            "value": 786,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268764032,
+            "size": 4,
+            "value": 0,
+            "provenance": "initial worker flags"
+          },
+          {
+            "address": 268763865,
+            "size": 1,
+            "value": 1,
+            "provenance": "no-retry state supplied; upstream lifecycle unrun"
+          },
+          {
+            "address": 268763852,
+            "size": 2,
+            "value": 42330,
+            "provenance": "stale mailbox sentinel; original STRH must replace it"
+          },
+          {
+            "address": 1078057100,
+            "size": 4,
+            "value": 1,
+            "provenance": "singleton initialization guard"
+          },
+          {
+            "address": 1078476608,
+            "size": 4,
+            "value": 1,
+            "provenance": "property0x1E already satisfied; no notification"
+          },
+          {
+            "address": 268894476,
+            "size": 4,
+            "value": 268902400,
+            "provenance": "processing parameter object link"
+          },
+          {
+            "address": 268902400,
+            "size": 4,
+            "value": 4,
+            "provenance": "parameter mode word; bit2 consumed by original UBFX"
+          },
+          {
+            "address": 268902411,
+            "size": 1,
+            "value": 1,
+            "provenance": "parameter byte+B; source production not established"
+          },
+          {
+            "address": 268894460,
+            "size": 4,
+            "value": 2,
+            "provenance": "counts/lengths remain prepared, not algorithm outputs"
+          },
+          {
+            "address": 268894464,
+            "size": 4,
+            "value": 1,
+            "provenance": "counts/lengths remain prepared, not algorithm outputs"
+          },
+          {
+            "address": 268894468,
+            "size": 4,
+            "value": 4,
+            "provenance": "counts/lengths remain prepared, not algorithm outputs"
+          },
+          {
+            "address": 268894472,
+            "size": 4,
+            "value": 4,
+            "provenance": "counts/lengths remain prepared, not algorithm outputs"
+          }
+        ],
+        "segments": [
+          {
+            "entry_offset": 8083796,
+            "stop_va": 40053976,
+            "note": "prepared invocation"
+          },
+          {
+            "entry_offset": 6491588,
+            "stop_va": 40046036,
+            "note": "prepared invocation"
+          },
+          {
+            "entry_offset": 6514324,
+            "stop_va": 40063708,
+            "note": "prepared invocation"
+          },
+          {
+            "entry_offset": 6509864,
+            "stop_va": 40061296,
+            "note": "after omitted worker parameter setup/output clearing; original BL and core prologue; before service calls"
+          },
+          {
+            "entry_offset": 7686512,
+            "stop_va": 269422592,
+            "note": "prepared invocation"
+          },
+          {
+            "entry_offset": 5832652,
+            "stop_va": 39387116,
+            "note": "prepared invocation"
+          },
+          {
+            "entry_offset": 5832688,
+            "stop_va": 39387604,
+            "note": "after omitted event clear; native flag predicate and store"
+          },
+          {
+            "entry_offset": 6509076,
+            "stop_va": 40063548,
+            "note": "omitted processing; prepared engine object; native result copy"
+          },
+          {
+            "entry_offset": 6509876,
+            "stop_va": 40068852,
+            "note": "native setters, list return, result halfword; before event signal"
+          },
+          {
+            "entry_offset": 6499604,
+            "stop_va": 41636176,
+            "note": "after omitted clear/lock/wait/clear; original mailbox read and caller commit"
+          }
+        ],
+        "original_instruction_checks": {
+          "width_counts": {
+            "4": 141387,
+            "2": 769
+          },
+          "ordered_pc_bytes_sha256": "3f2b67eb4b4f4b73906c894e2783fb3f952465fcea152ff938c3d633db30bc29"
+        },
+        "mapped_image_baseline_sha256": "f4789f1e45736aad085fc42b5185caf0cd0ebee326c28fb216ae021d14c28bfe",
+        "baseline_fixture_overlays": [
+          {
+            "address": 36175872,
+            "size": 65536
+          },
+          {
+            "address": 36241408,
+            "size": 57344
+          },
+          {
+            "address": 36306944,
+            "size": 65536
+          },
+          {
+            "address": 36372480,
+            "size": 57344
+          }
+        ],
+        "guest_image_writes": [],
+        "execution_replacements": []
+      },
+      {
+        "case": "mode_bit_clear_count_mismatch",
+        "mode_word": 0,
+        "parameter_byte_b": 1,
+        "prepared_counts": [
+          2,
+          1
+        ],
+        "prepared_lengths": [
+          4,
+          4
+        ],
+        "native_result_flag": 0,
+        "native_list_mask": 0,
+        "native_mailbox_halfword": 0,
+        "native_command_response": [
+          25,
+          0
+        ],
+        "native_config_flags": [
+          1,
+          1
+        ],
+        "addresses": {
+          "engine_command": 268894208,
+          "parameters": 268902400,
+          "worker_frame": 269221360,
+          "core_frame": 269221296,
+          "flag_frame": 269156272,
+          "submit_frame": 269287080,
+          "plan_frame": 269287088,
+          "request": 269287088
+        },
+        "result_bytes": "0000000002000000010000000400000004000000",
+        "native_writes": [
+          {
+            "pc_offset": 7525652,
+            "address": 268894456,
+            "size": 1,
+            "value": 0
+          },
+          {
+            "pc_offset": 7525656,
+            "address": 268894460,
+            "size": 4,
+            "value": 0
+          },
+          {
+            "pc_offset": 7525660,
+            "address": 268894464,
+            "size": 4,
+            "value": 0
+          },
+          {
+            "pc_offset": 7525664,
+            "address": 268894468,
+            "size": 4,
+            "value": 0
+          },
+          {
+            "pc_offset": 7525668,
+            "address": 268894472,
+            "size": 4,
+            "value": 0
+          },
+          {
+            "pc_offset": 7416028,
+            "address": 269221608,
+            "size": 4,
+            "value": 0
+          },
+          {
+            "pc_offset": 7416028,
+            "address": 269221612,
+            "size": 4,
+            "value": 2
+          },
+          {
+            "pc_offset": 7416028,
+            "address": 269221616,
+            "size": 4,
+            "value": 1
+          },
+          {
+            "pc_offset": 7416028,
+            "address": 269221620,
+            "size": 4,
+            "value": 4
+          },
+          {
+            "pc_offset": 7416052,
+            "address": 269221624,
+            "size": 4,
+            "value": 4
+          },
+          {
+            "pc_offset": 6514408,
+            "address": 268763852,
+            "size": 2,
+            "value": 0
+          },
+          {
+            "pc_offset": 7663164,
+            "address": 268566540,
+            "size": 1,
+            "value": 1
+          },
+          {
+            "pc_offset": 7663176,
+            "address": 268566541,
+            "size": 1,
+            "value": 1
+          }
+        ],
+        "native_mailbox_reads": [
+          {
+            "pc_offset": 6499608,
+            "address": 268763852,
+            "size": 2,
+            "value": 0
+          }
+        ],
+        "host_inputs": [
+          {
+            "address": 268697648,
+            "size": 4,
+            "value": 268763136,
+            "provenance": "controller-to-worker link"
+          },
+          {
+            "address": 268830808,
+            "size": 1,
+            "value": 2,
+            "provenance": "command family"
+          },
+          {
+            "address": 268830809,
+            "size": 1,
+            "value": 4,
+            "provenance": "command type"
+          },
+          {
+            "address": 268828680,
+            "size": 4,
+            "value": 4,
+            "provenance": "native selector4 has one active request"
+          },
+          {
+            "address": 268828684,
+            "size": 4,
+            "value": 257,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828688,
+            "size": 4,
+            "value": 513,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828692,
+            "size": 4,
+            "value": 784,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828696,
+            "size": 4,
+            "value": 258,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828700,
+            "size": 4,
+            "value": 514,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828704,
+            "size": 4,
+            "value": 785,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828708,
+            "size": 4,
+            "value": 259,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828712,
+            "size": 4,
+            "value": 515,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828716,
+            "size": 4,
+            "value": 786,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268764032,
+            "size": 4,
+            "value": 0,
+            "provenance": "initial worker flags"
+          },
+          {
+            "address": 268763865,
+            "size": 1,
+            "value": 1,
+            "provenance": "no-retry state supplied; upstream lifecycle unrun"
+          },
+          {
+            "address": 268763852,
+            "size": 2,
+            "value": 42330,
+            "provenance": "stale mailbox sentinel; original STRH must replace it"
+          },
+          {
+            "address": 1078057100,
+            "size": 4,
+            "value": 1,
+            "provenance": "singleton initialization guard"
+          },
+          {
+            "address": 1078476608,
+            "size": 4,
+            "value": 1,
+            "provenance": "property0x1E already satisfied; no notification"
+          },
+          {
+            "address": 268894476,
+            "size": 4,
+            "value": 268902400,
+            "provenance": "processing parameter object link"
+          },
+          {
+            "address": 268902400,
+            "size": 4,
+            "value": 0,
+            "provenance": "parameter mode word; bit2 consumed by original UBFX"
+          },
+          {
+            "address": 268902411,
+            "size": 1,
+            "value": 1,
+            "provenance": "parameter byte+B; source production not established"
+          },
+          {
+            "address": 268894460,
+            "size": 4,
+            "value": 2,
+            "provenance": "counts/lengths remain prepared, not algorithm outputs"
+          },
+          {
+            "address": 268894464,
+            "size": 4,
+            "value": 1,
+            "provenance": "counts/lengths remain prepared, not algorithm outputs"
+          },
+          {
+            "address": 268894468,
+            "size": 4,
+            "value": 4,
+            "provenance": "counts/lengths remain prepared, not algorithm outputs"
+          },
+          {
+            "address": 268894472,
+            "size": 4,
+            "value": 4,
+            "provenance": "counts/lengths remain prepared, not algorithm outputs"
+          }
+        ],
+        "segments": [
+          {
+            "entry_offset": 8083796,
+            "stop_va": 40053976,
+            "note": "prepared invocation"
+          },
+          {
+            "entry_offset": 6491588,
+            "stop_va": 40046036,
+            "note": "prepared invocation"
+          },
+          {
+            "entry_offset": 6514324,
+            "stop_va": 40063708,
+            "note": "prepared invocation"
+          },
+          {
+            "entry_offset": 6509864,
+            "stop_va": 40061296,
+            "note": "after omitted worker parameter setup/output clearing; original BL and core prologue; before service calls"
+          },
+          {
+            "entry_offset": 7686512,
+            "stop_va": 269422592,
+            "note": "prepared invocation"
+          },
+          {
+            "entry_offset": 5832652,
+            "stop_va": 39387116,
+            "note": "prepared invocation"
+          },
+          {
+            "entry_offset": 5832688,
+            "stop_va": 39387604,
+            "note": "after omitted event clear; native flag predicate and store"
+          },
+          {
+            "entry_offset": 6509076,
+            "stop_va": 40063548,
+            "note": "omitted processing; prepared engine object; native result copy"
+          },
+          {
+            "entry_offset": 6509876,
+            "stop_va": 40068852,
+            "note": "native setters, list return, result halfword; before event signal"
+          },
+          {
+            "entry_offset": 6499604,
+            "stop_va": 41636176,
+            "note": "after omitted clear/lock/wait/clear; original mailbox read and caller commit"
+          }
+        ],
+        "original_instruction_checks": {
+          "width_counts": {
+            "4": 141417,
+            "2": 769
+          },
+          "ordered_pc_bytes_sha256": "80ae9a6ca5bc93a711fdcf8ef44928ac7a76d0b2efca69ff88896c5568ec919f"
+        },
+        "mapped_image_baseline_sha256": "f4789f1e45736aad085fc42b5185caf0cd0ebee326c28fb216ae021d14c28bfe",
+        "baseline_fixture_overlays": [
+          {
+            "address": 36175872,
+            "size": 65536
+          },
+          {
+            "address": 36241408,
+            "size": 57344
+          },
+          {
+            "address": 36306944,
+            "size": 65536
+          },
+          {
+            "address": 36372480,
+            "size": 57344
+          }
+        ],
+        "guest_image_writes": [],
+        "execution_replacements": []
+      },
+      {
+        "case": "parameter_gate_clear_count_mismatch",
+        "mode_word": 4,
+        "parameter_byte_b": 0,
+        "prepared_counts": [
+          2,
+          1
+        ],
+        "prepared_lengths": [
+          4,
+          4
+        ],
+        "native_result_flag": 0,
+        "native_list_mask": 0,
+        "native_mailbox_halfword": 0,
+        "native_command_response": [
+          25,
+          0
+        ],
+        "native_config_flags": [
+          1,
+          1
+        ],
+        "addresses": {
+          "engine_command": 268894208,
+          "parameters": 268902400,
+          "worker_frame": 269221360,
+          "core_frame": 269221296,
+          "flag_frame": 269156272,
+          "submit_frame": 269287080,
+          "plan_frame": 269287088,
+          "request": 269287088
+        },
+        "result_bytes": "0000000002000000010000000400000004000000",
+        "native_writes": [
+          {
+            "pc_offset": 7525652,
+            "address": 268894456,
+            "size": 1,
+            "value": 0
+          },
+          {
+            "pc_offset": 7525656,
+            "address": 268894460,
+            "size": 4,
+            "value": 0
+          },
+          {
+            "pc_offset": 7525660,
+            "address": 268894464,
+            "size": 4,
+            "value": 0
+          },
+          {
+            "pc_offset": 7525664,
+            "address": 268894468,
+            "size": 4,
+            "value": 0
+          },
+          {
+            "pc_offset": 7525668,
+            "address": 268894472,
+            "size": 4,
+            "value": 0
+          },
+          {
+            "pc_offset": 7416028,
+            "address": 269221608,
+            "size": 4,
+            "value": 0
+          },
+          {
+            "pc_offset": 7416028,
+            "address": 269221612,
+            "size": 4,
+            "value": 2
+          },
+          {
+            "pc_offset": 7416028,
+            "address": 269221616,
+            "size": 4,
+            "value": 1
+          },
+          {
+            "pc_offset": 7416028,
+            "address": 269221620,
+            "size": 4,
+            "value": 4
+          },
+          {
+            "pc_offset": 7416052,
+            "address": 269221624,
+            "size": 4,
+            "value": 4
+          },
+          {
+            "pc_offset": 6514408,
+            "address": 268763852,
+            "size": 2,
+            "value": 0
+          },
+          {
+            "pc_offset": 7663164,
+            "address": 268566540,
+            "size": 1,
+            "value": 1
+          },
+          {
+            "pc_offset": 7663176,
+            "address": 268566541,
+            "size": 1,
+            "value": 1
+          }
+        ],
+        "native_mailbox_reads": [
+          {
+            "pc_offset": 6499608,
+            "address": 268763852,
+            "size": 2,
+            "value": 0
+          }
+        ],
+        "host_inputs": [
+          {
+            "address": 268697648,
+            "size": 4,
+            "value": 268763136,
+            "provenance": "controller-to-worker link"
+          },
+          {
+            "address": 268830808,
+            "size": 1,
+            "value": 2,
+            "provenance": "command family"
+          },
+          {
+            "address": 268830809,
+            "size": 1,
+            "value": 4,
+            "provenance": "command type"
+          },
+          {
+            "address": 268828680,
+            "size": 4,
+            "value": 4,
+            "provenance": "native selector4 has one active request"
+          },
+          {
+            "address": 268828684,
+            "size": 4,
+            "value": 257,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828688,
+            "size": 4,
+            "value": 513,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828692,
+            "size": 4,
+            "value": 784,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828696,
+            "size": 4,
+            "value": 258,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828700,
+            "size": 4,
+            "value": 514,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828704,
+            "size": 4,
+            "value": 785,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828708,
+            "size": 4,
+            "value": 259,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828712,
+            "size": 4,
+            "value": 515,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268828716,
+            "size": 4,
+            "value": 786,
+            "provenance": "source command payload"
+          },
+          {
+            "address": 268764032,
+            "size": 4,
+            "value": 0,
+            "provenance": "initial worker flags"
+          },
+          {
+            "address": 268763865,
+            "size": 1,
+            "value": 1,
+            "provenance": "no-retry state supplied; upstream lifecycle unrun"
+          },
+          {
+            "address": 268763852,
+            "size": 2,
+            "value": 42330,
+            "provenance": "stale mailbox sentinel; original STRH must replace it"
+          },
+          {
+            "address": 1078057100,
+            "size": 4,
+            "value": 1,
+            "provenance": "singleton initialization guard"
+          },
+          {
+            "address": 1078476608,
+            "size": 4,
+            "value": 1,
+            "provenance": "property0x1E already satisfied; no notification"
+          },
+          {
+            "address": 268894476,
+            "size": 4,
+            "value": 268902400,
+            "provenance": "processing parameter object link"
+          },
+          {
+            "address": 268902400,
+            "size": 4,
+            "value": 4,
+            "provenance": "parameter mode word; bit2 consumed by original UBFX"
+          },
+          {
+            "address": 268902411,
+            "size": 1,
+            "value": 0,
+            "provenance": "parameter byte+B; source production not established"
+          },
+          {
+            "address": 268894460,
+            "size": 4,
+            "value": 2,
+            "provenance": "counts/lengths remain prepared, not algorithm outputs"
+          },
+          {
+            "address": 268894464,
+            "size": 4,
+            "value": 1,
+            "provenance": "counts/lengths remain prepared, not algorithm outputs"
+          },
+          {
+            "address": 268894468,
+            "size": 4,
+            "value": 4,
+            "provenance": "counts/lengths remain prepared, not algorithm outputs"
+          },
+          {
+            "address": 268894472,
+            "size": 4,
+            "value": 4,
+            "provenance": "counts/lengths remain prepared, not algorithm outputs"
+          }
+        ],
+        "segments": [
+          {
+            "entry_offset": 8083796,
+            "stop_va": 40053976,
+            "note": "prepared invocation"
+          },
+          {
+            "entry_offset": 6491588,
+            "stop_va": 40046036,
+            "note": "prepared invocation"
+          },
+          {
+            "entry_offset": 6514324,
+            "stop_va": 40063708,
+            "note": "prepared invocation"
+          },
+          {
+            "entry_offset": 6509864,
+            "stop_va": 40061296,
+            "note": "after omitted worker parameter setup/output clearing; original BL and core prologue; before service calls"
+          },
+          {
+            "entry_offset": 7686512,
+            "stop_va": 269422592,
+            "note": "prepared invocation"
+          },
+          {
+            "entry_offset": 5832652,
+            "stop_va": 39387116,
+            "note": "prepared invocation"
+          },
+          {
+            "entry_offset": 5832688,
+            "stop_va": 39387604,
+            "note": "after omitted event clear; native flag predicate and store"
+          },
+          {
+            "entry_offset": 6509076,
+            "stop_va": 40063548,
+            "note": "omitted processing; prepared engine object; native result copy"
+          },
+          {
+            "entry_offset": 6509876,
+            "stop_va": 40068852,
+            "note": "native setters, list return, result halfword; before event signal"
+          },
+          {
+            "entry_offset": 6499604,
+            "stop_va": 41636176,
+            "note": "after omitted clear/lock/wait/clear; original mailbox read and caller commit"
+          }
+        ],
+        "original_instruction_checks": {
+          "width_counts": {
+            "4": 141416,
+            "2": 769
+          },
+          "ordered_pc_bytes_sha256": "5ae912edf7959c3255e4f2af5e5b35b3c18c804585a9e0c6701b99083a267409"
+        },
+        "mapped_image_baseline_sha256": "f4789f1e45736aad085fc42b5185caf0cd0ebee326c28fb216ae021d14c28bfe",
+        "baseline_fixture_overlays": [
+          {
+            "address": 36175872,
+            "size": 65536
+          },
+          {
+            "address": 36241408,
+            "size": 57344
+          },
+          {
+            "address": 36306944,
+            "size": 65536
+          },
+          {
+            "address": 36372480,
+            "size": 57344
+          }
+        ],
+        "guest_image_writes": [],
+        "execution_replacements": []
+      }
+    ],
+    "limits": [
+      "Prepared parameter mode, byte+B, engine-command pointer, counts and lengths; original predicate, worker frame, 20-byte copy, list and mailbox code execute in slices.",
+      "The host restores CPU registers while the VM retains RAM; the source result is not copied by the host.",
+      "Selector 4 contributes one active request at indices 24 and 25; the no-retry condition is supplied.",
+      "RTOS event clear, locking, waking, waiting and notification, worker setup/buffer initialization and image processing are omitted.",
+      "Response +8 is the zero-extended list halfword; historical synthetic 0x3ff is a separate input."
+    ]
+  },
+  "worker_parameter_production": {
+    "case_trace_sha256": "4381a0824181fc9ae43c2f6ae4e13fc69d90159ec4ed89e62c4b2321dc3372d9",
+    "cases": [
+      {
+        "selector": 1,
+        "native_worker_constant": true,
+        "addresses": {
+          "job": 268566528,
+          "worker": 268763136,
+          "engine": 268575808,
+          "parameters": 268657380,
+          "worker_frame": 269287096,
+          "core_frame": 269287032
+        },
+        "mode_word": 21,
+        "gate": 1,
+        "result_flag": 1,
+        "owner_flags": 8088,
+        "prepared_memory": [
+          {
+            "address": 268763676,
+            "size": 4,
+            "value": 268566528,
+            "provenance": "worker-to-job owner link; allocation lifecycle not executed"
+          }
+        ],
+        "segments": [
+          {
+            "entry_offset": 7686512,
+            "stop_va": 269422592,
+            "note": "original constructor; prepared object address"
+          },
+          {
+            "entry_offset": 7442872,
+            "stop_va": 269422592,
+            "note": "original constructor; prepared object address"
+          },
+          {
+            "entry_offset": 6640260,
+            "stop_va": 40194708,
+            "note": "original binding slice; caller lifecycle not executed"
+          },
+          {
+            "entry_offset": 6509216,
+            "stop_va": 40063664,
+            "note": "native worker prologue; stop before singleton getter"
+          },
+          {
+            "entry_offset": 6509268,
+            "stop_va": 40063708,
+            "note": "skip singleton/request getters; native frame constructor"
+          },
+          {
+            "entry_offset": 6509600,
+            "stop_va": 40064044,
+            "note": "skip intervening worker setters; native MOV1 and byte51 store"
+          },
+          {
+            "entry_offset": 6509864,
+            "stop_va": 40061296,
+            "note": "skip remaining setup/buffer clearing; native core call and prologue"
+          },
+          {
+            "entry_offset": 6507912,
+            "stop_va": 40062356,
+            "note": "skip service/preparation calls; derive engine from same worker/job"
+          },
+          {
+            "entry_offset": 6508616,
+            "stop_va": 40063068,
+            "note": "native saved-frame gate getter and engine gate setter"
+          },
+          {
+            "entry_offset": 6508776,
+            "stop_va": 40196900,
+            "note": "native caller chooses builder mode; stop before service checks"
+          },
+          {
+            "entry_offset": 5832652,
+            "stop_va": 39387116,
+            "note": "native flag function prologue; owner supplied, mask0"
+          },
+          {
+            "entry_offset": 5832688,
+            "stop_va": 39387604,
+            "note": "skip event clear; original II-17 predicate and flag setter"
+          }
+        ],
+        "relevant_native_writes": [
+          {
+            "pc_offset": 7686644,
+            "address": 268575889,
+            "size": 1,
+            "value": 0
+          },
+          {
+            "pc_offset": 7525652,
+            "address": 268576056,
+            "size": 1,
+            "value": 0
+          },
+          {
+            "pc_offset": 7686704,
+            "address": 268576076,
+            "size": 4,
+            "value": 0
+          },
+          {
+            "pc_offset": 7442876,
+            "address": 268657380,
+            "size": 4,
+            "value": 0
+          },
+          {
+            "pc_offset": 7442908,
+            "address": 268657391,
+            "size": 1,
+            "value": 0
+          },
+          {
+            "pc_offset": 7450072,
+            "address": 268576076,
+            "size": 4,
+            "value": 268657380
+          },
+          {
+            "pc_offset": 7686644,
+            "address": 269287177,
+            "size": 1,
+            "value": 0
+          },
+          {
+            "pc_offset": 7686456,
+            "address": 269287177,
+            "size": 1,
+            "value": 1
+          },
+          {
+            "pc_offset": 7686456,
+            "address": 268575889,
+            "size": 1,
+            "value": 1
+          },
+          {
+            "pc_offset": 7442864,
+            "address": 268657380,
+            "size": 4,
+            "value": 0
+          },
+          {
+            "pc_offset": 7442760,
+            "address": 268657391,
+            "size": 1,
+            "value": 0
+          },
+          {
+            "pc_offset": 7442760,
+            "address": 268657391,
+            "size": 1,
+            "value": 1
+          },
+          {
+            "pc_offset": 7442864,
+            "address": 268657380,
+            "size": 4,
+            "value": 21
+          },
+          {
+            "pc_offset": 7886220,
+            "address": 268576056,
+            "size": 1,
+            "value": 1
+          }
+        ],
+        "parameter_reads": [
+          {
+            "pc_offset": 7455592,
+            "address": 268575889,
+            "size": 1,
+            "value": 1
+          },
+          {
+            "pc_offset": 7526308,
+            "address": 268576076,
+            "size": 4,
+            "value": 268657380
+          },
+          {
+            "pc_offset": 7526644,
+            "address": 268657380,
+            "size": 4,
+            "value": 21
+          },
+          {
+            "pc_offset": 7594228,
+            "address": 268657391,
+            "size": 1,
+            "value": 1
+          }
+        ],
+        "instruction_widths": {
+          "4": 526
+        },
+        "instruction_trace_sha256": "7ada0618645df702e2b6ac40ca85d2069456133c71beb256f25b92b5012a1409",
+        "image_guest_writes": []
+      },
+      {
+        "selector": 1,
+        "native_worker_constant": false,
+        "addresses": {
+          "job": 268566528,
+          "worker": 268763136,
+          "engine": 268575808,
+          "parameters": 268657380,
+          "worker_frame": 269287096,
+          "core_frame": 269287032
+        },
+        "mode_word": 21,
+        "gate": 0,
+        "result_flag": 0,
+        "owner_flags": 7704,
+        "prepared_memory": [
+          {
+            "address": 268763676,
+            "size": 4,
+            "value": 268566528,
+            "provenance": "worker-to-job owner link; allocation lifecycle not executed"
+          }
+        ],
+        "segments": [
+          {
+            "entry_offset": 7686512,
+            "stop_va": 269422592,
+            "note": "original constructor; prepared object address"
+          },
+          {
+            "entry_offset": 7442872,
+            "stop_va": 269422592,
+            "note": "original constructor; prepared object address"
+          },
+          {
+            "entry_offset": 6640260,
+            "stop_va": 40194708,
+            "note": "original binding slice; caller lifecycle not executed"
+          },
+          {
+            "entry_offset": 6509216,
+            "stop_va": 40063664,
+            "note": "native worker prologue; stop before singleton getter"
+          },
+          {
+            "entry_offset": 6509268,
+            "stop_va": 40063708,
+            "note": "skip singleton/request getters; native frame constructor"
+          },
+          {
+            "entry_offset": 6509864,
+            "stop_va": 40061296,
+            "note": "skip remaining setup/buffer clearing; native core call and prologue"
+          },
+          {
+            "entry_offset": 6507912,
+            "stop_va": 40062356,
+            "note": "skip service/preparation calls; derive engine from same worker/job"
+          },
+          {
+            "entry_offset": 6508616,
+            "stop_va": 40063068,
+            "note": "native saved-frame gate getter and engine gate setter"
+          },
+          {
+            "entry_offset": 6508776,
+            "stop_va": 40196900,
+            "note": "native caller chooses builder mode; stop before service checks"
+          },
+          {
+            "entry_offset": 5832652,
+            "stop_va": 39387116,
+            "note": "native flag function prologue; owner supplied, mask0"
+          },
+          {
+            "entry_offset": 5832688,
+            "stop_va": 39387604,
+            "note": "skip event clear; original II-17 predicate and flag setter"
+          }
+        ],
+        "relevant_native_writes": [
+          {
+            "pc_offset": 7686644,
+            "address": 268575889,
+            "size": 1,
+            "value": 0
+          },
+          {
+            "pc_offset": 7525652,
+            "address": 268576056,
+            "size": 1,
+            "value": 0
+          },
+          {
+            "pc_offset": 7686704,
+            "address": 268576076,
+            "size": 4,
+            "value": 0
+          },
+          {
+            "pc_offset": 7442876,
+            "address": 268657380,
+            "size": 4,
+            "value": 0
+          },
+          {
+            "pc_offset": 7442908,
+            "address": 268657391,
+            "size": 1,
+            "value": 0
+          },
+          {
+            "pc_offset": 7450072,
+            "address": 268576076,
+            "size": 4,
+            "value": 268657380
+          },
+          {
+            "pc_offset": 7686644,
+            "address": 269287177,
+            "size": 1,
+            "value": 0
+          },
+          {
+            "pc_offset": 7686456,
+            "address": 268575889,
+            "size": 1,
+            "value": 0
+          },
+          {
+            "pc_offset": 7442864,
+            "address": 268657380,
+            "size": 4,
+            "value": 0
+          },
+          {
+            "pc_offset": 7442760,
+            "address": 268657391,
+            "size": 1,
+            "value": 0
+          },
+          {
+            "pc_offset": 7442760,
+            "address": 268657391,
+            "size": 1,
+            "value": 0
+          },
+          {
+            "pc_offset": 7442864,
+            "address": 268657380,
+            "size": 4,
+            "value": 21
+          }
+        ],
+        "parameter_reads": [
+          {
+            "pc_offset": 7455592,
+            "address": 268575889,
+            "size": 1,
+            "value": 0
+          },
+          {
+            "pc_offset": 7526308,
+            "address": 268576076,
+            "size": 4,
+            "value": 268657380
+          },
+          {
+            "pc_offset": 7526644,
+            "address": 268657380,
+            "size": 4,
+            "value": 21
+          },
+          {
+            "pc_offset": 7594228,
+            "address": 268657391,
+            "size": 1,
+            "value": 0
+          }
+        ],
+        "instruction_widths": {
+          "4": 505
+        },
+        "instruction_trace_sha256": "88f4b8922aa7426d8482ffb736c974deb985775e8130d6372216429422a3adfe",
+        "image_guest_writes": []
+      },
+      {
+        "selector": 2,
+        "native_worker_constant": true,
+        "addresses": {
+          "job": 268566528,
+          "worker": 268763136,
+          "engine": 268575808,
+          "parameters": 268657380,
+          "worker_frame": 269287096,
+          "core_frame": 269287032
+        },
+        "mode_word": 22,
+        "gate": 1,
+        "result_flag": 1,
+        "owner_flags": 408,
+        "prepared_memory": [
+          {
+            "address": 268763676,
+            "size": 4,
+            "value": 268566528,
+            "provenance": "worker-to-job owner link; allocation lifecycle not executed"
+          }
+        ],
+        "segments": [
+          {
+            "entry_offset": 7686512,
+            "stop_va": 269422592,
+            "note": "original constructor; prepared object address"
+          },
+          {
+            "entry_offset": 7442872,
+            "stop_va": 269422592,
+            "note": "original constructor; prepared object address"
+          },
+          {
+            "entry_offset": 6640260,
+            "stop_va": 40194708,
+            "note": "original binding slice; caller lifecycle not executed"
+          },
+          {
+            "entry_offset": 6509216,
+            "stop_va": 40063664,
+            "note": "native worker prologue; stop before singleton getter"
+          },
+          {
+            "entry_offset": 6509268,
+            "stop_va": 40063708,
+            "note": "skip singleton/request getters; native frame constructor"
+          },
+          {
+            "entry_offset": 6509600,
+            "stop_va": 40064044,
+            "note": "skip intervening worker setters; native MOV1 and byte51 store"
+          },
+          {
+            "entry_offset": 6509864,
+            "stop_va": 40061296,
+            "note": "skip remaining setup/buffer clearing; native core call and prologue"
+          },
+          {
+            "entry_offset": 6507912,
+            "stop_va": 40062356,
+            "note": "skip service/preparation calls; derive engine from same worker/job"
+          },
+          {
+            "entry_offset": 6508616,
+            "stop_va": 40063068,
+            "note": "native saved-frame gate getter and engine gate setter"
+          },
+          {
+            "entry_offset": 6508940,
+            "stop_va": 40196900,
+            "note": "native caller chooses builder mode; stop before service checks"
+          },
+          {
+            "entry_offset": 5832652,
+            "stop_va": 39387116,
+            "note": "native flag function prologue; owner supplied, mask0"
+          },
+          {
+            "entry_offset": 5832688,
+            "stop_va": 39387604,
+            "note": "skip event clear; original II-17 predicate and flag setter"
+          }
+        ],
+        "relevant_native_writes": [
+          {
+            "pc_offset": 7686644,
+            "address": 268575889,
+            "size": 1,
+            "value": 0
+          },
+          {
+            "pc_offset": 7525652,
+            "address": 268576056,
+            "size": 1,
+            "value": 0
+          },
+          {
+            "pc_offset": 7686704,
+            "address": 268576076,
+            "size": 4,
+            "value": 0
+          },
+          {
+            "pc_offset": 7442876,
+            "address": 268657380,
+            "size": 4,
+            "value": 0
+          },
+          {
+            "pc_offset": 7442908,
+            "address": 268657391,
+            "size": 1,
+            "value": 0
+          },
+          {
+            "pc_offset": 7450072,
+            "address": 268576076,
+            "size": 4,
+            "value": 268657380
+          },
+          {
+            "pc_offset": 7686644,
+            "address": 269287177,
+            "size": 1,
+            "value": 0
+          },
+          {
+            "pc_offset": 7686456,
+            "address": 269287177,
+            "size": 1,
+            "value": 1
+          },
+          {
+            "pc_offset": 7686456,
+            "address": 268575889,
+            "size": 1,
+            "value": 1
+          },
+          {
+            "pc_offset": 7442864,
+            "address": 268657380,
+            "size": 4,
+            "value": 0
+          },
+          {
+            "pc_offset": 7442760,
+            "address": 268657391,
+            "size": 1,
+            "value": 0
+          },
+          {
+            "pc_offset": 7442864,
+            "address": 268657380,
+            "size": 4,
+            "value": 22
+          },
+          {
+            "pc_offset": 7442760,
+            "address": 268657391,
+            "size": 1,
+            "value": 1
+          },
+          {
+            "pc_offset": 7886220,
+            "address": 268576056,
+            "size": 1,
+            "value": 1
+          }
+        ],
+        "parameter_reads": [
+          {
+            "pc_offset": 7455592,
+            "address": 268575889,
+            "size": 1,
+            "value": 1
+          },
+          {
+            "pc_offset": 7526308,
+            "address": 268576076,
+            "size": 4,
+            "value": 268657380
+          },
+          {
+            "pc_offset": 7526644,
+            "address": 268657380,
+            "size": 4,
+            "value": 22
+          },
+          {
+            "pc_offset": 7594228,
+            "address": 268657391,
+            "size": 1,
+            "value": 1
+          }
+        ],
+        "instruction_widths": {
+          "4": 512
+        },
+        "instruction_trace_sha256": "c36ea8201411995235117f9355bb420c99672cd720c35985f59cff426bccbdd7",
+        "image_guest_writes": []
+      }
+    ],
+    "limits": [
+      "Independent replay with its own VM per case. Does not execute the prior result copy, list or mailbox.",
+      "Host supplies worker+0x21c, object addresses and predicate entry state. Native binder executes separately from its static virtual call path.",
+      "Builder argument selects a local mode literal; the separate +B byte comes from the worker gate through engine+0x51.",
+      "The zero-gate control skips the entire original constant/store slice. Builder 2 starts after its real guard.",
+      "Builder service tail, owner scheduling, event clear, buffer work and image processing are omitted."
+    ]
+  },
+  "disk_input_unchanged": true
+}

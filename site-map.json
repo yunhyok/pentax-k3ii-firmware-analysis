@@ -30,6 +30,7 @@
       {"file": "analysis/preserved-sector20.html", "label": "보존 섹터 20·21과 정책 입력"},
       {"file": "analysis/preserved-config.html", "label": "정책 플래그의 생산자"},
       {"file": "analysis/preserved-dispatch.html", "label": "보존 레코드의 상위 명령 경로"},
+      {"file": "analysis/preserved-continuity.html", "label": "작업자 매개변수와 목록 응답"},
       {"file": "analysis/preserved-record.html", "label": "보존 섹터 14의 진단 레코드"},
       {"file": "analysis/settings-storage.html", "label": "보존 섹터의 설정 저장"}
     ]},
