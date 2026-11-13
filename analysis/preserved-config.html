@@ -28,7 +28,7 @@
 <h2 data-toc="no">핵심 요약</h2>
 <ul>
 <li>촬영 서비스가 가진 설정 객체에는 <strong>검사 결과 바이트가 둘</strong> 있습니다. 보존 레코드 안의 데이터 묶음을 두 그룹으로 나눠 검사한 결과가 각각 저장됩니다.</li>
-<li>첫째 바이트는 픽셀 정책 함수 앞부분에서 <strong>초기 플래그</strong>가 됩니다. 둘째 바이트는 다른 호출자가 받습니다. 두 소비자 모두 RAM에 있는 레코드 마커 둘을 한 번 더 검사합니다.</li>
+<li>첫째 바이트는 픽셀 정책 함수 앞부분에서 <strong>초기 플래그</strong>가 됩니다. 둘째 바이트는 다른 호출자가 받습니다. 두 소비자의 코드에서 RAM 마커 둘을 다시 검사하는 명령을 확인했습니다. 첫째 바이트를 읽는 경로에서는 마커가 틀리면 0을 내는 동작도 실행해 확인했습니다.</li>
 <li>초기화 5건과 이어진 갱신 3건을 실행했습니다. 한 그룹의 개수만 어긋나게 하면 그 그룹의 바이트만 0이 되고, 초기 플래그와 다른 호출자의 반환값이 그대로 따라 바뀌었습니다.</li>
 <li>이 바이트를 메뉴 설정값이나 “실제 촬영에서 보정이 켜진다”는 뜻으로 확정하지 않았습니다. 레코드는 합성 값이고 촬영은 실행하지 않았습니다.</li>
 </ul>
@@ -160,7 +160,7 @@
 <div class="dg-scroll">
 <svg class="dg" viewBox="0 0 800 250" role="img" aria-labelledby="dg-chain-title dg-chain-desc">
 <title id="dg-chain-title">두 그룹의 생산자에서 소비자까지 이어지는 두 줄</title>
-<desc id="dg-chain-desc">위 줄은 ID 0x63 RAM 레코드의 그룹 1을 함수 0x74EA34가 검사해 설정 +0xC에 저장하고, 소비자 0x74F9BC가 RAM 마커 둘을 다시 검사한 뒤 촬영 컨텍스트의 초기 +0x4A로 내보내는 경로입니다. 아래 줄은 ID 0x64 RAM 레코드의 그룹 2를 함수 0x74E9E4가 검사해 설정 +0xD에 저장하고, 소비자 0x74F9F8이 마커를 다시 검사한 뒤 호출자 0x593740에 반환하는 경로입니다. 두 줄의 검사는 두 RAM 마커가 모두 맞을 때만 시작합니다.</desc>
+<desc id="dg-chain-desc">위 줄은 ID 0x63 RAM 레코드의 그룹 1을 함수 0x74EA34가 검사해 설정 +0xC에 저장하고, 소비자 0x74F9BC가 RAM 마커 둘을 다시 검사한 뒤 촬영 컨텍스트의 초기 +0x4A로 내보내는 경로입니다. 아래 줄은 ID 0x64 RAM 레코드의 그룹 2를 함수 0x74E9E4가 검사해 설정 +0xD에 저장하고, 소비자 0x74F9F8이 마커를 다시 검사한 뒤 호출자 0x593740에 반환하는 경로입니다. 공개 근거에서 아래 줄의 마커 재검사는 정적 분석으로 확인했습니다. 두 줄의 검사는 두 RAM 마커가 모두 맞을 때만 시작합니다.</desc>
 <defs><marker id="dg-chain-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker></defs>
 <text class="n" x="4" y="24">두 RAM 마커가 모두 맞을 때만 검사를 시작합니다. 아니면 두 바이트는 생성자가 넣은 0으로 남습니다.</text>
 
@@ -193,7 +193,7 @@
 <rect class="b key" x="350" y="160" width="110" height="64" rx="8"/>
 <text class="t" x="362" y="187">설정 +0xD</text>
 <text class="s" x="362" y="207">1바이트</text>
-<rect class="b ok" x="478" y="160" width="160" height="64" rx="8"/>
+<rect class="b static" x="478" y="160" width="160" height="64" rx="8"/>
 <text class="t" x="490" y="187">마커 2개 재검사</text>
 <text class="s mono" x="490" y="207">0x74F9F8</text>
 <rect class="b ok" x="656" y="160" width="140" height="64" rx="8"/>
@@ -205,7 +205,7 @@
 <path class="e" d="M638 192H654" marker-end="url(#dg-chain-ah)"/>
 </svg>
 </div>
-<ul class="dg-legend"><li><i class="model"></i>시험용 합성 레코드</li><li><i class="ok"></i>원본 코드 실행으로 확인</li><li><i class="key"></i>검사 결과 바이트</li></ul>
+<ul class="dg-legend"><li><i class="model"></i>시험용 합성 레코드</li><li><i class="ok"></i>원본 코드 실행으로 확인</li><li><i class="static"></i>정적 분석</li><li><i class="key"></i>검사 결과 바이트</li></ul>
 </figure>
 
 <h3>초기화 함수가 하는 일</h3>
@@ -276,7 +276,7 @@
 </tbody></table></div>
 <p>갱신 3건은 “두 그룹 통과” 상태에서 이어서 실행했습니다. 여덟 건 모두에서 CAP+0x4A는 <code>+0xC</code>를, 다른 호출자의 반환값은 <code>+0xD</code>를 따랐습니다.</p>
 
-<p>두 소비자는 서비스의 <code>+0x3C</code>를 거쳐 같은 설정 객체를 얻습니다. 그리고 각자 RAM 마커 둘을 다시 읽습니다. 그래서 검사 바이트가 1이어도 마커 중 하나가 틀리면 0을 냅니다. <code>+0xC</code> 쪽의 이 동작은 <a href="preserved-sector20.html#policy">섹터 20·21 문서의 열두 대조</a>에서 직접 실행해 확인했습니다.</p>
+<p>두 소비자는 서비스의 <code>+0x3C</code>를 거쳐 같은 설정 객체를 얻습니다. 그리고 각자 RAM 마커 둘을 다시 읽습니다. 그래서 검사 바이트가 1이어도 마커 중 하나가 틀리면 0을 냅니다. <code>+0xC</code> 쪽의 이 동작은 <a href="preserved-sector20.html#policy">섹터 20·21 문서의 열두 대조</a>에서 직접 실행해 확인했습니다. <code>+0xD</code> 경로의 마커 불일치 처리는 명령을 읽어 확인했습니다. 공개 실행 대조에서는 초기 마커가 틀리면 <code>+0xD</code>도 0이 됐으므로, 이 바이트를 1로 둔 채 마커만 바꾼 사례는 없습니다.</p>
 
 <div class="callout warn"><strong class="label">해석의 한계</strong>
 <p>정책 앞부분은 CAP+0x4A에 처음 값을 저장한 직후 멈췄습니다. 그 뒤 정책이 값을 다시 바꾸는 조건은 <a href="pixel-policy.html">픽셀 보정 활성값과 준비 분기</a>에 있습니다. 이 바이트가 <a href="superresolution-lifecycle.html#gate">보조 스케일러의 활성 조건</a>이나 <a href="superresolution-lifecycle.html#menu">SuperResolution 메뉴</a>와 같은 값이라고 연결하지 않습니다.</p></div>

@@ -128,10 +128,10 @@
 <tr><th scope="row">업데이트 검사는 길이·모델값·표식·덧셈 합계를 확인함. 주 이미지 합계 요청(명령 7)은 덧셈임</th><td><span class="badge ok">확인</span></td><td><a href="rebuild.html#native">재포장과 검사</a></td></tr>
 <tr><th scope="row">같은 크기로 고친 후보(메뉴 글자 하나)가 원본 검사 코드를 통과함</th><td><span class="badge ok">확인</span> <span class="badge model">모델</span></td><td><a href="rebuild.html#cases">재포장과 검사</a></td></tr>
 <tr><th scope="row">체크섬 칸이 <code>0xFFFFFFFF</code>이면 덧셈 검사 함수가 검사를 건너뜀. 도구는 이런 출력을 거부함</th><td><span class="badge ok">확인</span></td><td><a href="rebuild.html#sentinel">재포장과 검사</a></td></tr>
-<tr><th scope="row">보조 이미지는 64바이트씩 960회 전송하고 전체를 다시 읽어 비교함. 내용 불일치만 3회까지 재시도</th><td><span class="badge ok">확인</span> <span class="badge model">모델</span></td><td><a href="installation.html#aux">전송과 기록 오류</a></td></tr>
+<tr><th scope="row">보조 이미지는 64바이트씩 960회 전송하고 전체를 다시 읽어 비교함. 내용이 다를 때만 다시 전송하며 최초 전송을 포함해 최대 3회 시도</th><td><span class="badge ok">확인</span> <span class="badge model">모델</span></td><td><a href="installation.html#aux">전송과 기록 오류</a></td></tr>
 <tr><th scope="row">주 이미지는 섹터 13~22를 건너뛰고 섹터 0을 마지막에 기록함. 전체 순회는 16회까지 시도</th><td><span class="badge ok">확인</span> <span class="badge model">모델</span></td><td><a href="installation.html#order">전송과 기록 오류</a></td></tr>
 <tr><th scope="row">프로그램 함수의 실패값이 요청한 쪽에 전달되지 않음. 기록 뒤의 재비교가 불일치를 잡음</th><td><span class="badge ok">확인</span> <span class="badge model">모델</span></td><td><a href="installation.html#errors">전송과 기록 오류</a></td></tr>
-<tr><th scope="row">64바이트 톤 보간 함수를 C로 다시 만든 코드가 원본 호출자 9곳에서 같은 결과를 냄</th><td><span class="badge ok">확인</span> <span class="badge model">모델</span></td><td><a href="tone-rebuild.html#results">함수 재구현</a></td></tr>
+<tr><th scope="row">64바이트 톤 보간 함수를 C로 다시 만든 코드가 원본 호출 구간 3곳의 호출 지점 9곳에서 같은 결과를 냄</th><td><span class="badge ok">확인</span> <span class="badge model">모델</span></td><td><a href="tone-rebuild.html#results">함수 재구현</a></td></tr>
 <tr><th scope="row">원본 호출자가 r3·r12 보존을 가정함</th><td><span class="badge ok">확인</span></td><td><a href="tone-rebuild.html#contract">함수 재구현</a></td></tr>
 <tr><th scope="row">업데이트 함수들이 서로를 부르는 순서</th><td><span class="badge static">정적 분석</span></td><td><a href="rebuild.html#native">재포장과 검사</a>, <a href="installation.html#primary">전송과 기록 오류</a></td></tr>
 <tr><th scope="row">업데이트 경로 전체, 내부 ROM, 부팅 경로에 다른 인증이 있는지</th><td><span class="badge open">미확인</span></td><td><a href="rebuild.html#limits">재포장과 검사</a></td></tr>

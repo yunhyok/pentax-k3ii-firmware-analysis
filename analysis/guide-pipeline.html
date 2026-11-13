@@ -283,7 +283,8 @@
 <tr><td>Pixel Shift Resolution 메뉴의 On/Off가 활성 프로필 설정을 거쳐 SuperResolution 작업 종류 11을 고름</td><td><span class="badge ok">확인</span> <span class="badge model">모델</span></td><td><a href="superresolution-lifecycle.html">⑥ Pixel Shift</a></td></tr>
 <tr><td>일반 출력용 버퍼 슬롯 4와 마스크용 슬롯 17이 따로 할당되고, 일반 출력 버퍼는 JPEG 단계 뒤에 반환됨</td><td><span class="badge ok">확인</span> <span class="badge model">모델</span></td><td><a href="superresolution-lifecycle.html">⑥ 버퍼 수명</a></td></tr>
 <tr><td>보조 스케일러를 켜는 코드. 공통 설정 경로의 64개 사례에서는 모두 꺼져 있었음</td><td><span class="badge open">미확인</span></td><td><a href="masked-cpp-analysis.html">⑤</a>, <a href="superresolution-lifecycle.html">⑥</a></td></tr>
-<tr><td>마스크 분기의 출력이 JPEG 입력으로 이어지는지</td><td><span class="badge open">미확인</span></td><td><a href="backend-b-cpp-analysis.html">④</a>, <a href="masked-cpp-analysis.html">⑤</a></td></tr>
+<tr><td>활성값을 1로 넣고 같은 기준 주소에 배치한 합성 사례에서 보조 스케일러 출력과 JPEG 보조 입력의 평면 주소가 일치함</td><td><span class="badge ok">확인</span> <span class="badge model">모델</span></td><td><a href="masked-cpp-analysis.html#jpeg">⑤ 조건부 주소 공유</a></td></tr>
+<tr><td>실제 작업에서 보조 스케일러가 켜지고 같은 평면 주소가 JPEG 보조 입력에 쓰이는지</td><td><span class="badge open">미확인</span></td><td><a href="backend-b-cpp-analysis.html#masked">④ 마스크 분기</a>, <a href="masked-cpp-analysis.html#jpeg">⑤ 조건부 주소 공유</a></td></tr>
 <tr><td>레시피 ID와 작업 종류가 실제 촬영 조작이나 모드와 어떻게 대응하는지 (종류 5와 11 외)</td><td><span class="badge open">미확인</span></td><td><a href="masked-cpp-analysis.html">⑤</a></td></tr>
 <tr><td>레시피가 실제 스레드와 장치에서 끝까지 실행되는 순서와 완료 시점</td><td><span class="badge open">미확인</span></td><td>여섯 문서 모두</td></tr>
 <tr><td>영상 처리 회로의 픽셀 처리 순서와 수식, 실제 JPEG의 색과 압축 결과</td><td><span class="badge open">미확인</span></td><td>여섯 문서 모두</td></tr>

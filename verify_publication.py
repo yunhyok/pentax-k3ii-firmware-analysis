@@ -6,7 +6,6 @@ from html.parser import HTMLParser
 from hashlib import sha256
 import json
 from pathlib import Path
-import subprocess
 import sys
 from urllib.parse import unquote, urlsplit
 import xml.etree.ElementTree as ET
@@ -36,9 +35,9 @@ class Document(HTMLParser):
 def main():
     root = Path(__file__).resolve().parent
     sys.path.insert(0, str(root / "tools"))
-    from site_chrome import Site
+    from site_chrome import Site, published_files
+    files = published_files()
     site = Site()
-    files = subprocess.check_output(["git", "ls-files", "--cached", "--others", "--exclude-standard"], cwd=root, text=True).splitlines()
     documents = {root / name: Document((root / name).read_text(encoding="utf-8"))
                  for name in files if name.endswith(".html")}
     text = (root / "analysis/firmware-structure.html").read_text(encoding="utf-8")
