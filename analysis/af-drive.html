@@ -29,7 +29,7 @@
 <ul>
 <li>카메라는 렌즈에 명령을 보내 1바이트짜리 응답을 받고 이를 “능력 바이트”로 저장합니다. <strong>이 바이트의 비트 6이 1이면 렌즈 명령 경로, 0이면 바디 드라이버 경로</strong>로 AF 구동 준비가 진행됩니다.</li>
 <li>응답은 전송이 성공했을 때만 저장됩니다. 전송이 실패하면 이전에 저장된 값이 그대로 남습니다.</li>
-<li>연구자가 만든 응답 6가지를 넣어 두 경로를 모두 실행했습니다. 렌즈 경로에서는 렌즈 명령 두 개가 준비됐고, 바디 경로에서는 바디 드라이버 함수의 입구에 도달했습니다.</li>
+<li>연구자가 만든 응답 6가지를 넣어 두 경로를 모두 실행했습니다. 렌즈 경로에서는 렌즈 명령 두 개가 준비됐고 바디 경로에서는 바디 드라이버 함수의 입구에 도달했습니다.</li>
 <li>실물 렌즈를 붙이거나 모터를 움직인 결과가 아닙니다. 특정 렌즈의 구동 방식을 바꾸는 수정 펌웨어를 만든 것도 아닙니다.</li>
 </ul>
 </section>
@@ -113,14 +113,14 @@
 <ul class="dg-legend"><li><i class="key"></i>이 문서가 다루는 판단 코드</li><li><i></i>물리 장치(이 연구에서 움직이지 않음)</li></ul>
 </figure>
 
-<p>펌웨어에는 C++ 클래스 이름이 남아 있어 코드의 역할을 짐작하는 데 도움이 됩니다. 이 문서에 나오는 <code>CAfMotor</code>, <code>CAfLens</code>, <code>CLensKaf2</code>, <code>CLensSdm</code>은 펌웨어 안의 <dfn title="C++ 실행 시간 형식 정보. 컴파일러가 클래스마다 이름 문자열을 남깁니다.">RTTI</dfn> 문자열에서 확인한 이름입니다. 이름이 마운트 종류(KAF2)와 모터 방식(SDM)을 가리키지만, 각 클래스가 실제로 하는 일은 아래에서 실행으로 확인한 범위까지만 말할 수 있습니다.</p>
+<p>펌웨어에는 C++ 클래스 이름이 남아 있어 코드의 역할을 짐작하는 데 도움이 됩니다. 이 문서에 나오는 <code>CAfMotor</code>, <code>CAfLens</code>, <code>CLensKaf2</code>, <code>CLensSdm</code>은 펌웨어 안의 <dfn title="C++ 실행 시간 형식 정보. 컴파일러가 클래스마다 이름 문자열을 남깁니다.">RTTI</dfn> 문자열에서 확인한 이름입니다. 이름이 마운트 종류(KAF2)와 모터 방식(SDM)을 가리키지만 각 클래스가 실제로 하는 일은 아래에서 실행으로 확인한 범위까지만 말할 수 있습니다.</p>
 <div class="callout"><strong class="label">주소 표기</strong>
 <p>코드 위치는 복호화한 이미지의 파일 오프셋입니다. 일부 코드는 시작할 때 RAM으로 복사되어 다른 주소에서 실행되므로, 오프셋에 <code>0x02000000</code>을 더한 주소에서 그대로 실행하면 안 됩니다. 검증기는 펌웨어에 들어 있는 복사 표 4행을 그대로 재현해 실행 주소를 맞췄습니다.</p></div>
 </section>
 
 <section id="capability">
 <h2>능력 바이트: 성공한 응답만 저장됩니다</h2>
-<p class="takeaway">렌즈 명령 <code>0x8205</code>의 1바이트 응답은 전송 결과가 0(성공)일 때만 저장되고, AF 코드는 그 바이트의 비트 6만 꺼내 씁니다.</p>
+<p class="takeaway">렌즈 명령 <code>0x8205</code>의 1바이트 응답은 전송 결과가 0(성공)일 때만 저장되고 AF 코드는 그 바이트의 비트 6만 꺼내 씁니다.</p>
 
 <figure class="diagram">
 <figcaption>능력 바이트가 만들어지고 쓰이는 경로</figcaption>
@@ -160,7 +160,7 @@
 <ul class="dg-legend"><li><i class="ok"></i>원본 코드 실행으로 확인</li><li><i class="model"></i>연구자가 넣은 값</li></ul>
 </figure>
 
-<p>능력을 묻는 쪽은 <code>CLensSdm</code>의 함수 <code>0x94DC4</code>입니다. 저장된 능력 바이트(<code>CLensKaf2</code> 객체의 6번 바이트)가 0이면 명령 <code>0x8205</code>를 준비합니다. 명령 디스패처와 처리기는 1바이트를 요청하고, 전송 결과가 0일 때만 응답을 저장합니다. <code>CAfLens</code>의 함수 <code>0x4C500</code>은 저장된 바이트에서 비트 6(값 <code>0x40</code>)만 꺼내 0 또는 1로 돌려줍니다. 비트 7만 켜진 응답은 0으로 판정됩니다.</p>
+<p>능력을 묻는 쪽은 <code>CLensSdm</code>의 함수 <code>0x94DC4</code>입니다. 저장된 능력 바이트(<code>CLensKaf2</code> 객체의 6번 바이트)가 0이면 명령 <code>0x8205</code>를 준비합니다. 명령 디스패처와 처리기는 1바이트를 요청하고 전송 결과가 0일 때만 응답을 저장합니다. <code>CAfLens</code>의 함수 <code>0x4C500</code>은 저장된 바이트에서 비트 6(값 <code>0x40</code>)만 꺼내 0 또는 1로 돌려줍니다. 비트 7만 켜진 응답은 0으로 판정됩니다.</p>
 <p>조회가 어떤 조건에서 실행되는지는 <a href="af-control.html#capability">다음 문서</a>에서 더 자세히 다룹니다. 렌즈를 붙였을 때 진행되는 전체 순서는 실행하지 않았습니다.</p>
 
 <details class="evidence"><summary>능력 바이트 경로의 함수와 명령</summary>
@@ -179,7 +179,7 @@
 
 <section id="drive">
 <h2>구동 준비: 같은 시작점에서 두 경로로 갈립니다</h2>
-<p class="takeaway">AF 구동 준비 함수는 비트 6이 1이면 렌즈에 보낼 명령을 준비하고, 0이면 렌즈 명령 없이 바디 드라이버로 갑니다.</p>
+<p class="takeaway">AF 구동 준비 함수는 비트 6이 1이면 렌즈에 보낼 명령을 준비하고 0이면 렌즈 명령 없이 바디 드라이버로 갑니다.</p>
 
 <figure class="diagram">
 <figcaption>구동 준비 함수 0x52E38에서 갈라지는 두 경로</figcaption>
@@ -226,7 +226,7 @@
 <ul class="dg-legend"><li><i class="key"></i>분기가 일어나는 함수</li><li><i class="ok"></i>원본 코드 실행으로 확인</li><li><i class="static"></i>호출 연결만 읽어 확인</li><li><i class="model"></i>대체한 경계</li></ul>
 </figure>
 
-<p>시험에서는 원본 <code>CAfMotor</code>의 구동 준비 함수 <code>0x52E38</code>에 준비한 객체와 인수 5를 넣었습니다. 분기 직전에 비트를 억지로 바꾸지 않았고, 앞 절의 원본 저장·조회 코드가 만든 값을 그대로 썼습니다.</p>
+<p>시험에서는 원본 <code>CAfMotor</code>의 구동 준비 함수 <code>0x52E38</code>에 준비한 객체와 인수 5를 넣었습니다. 분기 직전에 비트를 억지로 바꾸지 않았고 앞 절의 원본 저장·조회 코드가 만든 값을 그대로 썼습니다.</p>
 <ul>
 <li><strong>렌즈 명령 경로</strong> — 렌즈 명령 <code>0x8920</code>(1바이트)과 <code>0x8900</code>(2바이트)이 차례로 전송 함수에 넘어갔습니다. 시험용으로 넣어 둔 위치값 <code>0x0345</code>는 두 바이트 <code>03 45</code>로 준비됐습니다.</li>
 <li><strong>바디 드라이버 경로</strong> — 렌즈 명령은 하나도 나가지 않았습니다. 바디 드라이버 입구 <code>0x47D80</code>에 목표값 <code>0x12</code>가 전달되는 것까지 확인하고 멈췄습니다.</li>
@@ -245,7 +245,7 @@
 </tbody></table></div>
 
 <div class="callout warn"><strong class="label">주의</strong>
-<p>두 경로 모두 끝까지 간 것이 아닙니다. 렌즈 쪽은 전송 함수를 대체했으므로 실제 렌즈가 명령을 받아들이거나 움직였다는 증거가 아닙니다. 바디 쪽은 드라이버 입구에서 멈췄고, 그 아래의 물리 모터 출력은 실행하지 않았습니다.</p></div>
+<p>두 경로 모두 끝까지 간 것이 아닙니다. 렌즈 쪽은 전송 함수를 대체했으므로 실제 렌즈가 명령을 받아들이거나 움직였다는 증거가 아닙니다. 바디 쪽은 드라이버 입구에서 멈췄고 그 아래의 물리 모터 출력은 실행하지 않았습니다.</p></div>
 
 <details class="evidence"><summary>두 경로의 호출 연결과 시험 조건</summary>
 <div class="table-wrap"><table class="compact">
@@ -267,7 +267,7 @@
 
 <section id="model">
 <h2>서비스 메뉴의 “SDM On”과 렌즈 모델 분기는 별개입니다</h2>
-<p class="takeaway">펌웨어에는 SDM과 관련된 경로가 더 있지만, 위에서 본 촬영 AF의 구동 선택과는 다른 명령·다른 값을 씁니다.</p>
+<p class="takeaway">펌웨어에는 SDM과 관련된 경로가 더 있지만 위에서 본 촬영 AF의 구동 선택과는 다른 명령·다른 값을 씁니다.</p>
 
 <div class="table-wrap"><table>
 <caption>이름이 비슷하지만 서로 다른 세 경로</caption>
@@ -290,8 +290,8 @@
 
 <details class="evidence"><summary>서비스 경로와 모델 분기의 주소</summary>
 <ul>
-<li>서비스 문자열 <code>SDM On</code>은 파일 <code>0x85B26C</code>에 있습니다. 호출은 <code>0x85B088</code> → <code>0x5CA85C</code>, <code>0x5CA868</code> → <code>0x5D7034</code>, <code>0x5D7078</code> → <code>0x5D6E4C</code>이고, 명령 번호 <code>0x8601</code>은 <code>0x5D7070</code>의 명령에 들어 있습니다.</li>
-<li>모델 바이트: <code>0x4D404</code> → <code>0x4B9F8</code>(값 읽기), <code>0x4BA00</code> → <code>0x9025C</code>. 비교 명령은 <code>0x4D468</code>(<code>F1</code>)과 <code>0x4D498</code>(<code>F2</code>)이고, 분기는 <code>0x4D4F0</code> → <code>0x4D1BC</code>, <code>0x4D4E4</code> → <code>0x4D2BC</code>입니다.</li>
+<li>서비스 문자열 <code>SDM On</code>은 파일 <code>0x85B26C</code>에 있습니다. 호출은 <code>0x85B088</code> → <code>0x5CA85C</code>, <code>0x5CA868</code> → <code>0x5D7034</code>, <code>0x5D7078</code> → <code>0x5D6E4C</code>이고 명령 번호 <code>0x8601</code>은 <code>0x5D7070</code>의 명령에 들어 있습니다.</li>
+<li>모델 바이트: <code>0x4D404</code> → <code>0x4B9F8</code>(값 읽기), <code>0x4BA00</code> → <code>0x9025C</code>. 비교 명령은 <code>0x4D468</code>(<code>F1</code>)과 <code>0x4D498</code>(<code>F2</code>)이고 분기는 <code>0x4D4F0</code> → <code>0x4D1BC</code>, <code>0x4D4E4</code> → <code>0x4D2BC</code>입니다.</li>
 <li>근거는 <a href="af-drive.json">af-drive.json</a>의 <code>model_and_service</code>와 <code>native_profile_cases</code>입니다.</li>
 </ul>
 </details>
@@ -310,7 +310,7 @@
 
 <section id="reproduce">
 <h2>재현 방법</h2>
-<p>입력은 <a href="../inspect_firmware.py">복호화 도구</a>가 만든 <code>decoded.bin</code>이고, 에뮬레이터는 Unicorn 2.1.4입니다.</p>
+<p>입력은 <a href="../inspect_firmware.py">복호화 도구</a>가 만든 <code>decoded.bin</code>이고 에뮬레이터는 Unicorn 2.1.4입니다.</p>
 <pre><code>python verify_af_drive.py decoded.bin --emulate --compare analysis/af-drive.json</code></pre>
 <dl class="kv">
 <dt>정적 대조</dt><dd>명령어·상수 33개, 분기 36개, 코드 구간 해시 11개, 시작 복사 표 4행, 클래스 이름 5개</dd>

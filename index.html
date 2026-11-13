@@ -76,7 +76,7 @@
 
 <section class="band wrap" id="inside">
 <h2>펌웨어 파일 안에 든 것</h2>
-<p class="sub">배포 파일 <code>fwdc230b.bin</code>은 압축되어 있지 않고, 단순한 XOR 방식으로 난독화되어 있습니다. 풀어도 크기와 위치가 그대로입니다. 파일은 헤더 두 개와 난독화된 구간 세 개로 나뉩니다.</p>
+<p class="sub">배포 파일 <code>fwdc230b.bin</code>은 압축되어 있지 않고 단순한 XOR 방식으로 난독화되어 있습니다. 풀어도 크기와 위치가 그대로입니다. 파일은 헤더 두 개와 난독화된 구간 세 개로 나뉩니다.</p>
 <ul class="facts">
 <li><b>16,838,656바이트</b><span>파일 크기 (풀기 전후 같음)</span></li>
 <li><b>3개</b><span>XOR 난독화 구간</span></li>
@@ -127,7 +127,7 @@
 <div class="panel">
 <h3>어떤 CPU인가</h3>
 <p>시작 코드는 CPU의 식별 레지스터(<dfn title="Main ID Register. ARM CPU가 자신의 종류를 알려 주는 레지스터">MIDR</dfn>)를 읽어 부품 번호가 <code>0xC09</code>인지 검사합니다. Arm 문서에서 이 번호는 Cortex-A9입니다. 리코는 이 카메라의 영상 엔진을 PRIME III라고 부릅니다.</p>
-<p class="small muted">확인한 것은 펌웨어 안의 검사 코드입니다. 실제 카메라에서 레지스터 값을 읽은 것이 아니며, 칩의 부품 번호·코어 수·동작 클럭은 확인하지 못했습니다.</p>
+<p class="small muted">확인한 것은 펌웨어 안의 검사 코드입니다. 실제 카메라에서 레지스터 값을 읽은 것이 아니며 칩의 부품 번호·코어 수·동작 클럭은 확인하지 못했습니다.</p>
 </div>
 <div class="panel">
 <h3>K-3 Mark III와 무엇이 다른가</h3>
@@ -144,7 +144,7 @@
 <li><span class="badge ok">확인</span>
 <p>원본 펌웨어의 기계어를 PC의 CPU 에뮬레이터에서 실제로 실행해 관측했거나, 파일의 바이트를 직접 읽어 구조와 해시를 대조한 결과입니다.</p></li>
 <li><span class="badge static">정적 분석</span>
-<p>코드를 실행하지 않고, 기계어를 사람이 읽을 수 있게 바꾼 결과를 읽어서 판단한 내용입니다.</p></li>
+<p>코드를 실행하지 않고 기계어를 사람이 읽을 수 있게 바꾼 결과를 읽어서 판단한 내용입니다.</p></li>
 <li><span class="badge model">모델</span>
 <p>하드웨어의 응답이나 입력 데이터처럼, 실물 대신 연구자가 정해서 넣은 값입니다. 그 조건에서만 성립합니다.</p></li>
 <li><span class="badge open">미확인</span>
@@ -187,7 +187,7 @@
 </div>
 <ul class="dg-legend"><li><i class="ok"></i>확인</li><li><i class="model"></i>모델</li><li><i class="open"></i>미확인</li></ul>
 </figure>
-<p class="wrap-note small muted">이 기종의 RAW로 한 Lightroom 색 프로파일 실험은 성격이 다릅니다. 실제 RAW 파일을 실제 Adobe Lightroom Classic에 넣어 얻은 측정값이며, <a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/lightroom-bridge.html">K-3 Mark III 저장소의 Lightroom 색 프로파일 문서</a>에 세 기종을 함께 정리했습니다.</p>
+<p class="wrap-note small muted">이 기종의 RAW로 한 Lightroom 색 프로파일 실험은 성격이 다릅니다. 실제 RAW 파일을 실제 Adobe Lightroom Classic에 넣어 얻은 측정값이며 <a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/lightroom-bridge.html">K-3 Mark III 저장소의 Lightroom 색 프로파일 문서</a>에 세 기종을 함께 정리했습니다.</p>
 </section>
 
 <section class="band wrap" id="map">

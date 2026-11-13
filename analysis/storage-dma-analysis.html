@@ -20,16 +20,16 @@
 </header>
 <div class="layout">
 <!-- chrome:toc -->
-<nav class="toc" aria-label="이 문서의 목차"><h2 data-toc="no">이 문서에서</h2><ol><li><a href="#background">배경: 파일 하나가 카드에 쓰이는 단계</a></li><li><a href="#filesystem">카드 용량으로 백엔드를 고르고, 백엔드 A는 카드 객체로 이어집니다</a></li><li><a href="#sectors">전체 섹터는 원래 버퍼를, 부분 섹터는 캐시를 카드에 넘깁니다</a></li><li><a href="#sd">두 SD 포트에서 명령과 ADMA2 설명자가 설정됩니다</a></li><li><a href="#alternate">색 처리의 대체 출력 평면과 JPEG 목적지의 공유·재시도 조건</a></li><li><a href="#limits">한계와 남은 과제</a></li><li><a href="#verification">재현 방법</a></li><li><a href="#refs">근거 파일과 참고 자료</a></li></ol></nav>
+<nav class="toc" aria-label="이 문서의 목차"><h2 data-toc="no">이 문서에서</h2><ol><li><a href="#background">배경: 파일 하나가 카드에 쓰이는 단계</a></li><li><a href="#filesystem">카드 용량으로 백엔드를 고르고 백엔드 A는 카드 객체로 이어집니다</a></li><li><a href="#sectors">전체 섹터는 원래 버퍼를, 부분 섹터는 캐시를 카드에 넘깁니다</a></li><li><a href="#sd">두 SD 포트에서 명령과 ADMA2 설명자가 설정됩니다</a></li><li><a href="#alternate">색 처리의 대체 출력 평면과 JPEG 목적지의 공유·재시도 조건</a></li><li><a href="#limits">한계와 남은 과제</a></li><li><a href="#verification">재현 방법</a></li><li><a href="#refs">근거 파일과 참고 자료</a></li></ol></nav>
 <!-- /chrome:toc -->
 <main class="doc" id="main">
 
 <section class="summary">
 <h2 data-toc="no">핵심 요약</h2>
 <ul>
-<li>펌웨어에는 저장 백엔드가 두 개 있고, 카드를 마운트할 때 <strong>카드 용량</strong>으로 하나를 고릅니다. 이 문서는 그중 백엔드 A를 블록 콜백, SD 카드 객체, SD 명령까지 이었습니다.</li>
+<li>펌웨어에는 저장 백엔드가 두 개 있고 카드를 마운트할 때 <strong>카드 용량</strong>으로 하나를 고릅니다. 이 문서는 그중 백엔드 A를 블록 콜백, SD 카드 객체, SD 명령까지 이었습니다.</li>
 <li>섹터 경계에 맞는 쓰기는 <strong>원래 버퍼 주소 그대로</strong> 카드 쓰기에 전달됩니다. 섹터 일부만 쓰는 요청은 캐시에 복사해 두었다가 나중에 캐시 주소로 내보냅니다.</li>
-<li>SD 포트 두 개에서 단일 블록 쓰기(CMD24)와 다중 블록 쓰기(CMD25)의 레지스터 설정을 확인했습니다. 버퍼는 64KiB 조각마다 <strong>ADMA2 설명자</strong> 한 줄로 등록되고, 한 명령은 16MiB까지만 싣습니다.</li>
+<li>SD 포트 두 개에서 단일 블록 쓰기(CMD24)와 다중 블록 쓰기(CMD25)의 레지스터 설정을 확인했습니다. 버퍼는 64KiB 조각마다 <strong>ADMA2 설명자</strong> 한 줄로 등록되고 한 명령은 16MiB까지만 싣습니다.</li>
 <li>색 처리의 대체 출력 평면이 선택되는 조건과, JPEG 압축 목적지를 공유하거나 품질을 낮춰 다시 압축하는 조건도 확인했습니다.</li>
 <li>원본 코드를 합성 조건 49건으로 실행한 결과입니다. 실제 데이터가 DMA로 옮겨지거나 카드에 기록되는 것은 관측하지 않았습니다.</li>
 </ul>
@@ -69,15 +69,15 @@
 <ol class="flow">
 <li><strong>파일시스템</strong><span>파일 위치와 바이트 수를 섹터 번호(LBA)와 섹터 개수로 바꿉니다.</span></li>
 <li><strong>카드 드라이버</strong><span>섹터 요청을 SD 명령으로 바꿉니다. 한 블록은 CMD24, 여러 블록은 CMD25입니다.</span></li>
-<li><strong>호스트 컨트롤러</strong><span>명령을 보내고, 데이터가 있는 메모리 위치를 표로 만들어 하드웨어에 알려 줍니다.</span></li>
+<li><strong>호스트 컨트롤러</strong><span>명령을 보내고 데이터가 있는 메모리 위치를 표로 만들어 하드웨어에 알려 줍니다.</span></li>
 <li><strong>SD 카드</strong><span>하드웨어가 표를 따라 메모리에서 데이터를 가져가 카드에 보냅니다.</span></li>
 </ol>
 <h3>이 문서에 나오는 용어</h3>
 <ul>
-<li><strong>CMD24, CMD25</strong> — SD 규격의 쓰기 명령입니다. CMD24는 WRITE_BLOCK(한 블록), CMD25는 WRITE_MULTIPLE_BLOCK(연속 여러 블록)입니다. 읽기는 CMD17과 CMD18이고, CMD23은 블록 개수를 미리 알리는 명령, CMD9는 카드 정보(CSD)를 읽는 명령입니다. 번호와 이름은 <a href="https://github.com/torvalds/linux/blob/v6.18/include/linux/mmc/mmc.h#L40-L64">Linux의 MMC 명령 정의</a>와 대조했습니다.</li>
+<li><strong>CMD24, CMD25</strong> — SD 규격의 쓰기 명령입니다. CMD24는 WRITE_BLOCK(한 블록), CMD25는 WRITE_MULTIPLE_BLOCK(연속 여러 블록)입니다. 읽기는 CMD17과 CMD18이고 CMD23은 블록 개수를 미리 알리는 명령, CMD9는 카드 정보(CSD)를 읽는 명령입니다. 번호와 이름은 <a href="https://github.com/torvalds/linux/blob/v6.18/include/linux/mmc/mmc.h#L40-L64">Linux의 MMC 명령 정의</a>와 대조했습니다.</li>
 <li><strong>DMA와 ADMA2</strong> — <dfn title="Direct Memory Access. CPU가 한 바이트씩 옮기지 않고 하드웨어가 메모리에서 직접 데이터를 가져가는 방식">DMA</dfn>는 하드웨어가 메모리에서 데이터를 직접 가져가는 방식입니다. ADMA2는 SD 호스트 컨트롤러 규격의 DMA 방식으로, “이 주소에서 이만큼”을 적은 8바이트 설명자를 표로 늘어놓습니다.</li>
 <li><strong>백엔드 A, B</strong> — 파일시스템 객체에 등록된 두 저장 구현을 이 연구에서 구분해 부르는 이름입니다. 파일시스템의 종류를 뜻하지 않습니다.</li>
-<li><strong>주소 표기</strong> — 코드 주소는 복호화한 이미지의 파일 오프셋이고, 가상 주소는 여기에 <code>0x02000000</code>을 더한 값입니다. <code>0xC6000000</code>, <code>0xC7000000</code>은 SD 포트의 장치 레지스터 주소입니다.</li>
+<li><strong>주소 표기</strong> — 코드 주소는 복호화한 이미지의 파일 오프셋이고 가상 주소는 여기에 <code>0x02000000</code>을 더한 값입니다. <code>0xC6000000</code>, <code>0xC7000000</code>은 SD 포트의 장치 레지스터 주소입니다.</li>
 </ul>
 <p>SD 명령과 CSD의 원문 규격은 SD Association의 <a href="https://www.sdcard.org/downloads/pls/">간이 규격 내려받기 페이지</a>에 있습니다(Part 1 Physical Layer, Part A2 SD Host Controller). 레지스터 배치와 설명자 형식은 같은 규격을 구현한 <a href="https://github.com/torvalds/linux/blob/v6.18/drivers/mmc/host/sdhci.h">Linux의 SDHCI 정의</a>와 대조했습니다.</p>
 <div class="callout warn"><strong class="label">그림을 읽을 때 주의</strong>
@@ -85,7 +85,7 @@
 </section>
 
 <section id="filesystem">
-<h2>카드 용량으로 백엔드를 고르고, 백엔드 A는 카드 객체로 이어집니다</h2>
+<h2>카드 용량으로 백엔드를 고르고 백엔드 A는 카드 객체로 이어집니다</h2>
 <p class="takeaway">파일시스템 어댑터는 마운트 때 정해 둔 백엔드로 쓰기를 넘깁니다. 백엔드 A의 쓰기는 파일시스템 라이브러리의 섹터 처리와 블록 콜백을 거쳐, 포트마다 하나씩 있는 SD 카드 객체의 쓰기 함수에 닿습니다.</p>
 
 <figure class="diagram">
@@ -210,7 +210,7 @@
 
 <section id="sectors">
 <h2>전체 섹터는 원래 버퍼를, 부분 섹터는 캐시를 카드에 넘깁니다</h2>
-<p class="takeaway">섹터 경계에 딱 맞는 요청은 받은 버퍼 주소를 그대로 카드 쓰기에 전달합니다. 섹터 안쪽 일부만 바꾸는 요청은 캐시의 해당 구간만 고쳐 두고, 나중에 별도의 내보내기 함수가 캐시 주소로 한 섹터를 씁니다.</p>
+<p class="takeaway">섹터 경계에 딱 맞는 요청은 받은 버퍼 주소를 그대로 카드 쓰기에 전달합니다. 섹터 안쪽 일부만 바꾸는 요청은 캐시의 해당 구간만 고쳐 두고 나중에 별도의 내보내기 함수가 캐시 주소로 한 섹터를 씁니다.</p>
 
 <figure class="diagram">
 <figcaption>바이트 쓰기가 블록 쓰기로 바뀌는 두 경우</figcaption>
@@ -295,7 +295,7 @@
 <p>둘째 줄은 파일시스템 검증에서, 셋째 줄은 SD 검증에서 따로 실행한 결과입니다.</p>
 </figure>
 <ul>
-<li><strong>블록 콜백 단위</strong> — 블록 콜백을 부르는 함수는 한 번에 넘기는 블록 수를 <code>0xFFFF</code>개 이하로 자릅니다. 65,536블록 요청은 65,535블록과 1블록으로 나뉘었고, 둘째 호출의 버퍼 주소는 65,535 × 512바이트만큼 뒤였습니다.</li>
+<li><strong>블록 콜백 단위</strong> — 블록 콜백을 부르는 함수는 한 번에 넘기는 블록 수를 <code>0xFFFF</code>개 이하로 자릅니다. 65,536블록 요청은 65,535블록과 1블록으로 나뉘었고 둘째 호출의 버퍼 주소는 65,535 × 512바이트만큼 뒤였습니다.</li>
 <li><strong>카드 명령 단위</strong> — 카드 쓰기 루프는 호스트 객체에 든 상한으로 다시 자릅니다. 호스트 생성자가 넣는 상한은 <code>0x8000</code>블록, 곧 16MiB이고 64KiB 설명자 256개와 맞습니다. 65,535블록 요청은 32,768블록과 32,767블록의 CMD25 두 번이 되었습니다. 두 설명자 표 전체, 둘째 명령의 LBA와 버퍼 주소 증가, 명령 레지스터 쓰기를 대조했습니다.</li>
 <li><strong>실패했을 때</strong> — 첫 호출이 실패하면 둘째 호출을 하지 않았습니다. 이 사례에서는 오류 정책 함수를 0을 돌려주도록 대체했으므로, 원래 정책에 따른 재시도 전체는 실행하지 않았습니다.</li>
 </ul>
@@ -319,7 +319,7 @@
 
 <section id="sd">
 <h2>두 SD 포트에서 명령과 ADMA2 설명자가 설정됩니다</h2>
-<p class="takeaway">카드 쓰기 함수는 버퍼를 64KiB 이하 조각으로 나눠 설명자 표를 만들고, 표의 주소와 블록 크기·개수, 인수, 명령을 포트 레지스터에 차례로 씁니다. 이 단계에서 영상 데이터를 다른 버퍼로 복사하지 않습니다.</p>
+<p class="takeaway">카드 쓰기 함수는 버퍼를 64KiB 이하 조각으로 나눠 설명자 표를 만들고 표의 주소와 블록 크기·개수, 인수, 명령을 포트 레지스터에 차례로 씁니다. 이 단계에서 영상 데이터를 다른 버퍼로 복사하지 않습니다.</p>
 
 <figure class="diagram">
 <figcaption>129블록 쓰기에서 만들어진 설명자 표</figcaption>
@@ -386,8 +386,8 @@
 </figure>
 
 <h3>포트와 호스트 설정</h3>
-<p>포트 설정표에는 두 줄이 있고 각각 레지스터 기준 주소 <code>0xC6000000</code>과 <code>0xC7000000</code>을 갖습니다. 초기화 코드는 이 값을 호스트의 컨트롤러 래퍼에 넘깁니다. 호스트 초기화는 제어 레지스터 <code>+0x28</code>의 비트 4:3에 이진수 10을 넣는데, 이는 32비트 ADMA2를 고르는 값과 같습니다.</p>
-<p>K-3 II에는 SD 카드 슬롯이 두 개(SD1, SD2) 있습니다(<a href="https://www.ricoh-imaging.co.jp/english/support/man-pdf/k-3-2.pdf">사용설명서</a> 37쪽). 포트가 둘이라는 점은 이와 어울리지만, 두 포트 주소만으로 어느 포트가 어느 슬롯인지, 칩이 무엇인지는 정할 수 없습니다.</p>
+<p>포트 설정표에는 두 줄이 있고 각각 레지스터 기준 주소 <code>0xC6000000</code>과 <code>0xC7000000</code>을 갖습니다. 초기화 코드는 이 값을 호스트의 컨트롤러 래퍼에 넘깁니다. 호스트 초기화는 제어 레지스터 <code>+0x28</code>의 비트 4:3에 이진수 10을 넣는데 이는 32비트 ADMA2를 고르는 값과 같습니다.</p>
+<p>K-3 II에는 SD 카드 슬롯이 두 개(SD1, SD2) 있습니다(<a href="https://www.ricoh-imaging.co.jp/english/support/man-pdf/k-3-2.pdf">사용설명서</a> 37쪽). 포트가 둘이라는 점은 이와 어울리지만 두 포트 주소만으로 어느 포트가 어느 슬롯인지, 칩이 무엇인지는 정할 수 없습니다.</p>
 
 <h3>실행한 읽기·쓰기 사례</h3>
 <div class="table-wrap"><table>
@@ -405,7 +405,7 @@
 
 <h3>설명자와 주소 인수</h3>
 <ul>
-<li><strong>설명자 형식</strong> — 리틀 엔디언으로 <code>{16비트 속성, 16비트 길이, 32비트 버퍼 주소}</code>입니다. 일반 전송의 속성은 <code>0x21</code>, 마지막 줄은 <code>0x23</code>입니다. 길이 칸 0은 65,536바이트를 나타냅니다. 형식은 SDHCI의 32비트 ADMA2 설명자와 같고, 길이 0의 뜻은 <a href="https://github.com/torvalds/linux/blob/v6.18/drivers/mmc/host/sdhci.c#L4755-L4783">Linux 드라이버의 설명</a>과도 맞습니다.</li>
+<li><strong>설명자 형식</strong> — 리틀 엔디언으로 <code>{16비트 속성, 16비트 길이, 32비트 버퍼 주소}</code>입니다. 일반 전송의 속성은 <code>0x21</code>, 마지막 줄은 <code>0x23</code>입니다. 길이 칸 0은 65,536바이트를 나타냅니다. 형식은 SDHCI의 32비트 ADMA2 설명자와 같고 길이 0의 뜻은 <a href="https://github.com/torvalds/linux/blob/v6.18/drivers/mmc/host/sdhci.c#L4755-L4783">Linux 드라이버의 설명</a>과도 맞습니다.</li>
 <li><strong>버퍼 주소</strong> — 설명자의 주소는 받은 버퍼 포인터에 이미 등록한 바이트 수를 더한 값입니다. 129블록 사례에서 둘째 줄의 주소는 첫 줄보다 정확히 <code>0x10000</code> 컸습니다.</li>
 <li><strong>주소 인수</strong> — 카드 객체의 주소 방식 값이 2이면 LBA를 그대로, 그 밖에는 LBA를 왼쪽으로 9비트 민 값(바이트 주소)을 인수로 보냅니다. 블록 주소를 쓰는 카드와 바이트 주소를 쓰는 카드의 구분과 맞습니다. 값 2가 속한 열거형 전체와 카드 초기화의 모든 분기를 확정한 것은 아닙니다.</li>
 </ul>
@@ -413,11 +413,11 @@
 <h3>완료 통지와 오류 처리</h3>
 <ol class="flow">
 <li class="ok"><strong>인터럽트 처리기</strong><span>포트의 상태 레지스터를 읽어 정상 플래그와 오류 플래그로 나눕니다.</span></li>
-<li class="ok"><strong>RTOS 이벤트 게시</strong><span>같은 이벤트 객체에 두 값을 게시하고, 처리한 비트를 상태 레지스터에 다시 씁니다. 1을 쓰면 지워지는 방식의 비트입니다.</span></li>
+<li class="ok"><strong>RTOS 이벤트 게시</strong><span>같은 이벤트 객체에 두 값을 게시하고 처리한 비트를 상태 레지스터에 다시 씁니다. 1을 쓰면 지워지는 방식의 비트입니다.</span></li>
 <li class="ok"><strong>명령 완료 대기</strong><span>쓰기 함수가 비트 0을 기다립니다.</span></li>
 <li class="ok"><strong>전송 완료 대기</strong><span>비트 1을 기다립니다. 오류 비트나 카드 제거 비트가 오면 실패로 처리합니다.</span></li>
 </ol>
-<p>인터럽트 사례에서는 상태 값 <code>0x02008003</code>을 넣었습니다. 처리기는 <code>0x8003</code>과 <code>0x02000000</code>을 같은 이벤트 객체에 게시하고, 같은 두 값을 상태 레지스터에 기록했습니다.</p>
+<p>인터럽트 사례에서는 상태 값 <code>0x02008003</code>을 넣었습니다. 처리기는 <code>0x8003</code>과 <code>0x02000000</code>을 같은 이벤트 객체에 게시하고 같은 두 값을 상태 레지스터에 기록했습니다.</p>
 <div class="table-wrap"><table>
 <caption>오류를 넣은 5건 (모두 1블록 쓰기, 결과는 실패 반환)</caption>
 <thead><tr><th>넣은 조건</th><th>어디까지 진행했나</th></tr></thead>
@@ -451,7 +451,7 @@
 
 <section id="alternate">
 <h2>색 처리의 대체 출력 평면과 JPEG 목적지의 공유·재시도 조건</h2>
-<p class="takeaway">색 처리 모듈은 조건에 따라 평소와 다른 출력 평면을 쓰거나 두 번 반복합니다. JPEG 쪽은 두 출력이 목적지를 나눠 쓰거나 함께 쓰며, 결과가 용량에 맞지 않으면 품질을 낮춰 같은 자리에 다시 압축합니다.</p>
+<p class="takeaway">색 처리 모듈은 조건에 따라 평소와 다른 출력 평면을 쓰거나 두 번 반복합니다. JPEG 쪽은 두 출력이 목적지를 나눠 쓰거나 함께 쓰며 결과가 용량에 맞지 않으면 품질을 낮춰 같은 자리에 다시 압축합니다.</p>
 <p>앞 문서의 <a href="output-menu-analysis.html#buffers">버퍼 경로</a>는 색 처리 모듈이 작업의 세 평면 주소를 직접 쓰는 경우였습니다. 여기서는 그 밖의 분기를 봅니다. 이 주제의 다른 문서에서는 색 처리 모듈을 CPP라고 부릅니다.</p>
 
 <figure class="diagram">
@@ -515,8 +515,8 @@
 
 <ul>
 <li><strong>두 조건은 서로 다른 값을 봅니다</strong> — 첫 패스의 주소 선택은 작업의 마스크 값에서 <code>0x44</code> 비트를 봅니다. 별도 디스크립터를 채우는 쪽의 조건(배치 구분값이 1)은 또 다른 값입니다. 두 조건을 따로 바꾼 합성 사례를 포함해 8건을 실행했습니다.</li>
-<li><strong>두 번째 패스의 평면</strong> — 버퍼 슬롯 13의 배치 함수가 계산합니다. 주소를 32바이트 단위로 올리고, 가로·세로 곱과 그 절반, 여백 값을 써서 세 평면을 놓습니다.</li>
-<li><strong>처리 허용 표시</strong> — 일반 작업 생성자는 처리 허용 표시를 1로 둡니다. 이것을 0으로 넣은 사례는 방어 분기를 보려고 주입한 것이며, 일반 작업의 상태를 관측한 결과가 아닙니다. 이 경우 출력 주소 기록 구간에 들어가지 않았습니다.</li>
+<li><strong>두 번째 패스의 평면</strong> — 버퍼 슬롯 13의 배치 함수가 계산합니다. 주소를 32바이트 단위로 올리고 가로·세로 곱과 그 절반, 여백 값을 써서 세 평면을 놓습니다.</li>
+<li><strong>처리 허용 표시</strong> — 일반 작업 생성자는 처리 허용 표시를 1로 둡니다. 이것을 0으로 넣은 사례는 방어 분기를 보려고 주입한 것이며 일반 작업의 상태를 관측한 결과가 아닙니다. 이 경우 출력 주소 기록 구간에 들어가지 않았습니다.</li>
 </ul>
 <div class="callout warn"><strong class="label">이 문서에서 확인하지 못한 연결</strong>
 <p>일반 스케일러의 입력은 여전히 직접 평면 필드를 읽습니다. 그래서 대체 출력 평면이 JPEG 모듈 16의 입력과 같은 메모리를 가리키는지는 여기서 확인되지 않았습니다. 이어지는 추적은 <a href="backend-b-cpp-analysis.html">백엔드 B와 두 번째 CPP 출력</a>, <a href="masked-cpp-analysis.html">마스크 CPP와 보조 JPEG 입력</a>에 있습니다.</p></div>
@@ -527,11 +527,11 @@
 <thead><tr><th>조건</th><th>목적지와 경계 동작</th><th>코드 구간</th></tr></thead>
 <tbody>
 <tr><th scope="row">작업 <code>+0x65</code>가 0</th><td>작업 <code>+0x6B</code>에 따라 두 출력의 목적지를 따로 두거나 함께 씁니다.</td><td><code>0x660808</code>~<code>0x660844</code></td></tr>
-<tr><th scope="row">작업 <code>+0x65</code>가 0이 아님</th><td>32바이트로 정렬한 기준 주소 P를 잡고, 두 출력이 P + 16을 함께 씁니다. 출력별 용량은 별도 필드에 그대로 둡니다.</td><td><code>0x660798</code>~<code>0x660804</code></td></tr>
+<tr><th scope="row">작업 <code>+0x65</code>가 0이 아님</th><td>32바이트로 정렬한 기준 주소 P를 잡고 두 출력이 P + 16을 함께 씁니다. 출력별 용량은 별도 필드에 그대로 둡니다.</td><td><code>0x660798</code>~<code>0x660804</code></td></tr>
 <tr><th scope="row">첫 압축 시도</th><td>0 &lt; 길이 ≤ 용량이면 재시도 없이 끝냅니다.</td><td><code>0x576C60</code>~<code>0x576C98</code></td></tr>
 <tr><th scope="row">재시도</th><td>0 &lt; 길이 &lt; 용량이면 끝냅니다. 길이가 용량과 같아도 품질값이 100보다 높으면 계속합니다.</td><td><code>0x576780</code>~<code>0x576824</code></td></tr>
 </tbody></table></div>
-<p>재시도는 같은 입력 평면 세 개, 같은 목적지 포인터, 같은 용량을 유지합니다. 한 번 돌 때마다 품질값을 재시도 선택값에 따라 줄입니다. 선택값 0, 1, 2의 감소량은 500, 1,000, 2,000이고 다른 값은 500입니다. 이 선택값은 톤 선택값과 다른 번호입니다. 품질값은 100 아래로 내려가지 않으며, 100에 닿으면 용량 조건을 만족하지 못해도 반복을 끝냅니다.</p>
+<p>재시도는 같은 입력 평면 세 개, 같은 목적지 포인터, 같은 용량을 유지합니다. 한 번 돌 때마다 품질값을 재시도 선택값에 따라 줄입니다. 선택값 0, 1, 2의 감소량은 500, 1,000, 2,000이고 다른 값은 500입니다. 이 선택값은 톤 선택값과 다른 번호입니다. 품질값은 100 아래로 내려가지 않으며 100에 닿으면 용량 조건을 만족하지 못해도 반복을 끝냅니다.</p>
 <div class="table-wrap"><table>
 <caption>재시도 4건 (용량 800, 보고 길이는 넣어 준 값)</caption>
 <thead><tr><th class="n">재시도 선택값</th><th class="n">시작 품질값</th><th>시도마다의 품질값 → 보고 길이</th><th class="n">끝난 품질값</th><th class="n">최종 길이</th></tr></thead>
@@ -542,7 +542,7 @@
 <tr><td class="n">9</td><td class="n">1,300</td><td>800 → 1</td><td class="n">800</td><td class="n">1</td></tr>
 </tbody></table></div>
 <div class="callout warn"><strong class="label">주의</strong>
-<p>둘째 사례처럼 품질값이 하한에 닿으면 길이가 용량을 넘어도 반복이 끝납니다. 반복이 끝났다는 것을 유효한 JPEG가 만들어졌다는 성공 판정으로 일반화하지 않습니다. 시험에서는 원본의 디스크립터 조립 코드를 실행하고 장치가 보고할 길이를 넣어 주었으며, JPEG 파일은 만들지 않았습니다.</p></div>
+<p>둘째 사례처럼 품질값이 하한에 닿으면 길이가 용량을 넘어도 반복이 끝납니다. 반복이 끝났다는 것을 유효한 JPEG가 만들어졌다는 성공 판정으로 일반화하지 않습니다. 시험에서는 원본의 디스크립터 조립 코드를 실행하고 장치가 보고할 길이를 넣어 주었으며 JPEG 파일은 만들지 않았습니다.</p></div>
 
 <details class="evidence"><summary>대체 버퍼 경로의 위치와 합성 사례</summary>
 <div class="table-wrap"><table class="compact">

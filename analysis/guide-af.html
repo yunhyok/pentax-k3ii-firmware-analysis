@@ -28,7 +28,7 @@
 <h2 data-toc="no">핵심 요약</h2>
 <ul>
 <li>카메라는 렌즈가 응답한 1바이트의 <strong>비트 6</strong>을 보고 AF 구동 준비를 렌즈 명령 경로와 바디 드라이버 경로로 나눕니다.</li>
-<li>구동 준비 함수는 <strong>16비트 요청값</strong>을 받습니다. 바디 경로에서는 카운터와 보정값으로 계산하고, 렌즈 경로에서는 렌즈가 돌려준 값을 씁니다. 카운터를 읽는 레지스터와 보정값을 쓰는 코드까지 찾았습니다.</li>
+<li>구동 준비 함수는 <strong>16비트 요청값</strong>을 받습니다. 바디 경로에서는 카운터와 보정값으로 계산하고 렌즈 경로에서는 렌즈가 돌려준 값을 씁니다. 카운터를 읽는 레지스터와 보정값을 쓰는 코드까지 찾았습니다.</li>
 <li>확인한 것은 구동 준비 함수에 값이 도착하는 데까지입니다. <strong>실물 렌즈를 붙이거나 모터를 움직여 본 결과가 아닙니다.</strong> AF 센서가 초점 오차를 구하는 알고리즘도 아직 다루지 못했습니다.</li>
 <li>이 연구의 목적은 나중에 AF 동작의 변경을 검토할 때 필요한 기본 구조를 확보하는 것입니다. 특정 렌즈용 수정 펌웨어를 만든 것이 아닙니다.</li>
 </ul>
@@ -110,10 +110,10 @@
 <h2>배경 지식</h2>
 
 <h3>K-3 II의 AF 하드웨어</h3>
-<p>리코의 <a href="https://www.ricoh-imaging.co.jp/english/products/k-3-2/spec/">제품 사양</a>에 따르면 K-3 II의 초점 센서는 SAFOX 11(측거점 27개)이고, 마운트는 KAF2입니다. KAF2 마운트에는 AF 커플러, 렌즈 정보 접점, 전원 접점이 있습니다. 이 주제의 문서는 센서가 초점 오차를 구하는 계산은 다루지 못했고, 그 뒤의 구동 준비 단계를 다룹니다.</p>
+<p>리코의 <a href="https://www.ricoh-imaging.co.jp/english/products/k-3-2/spec/">제품 사양</a>에 따르면 K-3 II의 초점 센서는 SAFOX 11(측거점 27개)이고 마운트는 KAF2입니다. KAF2 마운트에는 AF 커플러, 렌즈 정보 접점, 전원 접점이 있습니다. 이 주제의 문서는 센서가 초점 오차를 구하는 계산은 다루지 못했고 그 뒤의 구동 준비 단계를 다룹니다.</p>
 
 <h3>바디 구동과 렌즈 구동</h3>
-<p>K 마운트 렌즈의 AF는 두 방식으로 구동됩니다. 바디 안의 모터가 마운트의 회전축(AF 커플러)을 돌리는 방식과, 렌즈 안의 모터(SDM·DC·PLM)가 직접 초점 기구를 움직이는 방식입니다. 리코의 <a href="https://www.ricoh-imaging.co.jp/english/products/lens/suit_mount.html">마운트별 호환표</a>가 이 구분을 보여 줍니다. 이후 마운트인 KAF3은 KAF2에서 AF 커플러를 뺀 것이어서, KAF3 렌즈는 렌즈 구동만 됩니다.</p>
+<p>K 마운트 렌즈의 AF는 두 방식으로 구동됩니다. 바디 안의 모터가 마운트의 회전축(AF 커플러)을 돌리는 방식과, 렌즈 안의 모터(SDM·DC·PLM)가 직접 초점 기구를 움직이는 방식입니다. 리코의 <a href="https://www.ricoh-imaging.co.jp/english/products/lens/suit_mount.html">마운트별 호환표</a>가 이 구분을 보여 줍니다. 이후 마운트인 KAF3은 KAF2에서 AF 커플러를 뺀 것이어서 KAF3 렌즈는 렌즈 구동만 됩니다.</p>
 
 <h3>렌즈 명령</h3>
 <p>카메라는 전기 접점으로 렌즈와 바이트를 주고받습니다. 펌웨어에서는 이 통신이 16비트 번호가 붙은 명령으로 나타납니다. 이 문서들에 나오는 명령은 넷입니다. 번호에 붙인 뜻은 코드에서 쓰이는 맥락으로 판단한 것입니다.</p>
@@ -134,7 +134,7 @@
 <p>분석한 펌웨어 1.12의 <a href="https://www.ricoh-imaging.co.jp/english/support/digital/k3_2.html">공식 변경 내용</a>은 HD PENTAX-DA★16-50mmF2.8ED PLM AW 렌즈의 초점 동작 최적화입니다. 이 렌즈는 리코가 <a href="https://news.ricoh-imaging.co.jp/rim_info2/2021/20210715_021095.html">PLM(펄스 모터)</a>을 넣었다고 발표한 렌즈입니다. 이 변경이 코드의 어느 부분에 해당하는지는 조사하지 않았습니다.</p>
 
 <h3>“원본 코드 실행으로 확인”의 뜻</h3>
-<p>검증은 펌웨어의 ARM 기계어를 PC의 CPU 에뮬레이터(<a href="https://github.com/unicorn-engine/unicorn">Unicorn</a>)에서 실행하는 방식입니다. 판단과 계산은 원본 코드가 합니다. 렌즈의 응답, 카운터 값, 객체의 초기 상태는 연구자가 정해서 넣었습니다. 따라서 결과는 “이런 입력이 주어지면 코드가 이렇게 움직인다”는 뜻이며, 실제 카메라에서 그런 입력이 생기는지는 별개의 물음입니다.</p>
+<p>검증은 펌웨어의 ARM 기계어를 PC의 CPU 에뮬레이터(<a href="https://github.com/unicorn-engine/unicorn">Unicorn</a>)에서 실행하는 방식입니다. 판단과 계산은 원본 코드가 합니다. 렌즈의 응답, 카운터 값, 객체의 초기 상태는 연구자가 정해서 넣었습니다. 따라서 결과는 “이런 입력이 주어지면 코드가 이렇게 움직인다”는 뜻이며 실제 카메라에서 그런 입력이 생기는지는 별개의 물음입니다.</p>
 </section>
 
 <section id="status">
@@ -146,7 +146,7 @@
 <tr><th scope="row">렌즈 명령 <code>0x8205</code>의 응답은 전송이 성공했을 때만 능력 바이트로 저장됨</th><td><span class="badge ok">확인</span> <span class="badge model">모델</span></td><td><a href="af-drive.html#capability">구동 분기</a></td></tr>
 <tr><th scope="row">능력 바이트의 비트 6에 따라 구동 준비가 렌즈 명령 경로와 바디 드라이버 경로로 갈림</th><td><span class="badge ok">확인</span> <span class="badge model">모델</span></td><td><a href="af-drive.html#drive">구동 분기</a></td></tr>
 <tr><th scope="row">능력 조회는 상태 비트가 켜져 있고 저장된 값이 0일 때만 실행됨</th><td><span class="badge ok">확인</span> <span class="badge model">모델</span></td><td><a href="af-control.html#capability">요청 계산과 전달</a></td></tr>
-<tr><th scope="row">바디 경로의 요청값은 “정규화한 입력 − 차감값 + 보정값”. 0이나 음수면 전달하지 않고, 크기에 따라 구간 0·1·2를 기록</th><td><span class="badge ok">확인</span> <span class="badge model">모델</span></td><td><a href="af-control.html#body">요청 계산과 전달</a></td></tr>
+<tr><th scope="row">바디 경로의 요청값은 “정규화한 입력 − 차감값 + 보정값”. 0이나 음수면 전달하지 않고 크기에 따라 구간 0·1·2를 기록</th><td><span class="badge ok">확인</span> <span class="badge model">모델</span></td><td><a href="af-control.html#body">요청 계산과 전달</a></td></tr>
 <tr><th scope="row">렌즈 경로의 요청값은 렌즈 명령 <code>0x8211</code>의 2바이트 응답</th><td><span class="badge ok">확인</span> <span class="badge model">모델</span></td><td><a href="af-control.html#lens">요청 계산과 전달</a></td></tr>
 <tr><th scope="row">입력 카운터는 타이머 드라이버가 가리키는 레지스터에서 읽음</th><td><span class="badge ok">확인</span></td><td><a href="af-input.html#binding">카운터와 보정값</a></td></tr>
 <tr><th scope="row">보정값은 조건을 통과하면 카운터에서 40을 뺀 값(분기에 따라 카운터 그대로)으로 저장됨</th><td><span class="badge ok">확인</span> <span class="badge model">모델</span></td><td><a href="af-input.html#producer">카운터와 보정값</a></td></tr>
@@ -168,7 +168,7 @@
 <p>조사한 순서가 곧 이해하기 쉬운 순서입니다. 구동 방식의 선택에서 시작해 값의 출처로 거슬러 올라갑니다.</p>
 <ul class="cards">
 <li class="card"><span class="tag">1단계</span><h3><a href="af-drive.html">렌즈 능력과 구동 분기</a></h3><p class="q">카메라는 바디 모터와 렌즈 안 모터 중 어느 쪽으로 구동할지를 무엇으로 정하는가.</p><p>렌즈가 응답한 능력 바이트의 비트 6이 두 경로를 가릅니다.</p></li>
-<li class="card"><span class="tag">2단계</span><h3><a href="af-control.html">AF 요청 계산과 구동 준비</a></h3><p class="q">능력 조회는 언제 실행되고, 구동 준비 함수가 받는 요청값은 어떻게 계산되는가.</p><p>한 호출이 계산해 적어 둔 16비트 값을 다음 호출이 읽어 전달합니다.</p></li>
+<li class="card"><span class="tag">2단계</span><h3><a href="af-control.html">AF 요청 계산과 구동 준비</a></h3><p class="q">능력 조회는 언제 실행되고 구동 준비 함수가 받는 요청값은 어떻게 계산되는가.</p><p>한 호출이 계산해 적어 둔 16비트 값을 다음 호출이 읽어 전달합니다.</p></li>
 <li class="card"><span class="tag">3단계</span><h3><a href="af-input.html">AF 카운터와 보정값</a></h3><p class="q">요청값 계산에 들어가는 입력과 보정값은 펌웨어 안의 어디서 오는가.</p><p>입력은 타이머 드라이버의 카운터 레지스터에서, 보정값은 AF 모터 객체의 함수에서 나옵니다.</p></li>
 </ul>
 </section>

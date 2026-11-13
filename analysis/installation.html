@@ -20,17 +20,17 @@
 </header>
 <div class="layout">
 <!-- chrome:toc -->
-<nav class="toc" aria-label="이 문서의 목차"><h2 data-toc="no">이 문서에서</h2><ol><li><a href="#background">배경: 검사 다음에 벌어지는 일</a></li><li><a href="#aux">보조 이미지: 전송 오류는 즉시 실패, 내용 불일치만 다시 시도</a></li><li><a href="#primary">주 이미지: RAM에 복사된 송신기가 기록 명령을 보냅니다</a></li><li><a href="#errors">프로그램 오류 2는 응답에 남지 않고, 다시 비교가 불일치를 잡습니다</a></li><li><a href="#order">실제 갱신 순서: 섹터 13~22는 건너뛰고 섹터 0은 마지막</a></li><li><a href="#limits">한계와 남은 과제</a></li><li><a href="#reproduce">재현 방법</a></li><li><a href="#refs">근거 파일과 참고 자료</a></li></ol></nav>
+<nav class="toc" aria-label="이 문서의 목차"><h2 data-toc="no">이 문서에서</h2><ol><li><a href="#background">배경: 검사 다음에 벌어지는 일</a></li><li><a href="#aux">보조 이미지: 전송 오류는 즉시 실패, 내용 불일치만 다시 시도</a></li><li><a href="#primary">주 이미지: RAM에 복사된 송신기가 기록 명령을 보냅니다</a></li><li><a href="#errors">프로그램 오류 2는 응답에 남지 않고 다시 비교가 불일치를 잡습니다</a></li><li><a href="#order">실제 갱신 순서: 섹터 13~22는 건너뛰고 섹터 0은 마지막</a></li><li><a href="#limits">한계와 남은 과제</a></li><li><a href="#reproduce">재현 방법</a></li><li><a href="#refs">근거 파일과 참고 자료</a></li></ol></nav>
 <!-- /chrome:toc -->
 <main class="doc" id="main">
 
 <section class="summary">
 <h2 data-toc="no">핵심 요약</h2>
 <ul>
-<li><strong>보조 이미지</strong>는 64바이트씩 960번 전송한 뒤 전체를 다시 읽어 비교합니다. 전송이나 읽기가 실패하면 바로 포기하고, 내용이 다를 때만 처음부터 다시 보냅니다(시도는 모두 3회까지).</li>
-<li><strong>주 이미지</strong>는 128 KiB 섹터 단위로 “비교 → 지우기 → 프로그램 → 다시 비교” 순서로 기록합니다. 섹터 13~22는 건너뛰고, 첫 섹터(섹터 0)를 맨 마지막에 처리합니다.</li>
+<li><strong>보조 이미지</strong>는 64바이트씩 960번 전송한 뒤 전체를 다시 읽어 비교합니다. 전송이나 읽기가 실패하면 바로 포기하고 내용이 다를 때만 처음부터 다시 보냅니다(시도는 모두 3회까지).</li>
+<li><strong>주 이미지</strong>는 128 KiB 섹터 단위로 “비교 → 지우기 → 프로그램 → 다시 비교” 순서로 기록합니다. 섹터 13~22는 건너뛰고 첫 섹터(섹터 0)를 맨 마지막에 처리합니다.</li>
 <li>프로그램 함수가 실패를 뜻하는 값 2를 돌려줘도 <strong>그 값은 요청한 쪽에 전달되지 않습니다.</strong> 대신 기록 뒤의 다시 비교 단계가 내용 불일치를 알려 줍니다.</li>
-<li>모두 PC 에뮬레이터의 합성 메모리에서 실행한 43건입니다. 직렬 통신과 플래시 상태는 연구자가 넣은 값이며, 실제 장치에 기록하지 않았습니다.</li>
+<li>모두 PC 에뮬레이터의 합성 메모리에서 실행한 43건입니다. 직렬 통신과 플래시 상태는 연구자가 넣은 값이며 실제 장치에 기록하지 않았습니다.</li>
 </ul>
 </section>
 
@@ -124,7 +124,7 @@
 
 <section id="aux">
 <h2>보조 이미지: 전송 오류는 즉시 실패, 내용 불일치만 다시 시도</h2>
-<p class="takeaway">보조 이미지 제어 함수는 “전송이 안 됨”과 “보낸 것과 읽은 것이 다름”을 다르게 다룹니다. 앞의 경우는 한 번에 포기하고, 뒤의 경우만 처음부터 다시 보냅니다.</p>
+<p class="takeaway">보조 이미지 제어 함수는 “전송이 안 됨”과 “보낸 것과 읽은 것이 다름”을 다르게 다룹니다. 앞의 경우는 한 번에 포기하고 뒤의 경우만 처음부터 다시 보냅니다.</p>
 
 <figure class="diagram">
 <figcaption>보조 이미지 전송과 확인(제어 함수 0x5D5370)</figcaption>
@@ -187,7 +187,7 @@
 </tbody></table></div>
 
 <h3>블록 하나를 보내고 받는 직렬 함수</h3>
-<p>전송 함수 아래의 직렬 쓰기 함수 <code>0x55601C</code>와 읽기 함수 <code>0x556180</code>도 따로 실행했습니다. 쓰기는 태그 <code>0xF0</code>을 먼저 보내고 데이터 64바이트를 순서대로 보냅니다. 읽기는 0을 보내면서 응답을 받는데, 첫 응답이 기대한 태그가 아니면 데이터를 읽기 전에 끝냅니다.</p>
+<p>전송 함수 아래의 직렬 쓰기 함수 <code>0x55601C</code>와 읽기 함수 <code>0x556180</code>도 따로 실행했습니다. 쓰기는 태그 <code>0xF0</code>을 먼저 보내고 데이터 64바이트를 순서대로 보냅니다. 읽기는 0을 보내면서 응답을 받는데 첫 응답이 기대한 태그가 아니면 데이터를 읽기 전에 끝냅니다.</p>
 <div class="table-wrap"><table>
 <caption>직렬 함수 실행 4건(합성 데이터 64바이트)</caption>
 <thead><tr><th>방향</th><th>조건</th><th>반환</th><th class="n">보낸 바이트</th><th class="n">받기 호출</th></tr></thead>
@@ -213,14 +213,14 @@
 <ul>
 <li>오류 경로에서 호출된 함수(대체함): 전송 오류 <code>0x8475C4</code>, 읽기 오류 <code>0x8475A8</code>, 내용 불일치 <code>0x84758C</code>(시도마다 한 번).</li>
 <li>제어 함수 시험에서 대체한 함수는 24개, 직렬 함수 시험에서는 11개와 합성 뮤텍스 콜백 하나입니다. 목록은 <a href="installation.json">installation.json</a>의 <code>stub_offsets</code>에 있습니다.</li>
-<li>다시 읽기의 응답은 보조 이미지 내용을 복사해 만들었고, 선택한 오류만 그 경계에 넣었습니다.</li>
+<li>다시 읽기의 응답은 보조 이미지 내용을 복사해 만들었고 선택한 오류만 그 경계에 넣었습니다.</li>
 </ul>
 </details>
 </section>
 
 <section id="primary">
 <h2>주 이미지: RAM에 복사된 송신기가 기록 명령을 보냅니다</h2>
-<p class="takeaway">주 이미지 기록은 메일박스 명령 세 개(비교 8, 지우기 9, 프로그램 0xA)로 이루어지고, 명령을 받는 쪽의 기록 함수가 플래시에 명령 바이트를 써 넣습니다.</p>
+<p class="takeaway">주 이미지 기록은 메일박스 명령 세 개(비교 8, 지우기 9, 프로그램 0xA)로 이루어지고 명령을 받는 쪽의 기록 함수가 플래시에 명령 바이트를 써 넣습니다.</p>
 
 <figure class="diagram">
 <figcaption>주 이미지 기록 요청이 지나가는 층</figcaption>
@@ -298,7 +298,7 @@
 <tr><th scope="row">프로그램 끝</th><td><code>90</code>·<code>00</code>. 실패했을 때는 그 앞에 <code>F0</code></td><td>Unlock Bypass Reset, Reset</td></tr>
 </tbody></table></div>
 <div class="callout"><strong class="label">참고</strong>
-<p>이 바이트 순서는 AMD·Spansion 계열 NOR 플래시의 표준 명령 집합과 모양이 같습니다. 예를 들어 <a href="https://www.infineon.com/assets/row/public/documents/non-assigned/49/infineon-s29gl512n-s29gl256n-s29gl128n-512-256-128-mbit-3-v-page-flash-featuring-110-nm-mirrorbit-datasheet-en.pdf">S29GL-N 데이터시트</a>의 명령 정의 표와 <a href="https://github.com/u-boot/u-boot/blob/master/include/mtd/cfi_flash.h">U-Boot의 CFI 플래시 상수</a>에 같은 값이 나옵니다. 그러나 이 명령 집합은 여러 제조사가 함께 쓰고, 예로 든 S29GL-N은 한 번에 16워드까지만 버퍼에 쓰므로 여기서 본 128개와 다릅니다. 이 패턴만으로 제조사나 부품 번호를 정하지 않았습니다.</p></div>
+<p>이 바이트 순서는 AMD·Spansion 계열 NOR 플래시의 표준 명령 집합과 모양이 같습니다. 예를 들어 <a href="https://www.infineon.com/assets/row/public/documents/non-assigned/49/infineon-s29gl512n-s29gl256n-s29gl128n-512-256-128-mbit-3-v-page-flash-featuring-110-nm-mirrorbit-datasheet-en.pdf">S29GL-N 데이터시트</a>의 명령 정의 표와 <a href="https://github.com/u-boot/u-boot/blob/master/include/mtd/cfi_flash.h">U-Boot의 CFI 플래시 상수</a>에 같은 값이 나옵니다. 그러나 이 명령 집합은 여러 제조사가 함께 쓰고 예로 든 S29GL-N은 한 번에 16워드까지만 버퍼에 쓰므로 여기서 본 128개와 다릅니다. 이 패턴만으로 제조사나 부품 번호를 정하지 않았습니다.</p></div>
 
 <details class="evidence"><summary>송신기·수신기 실행 9건의 요청과 응답</summary>
 <div class="table-wrap"><table class="compact">
@@ -318,14 +318,14 @@
 <li>요청 다섯 칸의 첫 칸과 마지막 칸에는 같은 명령 번호가 들어갑니다. 응답 세 칸은 <code>명령 번호, 결과, 명령 번호</code>입니다.</li>
 <li>송신기가 요청 두 칸을 0으로 지우면 수신기가 응답 세 칸을 0으로 지웁니다. 그 뒤에 송신기가 복귀합니다. 9건 모두 이 순서를 확인했습니다.</li>
 <li>합 비교 요청의 <code>0xC03FBF00</code>은 시험 버퍼 512바이트를 32비트 값 128개로 더한 합과 같습니다.</li>
-<li>쓰기 횟수 267은 시작 3 + 블록 2개 × 131 + 끝 2이고, 137은 시작 3 + 블록 1개 × 131 + <code>F0</code> 1 + 끝 2입니다.</li>
+<li>쓰기 횟수 267은 시작 3 + 블록 2개 × 131 + 끝 2이고 137은 시작 3 + 블록 1개 × 131 + <code>F0</code> 1 + 끝 2입니다.</li>
 <li>수신 쪽 하위 호출: 지우기 <code>0xD9E08</code> → <code>0xD9DAC</code>, 프로그램 <code>0xD9EDC</code> → <code>0xD9E48</code>. 블록 크기 상수는 <code>0x7F</code>와 <code>0x80</code>으로 확인했습니다.</li>
 </ul>
 </details>
 </section>
 
 <section id="errors">
-<h2>프로그램 오류 2는 응답에 남지 않고, 다시 비교가 불일치를 잡습니다</h2>
+<h2>프로그램 오류 2는 응답에 남지 않고 다시 비교가 불일치를 잡습니다</h2>
 <p class="takeaway">비교와 지우기는 함수의 결과가 요청한 쪽에 그대로 전달됩니다. 프로그램만 다릅니다. 수신기가 프로그램 함수의 반환값을 응답 칸에 적지 않습니다.</p>
 
 <figure class="diagram">
@@ -389,7 +389,7 @@
 <tr><th scope="row">비교 3, 프로그램 0, 재비교 3</th><td>합 → 비교 → 지우기 → 프로그램 → 비교</td><td class="n">3</td></tr>
 <tr><th scope="row">비교 3, 프로그램 0, 재비교 0</th><td>합 → 비교 → 지우기 → 프로그램 → 비교</td><td class="n">0</td></tr>
 </tbody></table></div>
-<p class="small muted">준비 버퍼는 VA <code>0x40459204</code>입니다. 이미 내용이 같으면 합 검사 결과와 상관없이 0을 반환하고, 합 검사가 3이면서 내용이 다르면 지우지 않고 3을 반환합니다. “프로그램 2” 사례는 제어 함수의 판단만 본 것입니다. 실제 수신기는 위에서 본 대로 2를 전달하지 않습니다.</p>
+<p class="small muted">준비 버퍼는 VA <code>0x40459204</code>입니다. 이미 내용이 같으면 합 검사 결과와 상관없이 0을 반환하고 합 검사가 3이면서 내용이 다르면 지우지 않고 3을 반환합니다. “프로그램 2” 사례는 제어 함수의 판단만 본 것입니다. 실제 수신기는 위에서 본 대로 2를 전달하지 않습니다.</p>
 
 <div class="table-wrap"><table>
 <caption>갱신용 블록 제어 함수 0xBFD0의 판단 5건(하위 반환값은 공급)</caption>
@@ -426,7 +426,7 @@
 
 <section id="order">
 <h2>실제 갱신 순서: 섹터 13~22는 건너뛰고 섹터 0은 마지막</h2>
-<p class="takeaway">일반 업데이트는 주 이미지의 128개 섹터 가운데 118개만 다시 씁니다. 가운데 10개는 손대지 않고, 맨 앞 섹터는 나머지가 모두 성공한 뒤에 씁니다.</p>
+<p class="takeaway">일반 업데이트는 주 이미지의 128개 섹터 가운데 118개만 다시 씁니다. 가운데 10개는 손대지 않고 맨 앞 섹터는 나머지가 모두 성공한 뒤에 씁니다.</p>
 
 <figure class="diagram">
 <figcaption>일반 업데이트(둘째 인수 0)의 섹터 처리 순서. 섹터 하나는 128 KiB입니다.</figcaption>
@@ -478,9 +478,9 @@
 <tr><td class="n">0</td><td>섹터 0 (VA <code>0x02000000</code>)</td><td>1–12, 23–127, 0</td><td class="n">3</td></tr>
 </tbody></table></div>
 <ul>
-<li>진입 2건: 보조 이미지 함수의 반환값이 0이면 <code>0x5D6664</code>의 분기가 갱신 진입을 건너뛰어 VA <code>0x025D667C</code>에 도달했고, 1이면 RAM의 VA <code>0x40304F54</code>(파일 <code>0xC278</code>)에 도달했습니다.</li>
+<li>진입 2건: 보조 이미지 함수의 반환값이 0이면 <code>0x5D6664</code>의 분기가 갱신 진입을 건너뛰어 VA <code>0x025D667C</code>에 도달했고 1이면 RAM의 VA <code>0x40304F54</code>(파일 <code>0xC278</code>)에 도달했습니다.</li>
 <li>호출 관계: <code>0x5D640C</code> → <code>0x73CF94</code>(갱신 루틴 복사), <code>0x5D666C</code> → <code>0x73CFF4</code>(송신기 복사), <code>0x5D6678</code> → <code>0x630174</code>, 섹터 순회 <code>0xC07C</code>의 <code>0xC148</code>·<code>0xC254</code> → <code>0xBFD0</code>.</li>
-<li>섹터 순회 시험에서는 블록 제어 함수의 결과를 공급했고, 재시도 시험에서는 섹터 순회의 결과를 공급했습니다. 화면 표시 등 RAM 쪽 함수 13개와 시스템 함수 4개를 대체했습니다.</li>
+<li>섹터 순회 시험에서는 블록 제어 함수의 결과를 공급했고 재시도 시험에서는 섹터 순회의 결과를 공급했습니다. 화면 표시 등 RAM 쪽 함수 13개와 시스템 함수 4개를 대체했습니다.</li>
 <li>섹터 하나에 넘기는 길이는 16비트 값 <code>0x10000</code>개(<code>0x20000</code>바이트)입니다.</li>
 <li>섹터 13의 결과가 덮어쓰이는 점은 <a href="installation.json">installation.json</a>의 <code>variant1_first_special_sector_status_overwritten</code>에 기록되어 있습니다.</li>
 </ul>
@@ -490,7 +490,7 @@
 <section id="limits">
 <h2>한계와 남은 과제</h2>
 <ul>
-<li><strong>전체 설치를 실행한 것이 아닙니다.</strong> 각 층의 판단을 따로 실행했고, 층과 층 사이는 반환값을 공급해 이었습니다. 원본 코드가 내린 판단은 확인했지만 처음부터 끝까지 이어진 플래시 기록 모형은 아닙니다.</li>
+<li><strong>전체 설치를 실행한 것이 아닙니다.</strong> 각 층의 판단을 따로 실행했고 층과 층 사이는 반환값을 공급해 이었습니다. 원본 코드가 내린 판단은 확인했지만 처음부터 끝까지 이어진 플래시 기록 모형은 아닙니다.</li>
 <li><strong>플래시 상태 함수를 대체했습니다.</strong> 물리적으로 기록이 성공한다는 주장은 하지 않습니다.</li>
 <li><strong>보조 이미지를 받는 쪽</strong>의 코드와 그쪽 플래시의 위치는 추적하지 못했습니다. 태그 <code>0xF0</code>은 보내는 쪽에서만 확인했습니다.</li>
 <li><strong>보존 영역</strong> 가운데 설정 사본(섹터 13·22) 밖의 의미, 전원이 끊겼을 때의 복구, 설치 뒤의 부팅 경로는 이 문서의 범위 밖입니다.</li>

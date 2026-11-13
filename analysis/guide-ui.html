@@ -29,15 +29,15 @@
 <ul>
 <li>메뉴 선택 하나가 지나가는 길을 <strong>여섯 단계</strong>로 나눴습니다. 버튼 입력 → 메뉴 알림 → 화면 전환 → 글자 준비 → RAM 설정 기록 → 설정 섹터 저장 요청입니다.</li>
 <li>가운데 네 단계는 이 주제의 세 문서가 원본 코드를 PC 에뮬레이터에서 실행해 확인했습니다. 마지막 단계는 “촬영 준비와 보존 레코드” 주제의 문서가 다룹니다.</li>
-<li>두 메뉴에서 같은 규칙을 확인했습니다. <strong>고르는 것만으로는 설정이 바뀌지 않고, 확정(적용) 동작이 RAM의 설정 두 곳에 기록합니다.</strong></li>
-<li>단계들을 처음부터 끝까지 한 번에 실행한 것은 아닙니다. 구간별로 실행했고, 구간 사이는 값을 직접 넣어 이었습니다. 버튼 입력, LCD 표시, 플래시 기록은 확인하지 않았습니다.</li>
+<li>두 메뉴에서 같은 규칙을 확인했습니다. <strong>고르는 것만으로는 설정이 바뀌지 않고 확정(적용) 동작이 RAM의 설정 두 곳에 기록합니다.</strong></li>
+<li>단계들을 처음부터 끝까지 한 번에 실행한 것은 아닙니다. 구간별로 실행했고 구간 사이는 값을 직접 넣어 이었습니다. 버튼 입력, LCD 표시, 플래시 기록은 확인하지 않았습니다.</li>
 <li>다른 기종의 UI를 옮겨 오는 작업은 하지 않았습니다. 그러려면 객체 구조, 그리기 코드, 버튼 대응을 맞춰야 하는데 모두 남아 있습니다.</li>
 </ul>
 </section>
 
 <section id="map">
 <h2>한눈에 보기</h2>
-<p class="takeaway">메뉴 선택은 여섯 단계를 거칩니다. ②~⑥은 구간별로 확인했고, ①과 맨 아랫줄은 아직 확인하지 못했습니다.</p>
+<p class="takeaway">메뉴 선택은 여섯 단계를 거칩니다. ②~⑥은 구간별로 확인했고 ①과 맨 아랫줄은 아직 확인하지 못했습니다.</p>
 <figure class="diagram">
 <figcaption>메뉴 선택 하나가 펌웨어 안에서 지나가는 길</figcaption>
 <div class="dg-scroll">
@@ -104,7 +104,7 @@
 </svg>
 </div>
 <ul class="dg-legend"><li><i class="ok"></i>원본 코드 실행으로 확인한 단계</li><li><i class="open"></i>미확인</li></ul>
-<p>실선 화살표는 같은 실행 안에서 이어진 곳입니다. 파선 화살표는 값을 직접 넣어 이은 곳이고, 점선 화살표는 확인하지 못한 연결입니다. 상자의 제목을 누르면 그 단계를 다루는 절로 갑니다.</p>
+<p>실선 화살표는 같은 실행 안에서 이어진 곳입니다. 파선 화살표는 값을 직접 넣어 이은 곳이고 점선 화살표는 확인하지 못한 연결입니다. 상자의 제목을 누르면 그 단계를 다루는 절로 갑니다.</p>
 </figure>
 
 <div class="table-wrap"><table>
@@ -113,10 +113,10 @@
 <tbody>
 <tr><th scope="row">① 버튼 입력</th><td>버튼 조작이 화면 객체가 받는 논리 동작 번호로 바뀝니다.</td><td>없음 (미확인)</td></tr>
 <tr><th scope="row">② 메뉴 알림</th><td>상위 메뉴의 항목이 새 화면을 요청합니다. 요청은 필터를 거쳐 대기 레코드에 적힙니다.</td><td><a href="color-ui.html#route">색공간 메뉴: 화면 요청</a> · <a href="ui-dispatch.html#filter">알림과 화면 전환: 필터</a> · <a href="ui-dispatch.html#pending">대기 레코드</a></td></tr>
-<tr><th scope="row">③ 화면 전환</th><td>작업 루프가 요청을 넘겨받고, 전환 함수가 화면 객체에 쓸 메모리를 요청합니다. 생성자가 화면 객체를 만들어 등록합니다.</td><td><a href="ui-dispatch.html#dispatch">알림과 화면 전환: 전환 함수</a> · <a href="color-ui.html#route">색공간 메뉴: 화면 등록</a></td></tr>
-<tr><th scope="row">④ 글자·표시 준비</th><td>위젯 번호로 리소스를 찾아 글자 객체를 만들고, 언어에 맞는 글리프 배열을 준비합니다.</td><td><a href="color-ui.html#render">색공간 메뉴: 글자와 선택 표시</a> · <a href="ui-resources.html#text">RAW 형식 메뉴: 글자 준비</a></td></tr>
-<tr><th scope="row">⑤ 고르고 확정</th><td>고르면 임시값만 바뀌고, 확정하면 RAM의 현재값과 미러에 기록합니다.</td><td><a href="color-ui.html#state">색공간 메뉴: 고르기·확정·취소</a> · <a href="ui-resources.html#events">RAW 형식 메뉴: 고르기와 적용</a></td></tr>
-<tr><th scope="row">⑥ 저장 요청</th><td>저장 함수가 RAM 설정으로 섹터 내용을 준비하고, 기존 섹터와 다를 때만 쓰기를 요청합니다.</td><td><a href="settings-storage.html#save">보존 섹터의 설정 저장</a> (촬영 준비와 보존 레코드 주제)</td></tr>
+<tr><th scope="row">③ 화면 전환</th><td>작업 루프가 요청을 넘겨받고 전환 함수가 화면 객체에 쓸 메모리를 요청합니다. 생성자가 화면 객체를 만들어 등록합니다.</td><td><a href="ui-dispatch.html#dispatch">알림과 화면 전환: 전환 함수</a> · <a href="color-ui.html#route">색공간 메뉴: 화면 등록</a></td></tr>
+<tr><th scope="row">④ 글자·표시 준비</th><td>위젯 번호로 리소스를 찾아 글자 객체를 만들고 언어에 맞는 글리프 배열을 준비합니다.</td><td><a href="color-ui.html#render">색공간 메뉴: 글자와 선택 표시</a> · <a href="ui-resources.html#text">RAW 형식 메뉴: 글자 준비</a></td></tr>
+<tr><th scope="row">⑤ 고르고 확정</th><td>고르면 임시값만 바뀌고 확정하면 RAM의 현재값과 미러에 기록합니다.</td><td><a href="color-ui.html#state">색공간 메뉴: 고르기·확정·취소</a> · <a href="ui-resources.html#events">RAW 형식 메뉴: 고르기와 적용</a></td></tr>
+<tr><th scope="row">⑥ 저장 요청</th><td>저장 함수가 RAM 설정으로 섹터 내용을 준비하고 기존 섹터와 다를 때만 쓰기를 요청합니다.</td><td><a href="settings-storage.html#save">보존 섹터의 설정 저장</a> (촬영 준비와 보존 레코드 주제)</td></tr>
 </tbody></table></div>
 </section>
 
@@ -124,11 +124,11 @@
 <h2>배경 지식</h2>
 <p>세 문서를 읽는 데 필요한 개념입니다. 번호와 필드 위치는 모두 K-3 II 펌웨어 1.12의 내부 값입니다.</p>
 <dl class="kv">
-<dt>두 메뉴의 공식 이름</dt><dd>Color Space는 사용자 설정 메뉴 C3의 20번 항목이고 선택지는 sRGB와 AdobeRGB입니다. RAW File Format은 촬영 메뉴 1의 Image Capture Settings 안에 있고 선택지는 PEF와 DNG입니다(<a href="https://www.ricoh-imaging.co.jp/english/support/man-pdf/k-3-2.pdf">K-3 II 사용 설명서</a> 20·26·37쪽). PEF는 PENTAX 고유의 RAW 형식이고, DNG는 Adobe가 규격을 공개한 RAW 형식입니다(<a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000188.shtml">미국 의회도서관의 DNG 설명</a>).</dd>
+<dt>두 메뉴의 공식 이름</dt><dd>Color Space는 사용자 설정 메뉴 C3의 20번 항목이고 선택지는 sRGB와 AdobeRGB입니다. RAW File Format은 촬영 메뉴 1의 Image Capture Settings 안에 있고 선택지는 PEF와 DNG입니다(<a href="https://www.ricoh-imaging.co.jp/english/support/man-pdf/k-3-2.pdf">K-3 II 사용 설명서</a> 20·26·37쪽). PEF는 PENTAX 고유의 RAW 형식이고 DNG는 Adobe가 규격을 공개한 RAW 형식입니다(<a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000188.shtml">미국 의회도서관의 DNG 설명</a>).</dd>
 <dt>화면, 위젯, 논리 동작</dt><dd>메뉴의 한 화면은 펌웨어에서 객체 하나이고 화면 ID를 가집니다. 화면 속 제목, 선택 항목, 도움말은 위젯이라는 32비트 번호로 구분됩니다. 설명서의 OK·MENU 버튼 조작은 펌웨어 안에서 작은 번호(논리 동작)로 화면 객체에 전달됩니다. 어느 버튼이 어느 번호인지는 확인하지 못했습니다.</dd>
 <dt>임시값과 확정</dt><dd>화면 객체는 “지금 고른 값”을 임시값으로 들고 있습니다. 확정 동작이 와야 임시값이 설정으로 넘어갑니다.</dd>
-<dt>설정 번호, 현재값과 미러, 뱅크</dt><dd>설정은 번호로 구분됩니다(색공간 <code>0x15C</code>, RAW 형식 <code>0x97</code>). 값은 RAM의 두 곳, 즉 설정 객체 안의 현재값과 별도 블록인 미러에 함께 기록됩니다. 같은 설정 번호의 값은 뱅크라는 구획마다 한 벌씩 있고, 활성 인덱스가 쓸 뱅크를 정합니다.</dd>
-<dt>알림, 레코드, 깨움 값</dt><dd>메뉴 항목이 새 화면을 열려면 앱 객체에 알림을 보냅니다. 앱 객체는 요청을 24바이트 레코드에 적어 두고, 작업 루프가 깨움 값을 확인한 뒤 처리합니다.</dd>
+<dt>설정 번호, 현재값과 미러, 뱅크</dt><dd>설정은 번호로 구분됩니다(색공간 <code>0x15C</code>, RAW 형식 <code>0x97</code>). 값은 RAM의 두 곳, 즉 설정 객체 안의 현재값과 별도 블록인 미러에 함께 기록됩니다. 같은 설정 번호의 값은 뱅크라는 구획마다 한 벌씩 있고 활성 인덱스가 쓸 뱅크를 정합니다.</dd>
+<dt>알림, 레코드, 깨움 값</dt><dd>메뉴 항목이 새 화면을 열려면 앱 객체에 알림을 보냅니다. 앱 객체는 요청을 24바이트 레코드에 적어 두고 작업 루프가 깨움 값을 확인한 뒤 처리합니다.</dd>
 <dt>글리프 코드와 언어 표</dt><dd>메뉴 문구는 글꼴 속 글자 번호(글리프 코드)의 나열로 저장되어 있습니다. 문구마다 언어별 데이터 주소를 모은 언어 표가 있습니다.</dd>
 <dt>구간 실행</dt><dd>이 주제의 검증은 원본 ARM 코드를 <a href="https://github.com/unicorn-engine/unicorn">Unicorn 에뮬레이터</a>에 올려 함수나 구간 단위로 실행한 것입니다. 메모리 할당, 잠금, 알림 수신처럼 주변 기능은 검증용 코드로 대신했습니다. 카메라에서 실행한 것은 없습니다.</dd>
 </dl>
@@ -164,7 +164,7 @@
 <h2>읽는 순서</h2>
 <p>쉬운 문서부터 놓았습니다. 사이트의 문서 목록 순서와는 다릅니다.</p>
 <ul class="cards">
-<li class="card"><span class="tag">1</span><h3><a href="color-ui.html">색공간 메뉴와 표시</a></h3><p class="q">메뉴에서 고른 값은 언제 설정에 기록되는가?</p><p>고르기는 임시값만 바꾸고, 확정은 RAM 두 곳에 기록합니다. 8개 사례와 글자 5개, 선택 그림 2개를 확인했습니다.</p></li>
+<li class="card"><span class="tag">1</span><h3><a href="color-ui.html">색공간 메뉴와 표시</a></h3><p class="q">메뉴에서 고른 값은 언제 설정에 기록되는가?</p><p>고르기는 임시값만 바꾸고 확정은 RAM 두 곳에 기록합니다. 8개 사례와 글자 5개, 선택 그림 2개를 확인했습니다.</p></li>
 <li class="card"><span class="tag">2</span><h3><a href="ui-resources.html">RAW 형식 메뉴와 텍스트</a></h3><p class="q">다른 메뉴도 같은 구조인가? 메뉴 글자는 어떻게 준비되는가?</p><p>PEF·DNG 메뉴도 고르기와 적용이 나뉘어 있습니다. 이벤트 12건과 글리프 준비 12건을 확인했습니다.</p></li>
 <li class="card"><span class="tag">3</span><h3><a href="ui-dispatch.html">색공간 메뉴 알림과 화면 전환</a></h3><p class="q">메뉴 항목의 요청은 어떤 조건에서 새 화면으로 이어지는가?</p><p>필터, 대기 레코드, 전환 함수를 거쳐 화면 메모리 할당 요청까지 실행했습니다. 가장 내부적인 내용입니다.</p></li>
 <li class="card"><span class="tag">이어서</span><h3><a href="settings-storage.html">보존 섹터의 설정 저장</a></h3><p class="q">RAM에 기록한 설정은 어떻게 플래시에 저장되는가?</p><p>“촬영 준비와 보존 레코드” 주제의 문서입니다. 내용이 달라졌을 때만 반대쪽 섹터에 쓰기를 요청합니다.</p></li>
@@ -188,7 +188,7 @@
 <tr><th scope="row">Custom Image (Reversal Film 등 11종)</th><td>매개변수 <code>0x39</code></td><td class="nowrap">Reversal Film 6</td><td>고르는 이벤트 자체</td><td>조사하지 않음</td><td><a href="output-menu-analysis.html#menu">JPEG 출력 버퍼와 Reversal Film 메뉴</a></td></tr>
 </tbody></table></div>
 <ul>
-<li>앞의 세 메뉴는 고르기와 확정이 나뉘어 있고, 같은 설정 쓰기 함수(<code>0x6F1A38</code>)와 읽기 함수(<code>0x6F1A50</code>)를 씁니다.</li>
+<li>앞의 세 메뉴는 고르기와 확정이 나뉘어 있고 같은 설정 쓰기 함수(<code>0x6F1A38</code>)와 읽기 함수(<code>0x6F1A50</code>)를 씁니다.</li>
 <li>Custom Image 메뉴는 고르는 이벤트를 처리하는 중에 매개변수가 기록되는 것까지 확인했습니다. 임시값과 확정 단계가 따로 있는지는 조사하지 않았습니다.</li>
 <li>활성 인덱스 0~7에 대응하는 뱅크는 설정마다 다릅니다. 색공간과 RAW 형식은 0, 0, 2, 3, 4, 5, 6, 7이고 Pixel Shift Resolution은 0, 1, 2, 3, 4, 5, 6, 7입니다.</li>
 </ul>
