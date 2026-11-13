@@ -1,0 +1,29 @@
+{
+  "firmware_version": "1.12",
+  "decoded_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "scope": "Static anchor verification only; RAW path, pixel arithmetic and hardware unverified.",
+  "address_mapping": {
+    "decoded_file_offset": 0,
+    "analysis_base": "0x2000000",
+    "size": 16838656
+  },
+  "strings": {
+    "LNRTRG": "0x24c6c40",
+    "LNRCTL": "0x24c6c50",
+    "LNRXTH": "0x24c6c60"
+  },
+  "instruction_and_literal_checks": 4,
+  "calls": [
+    {
+      "site": "0x24c6bc0",
+      "target": "0x27073ec"
+    }
+  ],
+  "ranges": {
+    "lnr_register_dump": {
+      "start": "0x24c6b9c",
+      "end_exclusive": "0x24c6c14",
+      "sha256": "1b7bdacd79474ed2a1bd0d8e52f227e3794e4709894a5f33ce648ceb19fb4bec"
+    }
+  }
+}
