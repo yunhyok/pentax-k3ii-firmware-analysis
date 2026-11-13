@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>RAW 노이즈 감소를 끌 수 있는가 — PENTAX K-3 II 펌웨어 연구</title>
-<meta name="description" content="RAW 노이즈 감소를 끌 수 있는가">
+<meta name="description" content="K-3 II 펌웨어 1.12에서 RAW 노이즈 감소를 끄는 펌웨어 수정이 가능한지 살핀 타당성 검토입니다. LNR 제어 코드의 조사 출발점은 정적으로 찾았지만 저장 RAW와의 연결과 패치는 아직 없습니다.">
 <link rel="stylesheet" href="../assets/site.css">
 </head>
 <body data-camera="k3ii">
@@ -14,17 +14,241 @@
 <nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../index.html">PENTAX K-3 II</a></li><li><a href="guide-pipeline.html">영상 처리와 저장 경로</a></li><li aria-current="page">RAW 노이즈 감소를 끌 수 있는가</li></ol></nav>
 <!-- /chrome:top -->
 <header class="page-head">
-<p class="eyebrow">영상 처리와 저장 경로</p>
+<p class="eyebrow">영상 처리와 저장 경로 · 수정 가능성 검토</p>
 <h1>RAW 노이즈 감소를 끌 수 있는가</h1>
-<p class="lead">STUB-PLACEHOLDER 이 문서는 작성 중입니다.</p>
+<p class="lead">저장되는 RAW에 노이즈 감소가 섞여 있다면 펌웨어를 고쳐 끌 수 있을까요. 지금까지 읽어낸 것과, 아직 손대지 못한 경계를 정리했습니다.</p>
 </header>
 <div class="layout">
 <!-- chrome:toc -->
-<nav class="toc" aria-label="이 문서의 목차"><h2 data-toc="no">이 문서에서</h2><ol><li><a href="#map">작성 중</a></li><li><a href="#levels">작성 중</a></li></ol></nav>
+<nav class="toc" aria-label="이 문서의 목차"><h2 data-toc="no">이 문서에서</h2><ol><li><a href="#background">배경: RAW에 섞인 노이즈 감소란 무엇인가</a></li><li><a href="#measurement">공개 측정에서 첫 노이즈 감소 표시는 ISO 1600</a></li><li><a href="#static">정적 확인: LNR 레지스터 진단 경로</a></li><li><a href="#gap">진단 경로와 저장 RAW 사이는 아직 끊겨 있습니다</a></li><li><a href="#gates">수정 전에 넘어야 할 관문</a></li><li><a href="#plan">다음 할 일과 완료 기준</a></li><li><a href="#limits">한계와 남은 과제</a></li><li><a href="#reproduce">재현 방법</a></li><li><a href="#refs">근거 파일과 참고 자료</a></li></ol></nav>
 <!-- /chrome:toc -->
 <main class="doc" id="main">
-<section id="map"><h2>작성 중</h2><p>곧 채워집니다.</p></section>
-<section id="levels"><h2>작성 중</h2><p>곧 채워집니다.</p></section>
+
+<section class="summary">
+<h2 data-toc="no">핵심 요약</h2>
+<ul>
+<li>펌웨어 1.12를 정적으로 읽어 <code>LNR</code>이라는 이름의 제어 코드 구간을 찾았습니다. 노이즈 감소를 끄는 작업을 시작할 출발점입니다.</li>
+<li>저장되는 RAW의 노이즈 감소를 끌 수 있다는 근거는 아직 없습니다. 찾은 구간이 RAW 저장에 실제로 관여하는지 확인하지 못했습니다.</li>
+<li>패치는 만들지 않았습니다. 카메라에서 돌려 본 것도 없습니다. 이 문서는 결과 보고가 아니라 타당성 검토입니다.</li>
+<li>노이즈 감소가 켜졌다는 공개 측정은 ISO 1600부터 보입니다. 다만 이 수치는 외부 사이트에 올라온 RAW를 잰 것이고 분석한 펌웨어 버전의 실측이 아닙니다.</li>
+</ul>
+</section>
+
+<div class="scope">
+<div class="static"><h3><span class="badge static">정적 분석</span> 코드를 읽어 확인</h3>
+<ul>
+<li>복호화한 1.12 이미지에서 <code>LNR</code> 레지스터 진단 함수의 주소와 문자열, 직접 호출을 읽었습니다.</li>
+<li>리터럴에서 레지스터 베이스를 올리고 특정 오프셋 값을 읽는 명령을 확인했습니다.</li>
+<li>원본·복호화 파일의 SHA-256이 기존 근거와 같습니다.</li>
+</ul></div>
+<div class="model"><h3><span class="badge model">모델</span> 외부에서 가져온 값</h3>
+<ul>
+<li>노이즈 감소 감지 역치(ISO 1600)는 Photons to Photos에 기고된 RAW를 읽은 값입니다.</li>
+<li>분석 주소는 후보 베이스 <code>0x02000000</code>을 적용한 값입니다.</li>
+</ul></div>
+<div class="open"><h3><span class="badge open">미확인</span> 확인하지 못한 것</h3>
+<ul>
+<li>찾은 진단 경로가 저장 RAW의 노이즈 감소와 이어지는지</li>
+<li>메뉴에서 Off를 골랐을 때 이 레지스터 값이 바뀌는지</li>
+<li>제어 비트 하나하나의 뜻과 Off에 해당하는 값</li>
+<li>실기에서의 레지스터 읽기·쓰기, 패치 생성·플래시·부팅</li>
+</ul></div>
+</div>
+
+<section id="background">
+<h2>배경: RAW에 섞인 노이즈 감소란 무엇인가</h2>
+<p><dfn title="이미지 센서가 만든 거의 가공하지 않은 원본 데이터 파일">RAW</dfn>는 센서가 읽은 값을 거의 그대로 담은 파일입니다. 사진가가 RAW를 쓰는 까닭은 현상을 직접 하려는 데 있습니다. 노이즈 감소도 자기 손으로 조절하고 싶어 합니다.</p>
+<p>그런데 카메라가 RAW를 저장하기 전에 노이즈를 미리 깎아 버리면 선택권이 사라집니다. 한번 뭉개진 세부는 현상 단계에서 되살릴 수 없습니다. 그래서 "메뉴에서 노이즈 감소를 꺼도 저장 RAW에 남는 처리가 있는가"가 이 조사의 질문입니다.</p>
+<div class="callout plain"><strong class="label">쉽게 말하면</strong>
+<p>RAW는 요리 전 재료입니다. 카메라가 재료를 미리 손질해서 건네면 요리사가 바꿀 수 있는 폭이 줄어듭니다. 그 손질이 메뉴를 꺼도 남는지 보려는 것입니다.</p></div>
+<p>노이즈 감소가 걸렸는지는 <a href="https://www.photonstophotos.net/Charts/PDR.htm#Pentax%20K-3%20II,Pentax%20K-3%20III">Photons to Photos</a>의 차트로 어느 정도 가늠합니다. 이 사이트는 사용자가 올린 RAW를 분석해, 노이즈 감소 흔적이 보이는 ISO 지점에 삼각형(▽) 표시를 붙입니다. 표시가 처음 붙는 ISO가 카메라가 손질을 시작하는 대략의 지점입니다.</p>
+</section>
+
+<section id="measurement">
+<h2>공개 측정에서 첫 노이즈 감소 표시는 ISO 1600</h2>
+<p class="takeaway">K-3 II는 ISO 1600부터 노이즈 감소 표시가 붙습니다. ISO 100부터 1250까지는 표시가 없습니다. 다만 표시가 없다고 전처리가 전혀 없다는 뜻은 아닙니다.</p>
+<div class="table-wrap"><table class="fit">
+<caption>Photons to Photos 차트의 첫 노이즈 감소 표시(▽)</caption>
+<thead><tr><th scope="col">기종</th><th scope="col">표시 없는 구간</th><th scope="col">첫 표시 ISO</th><th scope="col">상태</th></tr></thead>
+<tbody>
+<tr><th scope="row">K-3 II</th><td>ISO 100~1250</td><td class="n">1600</td><td><span class="badge model">모델</span></td></tr>
+<tr><th scope="row">K-3 III</th><td>ISO 100~160</td><td class="n">200</td><td><span class="badge model">모델</span></td></tr>
+</tbody></table></div>
+<p>K-3 III 컬러의 첫 표시는 ISO 200이라 K-3 II와 다릅니다. 두 기종을 섞지 않도록 주의해야 합니다. 차트 값은 기고된 RAW를 읽은 것이고 이번 1.12 펌웨어를 직접 측정한 결과가 아닙니다.</p>
+<p>사용설명서도 참고했습니다. <a href="https://www.ricoh-imaging.co.jp/english/support/man-pdf/k-3-2.pdf#page=44">High-ISO NR(인쇄 42쪽)</a>에는 Off가 있습니다. 장노출 NR(인쇄 39쪽)은 별도 설정입니다. <a href="https://www.ricoh-imaging.co.jp/english/support/qa/k-3-2/index.html">공식 FAQ</a>는 확장 감도의 고감도 구간에서 노이즈 감소 설정과 무관하게 기본 영상 처리 시간이 늘 수 있다고 설명합니다. 공식 자료가 RAW 필터 수식이나 ISO 1600 역치를 명시하지는 않았습니다.</p>
+<p>그래서 조사 대상은 <strong>메뉴 Off 이후에도 저장 RAW에 남는 처리</strong>입니다. K-3 III의 가속기 설명이나 노이즈 감소 함수 이름을 K-3 II의 구현 증거로 끌어오지 않습니다.</p>
+</section>
+
+<section id="static">
+<h2>정적 확인: LNR 레지스터 진단 경로</h2>
+<p class="takeaway">공식 1.12 배포본을 복호화해 <code>LNR</code> 레지스터를 출력하는 진단 함수를 읽었습니다. 레지스터 값을 읽어 문자열로 찍는 경로입니다. 일반 촬영에서 도는 노이즈 감소 처리 자체는 아닙니다.</p>
+<p>공식 <a href="https://www.ricoh-imaging.co.jp/english/support/digital/k3_2.html">1.12 배포본</a>을 받아 기존 <code>inspect_firmware.py</code>로 해제했습니다. 해시는 기존 근거와 일치합니다. 아래 주소는 후보 코드 베이스 <code>0x02000000</code>을 적용한 분석 주소입니다. 실기 레지스터를 읽거나 쓴 결과가 아닙니다.</p>
+
+<figure class="diagram">
+<figcaption>진단 함수가 레지스터 값을 읽어 문자열로 찍는 순서</figcaption>
+<div class="dg-scroll">
+<svg class="dg" viewBox="0 0 800 168" role="img" aria-labelledby="dg-lnr-title dg-lnr-desc">
+<title id="dg-lnr-title">LNR 레지스터 진단 함수의 네 단계</title>
+<desc id="dg-lnr-desc">왼쪽부터 오른쪽으로 네 상자가 이어집니다. 첫째, 리터럴에서 레지스터 베이스 주소 0x20000000을 적재합니다. 둘째, 그 베이스에 0x304를 더한 주소의 값을 읽습니다. 셋째, LNRCTL 진단 문자열의 주소를 구성합니다. 넷째, 출력 함수 0x027073ec를 직접 호출합니다. 네 상자 모두 코드를 읽어 확인한 정적 분석 결과이며, 카메라에서 실행한 것이 아닙니다.</desc>
+<defs><marker id="dg-lnr-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="b static" x="8" y="40" width="182" height="78" rx="8"/>
+<text class="t" x="20" y="70">베이스 주소 적재</text>
+<text class="s mono" x="20" y="92">리터럴</text>
+<text class="s mono" x="20" y="109">0x20000000</text>
+<path class="e" d="M190 79 H206" marker-end="url(#dg-lnr-ah)"/>
+<rect class="b static" x="206" y="40" width="182" height="78" rx="8"/>
+<text class="t" x="218" y="70">제어값 읽기</text>
+<text class="s mono" x="218" y="92">베이스 +0x304</text>
+<text class="s" x="218" y="109">값은 관측 안 함</text>
+<path class="e" d="M388 79 H404" marker-end="url(#dg-lnr-ah)"/>
+<rect class="b static" x="404" y="40" width="182" height="78" rx="8"/>
+<text class="t" x="416" y="70">진단 문자열 구성</text>
+<text class="s mono" x="416" y="92">LNRCTL</text>
+<text class="s" x="416" y="109">출력 문자열 주소</text>
+<path class="e" d="M586 79 H602" marker-end="url(#dg-lnr-ah)"/>
+<rect class="b static" x="602" y="40" width="190" height="78" rx="8"/>
+<text class="t" x="614" y="70">출력 함수 호출</text>
+<text class="s mono" x="614" y="92">0x027073ec</text>
+<text class="s" x="614" y="109">직접 호출</text>
+</svg>
+</div>
+<ul class="dg-legend"><li><i class="static"></i>코드를 읽어 확인</li></ul>
+</figure>
+
+<div class="table-wrap"><table>
+<caption>정적으로 확인한 지점 (베이스 <code>0x02000000</code> 적용)</caption>
+<thead><tr><th scope="col">지점</th><th scope="col">확인 내용</th><th scope="col">의미의 한계</th></tr></thead>
+<tbody>
+<tr><th scope="row"><code>0x024c6b9c</code> 주변</th><td>LNR 레지스터 출력 함수</td><td>일반 촬영에서 도는 노이즈 감소 자체가 아님</td></tr>
+<tr><th scope="row"><code>0x024c6ba8</code></th><td>리터럴에서 레지스터 베이스 <code>0x20000000</code> 적재</td><td>실제 칩의 모든 기능 정의를 확보한 것은 아님</td></tr>
+<tr><th scope="row"><code>0x024c6bb8</code></th><td>위 베이스 <code>+0x304</code> 값을 읽음</td><td>읽는 코드만 확인. 실기 읽기·값 관측은 안 함</td></tr>
+<tr><th scope="row"><code>0x024c6bbc</code></th><td><code>LNRCTL</code> 출력 문자열 주소 구성</td><td>제어 비트별 의미·Off 값은 미확정</td></tr>
+<tr><th scope="row"><code>0x024c6bc0</code></th><td>출력 함수 <code>0x027073ec</code> 호출</td><td>노이즈 감소 알고리즘 실행 호출이 아님</td></tr>
+<tr><th scope="row">주변 문자열</th><td><code>LNRTRG</code>, <code>LNRCTL</code>, <code>LNRXTH</code>, <code>LNR0T0/1</code>, <code>LNR1T0/1</code></td><td>이름상 노이즈 감소 블록 조사 후보. 저장 RAW 적용 증거는 아님</td></tr>
+</tbody></table></div>
+
+<details class="evidence"><summary>문자열 주소와 함수 구간 해시</summary>
+<dl class="kv">
+<dt><code>LNRTRG</code> 문자열</dt><dd><code>0x24c6c40</code></dd>
+<dt><code>LNRCTL</code> 문자열</dt><dd><code>0x24c6c50</code></dd>
+<dt><code>LNRXTH</code> 문자열</dt><dd><code>0x24c6c60</code></dd>
+<dt>진단 함수 구간</dt><dd><code>0x24c6b9c</code>부터 <code>0x24c6c14</code>까지</dd>
+<dt>구간 SHA-256</dt><dd><code class="wrap">1b7bdacd79474ed2a1bd0d8e52f227e3794e4709894a5f33ce648ceb19fb4bec</code></dd>
+</dl>
+<p class="small muted">값은 <a href="nr-candidates.json">nr-candidates.json</a>과 K-3 III 저장소의 검증기에서 가져왔습니다.</p>
+</details>
+
+<p><code>LNR</code>이라는 약어를 특정 필터 수식으로 넓혀 읽지 않습니다. 이 블록이 JPEG 현상 전용이면 저장 RAW의 강제 노이즈 감소를 끄는 데는 소용이 없을 수 있습니다. 가장 먼저 할 일은 이 제어값을 쓰는 함수와 PEF·DNG 저장 분기가 이어지는지 확인하는 것입니다.</p>
+</section>
+
+<section id="gap">
+<h2>진단 경로와 저장 RAW 사이는 아직 끊겨 있습니다</h2>
+<p class="takeaway">확인한 것은 레지스터를 읽어 찍는 진단 경로 하나입니다. 메뉴 Off 값이 이 레지스터로 가는지, 이 레지스터가 저장 RAW에 작용하는지는 잇지 못했습니다.</p>
+<figure class="diagram">
+<figcaption>확인한 경로와 아직 잇지 못한 연결</figcaption>
+<div class="dg-scroll">
+<svg class="dg" viewBox="0 0 800 268" role="img" aria-labelledby="dg-gap-title dg-gap-desc">
+<title id="dg-gap-title">확인한 진단 경로와 미확인 연결의 관계</title>
+<desc id="dg-gap-desc">왼쪽 아래 묶음은 지금 확인한 것으로, LNR 레지스터 진단 경로 상자 하나가 들어 있습니다. 이 상자는 코드를 읽어 확인한 정적 결과입니다. 오른쪽 묶음은 아직 잇지 못한 것으로, 세 상자가 점선으로 놓여 있습니다. 위쪽에 메뉴 Off 값 생산자, 가운데에 제어값 쓰기 함수, 아래에 저장 RAW 분기 PEF와 DNG입니다. 진단 경로에서 제어값 쓰기 함수로 가는 점선에는 이름만 일치라고 적혀 있습니다. 메뉴 Off 값에서 쓰기 함수로, 쓰기 함수에서 저장 RAW 분기로 가는 연결은 모두 미확인 점선입니다. 세 연결이 확인돼야 노이즈 감소를 끄는 수정이 가능한지 판단할 수 있습니다.</desc>
+<defs><marker id="dg-gap-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah open" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="gf" x="8" y="96" width="250" height="150" rx="8"/>
+<text class="h" x="20" y="120">지금 확인한 것</text>
+<rect class="b static key" x="28" y="140" width="210" height="80" rx="8"/>
+<text class="t" x="40" y="170">LNR 레지스터</text>
+<text class="t" x="40" y="190">진단 경로</text>
+<text class="s" x="40" y="210">읽어서 찍음</text>
+<rect class="g" x="430" y="16" width="362" height="236" rx="8"/>
+<text class="h" x="442" y="40">아직 잇지 못한 것</text>
+<rect class="b open" x="450" y="52" width="320" height="52" rx="8"/>
+<text class="t" x="462" y="76">메뉴 Off 값 생산자</text>
+<text class="s" x="462" y="94">메뉴에서 고른 값이 어디로 가는가</text>
+<rect class="b open" x="450" y="120" width="320" height="52" rx="8"/>
+<text class="t" x="462" y="144">제어값 쓰기 함수</text>
+<text class="s mono" x="462" y="162">0x20000304에 쓰는 코드</text>
+<rect class="b open" x="450" y="188" width="320" height="52" rx="8"/>
+<text class="t" x="462" y="212">저장 RAW 분기</text>
+<text class="s mono" x="462" y="230">PEF · DNG</text>
+<path class="e open" d="M238 170 H344 V146 H450" marker-end="url(#dg-gap-ah)"/>
+<text class="n" x="300" y="162">이름만 일치</text>
+<path class="e open" d="M610 104 V120" marker-end="url(#dg-gap-ah)"/>
+<path class="e open" d="M610 172 V188" marker-end="url(#dg-gap-ah)"/>
+<text class="n" x="620" y="116">미확인</text>
+<text class="n" x="620" y="184">미확인</text>
+</svg>
+</div>
+<ul class="dg-legend"><li><i class="static"></i>코드를 읽어 확인</li><li><i class="open"></i>미확인 연결</li></ul>
+</figure>
+<p>이번 검증 결과는 <a href="nr-candidates.json">nr-candidates.json</a>에 있습니다. 전체 영상 처리 흐름은 <a href="guide-pipeline.html">영상 처리 안내</a>를 참고하면 됩니다. 분석 기준 커밋은 <code>ed0f6f0ff0fddd91f25068efbe940d035a809598</code>입니다.</p>
+</section>
+
+<section id="gates">
+<h2>수정 전에 넘어야 할 관문</h2>
+<p class="takeaway">파일을 풀고 다시 포장하는 도구는 있습니다. 제어 후보도 찾았습니다. 그러나 메뉴 Off와의 연동과 설치 가능한 수정본은 아직 없습니다.</p>
+<div class="table-wrap"><table>
+<caption>수정 가능성 점검</caption>
+<thead><tr><th scope="col">질문</th><th scope="col">현재 판단</th><th scope="col">상태</th></tr></thead>
+<tbody>
+<tr><th scope="row">파일을 풀고 다시 만들 수 있는가</th><td>난독화 해제·재포장 도구와 무변경 일치 근거가 있음</td><td><span class="badge ok">확인</span></td></tr>
+<tr><th scope="row">노이즈 감소 제어 후보가 있는가</th><td>LNR 진단 경로를 찾음. 실제 RAW 필터인지는 미확정</td><td><span class="badge static">정적 분석</span></td></tr>
+<tr><th scope="row">메뉴 Off와 연동되는가</th><td>미확인. 메뉴값 생산자와 레지스터 쓰기 경로를 추적해야 함</td><td><span class="badge open">미확인</span></td></tr>
+<tr><th scope="row">지금 설치할 수정본이 있는가</th><td>없음. 패치 생성·플래시·부팅 시험을 하지 않음</td><td><span class="badge open">미확인</span></td></tr>
+</tbody></table></div>
+<div class="callout warn"><strong class="label">주의</strong>
+<p><a href="repack.json">기존 repack 근거</a>의 가산 체크섬·마커 검증은 카메라 전체 인증이나 정상 부팅을 입증하지 않습니다. 조건 없이 제어 레지스터를 0으로 만들면 관련 처리·버퍼·완료 순서가 함께 깨질 수 있습니다. 비트 의미와 처리 의존성을 먼저 확인해야 합니다.</p></div>
+</section>
+
+<section id="plan">
+<h2>다음 할 일과 완료 기준</h2>
+<ol class="steps">
+<li><strong>NR-II-01 기준 RAW 확보.</strong> ISO 100·800·1250·1600·2000에서 짧은 암프레임과 평탄광을 반복 촬영합니다. High-ISO NR과 장노출 NR은 Off로 두고 Pixel Shift·HDR·다중 노출·AA 시뮬레이터는 쓰지 않습니다. 펌웨어와 촬영 조건을 정확히 기록하면 완료입니다.</li>
+<li><strong>NR-II-02 LNR 쓰기 경로 추적.</strong> <code>0x20000304</code>에 해당하는 제어값의 생산자와 설정 구조체를 찾습니다. 문자열·레지스터 이름이 같다는 것만으로 끝내지 않습니다. 메뉴값에서 이 주소까지 코드가 이어지면 완료입니다.</li>
+<li><strong>NR-II-03 RAW와 JPEG 분리.</strong> RAW 저장 버퍼가 LNR 처리 전에 나오는지 후에 나오는지 확인합니다. 어느 쪽인지 가려지면 완료입니다. 이어지지 않으면 센서 전처리·불량 화소 보정·별도 ISP 블록으로 조사 범위를 옮깁니다.</li>
+<li><strong>NR-II-04 최소 우회 검증.</strong> 적용 블록을 확인한 뒤 처리만 우회하고 버퍼·완료 통지는 유지합니다. On에서 기존 동작이 복원되고 Off에서 CFA 공간 통계가 바뀌면 완료입니다. 이 단계 전에는 실기 패치를 적용하지 않습니다.</li>
+</ol>
+<p>필터 후보별 판별 기준과 실험 방법은 <a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/raw-nr-feasibility.html">K-3 III와 묶은 검토 문서</a>에 더 자세히 적어 두었습니다.</p>
+</section>
+
+<section id="limits">
+<h2>한계와 남은 과제</h2>
+<ul>
+<li>이 문서는 타당성 검토입니다. 화질에 대한 결론이 아닙니다.</li>
+<li>ISO 1600 역치는 외부 사이트에 기고된 RAW의 측정입니다. 분석한 1.12 펌웨어의 실측이 아닙니다.</li>
+<li>찾은 것은 레지스터를 읽어 찍는 정적 경로입니다. 실기에서 레지스터를 읽거나 쓴 적이 없습니다.</li>
+<li><code>LNR</code>은 펌웨어 안의 이름입니다. 뜻을 확정하지 못했습니다.</li>
+<li>이 블록이 저장 RAW에 작용하는지, 메뉴 Off와 연동되는지가 가장 큰 미확인 항목입니다.</li>
+</ul>
+</section>
+
+<section id="reproduce">
+<h2>재현 방법</h2>
+<p>원본과 복호화 파일은 이 저장소에 넣지 않았습니다. 해제는 기존 도구를 씁니다.</p>
+<pre><code>python inspect_firmware.py fwdc230b.bin --output-dir .private/nr-decode</code></pre>
+<p>도구를 중복으로 만들지 않으려고 노이즈 감소 후보 검증기는 K-3 III 저장소의 <a href="https://github.com/yunhyok/pentax-k3iii-firmware-analysis/blob/main/verify_nr_candidates.py">verify_nr_candidates.py</a>에 합쳐 두었습니다. 두 저장소를 같은 상위 폴더에 두고 K-3 III 저장소에서 실행합니다.</p>
+<pre><code>python verify_nr_candidates.py k3ii \
+  ../pentax-k3ii-firmware-analysis/.private/nr-decode/decoded.bin \
+  --compare ../pentax-k3ii-firmware-analysis/analysis/nr-candidates.json</code></pre>
+<div class="table-wrap"><table class="fit">
+<caption>파일 해시</caption>
+<thead><tr><th scope="col">파일</th><th scope="col">SHA-256</th></tr></thead>
+<tbody>
+<tr><th scope="row">원본</th><td><code class="wrap">a33485f351019960192891ef69ddc5d4904ef9e298671d9d9955679e4c901a9a</code></td></tr>
+<tr><th scope="row">해제본</th><td><code class="wrap">1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc</code></td></tr>
+</tbody></table></div>
+<p class="small muted">검토일 2026-11-13. 이번 결과는 원본 바이너리의 정적 확인입니다. 실기에서 노이즈 감소를 끄는 데 성공했다는 보고가 아닙니다.</p>
+</section>
+
+<section id="refs">
+<h2>근거 파일과 참고 자료</h2>
+<ul class="refs">
+<li><a href="nr-candidates.json">nr-candidates.json</a> — 이번 정적 확인 결과(주소·문자열·호출·구간 해시)</li>
+<li><a href="guide-pipeline.html">영상 처리 경로 안내</a> — 기존 전체 영상 처리 흐름</li>
+<li><a href="repack.json">repack.json</a> — 기존 재포장 근거와 체크섬·마커 검증</li>
+<li>K-3 III 저장소: <a href="https://github.com/yunhyok/pentax-k3iii-firmware-analysis/blob/main/verify_nr_candidates.py">verify_nr_candidates.py</a>(두 기종 공통 검증기) · <a href="https://github.com/yunhyok/pentax-k3iii-firmware-analysis/blob/main/analysis/raw-nr-public-evidence.json">raw-nr-public-evidence.json</a>(공개 측정의 원문 해시·판독 절차) · <a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/raw-nr-feasibility.html">K-3 III와 묶은 검토 문서</a></li>
+<li>공개 측정: <a href="https://www.photonstophotos.net/Charts/PDR.htm#Pentax%20K-3%20II,Pentax%20K-3%20III">Photons to Photos PDR 차트</a>(저자 William J. Claff)</li>
+<li>카메라 자료: <a href="https://www.ricoh-imaging.co.jp/english/support/digital/k3_2.html">리코 K-3 II 펌웨어 1.12 배포</a> · <a href="https://www.ricoh-imaging.co.jp/english/support/man-pdf/k-3-2.pdf#page=44">사용설명서 High-ISO NR(인쇄 42쪽)</a> · <a href="https://www.ricoh-imaging.co.jp/english/support/qa/k-3-2/index.html">공식 FAQ</a></li>
+</ul>
+</section>
+
 </main>
 </div>
 <!-- chrome:bottom -->

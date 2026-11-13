@@ -1,31 +1,290 @@
-<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>K-3 II selector 5·6의 직접 생산 경로</title><link rel="stylesheet" href="../assets/site.css"><style>main.doc{max-width:1120px;margin:auto;padding:30px 24px}main.doc .note{border-left:4px solid #b17c27;background:#fff4df;padding:14px 20px}main.doc .scroll{overflow:auto;max-width:100%;margin:18px 0}main.doc svg{width:100%;min-width:960px;height:auto;background:white}main.doc svg text{font:17px system-ui,"Malgun Gothic",sans-serif;fill:#193148}main.doc .edge{stroke:#36556e;stroke-width:2.5;fill:none;marker-end:url(#arrow)}main.doc table{width:100%;border-collapse:collapse}main.doc th,main.doc td{padding:10px;border:1px solid #c8d2dd;text-align:left}main.doc code,main.doc .hash{overflow-wrap:anywhere}main.doc pre{white-space:pre-wrap}@media print{main.doc svg{min-width:0}}</style></head><body data-camera="k3ii"><!-- chrome:top -->
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>톤 selector 5·6 값을 만드는 원본 코드 — PENTAX K-3 II 펌웨어 연구</title>
+<meta name="description" content="K-3 II 펌웨어 1.12에서 톤 selector 5·6에 값을 넣는 직접 호출 두 곳이 별도 입력 객체의 16비트 값을 읽어 하위 8비트를 임시 객체에 저장하는 경로와 selector 6의 기본값 0x20 생산 코드를, 원본 코드 5개 사례로 재현한 기록입니다.">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body data-camera="k3ii">
+<!-- chrome:top -->
 <a class="skip" href="#main">본문 바로가기</a>
 <div class="topbar"><div class="topbar-in"><a class="brand" href="../index.html">PENTAX <b>펌웨어 연구</b></a><div class="cams" aria-label="기종 선택"><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/">K-3 III</a><a href="../index.html" aria-current="true">K-3 II</a><a href="https://yunhyok.github.io/pentax-q7-firmware-analysis/">Q7</a></div><nav class="topnav" aria-label="주제"><a href="../index.html">개요</a><a href="guide-pipeline.html" aria-current="true">영상 처리</a><a href="guide-capture.html">촬영·보존 레코드</a><a href="guide-rebuild.html">재구축·업데이트</a><a href="guide-af.html">AF</a><a href="guide-ui.html">UI</a></nav></div></div>
 <nav class="crumbs" aria-label="현재 위치"><ol><li><a href="../index.html">PENTAX K-3 II</a></li><li><a href="guide-pipeline.html">영상 처리와 저장 경로</a></li><li aria-current="page">selector 5·6의 직접 생산 경로</li></ol></nav>
-<!-- /chrome:top --><main class="doc" id="main"><p>II-TONE-SELECTOR-PUBLIC-36 · 전체 관측 검증 후 공개 · 2026-11-13</p><h1>selector 5·6의 직접 인자와<br>별도 입력 객체의 생산 경로</h1><p class="note">주소와 코드 상수는 0x 접두사를 생략한 16진수로도 표기합니다. 검사 개수와 바이트 길이는 10진수입니다. 기본값·합성 RAM 재현과 실제 메뉴 변경·촬영 도달을 구분합니다.</p><h2 id="section-1">1. 두 직접 호출의 수신자</h2><p>selector 5·6에 값을 전달하는 직접 호출 두 곳을 확인했습니다. 4EBBAC는 selector 5, 4EBBC4는 selector 6으로 6EB284를 호출합니다. 두 호출의 수신 객체는 고정 RAM 주소 4047AE1C입니다. 함수 4EBAF8의 진입 R0는 R4에 보존되며, word(R4+1C)가 가리키는 별도 입력 객체에서 값을 가져옵니다. 아래 명령 주소는 파일 offset이고, 실행 VA에는 02000000을 더합니다. RAM 주소는 이미 VA입니다.</p><h2 id="section-2">2. descriptor와 값 수식</h2><p>selector 5의 인자는 6C78D0이 읽는 입력 객체+24의 unsigned halfword입니다. selector 6은 6C78E0이 읽는 입력 객체+26의 unsigned halfword입니다. ROM descriptor 9DEAB8과 9DEAC0은 각각 offset 11·12, mask FF, shift 0을 담습니다. 6EB284는 이 인자의 하위 8비트를 수신 객체+15·+16에 씁니다. 색상·대비·밝기 같은 메뉴 명칭은 붙이지 않았습니다.</p><div class="scroll" tabindex="0" role="region" aria-label="생산 경로와 검증 범위 도식"><svg viewBox="0 0 1080 385" role="img" aria-labelledby="flowtitle flowdesc"><title id="flowtitle">입력 객체에서 selector 5·6으로 전달하는 두 경로</title><desc id="flowdesc">owner+1C의 포인터로 입력 객체를 찾는다. halfword24와26을 원본 getter로 읽고 selector setter가 각각 scratch15와16에 하위8비트를 저장한다. 26의 기본값20 생산 구간은 별도 진입으로 재현했다.</desc><defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0 0 L7 3 L0 6" fill="#36556e"/></marker></defs>
-<rect x="20" y="80" width="225" height="120" rx="8" fill="#e1eaf4"/><text x="38" y="112">호출자 진입 R0 → R4</text><text x="38" y="145">word(owner+0x1C)</text><text x="38" y="179">입력 객체 포인터</text>
-<path d="M245 140 H265 V82 H280 M265 140 V207 H280" class="edge"/>
-<rect x="285" y="40" width="230" height="85" rx="8" fill="#e1eaf4"/><text x="303" y="70">입력+0x24 · u16</text><text x="303" y="101">6C78D0 LDRH</text>
-<rect x="285" y="165" width="230" height="85" rx="8" fill="#e1eaf4"/><text x="303" y="195">입력+0x26 · u16</text><text x="303" y="226">6C78E0 LDRH</text>
-<path d="M515 82 H555 M515 207 H555" class="edge"/>
-<rect x="560" y="40" width="230" height="85" rx="8" fill="#dcefe3"/><text x="578" y="70">4EBBAC → 6EB284</text><text x="578" y="101">R1=5 · R2=halfword</text>
-<rect x="560" y="165" width="230" height="85" rx="8" fill="#dcefe3"/><text x="578" y="195">4EBBC4 → 6EB284</text><text x="578" y="226">R1=6 · R2=halfword</text>
-<path d="M790 82 H825 M790 207 H825" class="edge"/>
-<rect x="830" y="40" width="230" height="85" rx="8" fill="#dcefe3"/><text x="848" y="70">scratch+0x15</text><text x="848" y="101">입력 halfword &amp; 0xFF</text>
-<rect x="830" y="165" width="230" height="85" rx="8" fill="#dcefe3"/><text x="848" y="195">scratch+0x16</text><text x="848" y="226">입력 halfword &amp; 0xFF</text>
-<rect x="285" y="295" width="505" height="60" rx="8" fill="#fff0d5"/><text x="303" y="320">별도 기본값 구간: 4EBA50 R1=0x20</text><text x="303" y="344">4EBA54 → 6C78D8 STRH → 입력+0x26</text><path d="M400 295 V255" class="edge" stroke-dasharray="6 5"/>
-<text x="20" y="376" font-size="15">scratch = 0x4047AE1C · 화살표는 검증한 값 관계이며 전체 함수의 연속 실행을 뜻하지 않습니다.</text></svg></div><h2 id="section-3">3. selector 6 기본값 생산자</h2><p>selector 6에는 기본값 생산 코드도 연결됩니다. 4EBAF8→4EBA80→4EB9E4의 정적 호출 관계에서, 4EBA50은 R1을 20으로 만들고 4EBA54는 6C78D8을 호출해 입력 객체+26에 halfword 0020을 저장합니다. 이 작은 원본 구간을 실행하면 나중의 getter/setter 구간이 수신 객체+16에 20을 씁니다. 두 구간 사이의 서비스와 guard는 실행하지 않았으므로 실제 전체 함수가 항상 이 값을 전달한다고 단정할 수는 없습니다.</p><h2 id="section-4">4. selector 5와 owner의 남은 경계</h2><p>selector 5의 입력 저장 위치와 쓰기 leaf 6C78C8은 확인했지만, 현재 값이 어떤 메뉴 이벤트에서 만들어졌는지는 미확정입니다. 4E8F84→56B3BC→4E8F88의 owner+1C 설정 코드도 찾았으나 이번 호출과 동일한 런타임 인스턴스인지는 확인하지 않았습니다.</p><h2 id="section-5">5. 작은 원본 구간 재현</h2><p>5개 합성 RAM 사례에서 원본 쓰기 leaf, getter, selector setter를 실행했습니다. 기본 입력은 00·20, 상위 비트가 있는 입력 0144·0128은 44·28, 최대 halfword는 FF·FF가 됐습니다. 기본값 구간을 적용한 사례는 54·20이었고, 입력 객체 주소를 옮긴 대조도 44·28이었습니다. 실제 호출 시점의 R0·R1·R2와 메모리 이벤트를 기록했으며, 수신 객체의 나머지 50바이트는 바뀌지 않았습니다. 입력 포인터와 쓰기 leaf의 인자는 실기 관측값이 아닌 시험용 값입니다.</p><div class="scroll"><table><thead><tr><th>사례</th><th>읽힌 halfword 5·6</th><th>저장 byte 5·6</th><th>입력 조건</th></tr></thead><tbody><tr><td>baseline</td><td>0x0000, 0x0020</td><td>0x00, 0x20</td><td>주입값을 원본 쓰기 leaf로 저장</td></tr><tr><td>high_bytes</td><td>0x0144, 0x0128</td><td>0x44, 0x28</td><td>주입값을 원본 쓰기 leaf로 저장</td></tr><tr><td>maximum</td><td>0xFFFF, 0xFFFF</td><td>0xFF, 0xFF</td><td>주입값을 원본 쓰기 leaf로 저장</td></tr><tr><td>default_overwrites_source6</td><td>0x0154, 0x0020</td><td>0x54, 0x20</td><td>별도 기본값 구간 적용</td></tr><tr><td>relocated_owner</td><td>0x0144, 0x0128</td><td>0x44, 0x28</td><td>주입값을 원본 쓰기 leaf로 저장</td></tr></tbody></table></div><h2 id="section-6">6. manager와 기존 tone lookup의 관계</h2><p>같은 함수에는 manager의 내용을 scratch 객체로 읽는 4EBB7C와 수정한 내용을 쓰는 4EBBFC도 있습니다. 두 호출의 R2는 1입니다. manager 캐시 슬롯은 4040A5DC이고, scratch의 48바이트 payload는 4047AE20–4047AE50입니다. 이 읽기·쓰기와 후속 알림 경로는 정적으로 연결했으며 실행하지 않았습니다. 기존 II31의 job+334 객체, job+349·34A 기본값 00·20, selector 6의 ROM 029E651C lookup과는 자료형·descriptor를 대조했습니다. 이번 scratch가 실제 촬영 job으로 복사되는 연속 경로를 새로 입증한 것은 아닙니다.</p><div class="scroll" tabindex="0" role="region" aria-label="생산 경로와 검증 범위 도식"><svg viewBox="0 0 1080 250" role="img" aria-labelledby="contexttitle contextdesc"><title id="contexttitle">전체 함수에서 실행한 부분과 정적 연결만 확인한 부분</title><desc id="contextdesc">기본값 초기화와 manager guard, 읽기, 쓰기는 전체로 실행하지 않았다. 녹색 두 setter 사이만 작은 연속 구간으로 실행했다. 촬영job으로의 전달은 미확정이다.</desc><rect x="20" y="40" width="230" height="110" rx="8" fill="#edf0f3"/><text x="38" y="70">4EBAF8 진입</text><text x="38" y="100">기본값·guard·서비스</text><text x="38" y="130">전체 실행하지 않음</text><path d="M250 95 H280" class="edge" stroke-dasharray="6 5"/>
-<rect x="285" y="40" width="230" height="110" rx="8" fill="#edf0f3"/><text x="303" y="70">4EBB7C 읽기</text><text x="303" y="100">manager → scratch</text><text x="303" y="130">R2=1 · 정적 연결</text><path d="M515 95 H545" class="edge" stroke-dasharray="6 5"/>
-<rect x="550" y="40" width="230" height="110" rx="8" fill="#dcefe3"/><text x="568" y="70">4EBB98–4EBBC8</text><text x="568" y="100">getter·setter 두 경로</text><text x="568" y="130">합성 RAM에서 실행</text><path d="M780 95 H810" class="edge" stroke-dasharray="6 5"/>
-<rect x="815" y="40" width="245" height="110" rx="8" fill="#edf0f3"/><text x="833" y="70">4EBBFC 쓰기</text><text x="833" y="100">scratch → manager</text><text x="833" y="130">R2=1 · 정적 연결</text>
-<text x="20" y="195">기존 II31: job+0x334의 같은 descriptor layout → job+0x349 / +0x34A</text><text x="20" y="225">이번 scratch와 촬영 job의 실제 복사·재사용 이력, 메뉴 이벤트 연결은 미확정입니다.</text></svg></div><h2 id="section-7">7. 검증 범위와 미확정 사항</h2><p>분석 입력은 SHA-256으로 고정했고, 선택한 코드와 데이터 14개 범위를 별도로 기록했습니다. 전체 이미지의 정렬된 A32 분기 패턴 84개는 후보 목록으로만 취급했습니다. 실제 인자와 실행을 확인한 6EB284 호출은 두 곳입니다. Thumb·간접 호출·전체 별칭과 모든 CFG는 조사하지 않았습니다. 서비스·MMIO·CP15·부팅 재개·카메라 촬영은 실행하지 않았으며, 실제 메뉴 연결과 촬영 도달 조건은 남은 과제입니다.</p><!-- chrome:toc -->
-<nav class="toc" aria-label="이 문서의 목차"><h2 data-toc="no">이 문서에서</h2><ol><li><a href="#section-1">1. 두 직접 호출의 수신자</a></li><li><a href="#section-2">2. descriptor와 값 수식</a></li><li><a href="#section-3">3. selector 6 기본값 생산자</a></li><li><a href="#section-4">4. selector 5와 owner의 남은 경계</a></li><li><a href="#section-5">5. 작은 원본 구간 재현</a></li><li><a href="#section-6">6. manager와 기존 tone lookup의 관계</a></li><li><a href="#section-7">7. 검증 범위와 미확정 사항</a></li><li><a href="#verification">8. 공개 검증과 재현</a></li></ol></nav>
-<!-- /chrome:toc --><h2 id="verification">8. 공개 검증과 재현</h2><p>공개 CLI는 사용자가 따로 제공한 decoded 일반 파일을 정확한 크기와 SHA-256으로 한 번 캡처합니다. helper와 source contract도 고정된 크기·해시로 캡처하며, 검증한 helper bytes만 실행합니다. 입력과 14개 희소 원본 범위가 일치한 뒤 원본 leaf 구간 5개 사례를 재현합니다.</p><p>원본 II35 전체 관측의 dict·list·str·int·bool 자료형과 모든 값·순서·출처를 정본 해시로 검사합니다. 원래 Windows CRLF 직렬화도 메모리에서 복원해 원본 파일 해시와 비교합니다. 그 검사를 통과한 전체 관측을 공개 JSON에 유지합니다. 명령 주소와 읽기·쓰기 값은 포함하지만 원본 firmware bytes, 역어셈블리 목록과 사설 경로는 포함하지 않습니다. historical35는 과거 코드·환경이고 current_execution은 현재 CLI·helper·엔진 정보입니다.</p><p>기본 CI 검사는 표준 라이브러리만으로 수행하며 펌웨어와 Capstone·Unicorn을 가져오지 않습니다. 정상·-O 모드에서 각각 11개 검사가 통과했습니다. 원본 5개 사례 재현은 별도의 입력과 Capstone 배포판 5.0.9(모듈 5.0.7), Unicorn 2.1.4가 필요합니다. -O에서도 explicit require 검사가 유지됩니다. 다른 위치로 옮긴 일반 실행과 후보 위치의 -O 실행 결과는 바이트 단위로 같았습니다.</p><p>출력은 입력을 읽기 전과 쓰기 직전에 lexists로 검사하며 xb 모드로 생성합니다. 기존 파일·hardlink·dangling symlink를 덮어쓰지 않습니다. 별도 disassembly 출력 옵션은 제공하지 않습니다. 파일이 캡처된 뒤 외부에서 바뀌더라도 이번 결과는 검증한 캡처 bytes에 대한 결과입니다.</p><pre><code>python -B verify_tone_selectors.py /path/to/decoded.bin --output /path/to/new-result.json
+<!-- /chrome:top -->
+<header class="page-head">
+<p class="eyebrow">영상 처리와 저장 경로 · 톤 상세 ⑫</p>
+<h1>톤 selector 5·6 값을 만드는 원본 코드</h1>
+<p class="lead">톤 계산에 쓰이는 selector 5와 6의 바이트를 누가 처음 쓰는지 찾았습니다. 값을 넣는 호출 두 곳과 그 값의 입력 위치, selector 6의 기본값을 쓰는 코드를 정리하고 작은 원본 구간으로 재현했습니다.</p>
+</header>
+<div class="layout">
+<!-- chrome:toc -->
+<nav class="toc" aria-label="이 문서의 목차"><h2 data-toc="no">이 문서에서</h2><ol><li><a href="#background">배경: selector와 입력 객체</a></li><li><a href="#section-1">두 호출은 입력 halfword의 하위 8비트를 임시 객체에 씁니다</a></li><li><a href="#section-5">작은 원본 구간 5개 사례에서 하위 8비트 저장을 확인했습니다</a></li><li><a href="#section-6">관리자 읽기·쓰기와 기존 톤 경로는 정적으로만 이어집니다</a></li><li><a href="#limits">한계와 남은 과제</a></li><li><a href="#reproduce">재현 방법</a></li><li><a href="#refs">근거 파일과 참고 자료</a></li></ol></nav>
+<!-- /chrome:toc -->
+<main class="doc" id="main">
+
+<section class="summary">
+<h2 data-toc="no">핵심 요약</h2>
+<ul>
+<li>selector 5·6에 값을 넣는 <strong>직접 호출 두 곳</strong>을 찾았습니다. 둘은 같은 함수 안에 있습니다. 별도 입력 객체에서 16비트 값을 하나씩 읽어 <strong>하위 8비트만</strong> 고정 RAM의 임시 객체에 저장합니다.</li>
+<li>selector 6에는 <strong>기본값 32</strong>를 입력 객체에 쓰는 원본 코드도 연결됩니다. 작업 객체 생성자가 selector 6에 쓰는 값과 같은 수입니다.</li>
+<li>합성 RAM으로 만든 <strong>5개 사례</strong>에서 원본 쓰기 함수·getter·setter를 실행해 하위 8비트 저장을 확인했습니다. 임시 객체의 나머지 바이트는 바뀌지 않았습니다.</li>
+<li>두 값의 물리적 의미, 어느 메뉴 이벤트에서 오는지, 이 임시 객체가 촬영 작업으로 복사되는지는 확인하지 못했습니다. 서비스·메뉴·촬영은 실행하지 않았습니다.</li>
+</ul>
+</section>
+
+<div class="scope">
+<div class="ok"><h3><span class="badge ok">확인</span> 원본 코드 실행으로 확인</h3>
+<ul>
+<li>getter와 setter 연속 구간이 입력 halfword의 하위 8비트를 저장함</li>
+<li>기본값 구간이 입력 객체 <code>+0x26</code>에 32를 씀</li>
+<li>입력 객체 주소를 옮겨도 같은 결과</li>
+</ul></div>
+<div class="static"><h3><span class="badge static">정적 분석</span> 코드를 읽어 판단</h3>
+<ul>
+<li>두 호출의 수신 객체, 기술자, 입력 위치</li>
+<li>같은 함수 안의 관리자 읽기·쓰기(R2 = 1)</li>
+<li><code>owner+0x1C</code>를 설정하는 후보 코드</li>
+</ul></div>
+<div class="model"><h3><span class="badge model">모델</span> 시험 조건으로 정한 것</h3>
+<ul>
+<li>입력 객체 포인터와 원본 쓰기 함수에 넣은 값</li>
+<li>임시 객체의 처음 내용(<code>A5</code>로 채움)</li>
+</ul></div>
+<div class="open"><h3><span class="badge open">미확인</span> 확인하지 않은 것</h3>
+<ul>
+<li>두 값의 물리적 의미와 메뉴 이름</li>
+<li>selector 5 입력이 어느 이벤트에서 만들어지는지</li>
+<li>임시 객체에서 촬영 job으로 가는 복사 경로</li>
+<li>서비스·MMIO·CP15·부팅·촬영</li>
+</ul></div>
+</div>
+
+<section id="background">
+<h2>배경: selector와 입력 객체</h2>
+<p><a href="tone-upstream.html">톤 입력 R5</a> 문서에서 selector 6 바이트가 ROM 표에서 R5를 고르는 인덱스라는 것을 보았습니다. <a href="tone-manager.html">톤 설정 관리자</a> 문서에서는 그 바이트가 관리자 레코드에 실려 복사된다는 것까지 보았습니다. 이 문서는 바이트를 직접 쓰는 쪽을 찾습니다.</p>
+<dl class="kv">
+<dt>selector</dt><dd>설정 항목 번호입니다. setter <code>6EB284</code>는 번호로 ROM 기술자를 찾아 정해진 바이트를 씁니다.</dd>
+<dt>halfword</dt><dd>16비트(2바이트) 값입니다. ARM의 <code>LDRH</code>·<code>STRH</code> 명령이 읽고 씁니다.</dd>
+<dt>임시 객체</dt><dd>고정 RAM 주소 <code>0x4047AE1C</code>의 객체입니다. 관리자 레코드를 읽어 와 고친 뒤 되돌리는 데 씁니다.</dd>
+<dt>입력 객체</dt><dd>호출 함수의 owner가 <code>+0x1C</code>에 들고 있는 포인터가 가리키는 객체입니다. selector 값의 원천입니다.</dd>
+</dl>
+<div class="callout"><strong class="label">표기</strong>
+<p>주소와 코드 상수는 <code>0x</code>를 생략한 16진수로도 씁니다. 명령 주소는 파일 오프셋이고 실행 주소에는 <code>02000000</code>을 더합니다. RAM 주소는 처음부터 VA입니다. 검사 개수와 바이트 길이는 10진수입니다.</p></div>
+</section>
+
+<section id="section-1">
+<h2>두 호출은 입력 halfword의 하위 8비트를 임시 객체에 씁니다</h2>
+<p class="takeaway">selector 5는 입력 객체 <code>+0x24</code>, selector 6은 <code>+0x26</code>의 16비트 값을 읽어 임시 객체 <code>+0x15</code>·<code>+0x16</code>에 하위 8비트를 저장합니다.</p>
+<figure class="diagram">
+<figcaption>입력 객체에서 selector 5·6 바이트까지: 생산자에서 소비자로</figcaption>
+<div class="dg-scroll">
+<svg class="dg" viewBox="0 0 800 384" role="img" aria-labelledby="dg-sel-title dg-sel-desc">
+<title id="dg-sel-title">입력 객체의 halfword 두 개가 getter와 setter를 거쳐 임시 객체 바이트가 되는 흐름</title>
+<desc id="dg-sel-desc">왼쪽 열은 입력 객체에 값을 쓰는 쪽입니다. 시험값은 원본 쓰기 함수 6C78C8과 6C78D8로 저장했고, 별도의 기본값 구간 4EBA50은 R1을 0x20으로 만들어 6C78D8로 +0x26에 씁니다. 가운데 입력 객체는 word(owner+0x1C)가 가리키며 +0x24와 +0x26에 부호 없는 16비트 값이 있습니다. getter 6C78D0이 +0x24를 읽고 4EBBAC가 setter에 selector 5로 넘깁니다. getter 6C78E0이 +0x26을 읽고 4EBBC4가 selector 6으로 넘깁니다. setter는 하위 8비트를 임시 객체 4047AE1C의 +0x15와 +0x16에 씁니다.</desc>
+<defs><marker id="dg-sel-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker>
+<marker id="dg-sel-am" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah model" d="M0 0L10 5L0 10z"/></marker></defs>
+<text class="h" x="8" y="80">입력에 쓰는 쪽</text>
+<text class="h" x="206" y="80">입력 객체</text>
+<text class="h" x="404" y="80">읽기와 setter 호출</text>
+<text class="h" x="612" y="80">임시 객체 4047AE1C</text>
+<text class="s" x="206" y="40">입력 객체 = word(owner+0x1C)</text>
+<text class="s" x="206" y="58">owner = 호출 함수의 진입 R0 (R4에 보존)</text>
+
+<rect class="b model" x="8" y="120" width="170" height="60" rx="8"/>
+<text class="t" x="20" y="146">시험값 저장</text>
+<text class="s" x="20" y="166">원본 leaf 6C78C8</text>
+<rect class="b model" x="8" y="210" width="170" height="60" rx="8"/>
+<text class="t" x="20" y="236">시험값 저장</text>
+<text class="s" x="20" y="256">원본 leaf 6C78D8</text>
+<rect class="b ok" x="8" y="306" width="170" height="60" rx="8"/>
+<text class="t" x="20" y="332">기본값 구간</text>
+<text class="s" x="20" y="352">4EBA50: R1 = 0x20</text>
+
+<rect class="b mute" x="206" y="100" width="170" height="182" rx="8"/>
+<rect class="b key" x="218" y="120" width="146" height="60" rx="6"/>
+<text class="t" x="230" y="146">+0x24 · u16</text>
+<text class="s" x="230" y="166">selector 5 원천</text>
+<rect class="b key" x="218" y="210" width="146" height="60" rx="6"/>
+<text class="t" x="230" y="236">+0x26 · u16</text>
+<text class="s" x="230" y="256">selector 6 원천</text>
+
+<rect class="b ok" x="404" y="120" width="180" height="60" rx="8"/>
+<text class="t" x="416" y="146">getter 6C78D0</text>
+<text class="s" x="416" y="166">4EBBAC: setter, R1 = 5</text>
+<rect class="b ok" x="404" y="210" width="180" height="60" rx="8"/>
+<text class="t" x="416" y="236">getter 6C78E0</text>
+<text class="s" x="416" y="256">4EBBC4: setter, R1 = 6</text>
+
+<rect class="b ok" x="612" y="120" width="180" height="60" rx="8"/>
+<text class="t" x="624" y="146">+0x15</text>
+<text class="s" x="624" y="166">halfword &amp; 0xFF</text>
+<rect class="b ok" x="612" y="210" width="180" height="60" rx="8"/>
+<text class="t" x="624" y="236">+0x16</text>
+<text class="s" x="624" y="256">halfword &amp; 0xFF</text>
+
+<path class="e model" d="M178 150H216" marker-end="url(#dg-sel-am)"/>
+<path class="e model" d="M178 240H216" marker-end="url(#dg-sel-am)"/>
+<path class="e" d="M178 336H291V272" marker-end="url(#dg-sel-ah)"/>
+<path class="e" d="M364 150H402" marker-end="url(#dg-sel-ah)"/>
+<path class="e" d="M364 240H402" marker-end="url(#dg-sel-ah)"/>
+<path class="e" d="M584 150H610" marker-end="url(#dg-sel-ah)"/>
+<path class="e" d="M584 240H610" marker-end="url(#dg-sel-ah)"/>
+<text class="n" x="300" y="324">STRH로 32 저장</text>
+<text class="n" x="404" y="324">화살표는 확인한 값 관계입니다.</text>
+<text class="n" x="404" y="342">전체 함수를 이어서 실행했다는 뜻은 아닙니다.</text>
+</svg>
+</div>
+<ul class="dg-legend"><li><i class="ok"></i>원본 코드 실행으로 확인</li><li><i class="model"></i>시험값을 넣은 단계</li><li><i class="key"></i>selector 값의 원천</li></ul>
+</figure>
+<p>두 호출의 수신 객체는 고정 RAM 주소 <code>4047AE1C</code>입니다. 호출 함수 <code>4EBAF8</code>의 진입 R0는 R4에 보존됩니다. 값은 <code>word(R4+0x1C)</code>가 가리키는 별도 입력 객체에서 가져옵니다. setter는 받은 인자의 하위 8비트를 씁니다. 색상·대비·밝기 같은 메뉴 이름은 붙이지 않았습니다.</p>
+
+<div class="table-wrap" id="section-2"><table class="compact">
+<caption>두 경로의 기술자와 위치</caption>
+<thead><tr><th>항목</th><th>selector 5</th><th>selector 6</th></tr></thead>
+<tbody>
+<tr><th scope="row">setter 호출 위치</th><td><code>4EBBAC</code></td><td><code>4EBBC4</code></td></tr>
+<tr><th scope="row">입력과 getter</th><td>입력+0x24, <code>6C78D0</code> (LDRH)</td><td>입력+0x26, <code>6C78E0</code> (LDRH)</td></tr>
+<tr><th scope="row">ROM 기술자</th><td><code>9DEAB8</code></td><td><code>9DEAC0</code></td></tr>
+<tr><th scope="row">payload 오프셋 / mask / shift</th><td>0x11 / 0xFF / 0</td><td>0x12 / 0xFF / 0</td></tr>
+<tr><th scope="row">저장 위치</th><td>scratch+0x15 = <code>4047AE31</code></td><td>scratch+0x16 = <code>4047AE32</code></td></tr>
+<tr><th scope="row">입력 쓰기 함수</th><td><code>6C78C8</code> (호출자와 수명은 미확정)</td><td><code>6C78D8</code>, 기본값 구간에서도 호출</td></tr>
+</tbody></table></div>
+
+<h3 id="section-3">selector 6의 기본값 생산자</h3>
+<p>selector 6에는 기본값 코드가 연결됩니다. 정적 호출 관계는 <code>4EBAF8 → 4EBA80 → 4EB9E4</code>입니다. 그 안에서 <code>4EBA50</code>이 R1을 0x20으로 만들고 <code>4EBA54</code>가 <code>6C78D8</code>을 불러 입력 객체 <code>+0x26</code>에 halfword <code>0020</code>을 저장합니다. 이 작은 구간을 실행하면 뒤의 getter·setter 구간이 임시 객체 <code>+0x16</code>에 32를 씁니다.</p>
+<p>두 구간 사이의 서비스와 가드는 실행하지 않았습니다. 그래서 실제 전체 함수가 항상 이 값을 넘긴다고 단정하지 않습니다.</p>
+
+<h3 id="section-4">selector 5와 owner의 남은 경계</h3>
+<p>selector 5의 입력 저장 위치와 쓰기 함수 <code>6C78C8</code>은 확인했습니다. 지금 들어 있는 값이 어떤 메뉴 이벤트에서 만들어졌는지는 정하지 못했습니다. <code>owner+0x1C</code>를 설정하는 코드(<code>4E8F84 → 56B3BC → 4E8F88</code>)도 찾았습니다. 다만 위 호출과 같은 실행 중 객체인지는 확인하지 않았습니다.</p>
+</section>
+
+<section id="section-5">
+<h2>작은 원본 구간 5개 사례에서 하위 8비트 저장을 확인했습니다</h2>
+<p class="takeaway">모든 사례에서 저장된 바이트는 읽은 halfword의 하위 8비트였습니다. 임시 객체의 나머지 50바이트는 그대로였습니다.</p>
+<div class="table-wrap"><table>
+<caption>합성 RAM 사례 (입력 포인터와 쓰기 함수 인자는 시험값)</caption>
+<thead><tr><th>사례</th><th>읽힌 halfword 5 · 6</th><th>저장 바이트 5 · 6</th><th>입력 조건</th></tr></thead>
+<tbody>
+<tr><td><code>baseline</code></td><td><code>0x0000</code>, <code>0x0020</code></td><td><code>0x00</code>, <code>0x20</code></td><td>시험값을 원본 쓰기 함수로 저장</td></tr>
+<tr><td><code>high_bytes</code></td><td><code>0x0144</code>, <code>0x0128</code></td><td><code>0x44</code>, <code>0x28</code></td><td>시험값을 원본 쓰기 함수로 저장</td></tr>
+<tr><td><code>maximum</code></td><td><code>0xFFFF</code>, <code>0xFFFF</code></td><td><code>0xFF</code>, <code>0xFF</code></td><td>시험값을 원본 쓰기 함수로 저장</td></tr>
+<tr><td><code>default_overwrites_source6</code></td><td><code>0x0154</code>, <code>0x0020</code></td><td><code>0x54</code>, <code>0x20</code></td><td>selector 6에 넣은 <code>0x1234</code>를 기본값 구간이 덮어씀</td></tr>
+<tr><td><code>relocated_owner</code></td><td><code>0x0144</code>, <code>0x0128</code></td><td><code>0x44</code>, <code>0x28</code></td><td>owner와 입력 객체를 다른 주소에 배치</td></tr>
+</tbody></table></div>
+<p>실행한 원본 구간은 쓰기 함수, getter, setter입니다. 실제 호출 시점의 R0·R1·R2와 메모리 읽기·쓰기를 기록했습니다. 입력 포인터와 쓰기 함수의 인자는 실기 관측값이 아닌 시험값입니다.</p>
+<details class="evidence"><summary>실행 허용 구간과 시험 배치</summary>
+<ul>
+<li>실행을 허용한 원본 구간: <code>4EBA4C..4EBA58</code>(기본값), <code>4EBB98..4EBBC8</code>(getter·setter 연속 구간), <code>6C78C8..6C78E8</code>, <code>6EB284..6EB2D0</code>.</li>
+<li>owner는 <code>0x10100000</code>, 입력 객체 포인터는 하네스가 <code>0x10101000</code>으로 넣었습니다. <code>relocated_owner</code>는 <code>0x10104000</code>과 <code>0x10105000</code>입니다.</li>
+<li>setter의 바이트 쓰기는 <code>6EB2C8</code>에서 일어납니다. 사례마다 쓰기 4건(기본값 사례 5건), 읽기 16건(17건)을 기록했습니다.</li>
+<li>전체 기록은 <a href="tone-selectors.json">tone-selectors.json</a>의 <code>native_cases</code>에 있습니다.</li>
+</ul>
+</details>
+</section>
+
+<section id="section-6">
+<h2>관리자 읽기·쓰기와 기존 톤 경로는 정적으로만 이어집니다</h2>
+<p class="takeaway">같은 함수가 관리자 레코드를 임시 객체로 읽고 고친 뒤 되돌립니다. 그 가운데 실행한 것은 getter·setter 구간뿐입니다.</p>
+<figure class="diagram">
+<figcaption>함수 4EBAF8 안에서 실행한 부분과 정적으로만 연결한 부분</figcaption>
+<div class="dg-scroll">
+<svg class="dg" viewBox="0 0 800 236" role="img" aria-labelledby="dg-fn-title dg-fn-desc">
+<title id="dg-fn-title">함수 4EBAF8의 단계별 검증 상태</title>
+<desc id="dg-fn-desc">왼쪽부터 함수 진입과 기본값·가드·서비스 단계는 전체로 실행하지 않았고 기본값 구간만 따로 실행했습니다. 4EBB7C의 관리자 읽기(R2 1)는 정적 연결입니다. 4EBB98부터 4EBBC8까지 getter와 setter 두 경로는 합성 RAM에서 실행했습니다. 4EBBFC의 관리자 쓰기(R2 1)는 정적 연결입니다. 아래의 촬영 job+0x334 객체는 같은 기술자 배치로 job+0x349와 job+0x34A를 쓰지만, 임시 객체에서 촬영 job으로 가는 복사는 확인하지 않았습니다.</desc>
+<defs><marker id="dg-fn-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah" d="M0 0L10 5L0 10z"/></marker>
+<marker id="dg-fn-ao" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="ah open" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="b open" x="8" y="30" width="176" height="70" rx="8"/>
+<text class="t" x="20" y="56">4EBAF8 진입</text>
+<text class="s" x="20" y="76">기본값·가드·서비스</text>
+<text class="s" x="20" y="92">기본값 구간만 따로 실행</text>
+<rect class="b static" x="210" y="30" width="176" height="70" rx="8"/>
+<text class="t" x="222" y="56">4EBB7C 읽기</text>
+<text class="s" x="222" y="76">관리자 → 임시 객체</text>
+<text class="s" x="222" y="92">R2 = 1</text>
+<rect class="b ok" x="412" y="30" width="176" height="70" rx="8"/>
+<text class="t" x="424" y="56">4EBB98–4EBBC8</text>
+<text class="s" x="424" y="76">getter·setter 두 경로</text>
+<text class="s" x="424" y="92">합성 RAM에서 실행</text>
+<rect class="b static" x="614" y="30" width="178" height="70" rx="8"/>
+<text class="t" x="626" y="56">4EBBFC 쓰기</text>
+<text class="s" x="626" y="76">임시 객체 → 관리자</text>
+<text class="s" x="626" y="92">R2 = 1</text>
+<path class="e" d="M184 65H208" marker-end="url(#dg-fn-ah)"/>
+<path class="e" d="M386 65H410" marker-end="url(#dg-fn-ah)"/>
+<path class="e" d="M588 65H612" marker-end="url(#dg-fn-ah)"/>
+<rect class="b static" x="210" y="150" width="378" height="70" rx="8"/>
+<a href="tone-upstream.html"><text class="t" x="222" y="176">촬영 job+0x334 객체 · ⑩ 문서</text></a>
+<text class="s" x="222" y="196">같은 기술자 배치: +0x349 / +0x34A</text>
+<text class="s" x="222" y="212">생성자 값 0 / 32, ROM 029E651C 조회</text>
+<path class="e open" d="M703 100V185H590" marker-end="url(#dg-fn-ao)"/>
+<text class="n" x="612" y="208">복사 경로 미확인</text>
+</svg>
+</div>
+<ul class="dg-legend"><li><i class="ok"></i>원본 코드 실행으로 확인</li><li><i class="static"></i>코드를 읽어 연결</li><li><i class="open"></i>실행하지 않음 · 미확인</li></ul>
+</figure>
+<p>관리자 캐시 슬롯은 <code>4040A5DC</code>이고 임시 객체의 48바이트 payload는 <code>4047AE20</code>–<code>4047AE50</code>입니다. 이 읽기·쓰기와 이어지는 통지 경로는 정적으로 연결했으며 실행하지 않았습니다. 갱신 함수의 순서는 <a href="tone-manager.html">톤 설정 관리자</a> 문서에 있습니다.</p>
+<p>기존 촬영 job 경로와는 자료형과 기술자를 대조했습니다. job+0x334 객체의 selector 5·6은 job+0x349·0x34A에 있으며 생성자 기본값은 0·32입니다. selector 6은 ROM <code>029E651C</code>를 조회하며 인덱스 32와 40에서 8192와 16384가 나옵니다. 이 임시 객체가 실제 촬영 job으로 복사되는 연속 경로는 입증하지 않았습니다.</p>
+</section>
+
+<section id="limits">
+<h2>한계와 남은 과제</h2>
+<ul id="section-7">
+<li><strong>호출 범위</strong>: 분석 입력은 SHA-256으로 고정했고 코드·데이터 14개 범위를 따로 기록했습니다. 전체 이미지의 정렬된 A32 분기 패턴 84개는 후보 목록으로만 다룹니다. 인자와 실행을 확인한 <code>6EB284</code> 호출은 두 곳입니다.</li>
+<li><strong>찾지 않은 것</strong>: Thumb·간접 호출, 수신 객체 별칭, 다른 진입점, 전체 제어 흐름은 조사하지 않았습니다.</li>
+<li><strong>실행하지 않은 것</strong>: 서비스·MMIO·CP15·부팅 재개·카메라 촬영은 실행하지 않았습니다. 기본값 구간과 입력 쓰기는 따로 진입했고 그 사이의 서비스·가드 호출은 재현하지 않았습니다.</li>
+<li><strong>값의 뜻</strong>: 입력 객체 <code>+0x24</code>·<code>+0x26</code>과 각 값의 물리적 의미, 메뉴 이벤트, 촬영 도달, 픽셀 버퍼 재사용은 미확정입니다.</li>
+<li><strong>남은 연결</strong>: 관리자와 촬영 job 사이의 실제 복사 경로가 남아 있습니다.</li>
+</ul>
+</section>
+
+<section id="reproduce">
+<h2>재현 방법</h2>
+<h3 id="verification">공개 검증의 동작</h3>
+<ul>
+<li>CLI는 따로 준비한 복호화 일반 파일을 정확한 크기와 SHA-256으로 한 번 캡처합니다. 보조 코드와 소스 계약도 고정한 크기·해시로 캡처하며 검증한 보조 코드 바이트만 실행합니다.</li>
+<li>입력과 14개 원본 범위가 맞아야 원본 구간 5개 사례의 재현으로 넘어갑니다.</li>
+<li>원래 기록(II35) 전체의 자료형과 모든 값·순서·출처를 정본 해시로 검사합니다. 비교 대상에는 원래의 Windows CRLF 직렬화를 메모리에서 복원한 원본 파일 해시도 들어갑니다.</li>
+<li>공개 JSON에는 명령 주소와 읽기·쓰기 값만 있고 펌웨어 바이트, 역어셈블리 목록, 개인 경로는 없습니다. <code>historical35</code>는 과거 코드·환경, <code>current_execution</code>은 현재 CLI·보조 코드·엔진 정보입니다.</li>
+<li>기본 CI 검사는 표준 라이브러리만 쓰며 펌웨어·Capstone·Unicorn을 불러오지 않습니다. 일반·<code>-O</code> 모드에서 각각 11개 검사가 통과했습니다.</li>
+<li>원본 사례 재현에는 입력 파일과 Capstone 배포판 5.0.9(모듈 5.0.7), Unicorn 2.1.4가 필요합니다. <code>-O</code>에서도 명시적 require 검사가 유지됩니다. 다른 위치로 옮긴 일반 실행과 <code>-O</code> 실행의 결과는 바이트 단위로 같았습니다.</li>
+<li>출력 경로는 입력을 읽기 전과 쓰기 직전에 <code>lexists</code>로 검사하고 <code>xb</code> 모드로 만듭니다. 기존 파일·하드링크·끊어진 심볼릭 링크를 덮어쓰지 않습니다. 역어셈블리 출력 옵션은 없습니다.</li>
+</ul>
+<pre><code>python -B verify_tone_selectors.py /path/to/decoded.bin --output /path/to/new-result.json
 python -B -O verify_tone_selectors.py /path/to/decoded.bin --output /path/to/new-opt-result.json
 python -B -S -m unittest discover -s tests -p test_tone_selectors.py
 python -B -O -S -m unittest discover -s tests -p test_tone_selectors.py</code></pre>
-<p><a href="tone-selectors.json">전체 검증 결과</a> · <a href="tone-selectors-contract.json">실행 계약</a> · <a href="../verify_tone_selectors.py">portable CLI</a> · <a href="../tools/tone_provenance/selectors-source.json">입력·원본 범위·의존성 핀</a> · <a href="../tools/tone_provenance/selectors.py.inc">원본 구간 재현 helper</a> · <a href="../tests/test_tone_selectors.py">기본 검사</a> · <a href="../requirements-tone-selectors.txt">재현 의존성</a></p><p class="note">입력 객체+24/+26과 각 값의 물리적 의미는 미확정입니다. 실제 메뉴 이벤트·촬영 도달·픽셀 버퍼 재사용을 검증한 결과가 아닙니다. manager와 촬영 job 사이의 실제 복사 경로도 남아 있습니다. 서비스·MMIO·CP15·전체 부팅을 실행하지 않았습니다.</p><p class="hash">decoded SHA-256: 1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc</p><p class="hash">원본 II35 JSON SHA-256: 1e6ed678c9ce1a3a2e9a2dcb5935893bab09a9ac650d4020c7d01a29b4a647c5</p><p>재현 출력은 실행 중 다른 프로세스가 경로를 변경하지 않는 디렉터리에 둡니다.</p></main><!-- chrome:bottom -->
-<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">영상 처리와 저장 경로 — 이 주제의 문서</h2><ol><li><a href="guide-pipeline.html">영상 처리 경로 안내</a></li><li><a href="pipeline-analysis.html">RAW 이후의 톤·WB·색 행렬</a></li><li><a href="tone-provenance.html">톤 문맥과 곡선 생산자의 연결<span>원본 포인터·정수 계산·곡선 생성의 분리 재현</span></a></li><li><a href="tone-inputs.html">톤 입력의 원본 생산자<span>생성자·상위 job 입력·기존값 유지 조건</span></a></li><li><a href="tone-scale.html">recipe+9C 정수 생산자와 내장 입력 복사<span>정수 계산 20조건과 원본 바이트 전달 3조건</span></a></li><li><a href="tone-upstream.html">R5 상위 입력과 0 소비자<span>원본 생성자·기술자·ROM 표와 0 분모 경계</span></a></li><li><a href="tone-manager.html">톤 설정 관리자와 내부 버퍼 기록<span>두 호출점·48바이트 복사·busy 상태의 정적 순서</span></a></li><li><a href="tone-selectors.html" aria-current="page">selector 5·6의 직접 생산 경로<span>입력 halfword에서 하위 8비트까지·5개 원본 구간 재현</span></a></li><li><a href="output-menu-analysis.html">JPEG 출력 버퍼와 Reversal Film 메뉴</a></li><li><a href="storage-dma-analysis.html">파일시스템에서 SD·DMA까지</a></li><li><a href="backend-b-cpp-analysis.html">백엔드 B와 두 번째 CPP 출력</a></li><li><a href="masked-cpp-analysis.html">마스크 CPP와 보조 JPEG 입력</a></li><li><a href="superresolution-lifecycle.html">Pixel Shift 메뉴와 버퍼 수명</a></li></ol></nav>
+<p>출력은 실행 중 다른 프로세스가 경로를 바꾸지 않는 폴더에 둡니다. 캡처 뒤 파일이 밖에서 바뀌더라도 결과는 검증한 캡처 바이트 기준입니다.</p>
+<dl class="kv">
+<dt>복호화 입력 SHA-256</dt><dd><code class="wrap">1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc</code></dd>
+<dt>원래 기록 II35 JSON</dt><dd><code class="wrap">1e6ed678c9ce1a3a2e9a2dcb5935893bab09a9ac650d4020c7d01a29b4a647c5</code></dd>
+<dt>공개 JSON</dt><dd><code class="wrap">6f43418175126385151fb28bfb343c513142ffe8d84937cfc4bdacea7b8dfc35</code></dd>
+</dl>
+<p class="small muted">근거 스냅샷은 2026-11-13 기준입니다.</p>
+</section>
+
+<section id="refs">
+<h2>근거 파일과 참고 자료</h2>
+<ul class="refs">
+<li><a href="tone-selectors.json">tone-selectors.json</a> — 전체 검증 결과</li>
+<li><a href="tone-selectors-contract.json">tone-selectors-contract.json</a> — 실행 계약</li>
+<li><a href="../verify_tone_selectors.py">verify_tone_selectors.py</a> — 이식 가능한 CLI</li>
+<li><a href="../tools/tone_provenance/selectors-source.json">selectors-source.json</a> — 입력·원본 범위·의존성 고정값</li>
+<li><a href="../tools/tone_provenance/selectors.py.inc">selectors.py.inc</a> — 원본 구간 재현 보조 코드</li>
+<li><a href="../tests/test_tone_selectors.py">tests/test_tone_selectors.py</a> — 기본 검사</li>
+<li><a href="../requirements-tone-selectors.txt">requirements-tone-selectors.txt</a> — 재현 의존성</li>
+<li><a href="tone-upstream.html">R5 상위 입력과 0 소비자</a> · <a href="tone-manager.html">톤 설정 관리자와 내부 버퍼 기록</a></li>
+<li>외부 자료: <a href="https://github.com/unicorn-engine/unicorn">Unicorn CPU 에뮬레이터</a> · <a href="https://www.capstone-engine.org/">Capstone 디스어셈블러</a></li>
+</ul>
+</section>
+
+</main>
+</div>
+<!-- chrome:bottom -->
+<nav class="related" aria-label="같은 주제의 문서"><h2 data-toc="no">영상 처리와 저장 경로 — 이 주제의 문서</h2><ol><li><a href="guide-pipeline.html">영상 처리 경로 안내</a></li><li><a href="pipeline-analysis.html">RAW 이후의 톤·WB·색 행렬</a></li><li><a href="tone-provenance.html">톤 문맥과 곡선 생산자의 연결<span>원본 포인터·정수 계산·곡선 생성의 분리 재현</span></a></li><li><a href="tone-inputs.html">톤 입력의 원본 생산자<span>생성자·상위 job 입력·기존값 유지 조건</span></a></li><li><a href="tone-scale.html">recipe+9C 정수 생산자와 내장 입력 복사<span>정수 계산 20조건과 원본 바이트 전달 3조건</span></a></li><li><a href="tone-upstream.html">R5 상위 입력과 0 소비자<span>원본 생성자·기술자·ROM 표와 0 분모 경계</span></a></li><li><a href="tone-manager.html">톤 설정 관리자와 내부 버퍼 기록<span>두 호출점·48바이트 복사·busy 상태의 정적 순서</span></a></li><li><a href="tone-selectors.html" aria-current="page">selector 5·6의 직접 생산 경로<span>입력 halfword에서 하위 8비트까지·5개 원본 구간 재현</span></a></li><li><a href="output-menu-analysis.html">JPEG 출력 버퍼와 Reversal Film 메뉴</a></li><li><a href="storage-dma-analysis.html">파일시스템에서 SD·DMA까지</a></li><li><a href="backend-b-cpp-analysis.html">백엔드 B와 두 번째 CPP 출력</a></li><li><a href="masked-cpp-analysis.html">마스크 CPP와 보조 JPEG 입력</a></li><li><a href="superresolution-lifecycle.html">Pixel Shift 메뉴와 버퍼 수명</a></li><li><a href="raw-nr-feasibility.html">RAW 노이즈 감소를 끌 수 있는가</a></li></ol></nav>
 <nav class="pager" aria-label="이전·다음 문서"><a class="prev" href="tone-manager.html"><small>← 이전</small>톤 설정 관리자와 내부 버퍼 기록</a><a class="next" href="output-menu-analysis.html"><small>다음 →</small>JPEG 출력 버퍼와 Reversal Film 메뉴</a></nav>
 <footer class="sitefoot"><div class="sitefoot-in"><nav aria-label="사이트"><a href="../index.html#map">문서 지도</a><a href="../index.html#levels">검증 수준 읽는 법</a><a href="../glossary.html">용어집</a><a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/research-program.html">세 기종 연구 본부</a><a href="https://github.com/yunhyok/pentax-k3ii-firmware-analysis">GitHub 저장소</a></nav><p>PENTAX K-3 II 펌웨어 1.12 분석 문서. PC에서 수행한 정적 분석과 에뮬레이션 결과이며, 카메라 실기에서 검증한 내용이 아닙니다. 원본 펌웨어와 복호화한 바이너리는 포함하지 않습니다.</p></div></footer>
-<!-- /chrome:bottom --></body></html>
+<!-- /chrome:bottom -->
+</body>
+</html>

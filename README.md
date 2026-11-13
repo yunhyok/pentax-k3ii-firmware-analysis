@@ -25,7 +25,7 @@
 
 ## 문서 안내
 
-**새 조사:** [RAW 노이즈 감소와 펌웨어 On/Off 가능성 검토](docs/research/RAW_NR_FEASIBILITY_20261113_KO.md) — ISO 1600부터의 공개 NR 감지 근거, LNR 제어 후보와 후속 과제. 설치용 NR 패치가 아닌 연구 결과입니다.
+**새 조사:** [RAW 노이즈 감소를 끌 수 있는가](https://yunhyok.github.io/pentax-k3ii-firmware-analysis/analysis/raw-nr-feasibility.html)를 올렸습니다. ISO 1600부터의 공개 NR 감지 근거와 LNR 제어 후보, 후속 과제를 정리했습니다. 설치용 NR 패치가 아니라 수정 가능성을 살핀 연구입니다.
 
 주제마다 안내 문서가 있습니다. 안내 문서에서 전체 그림을 본 뒤 세부 문서로 들어가면 읽기 쉽습니다.
 
