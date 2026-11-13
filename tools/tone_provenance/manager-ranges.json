@@ -1,0 +1,140 @@
+{
+  "input_bytes": 16838656,
+  "input_sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+  "base_va": 33554432,
+  "spans": [
+    {
+      "label": "writer",
+      "kind": "ARM",
+      "start": 7253872,
+      "end_exclusive": 7253972,
+      "sha256": "c33927004a26277bab29de5477390dfbf2b358129e43d3c893564d7394cd38c2"
+    },
+    {
+      "label": "reader",
+      "kind": "ARM",
+      "start": 7253692,
+      "end_exclusive": 7253796,
+      "sha256": "2aa4c89cf9ac807f412453d1cf19d2dc0f78af7b0f36dc44d1c8fbbc60da151d"
+    },
+    {
+      "label": "copy48",
+      "kind": "ARM",
+      "start": 7445224,
+      "end_exclusive": 7445264,
+      "sha256": "091e100f2a4f43772c04f003f60dd8d427a85de423993d392f9fd6bf60a7bf6e"
+    },
+    {
+      "label": "copy-noop",
+      "kind": "ARM",
+      "start": 5423272,
+      "end_exclusive": 5423276,
+      "sha256": "379bec29dccd0a93c94826144d7ef6e42fab64ef195a3b8313a16926f66f388f"
+    },
+    {
+      "label": "setter",
+      "kind": "ARM",
+      "start": 7254660,
+      "end_exclusive": 7254768,
+      "sha256": "93ab9f53a430dd67f877b7828d4bfaf5f46b23290a9e81f8add6b27fe0e7b87b"
+    },
+    {
+      "label": "setter-descriptor-pointer",
+      "kind": "DATA",
+      "start": 7254796,
+      "end_exclusive": 7254800,
+      "sha256": "3b90e0ea25ae04fbc8de542769c7d00607a0498573bb9b051ac33c48e5c9d008"
+    },
+    {
+      "label": "descriptor1e",
+      "kind": "DATA",
+      "start": 10349440,
+      "end_exclusive": 10349448,
+      "sha256": "a8e0432b588b9bc87ff47e5c8b2a0add2ce704de4c01a84f8090b609ad17b931"
+    },
+    {
+      "label": "descriptor2b",
+      "kind": "DATA",
+      "start": 10349544,
+      "end_exclusive": 10349552,
+      "sha256": "6bb51ac0fe96964673f215c9948e11acb869bfb09812e19a902c92b6255bbfc6"
+    },
+    {
+      "label": "caller1-base",
+      "kind": "ARM",
+      "start": 4970404,
+      "end_exclusive": 4970588,
+      "sha256": "3db266b3deb387c909bcd0e01d730ca898b244855be2bad7eaefc9c747a35720"
+    },
+    {
+      "label": "caller1-transaction",
+      "kind": "ARM",
+      "start": 4971136,
+      "end_exclusive": 4971332,
+      "sha256": "ebf1713ff035886982bbb5bde5aa1862f195ea300a85643dcaea0af74e183623"
+    },
+    {
+      "label": "caller1-base-literal",
+      "kind": "DATA",
+      "start": 4972616,
+      "end_exclusive": 4972620,
+      "sha256": "ae7b65a405a1f49478991a4bca9b5d493138be104abf19d4b63ed086e7982026"
+    },
+    {
+      "label": "caller1-scratch-literal",
+      "kind": "DATA",
+      "start": 4972672,
+      "end_exclusive": 4972676,
+      "sha256": "a2eff7ddde88f69322f3cf263463be993f13b96d40c52893b253526015e4bc6c"
+    },
+    {
+      "label": "caller2-init",
+      "kind": "ARM",
+      "start": 4976948,
+      "end_exclusive": 4977136,
+      "sha256": "a3c1a270904e0a9808700606ddfc9a23892cba40563ae7e8d2c24dd449a16c82"
+    },
+    {
+      "label": "caller2-value-pointer",
+      "kind": "ARM",
+      "start": 4978032,
+      "end_exclusive": 4978160,
+      "sha256": "347de958d56751b27b2f9b64d2b9a94b5ae279e2d28af0de74bd92c0ab72a503"
+    },
+    {
+      "label": "caller2-transaction",
+      "kind": "ARM",
+      "start": 4978256,
+      "end_exclusive": 4978372,
+      "sha256": "d5a007e0149aadbdcdb47c4bbc8ef6dbf3083a559c447197559db9166fc8bfdc"
+    },
+    {
+      "label": "caller2-literals",
+      "kind": "DATA",
+      "start": 4980772,
+      "end_exclusive": 4980784,
+      "sha256": "825b18b62fb49f99d371fcdcd583487ea95928bea64aceedf50801e0e0f250ed"
+    },
+    {
+      "label": "singleton",
+      "kind": "ARM",
+      "start": 7393664,
+      "end_exclusive": 7393736,
+      "sha256": "32e9639d0c86790a0e5899b4b9dd869595fe2778edbff6d82084d2e53df342e7"
+    },
+    {
+      "label": "singleton-literal",
+      "kind": "DATA",
+      "start": 7396296,
+      "end_exclusive": 7396300,
+      "sha256": "a316939e5975d4b77fa9cd15c18c4eb20453a1425a3af12306aa1051b5615a0a"
+    },
+    {
+      "label": "manager-getter",
+      "kind": "ARM",
+      "start": 7887132,
+      "end_exclusive": 7887140,
+      "sha256": "cdb6597d5f559cc0fcf394f18a78ee566b12548b02900f598ee31e5f2b6efcf8"
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "schema": "k3ii-tone-manager-contract-v1",
+  "input": {
+    "bytes": 16838656,
+    "sha256": "1b87bf35b290e4b4e8910beb4055c34f97504b65e249ad65e5ccc0402bd14cfc",
+    "separately_supplied": true
+  },
+  "historical_record": {
+    "bytes": 11090,
+    "raw_sha256": "bd2b718be32432eb0870d1a0aaf8b021414260fb5b1eee9cd2e68e054014e1f3",
+    "typed_canonical_sha256": "d706b05011c9de1a1d6f507771edc990f42472e1096f1d6994c26521b04c0bb7",
+    "original_source_sha256": "b65c0a468c9469f37c3da26fe75b3c290e7ca70b60fb208fb52775f46f7a7b69",
+    "original_listing_sha256": "17e40759dcb2abad4d2f7186d433a6efc31316e12e6030a267f2b907ce456a14",
+    "original_Capstone_version": "5.0.7",
+    "source_listing_distributed": false
+  },
+  "public_checker_sha256": "915db644162c455170534f1b383a4b5cbd16d6ee62c0b37ea0ee124eadf66d14",
+  "scope": {
+    "source_ranges": 19,
+    "historical_decoded_ARM_instructions": 312,
+    "checked_direct_branches": 18,
+    "checked_literals": 12,
+    "direct_callers": 2,
+    "caller_depth": 1,
+    "syntactic_A32_candidates_in_research": 27,
+    "other_candidates_not_traced": 25
+  },
+  "manual_static_fields": [
+    "callers",
+    "writer_order",
+    "limits",
+    "descriptors.special_two_byte_path",
+    "symbolic_state_examples formula"
+  ],
+  "verification": {
+    "whole_historical_record_checked_before_metadata": true,
+    "default_mode": "standard-library static word and range checks",
+    "default_mode_imports_capstone": false,
+    "optional_mode": "Capstone5.0.7 after image validation, listing identity in memory only",
+    "optional_decoder_checked_during_packaging": true,
+    "normal_optimized_public_bytes": 13703,
+    "normal_optimized_public_sha256": "90f2c3d1fef9f005377e94c56ba184fbbccd92a49f3b853816fc2773d97ab382",
+    "portable_default_layout_verified": true,
+    "firmware_free_tests_normal": 12,
+    "firmware_free_tests_optimized": 12,
+    "CI_firmware_or_Capstone_required": false,
+    "regular_path_and_descriptor_checks": true,
+    "input_read_cap": 16838657,
+    "compare_cap": "4 times generated JSON bytes plus one sentinel read",
+    "exclusive_no_overwrite_output": true,
+    "firmware_or_emulator_executed": false,
+    "browser_rendered": false,
+    "independent_worker_review": false,
+    "POSIX_FIFO_run": false
+  },
+  "limits": [
+    "The complete II33 record, including original code/decoder/listing provenance, is checked before public metadata is added.",
+    "callers and writer_order contain manual static interpretations checked against pinned original ranges; they are not automatically inferred execution traces.",
+    "Default verification uses only Python standard-library checks of image, source ranges, branch words, literal words and descriptors. It does not import Capstone.",
+    "capstone_version, decoded_instruction_count, reproduction_source_sha256 and source_listing_sha256 inside observations preserve historical II33 provenance.",
+    "Optional Capstone checking re-creates the old listing in memory after exact image verification. No listing, firmware bytes or assets are exported.",
+    "The two inputs are 48-byte internal parameter records, not pixel buffers. No menu reachability, actual capture order, concurrency safety or reuse history is established.",
+    "Static instruction order only, not execution, synchronization proof, observed reuse history or camera reachability.",
+    "Guarded cache producers return singleton4047B754+14 manager; actual initialized cache contents and guard success are not observed.",
+    "R2=0 disables only the final notification tail; it does not disable the separate manager+0x0C helper call.",
+    "Both selected setters modify other payload fields, not selector5/6 bytes object+15/+16. Existing payload values are copied; their earlier producers remain unresolved.",
+    "The immediate setter argument is word(R5); the inspected path sets R5=caller_object+6C80 at4BF580. No exhaustive caller CFG or alias-free intervening calls are proved.",
+    "All aligned A32 scan matches outside these two callers remain syntactic candidates. No exhaustive Thumb/indirect caller recovery or actual menu event attribution."
+  ],
+  "artifacts": [
+    {
+      "path": "analysis/tone-manager.html",
+      "bytes": 21996,
+      "sha256": "83fe03a708c130fd2762e09a21ef5ed9a42b423ba0df2252478cc87d20adc0f5"
+    },
+    {
+      "path": "analysis/tone-manager.json",
+      "bytes": 13703,
+      "sha256": "90f2c3d1fef9f005377e94c56ba184fbbccd92a49f3b853816fc2773d97ab382"
+    },
+    {
+      "path": "tests/test_tone_manager.py",
+      "bytes": 8058,
+      "sha256": "01898bf7b2f1b37cc0dbf6b0b176a9724417b49d41f9303caf272f4ef26fb071"
+    },
+    {
+      "path": "tools/tone_provenance/manager-ranges.json",
+      "bytes": 4079,
+      "sha256": "e2256737f2e77936a007f9220bd7d9f091e82364beb3d88424a4e8987941bb3c"
+    },
+    {
+      "path": "verify_tone_manager.py",
+      "bytes": 12747,
+      "sha256": "915db644162c455170534f1b383a4b5cbd16d6ee62c0b37ea0ee124eadf66d14"
+    }
+  ]
+}
