@@ -30,7 +30,7 @@
 <li>메뉴 선택 하나가 지나가는 길을 <strong>여섯 단계</strong>로 나눴습니다. 버튼 입력 → 메뉴 알림 → 화면 전환 → 글자 준비 → RAM 설정 기록 → 설정 섹터 저장 요청입니다.</li>
 <li>가운데 네 단계는 이 주제의 세 문서가 원본 코드를 PC 에뮬레이터에서 실행해 확인했습니다. 마지막 단계는 “촬영 준비와 보존 레코드” 주제의 문서가 다룹니다.</li>
 <li>두 메뉴에서 같은 규칙을 확인했습니다. <strong>고르는 것만으로는 설정이 바뀌지 않고 확정(적용) 동작이 RAM의 설정 두 곳에 기록합니다.</strong></li>
-<li>단계들을 처음부터 끝까지 한 번에 실행한 것은 아닙니다. 구간별로 실행했고 구간 사이는 값을 직접 넣어 이었습니다. 버튼 입력, LCD 표시, 플래시 기록은 확인하지 않았습니다.</li>
+<li>단계들을 처음부터 끝까지 한 번에 실행하지는 않았습니다. 구간별로 실행했고 구간 사이는 값을 직접 넣어 이었습니다. 버튼 입력, LCD 표시, 플래시 기록은 확인하지 않았습니다.</li>
 <li>다른 기종의 UI를 옮겨 오는 작업은 하지 않았습니다. 그러려면 객체 구조, 그리기 코드, 버튼 대응을 맞춰야 하는데 모두 남아 있습니다.</li>
 </ul>
 </section>
@@ -124,7 +124,7 @@
 <h2>배경 지식</h2>
 <p>세 문서를 읽는 데 필요한 개념입니다. 번호와 필드 위치는 모두 K-3 II 펌웨어 1.12의 내부 값입니다.</p>
 <dl class="kv">
-<dt>두 메뉴의 공식 이름</dt><dd>Color Space는 사용자 설정 메뉴 C3의 20번 항목이고 선택지는 sRGB와 AdobeRGB입니다. RAW File Format은 촬영 메뉴 1의 Image Capture Settings 안에 있고 선택지는 PEF와 DNG입니다(<a href="https://www.ricoh-imaging.co.jp/english/support/man-pdf/k-3-2.pdf">K-3 II 사용 설명서</a> 20·26·37쪽). PEF는 PENTAX 고유의 RAW 형식이고 DNG는 Adobe가 규격을 공개한 RAW 형식입니다(<a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000188.shtml">미국 의회도서관의 DNG 설명</a>).</dd>
+<dt>두 메뉴의 공식 이름</dt><dd>Color Space는 사용자 설정 메뉴 C3의 20번 항목이고 선택지는 sRGB와 AdobeRGB입니다. RAW File Format은 촬영 메뉴 1의 Image Capture Settings 안에 있습니다. 선택지는 PEF와 DNG입니다(<a href="https://www.ricoh-imaging.co.jp/english/support/man-pdf/k-3-2.pdf">K-3 II 사용 설명서</a> 20·26·37쪽). PEF는 PENTAX 고유의 RAW 형식이고 DNG는 Adobe가 규격을 공개한 RAW 형식입니다(<a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000188.shtml">미국 의회도서관의 DNG 설명</a>).</dd>
 <dt>화면, 위젯, 논리 동작</dt><dd>메뉴의 한 화면은 펌웨어에서 객체 하나이고 화면 ID를 가집니다. 화면 속 제목, 선택 항목, 도움말은 위젯이라는 32비트 번호로 구분됩니다. 설명서의 OK·MENU 버튼 조작은 펌웨어 안에서 작은 번호(논리 동작)로 화면 객체에 전달됩니다. 어느 버튼이 어느 번호인지는 확인하지 못했습니다.</dd>
 <dt>임시값과 확정</dt><dd>화면 객체는 “지금 고른 값”을 임시값으로 들고 있습니다. 확정 동작이 와야 임시값이 설정으로 넘어갑니다.</dd>
 <dt>설정 번호, 현재값과 미러, 뱅크</dt><dd>설정은 번호로 구분됩니다(색공간 <code>0x15C</code>, RAW 형식 <code>0x97</code>). 값은 RAM의 두 곳, 즉 설정 객체 안의 현재값과 별도 블록인 미러에 함께 기록됩니다. 같은 설정 번호의 값은 뱅크라는 구획마다 한 벌씩 있고 활성 인덱스가 쓸 뱅크를 정합니다.</dd>

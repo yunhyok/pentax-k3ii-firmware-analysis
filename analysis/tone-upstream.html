@@ -30,7 +30,7 @@
 <li>R5의 입력을 작업 객체 안에 내장된 작은 객체의 <strong>바이트 두 개</strong>(selector 5와 6)까지 따라갔습니다. 원본 생성자는 두 바이트에 0과 32를 씁니다. selector 6은 ROM 표에서 R5를 고르는 인덱스가 됩니다.</li>
 <li>생성자·setter·가상 함수·ROM 표 조회를 원본 코드로 나누어 실행한 <strong>7개 조건</strong>에서 R5는 512부터 22000까지 나왔습니다. 생성자 값 그대로는 8192입니다. 이 값이 실제 촬영 설정으로 남는지는 확인하지 않았습니다.</li>
 <li>별도의 구성 서비스가 R5를 덮어쓸 수 있습니다. 그 값은 설정 파일 <code>C:\SYSPARAM.TXT</code>의 <code>STILL_SVD_GAIN</code> 항목에서 온다는 것을 코드를 읽어 추적했습니다. 파일 읽기와 서비스는 실행하지 않았습니다.</li>
-<li>R5 자리에 0을 넣으면 톤 정수에 0이 저장되고, 소비자 함수의 마지막 나눗셈 분모가 0이 됩니다. 실행은 <strong>0 나눗셈 처리기의 첫 명령 앞</strong>에서 멈췄고 결과는 저장되지 않았습니다. 처리기가 무엇을 하는지, 카메라가 어떻게 동작하는지는 이 결과로 알 수 없습니다.</li>
+<li>R5 자리에 0을 넣으면 톤 정수에 0이 저장되고 소비자 함수의 마지막 나눗셈 분모가 0이 됩니다. 실행은 <strong>0 나눗셈 처리기의 첫 명령 앞</strong>에서 멈췄고 결과는 저장되지 않았습니다. 처리기가 무엇을 하는지, 카메라가 어떻게 동작하는지는 이 결과로 알 수 없습니다.</li>
 <li>모두 PC 에뮬레이터에서 원본 코드 구간을 따로따로 실행한 결과입니다. 촬영 전체, 서비스, 메뉴 경로는 실행하지 않았고 값의 물리적 의미도 정해지지 않았습니다.</li>
 </ul>
 </section>
@@ -80,7 +80,7 @@
 
 <section id="owner">
 <h2>R5는 내장 객체의 바이트와 ROM 표에서 나옵니다</h2>
-<p class="takeaway">selector 6 바이트가 ROM 표의 인덱스가 되어 R5를 고르고, selector 5 바이트는 선택 경로에서 추가 계수를 고릅니다.</p>
+<p class="takeaway">selector 6 바이트가 ROM 표의 인덱스가 되어 R5를 고르고 selector 5 바이트는 선택 경로에서 추가 계수를 고릅니다.</p>
 <figure class="diagram">
 <figcaption>R5를 만드는 값의 흐름: 생산자에서 소비자까지</figcaption>
 <div class="dg-scroll">
@@ -165,21 +165,22 @@
 
 <div class="table-wrap"><table class="compact">
 <caption>원본 생성자 출력과 시험 인자를 구분한 7개 조건</caption>
-<thead><tr><th>조건</th><th>무엇을 바꿨나</th><th class="n">selector 6</th><th class="n">selector 5</th><th class="n">job+0x52</th><th class="n">인덱스</th><th class="n">ROM R5</th><th class="n">추가 계수</th><th class="n">최종 R5</th></tr></thead>
+<thead><tr><th>조건</th><th class="n">selector 6</th><th class="n">selector 5</th><th class="n">job+0x52</th><th class="n">인덱스</th><th class="n">ROM R5</th><th class="n">추가 계수</th><th class="n">최종 R5</th></tr></thead>
 <tbody>
-<tr><td><code>constructor</code></td><td>생성자 출력 그대로</td><td class="n">32</td><td class="n">0</td><td class="n">0</td><td class="n">32</td><td class="n">8192</td><td class="n">8192</td><td class="n">8192</td></tr>
-<tr><td><code>selector6_40</code></td><td>setter로 selector 6 = 40</td><td class="n">40</td><td class="n">0</td><td class="n">0</td><td class="n">40</td><td class="n">16384</td><td class="n">8192</td><td class="n">16384</td></tr>
-<tr><td><code>flag52_shift</code></td><td>위 조건 + <code>job+0x52</code> = 1</td><td class="n">40</td><td class="n">0</td><td class="n">1</td><td class="n">32</td><td class="n">8192</td><td class="n">8192</td><td class="n">8192</td></tr>
-<tr><td><code>selector5_44</code></td><td>selector 5 = 68 (<code>0x44</code>)</td><td class="n">40</td><td class="n">68</td><td class="n">0</td><td class="n">40</td><td class="n">16384</td><td class="n">11000</td><td class="n">22000</td></tr>
-<tr><td><code>selector5_54</code></td><td>selector 5 = 84 (<code>0x54</code>)</td><td class="n">40</td><td class="n">84</td><td class="n">0</td><td class="n">40</td><td class="n">16384</td><td class="n">8211</td><td class="n">16416</td></tr>
-<tr><td><code>setter_byte_truncate</code></td><td>setter 인자 256 → 바이트 0</td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td class="n">512</td><td class="n">8192</td><td class="n">512</td></tr>
-<tr><td><code>relocated</code></td><td><code>selector5_44</code>를 job <code>0x10200000</code>에서</td><td class="n">40</td><td class="n">68</td><td class="n">0</td><td class="n">40</td><td class="n">16384</td><td class="n">11000</td><td class="n">22000</td></tr>
+<tr><td><code>constructor</code></td><td class="n">32</td><td class="n">0</td><td class="n">0</td><td class="n">32</td><td class="n">8192</td><td class="n">8192</td><td class="n">8192</td></tr>
+<tr><td><code>selector6_40</code></td><td class="n">40</td><td class="n">0</td><td class="n">0</td><td class="n">40</td><td class="n">16384</td><td class="n">8192</td><td class="n">16384</td></tr>
+<tr><td><code>flag52_shift</code></td><td class="n">40</td><td class="n">0</td><td class="n">1</td><td class="n">32</td><td class="n">8192</td><td class="n">8192</td><td class="n">8192</td></tr>
+<tr><td><code>selector5_44</code></td><td class="n">40</td><td class="n">68</td><td class="n">0</td><td class="n">40</td><td class="n">16384</td><td class="n">11000</td><td class="n">22000</td></tr>
+<tr><td><code>selector5_54</code></td><td class="n">40</td><td class="n">84</td><td class="n">0</td><td class="n">40</td><td class="n">16384</td><td class="n">8211</td><td class="n">16416</td></tr>
+<tr><td><code>setter_byte_truncate</code></td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td class="n">0</td><td class="n">512</td><td class="n">8192</td><td class="n">512</td></tr>
+<tr><td><code>relocated</code></td><td class="n">40</td><td class="n">68</td><td class="n">0</td><td class="n">40</td><td class="n">16384</td><td class="n">11000</td><td class="n">22000</td></tr>
 </tbody></table></div>
+<dl class="kv"><dt><code>constructor</code></dt><dd>생성자 출력 그대로 사용</dd><dt><code>selector6_40</code></dt><dd>원본 setter로 selector 6에 40 저장</dd><dt><code>flag52_shift</code></dt><dd><code>selector6_40</code>에 <code>job+0x52</code> = 1을 더함</dd><dt><code>selector5_44</code></dt><dd><code>selector6_40</code>에 selector 5 = 68(<code>0x44</code>)을 더함</dd><dt><code>selector5_54</code></dt><dd><code>selector6_40</code>에 selector 5 = 84(<code>0x54</code>)를 더함</dd><dt><code>setter_byte_truncate</code></dt><dd>selector 6에 256을 넣어 하위 바이트 0이 저장됨</dd><dt><code>relocated</code></dt><dd><code>selector5_44</code>와 같은 입력, job을 <code>0x10200000</code>에 배치</dd></dl>
 <p><code>job+0x52</code>는 모든 조건에서 시험 입력입니다. 0은 새 RAM의 초기값이고 1은 하네스가 쓴 바이트입니다. 내장 객체 생성자가 이 바이트를 만들지는 않습니다. 표의 최종 R5는 구성 서비스 확인에 들어가기 직전 값이며 구성 서비스는 실행하지 않았습니다.</p>
 
 <h3>입력 바이트를 갱신하는 정적 경로</h3>
-<p>내장 객체의 바이트를 다시 쓰는 경로도 코드에서 찾았습니다. <code>owner+0x21C</code>의 포인터에서 <code>+0x30C</code>를 계산한 수신 객체가 <code>82E490</code>에 전달됩니다. 이 함수는 전역 객체 <code>4047B754</code>의 <code>+0x14</code>가 가리키는 관리자를 참조합니다. 관리자가 고른 버퍼의 48바이트 payload가 <code>job+0x338</code>부터 복사됩니다. 가상 함수 표 워드는 복사 대상이 아닙니다.</p>
-<p>관리자가 버퍼를 고르는 규칙은 상태 워드(관리자 <code>+0x18</code>)의 bit15로 갈립니다. bit15가 0이면 워드 전체를 인덱스로 쓰고, 1이면 <code>1 &amp; ~state</code>를 씁니다. 관리자와 이 레코드는 <a href="tone-manager.html">톤 설정 관리자</a> 문서에서 자세히 다룹니다. 선택 상태, 원본 버퍼의 실제 내용, 갱신 순서는 아직 정해지지 않았습니다. 다른 문서의 <code>owner+0x220</code> 경로와 같은 작업이라고 합치지도 않았습니다.</p>
+<p>내장 객체의 바이트를 다시 쓰는 경로도 코드에서 찾았습니다. <code>owner+0x21C</code>의 포인터에서 <code>+0x30C</code>를 계산한 수신 객체가 <code>82E490</code>에 전달됩니다. 이 함수는 전역 객체 <code>4047B754</code>의 <code>+0x14</code>가 가리키는 관리자를 참조합니다. 관리자가 고른 버퍼의 48바이트 payload가 <code>[job+0x338, job+0x368)</code>에 복사됩니다. 가상 함수 표 워드는 복사 대상이 아닙니다.</p>
+<p>관리자가 버퍼를 고르는 규칙은 상태 워드(관리자 <code>+0x18</code>)의 bit15로 갈립니다. bit15가 0이면 워드 전체를 인덱스로 쓰고 1이면 <code>1 &amp; ~state</code>를 씁니다. 관리자와 이 레코드는 <a href="tone-manager.html">톤 설정 관리자</a> 문서에서 자세히 다룹니다. 선택 상태, 원본 버퍼의 실제 내용, 갱신 순서는 아직 정해지지 않았습니다. 다른 문서의 <code>owner+0x220</code> 경로와 같은 작업이라고 합치지도 않았습니다.</p>
 
 <details class="evidence"><summary>실행 구간과 정적 연결 주소</summary>
 <div class="table-wrap"><table class="compact">
@@ -203,7 +204,7 @@
 
 <section id="config">
 <h2>구성 서비스는 두 필드가 모두 0이 아닐 때만 R5를 덮어씁니다</h2>
-<p class="takeaway">구성 서비스 0x42의 덮어쓰기 값은 별도 전역 객체에 있고, 그 필드는 설정 파일 파서가 채웁니다. 이 경로는 코드를 읽어서만 확인했습니다.</p>
+<p class="takeaway">구성 서비스 0x42의 덮어쓰기 값은 별도 전역 객체에 있습니다. 그 필드는 설정 파일 파서가 채웁니다. 이 경로는 코드를 읽어서만 확인했습니다.</p>
 <ol class="flow">
 <li class="static"><strong>+4 바이트 확인</strong><span>0이면 서비스가 0을 돌려줌</span></li>
 <li class="static"><strong>+0x71 바이트 확인</strong><span>0이면 R5를 그대로 둠</span></li>
@@ -217,7 +218,7 @@
 <tr><th scope="row"><code>+0x71</code></th><td>선택 바이트</td><td>0</td><td>첫 토큰이 0이 아니면 1</td></tr>
 <tr><th scope="row"><code>+0x74</code></th><td>덮어쓸 R5 워드</td><td>8192</td><td>두 번째 토큰을 워드로</td></tr>
 </tbody></table></div>
-<p>파서는 <code>C:\SYSPARAM.TXT</code>에서 <code>STILL_SVD_GAIN</code> 키를 비교한 뒤 두 필드를 씁니다. 생성자 출력과 파일을 읽은 뒤의 상태는 따로 보아야 합니다. 파서가 성공했다는 사실만으로 이 키가 파일에 있었다고 판단할 수도 없습니다. 파일 읽기, 토큰 변환, 서비스 성공은 실행하거나 가정하지 않았고, 구성 파일이나 카메라에 아무것도 쓰지 않았습니다.</p>
+<p>파서는 <code>C:\SYSPARAM.TXT</code>에서 <code>STILL_SVD_GAIN</code> 키를 비교한 뒤 두 필드를 씁니다. 생성자 출력과 파일을 읽은 뒤의 상태는 따로 보아야 합니다. 파서가 성공했다는 사실만으로 이 키가 파일에 있었다고 판단할 수도 없습니다. 파일 읽기, 토큰 변환, 서비스 성공은 실행하거나 가정하지 않았습니다. 구성 파일이나 카메라에도 아무것도 쓰지 않았습니다.</p>
 <details class="evidence"><summary>구성 서비스와 파서의 주소</summary>
 <ul>
 <li>서비스 ID 분기 <code>706B30</code>에서 ID 0x42로 가면 <code>706EA4</code>에서 <code>+0x71</code> 바이트를 읽고 <code>707120</code>에서 반환합니다.</li>
@@ -231,7 +232,7 @@
 
 <section id="zero">
 <h2>0이 저장되면 마지막 나눗셈의 분모가 0이 됩니다</h2>
-<p class="takeaway">0을 넣은 조건에서 소비자 함수는 0 나눗셈 처리기(Thumb 코드)의 첫 명령 앞까지 갔고, 결과 저장은 실행되지 않았습니다. 그 뒤의 동작은 확인하지 않았습니다.</p>
+<p class="takeaway">0을 넣은 조건에서 소비자 함수는 0 나눗셈 처리기(Thumb 코드)의 첫 명령 앞까지 갔고 결과 저장은 실행되지 않았습니다. 그 뒤의 동작은 확인하지 않았습니다.</p>
 <figure class="diagram">
 <figcaption>recipe+0x9C 값에 따라 소비자가 가는 길</figcaption>
 <div class="dg-scroll">
@@ -318,7 +319,7 @@
 
 <section id="checks">
 <h2>검증 방법</h2>
-<p class="takeaway">원본 명령은 실행 권한이 있는 메모리에서만 돌렸고, 명령마다 바이트와 허용 구간을 검사했습니다.</p>
+<p class="takeaway">원본 명령은 실행 권한이 있는 메모리에서만 돌렸고 명령마다 바이트와 허용 구간을 검사했습니다.</p>
 <ul>
 <li>원본 명령을 읽기·실행(RX) 메모리에서 실행하며 매 명령의 바이트, 허용 구간 158개, 쓰기 대상을 검사합니다. 입력 전체 해시와 실행 후 RX 이미지가 그대로인지도 확인합니다.</li>
 <li>생성자의 대량 쓰기는 순서를 반영한 해시와 건수로, 나머지 쓰기와 나눗셈 인자는 하나씩 기록했습니다.</li>
@@ -338,7 +339,7 @@
 <li><strong>값의 출처</strong>: 관리자가 고르는 버퍼의 실제 값과 갱신자, <code>owner+0x21C</code> 작업의 호출 순서는 정해지지 않았습니다.</li>
 <li><strong>구성 파일</strong>: 파일의 실제 내용과 로드 성공, 토큰 변환과 TLS는 실행하지 않았습니다.</li>
 <li><strong>0 처리기</strong>: 처리기 본문, 반환값, 카메라에서의 결과는 미확인입니다.</li>
-<li><strong>촬영 연결</strong>: R5 입력이 실제 촬영에서 도달하는지, <code>owner+0x220</code>·보조 스케일러 경로와의 실행 이력, 버퍼 재사용, SuperResolution 메뉴 도달은 이 재현으로 정할 수 없습니다.</li>
+<li><strong>촬영 연결</strong>: R5 입력이 실제 촬영에서 도달하는지는 모릅니다. <code>owner+0x220</code>·보조 스케일러 경로와의 실행 이력, 버퍼 재사용, SuperResolution 메뉴 도달도 이 재현으로 정하지 못합니다.</li>
 <li><strong>값의 뜻</strong>: 물리 단위, Q 형식, 감마, 실제 촬영 기본값은 정하지 않았습니다.</li>
 </ul>
 <p>메뉴와 버퍼 수명은 <a href="superresolution-lifecycle.html">메뉴·버퍼 수명 분석</a>, 정수 생산자의 시험 범위는 <a href="tone-scale.html">이전 정수 생산자 분석</a>을 따릅니다. 관리자 레코드를 고쳐 쓰는 코드는 <a href="tone-manager.html">톤 설정 관리자의 두 호출점과 내부 버퍼 기록 순서</a>에서 이어집니다.</p>
@@ -354,7 +355,7 @@ python -B -O verify_tone_upstream.py /path/to/decoded.bin --output tone-upstream
 python -B -m unittest discover -s tests -p test_tone_upstream.py</code></pre>
 <ul>
 <li>후보 파일이 다른 폴더에 있을 때만 <code>--repository</code>로 기존 검증기와 보조 소스가 있는 저장소를 지정합니다. 통합한 공개 배치에서는 생략합니다.</li>
-<li>출력은 새 경로에만 만듭니다. 기존 파일·하드링크·심볼릭 링크를 덮어쓰지 않고, 비교가 실패하면 출력 파일을 만들지 않습니다.</li>
+<li>출력은 새 경로에만 만듭니다. 기존 파일·하드링크·심볼릭 링크를 덮어쓰지 않으며 비교가 실패하면 출력 파일을 만들지 않습니다.</li>
 <li>비교 입력은 일반 파일만 받고 결과 크기의 네 배까지만 읽습니다. 타입을 구분하는 비교는 그대로 유지합니다.</li>
 </ul>
 <dl class="kv">
@@ -364,7 +365,7 @@ python -B -m unittest discover -s tests -p test_tone_upstream.py</code></pre>
 <dt>공개 보조 코드</dt><dd><code class="wrap">cf84d963cdfeafb8e219f98450be4da289df2b57e6447277938028ab9aa9a89e</code></dd>
 <dt>공개 JSON</dt><dd><code class="wrap">8c5652972fed478fcaecf16e999eb9a88da2065249c23a83fd0498933b0644a0</code></dd>
 </dl>
-<p class="small muted">카메라·부팅·실제 촬영, 구성 파일 읽기와 TLS, 실제 버퍼 갱신 순서, 0 처리기 본문은 실행하지 않았습니다.</p>
+<p class="small muted">카메라·부팅·실제 촬영, 구성 파일 읽기와 TLS, 실제 버퍼 갱신 순서, 0 처리기 본문은 실행하지 않았습니다. 근거 스냅샷은 2026-11-13 기준입니다.</p>
 </section>
 
 <section id="refs">

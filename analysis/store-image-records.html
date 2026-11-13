@@ -29,7 +29,7 @@
 <ul>
 <li>촬영 객체에는 <strong>레코드 여섯 개가 내장</strong>되어 있습니다. 생성, 준비 함수의 초기화, 저장 준비가 모두 같은 주소의 레코드를 다시 씁니다. 일곱 조건으로 확인했습니다.</li>
 <li>저장 준비 코드가 보내는 이벤트는 이 레코드들의 묶음을 가리킵니다. 받는 쪽은 레코드 하나를 고르고 <strong>요청 객체의 네 슬롯에 그 레코드 안의 주소 네 개</strong>를 등록합니다. 슬롯 2가 주 버퍼의 주소와 길이를 담습니다.</li>
-<li>별도의 두 사례에서, JPEG 완료 코드가 장치 카운터에서 읽은 길이가 원본 저장 명령들을 거쳐 <strong>같은 촬영 객체의 저장 요청 슬롯 2까지 같은 값</strong>으로 전달됐습니다.</li>
+<li>JPEG 완료 코드가 장치 카운터에서 읽은 길이는 원본 저장 명령들을 거쳐 <strong>같은 촬영 객체의 저장 요청 슬롯 2까지 같은 값</strong>으로 전달됐습니다. 별도의 두 사례에서 확인한 결과입니다.</li>
 <li>장치 카운터는 시험용으로 넣은 값입니다. 큐 전달과 호출자 상태는 준비했고 실제 압축·파일 쓰기·SD 기록은 실행하지 않았습니다.</li>
 </ul>
 </section>
@@ -60,9 +60,9 @@
 <h2>배경: 저장 작업에 넘겨야 하는 것</h2>
 <p>이 펌웨어에서 파일 저장을 맡는 작업의 이름은 <dfn title="펌웨어 안에서 이미지 파일 저장을 맡는 작업의 이름">StoreImage</dfn>입니다. StoreImage가 일을 하려면 “어느 버퍼의 몇 바이트를 쓸지”를 알아야 합니다. 이 정보는 <dfn title="촬영 작업 하나의 설정, 버퍼 주소, 플래그를 담는 구조체. 시작 주소 기준 오프셋을 CAP+0x… 로 적습니다.">촬영 객체</dfn> 안의 레코드에 담겨 전달됩니다.</p>
 <ul>
-<li><strong>내장 레코드</strong> — 촬영 객체의 <code>CAP+0xA850</code> 컨테이너 안에 <code>0x3FC</code>(1,020)바이트짜리 레코드 여섯 개가 연달아 놓여 있습니다. <a href="capture-prepare.html#return">촬영 준비 함수</a>가 끝날 때 두 필드를 0으로 초기화하는 바로 그 레코드입니다.</li>
-<li><strong>서술자</strong> — 레코드마다 버퍼를 가리키는 작은 구조(서술자)가 네 개 있습니다. 서술자 안의 <code>+0x34</code>가 주소, <code>+0x28</code>이 길이입니다.</li>
-<li><strong>모듈</strong> — 촬영 객체의 일은 번호가 붙은 모듈 단위로 불립니다. 이 문서에는 저장 레코드를 채우고 이벤트를 보내는 모듈 9와, JPEG 출력 서술자를 다루는 모듈 16이 나옵니다.</li>
+<li><strong>내장 레코드</strong>: 촬영 객체의 <code>CAP+0xA850</code> 컨테이너 안에 <code>0x3FC</code>(1,020)바이트짜리 레코드 여섯 개가 연달아 놓여 있습니다. <a href="capture-prepare.html#return">촬영 준비 함수</a>가 끝날 때 두 필드를 0으로 초기화하는 바로 그 레코드입니다.</li>
+<li><strong>서술자</strong>: 레코드마다 버퍼를 가리키는 작은 구조(서술자)가 네 개 있습니다. 서술자 안의 <code>+0x34</code>가 주소, <code>+0x28</code>이 길이입니다.</li>
+<li><strong>모듈</strong>: 촬영 객체의 일은 번호가 붙은 모듈 단위로 불립니다. 이 문서에는 저장 레코드를 채우고 이벤트를 보내는 모듈 9와, JPEG 출력 서술자를 다루는 모듈 16이 나옵니다.</li>
 </ul>
 <p>이 문서의 결과는 <a href="capture-prepare.html#return">준비 함수의 버퍼 보존</a>과 <a href="output-menu-analysis.html">JPEG 출력 버퍼 분석</a> 사이를 잇습니다.</p>
 <div class="callout"><strong class="label">표기 규칙</strong>
@@ -160,9 +160,9 @@
 </tbody></table></div>
 
 <ul>
-<li><strong>서술자 채우기</strong> — 값이 있는 서술자는 원본 저장 명령 <code>0x8598E0</code>(주소)과 <code>0x832FB0</code>(길이)으로 채워집니다. 0으로 초기화하는 저장은 <code>0x5AA3B0</code> → <code>0x859888</code>에서도 실행됩니다.</li>
-<li><strong>대조 방법</strong> — 서로 다른 주소와 길이를 넣고 여섯 레코드의 네 서술자를 모두 예상값과 비교했습니다. 셋째 계열의 길이는 3 × 32 × 16 = <code>0x600</code>이었습니다.</li>
-<li><strong>두 인덱스</strong> — 요청한 계열은 인덱스 0과 1의 레코드를 둘 다 생산합니다. 그러나 “쓸 수 있음” 표시는 <code>CAP+0x207C</code>·<code>+0x207D</code>와 계열 플래그의 조합에 따라 인덱스별로 켜집니다.</li>
+<li><strong>서술자 채우기</strong>: 값이 있는 서술자는 원본 저장 명령 <code>0x8598E0</code>(주소)과 <code>0x832FB0</code>(길이)으로 채워집니다. 0으로 초기화하는 저장은 <code>0x5AA3B0</code> → <code>0x859888</code>에서도 실행됩니다.</li>
+<li><strong>대조 방법</strong>: 서로 다른 주소와 길이를 넣고 여섯 레코드의 네 서술자를 모두 예상값과 비교했습니다. 셋째 계열의 길이는 3 × 32 × 16 = <code>0x600</code>이었습니다.</li>
+<li><strong>두 인덱스</strong>: 요청한 계열은 인덱스 0과 1의 레코드를 둘 다 생산합니다. 그러나 “쓸 수 있음” 표시는 <code>CAP+0x207C</code>·<code>+0x207D</code>와 계열 플래그의 조합에 따라 인덱스별로 켜집니다.</li>
 </ul>
 <div class="callout model"><strong class="label">시험 조건</strong>
 <p>레코드 생성은 전체 생성자 대신 원본 호출 <code>0x653BAC</code>에서 <code>0x5AA3DC</code> 안의 배열 생성까지의 앞부분만 실행했습니다. 촬영 준비 함수의 반환 실험과 이 저장 경로 실험은 서로 다른 실행이며 촬영 전체를 이어서 실행한 결과가 아닙니다.</p></div>
@@ -247,9 +247,9 @@
 </figure>
 
 <ul>
-<li><strong>송신</strong> — 원본 <code>0x656984</code>는 모듈 9에서 컨테이너 <code>CAP+0xA850</code>을 돌려줍니다. 송신 코드가 만든 이벤트의 <code>+0x8</code>은 이 컨테이너를, <code>+0x10</code>은 같은 촬영 객체를 가리킵니다. 큐에 넣는 <code>0x6FEA38</code> 진입 직전에 멈췄습니다.</li>
-<li><strong>수신</strong> — 같은 이벤트를 원본 수신 선택 코드에 넘기면 쓸 수 있는 레코드의 주소가 돌아옵니다. 세 계열을 함께 켠 조건에서는 첫째 계열의 인덱스 0이 선택됐고 한 계열만 켠 조건에서는 준비한 인덱스 0 또는 1이 선택됐습니다.</li>
-<li><strong>요청</strong> — 원본 호출자 세 곳(<code>0x5A88AC</code>, <code>0x5A8BE4</code>, <code>0x5A91E0</code>)이 각각 레코드를 다시 골라 <code>0x5A820C</code>에 넘겼습니다. StoreImage 객체의 <code>+0x82</code>에는 인덱스가, <code>+0x83</code>에는 세 계열에 따라 0·1·3이 기록됐습니다. 요청 슬롯 2에서 읽은 주소와 길이는 생산 함수가 쓴 값과 같았습니다.</li>
+<li><strong>송신</strong>: 원본 <code>0x656984</code>는 모듈 9에서 컨테이너 <code>CAP+0xA850</code>을 돌려줍니다. 송신 코드가 만든 이벤트의 <code>+0x8</code>은 이 컨테이너를, <code>+0x10</code>은 같은 촬영 객체를 가리킵니다. 큐에 넣는 <code>0x6FEA38</code> 진입 직전에 멈췄습니다.</li>
+<li><strong>수신</strong>: 같은 이벤트를 원본 수신 선택 코드에 넘기면 쓸 수 있는 레코드의 주소가 돌아옵니다. 세 계열을 함께 켠 조건에서는 첫째 계열의 인덱스 0이 선택됐고 한 계열만 켠 조건에서는 준비한 인덱스 0 또는 1이 선택됐습니다.</li>
+<li><strong>요청</strong>: 원본 호출자 세 곳(<code>0x5A88AC</code>, <code>0x5A8BE4</code>, <code>0x5A91E0</code>)이 각각 레코드를 다시 골라 <code>0x5A820C</code>에 넘겼습니다. StoreImage 객체의 <code>+0x82</code>에는 인덱스가, <code>+0x83</code>에는 세 계열에 따라 0·1·3이 기록됐습니다. 요청 슬롯 2에서 읽은 주소와 길이는 생산 함수가 쓴 값과 같았습니다.</li>
 </ul>
 
 <div class="table-wrap"><table class="fit">
@@ -340,7 +340,7 @@
 <li><strong>대조값 채우기</strong> <code>CAP+0x2EC</code>와 <code>+0x2F0</code>을 대조값으로 채워, 뒤에서 원본 코드가 덮어쓰는지 볼 수 있게 했습니다.</li>
 <li><strong>출력 주소 생산</strong> 주소 생산 구간(<code>0x660808</code>)과 모듈 16의 출력 서술자 구성을 실행했습니다. 원본 장치 설정 코드가 이 주소를 장치 레지스터 <code>0x200E2050</code>에 쓰는 것도 확인했습니다.</li>
 <li><strong>콜백 연결</strong> 수신 객체 생성자의 일부와, 대기 뒤에 실행되는 등록 명령을 실행해 콜백 포인터를 연결했습니다.</li>
-<li><strong>완료 코드</strong> 완료 코드가 합성 RAM의 카운터를 읽고 <code>0x6FE97C</code> → 가상 함수 칸 <code>+0x8</code> → <code>0x576044</code> → <code>0x576008</code>을 이어 실행해 수신 객체에 길이를 기록했습니다. 깨우기 직전 <code>0x576030</code>에서 멈췄습니다.</li>
+<li><strong>완료 코드</strong> 완료 코드가 합성 RAM의 카운터를 읽었습니다. 그다음 <code>0x6FE97C</code> → 가상 함수 칸 <code>+0x8</code> → <code>0x576044</code> → <code>0x576008</code>을 차례로 실행해 수신 객체에 길이를 기록했습니다. 깨우기 직전 <code>0x576030</code>에서 멈췄습니다.</li>
 <li><strong>길이 저장과 완료 분기</strong> 출력 서술자에 길이를 저장하는 구간과 완료 분기(<code>0x6DBA14</code> → <code>0x65DC34</code>)를 따로 실행했습니다. 완료 명령 값 <code>0x03000002</code>는 레지스터에 준비해 넣었습니다.</li>
 <li><strong>저장 요청</strong> 같은 촬영 객체로 모듈 9와 StoreImage 요청 구성을 실행하고 요청 슬롯 2의 주소와 길이를 원본 getter로 읽었습니다.</li>
 </ol>
@@ -353,7 +353,7 @@
 <tr><th scope="row">0 — 공유</th><td><code>0x11000010</code> / <code>0x11000010</code></td><td>첫 출력만 <code>0x1579</code></td><td><code>0x1579</code> / <code>0x1579</code></td></tr>
 </tbody></table></div>
 <ul>
-<li><strong>공유 조건</strong> — <code>CAP+0x3E</code>와 <code>+0x3F</code>를 모두 켠 공유 조건에서는 둘째 출력 서술자의 길이가 0이어도, 원본 완료 코드가 첫 길이를 <code>CAP+0x2F0</code>에 복사했습니다.</li>
+<li><strong>공유 조건</strong>: <code>CAP+0x3E</code>와 <code>+0x3F</code>를 모두 켠 조건입니다. 이때는 둘째 출력 서술자의 길이가 0이어도 원본 완료 코드가 첫 길이를 <code>CAP+0x2F0</code>에 복사했습니다.</li>
 <li><strong>분리 조건</strong> — 서로 다른 두 길이가 각각 유지됐습니다.</li>
 </ul>
 
@@ -384,8 +384,8 @@
 <tr><td><code>0x4B7ABC</code> / <code>0x4B7AD0</code></td><td><code>0x200E2000</code></td><td>읽기 / 쓰기</td><td><code>0xFFFFFFFF</code> / <code>0x373F0</code></td></tr>
 <tr><td><code>0x4B7D38</code> / <code>0x4B7D4C</code></td><td><code>0x200E2040</code></td><td>읽기 / 쓰기</td><td><code>0xFFFFFFFF</code> / <code>0x03770110</code></td></tr>
 </tbody></table></div>
-<p class="small">출력 주소를 장치에 설정하는 구간은 평면 주소 세 개와 출력 주소를 16바이트 단위로 내림해 <code>0x200E2028</code>, <code>0x200E202C</code>, <code>0x200E2030</code>, <code>0x200E2050</code>에 썼습니다. 첫째 출력에서는 <code>0x12000000</code>, <code>0x13000000</code>, <code>0x14000000</code>, <code>0x11000010</code>이었고 분리 조건의 둘째 출력에서는 <code>0x12001000</code>, <code>0x13001000</code>, <code>0x14001000</code>, <code>0x11002010</code>이었습니다.</p>
-<p class="small">콜백 인수는 차례로 (<code>0x6FE97C</code>, 코덱 객체 +0x14), (<code>0x576044</code>, 수신 객체 +4), (<code>0x576008</code>, 수신 객체)였고 세 곳 모두 이벤트 <code>0x02060001</code>과 카운터 값을 받았습니다. 촬영 객체의 길이 필드는 <code>0x65E178</code>의 명령이 <code>+0x2EC</code>와 <code>+0x2F0</code>에 쓰고 공유 조건에서는 <code>0x65E1A0</code>이 <code>+0x2F0</code>에 첫 길이를 한 번 더 썼습니다. 출력 용량은 <code>CAP+0x2E4</code> = <code>0x2000</code>, <code>+0x2E8</code> = <code>0x1000</code>으로 두었습니다.</p>
+<p class="small">출력 주소를 장치에 설정하는 구간은 평면 주소 세 개와 출력 주소를 16바이트 단위로 내림해 <code>0x200E2028</code>, <code>0x200E202C</code>, <code>0x200E2030</code>, <code>0x200E2050</code>에 썼습니다. 첫째 출력에서는 <code>0x12000000</code>, <code>0x13000000</code>, <code>0x14000000</code>, <code>0x11000010</code>이었습니다. 분리 조건의 둘째 출력에서는 <code>0x12001000</code>, <code>0x13001000</code>, <code>0x14001000</code>, <code>0x11002010</code>이었습니다.</p>
+<p class="small">콜백 인수는 차례로 (<code>0x6FE97C</code>, 코덱 객체 +0x14), (<code>0x576044</code>, 수신 객체 +4), (<code>0x576008</code>, 수신 객체)였습니다. 세 곳 모두 이벤트 <code>0x02060001</code>과 카운터 값을 받았습니다. 촬영 객체의 길이 필드는 <code>0x65E178</code>의 명령이 <code>+0x2EC</code>와 <code>+0x2F0</code>에 썼습니다. 공유 조건에서는 <code>0x65E1A0</code>이 <code>+0x2F0</code>에 첫 길이를 한 번 더 썼습니다. 출력 용량은 <code>CAP+0x2E4</code> = <code>0x2000</code>, <code>+0x2E8</code> = <code>0x1000</code>으로 두었습니다.</p>
 <div class="table-wrap"><table class="compact">
 <caption>실행 구간 (시작 ~ 정지, 정지 주소의 명령은 실행하지 않음)</caption>
 <thead><tr><th>구간</th><th>내용</th></tr></thead>

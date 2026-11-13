@@ -481,9 +481,9 @@
 
 <h3>이 분기의 현재 상태</h3>
 <ul>
-<li><strong>활성값</strong> — 스케일러 설정을 처음부터 큐 호출 직전까지 실행한 64건에서도 활성 바이트는 0이었습니다. 0이 아닌 값을 쓰는 코드는 아직 찾지 못했습니다. (<a href="superresolution-lifecycle.html#gate">활성값 추적</a>)</li>
-<li><strong>JPEG 보조 입력</strong> — JPEG 모듈은 <code>job+0x21E8</code>과 <code>job+0x2204</code>도 읽습니다. 보조 스케일러 출력과 JPEG 보조 입력은 서로 다른 디스크립터를 씁니다. 활성값을 1로 넣고 일반 배치 뒤에 같은 기준 주소로 마스크 배치를 만든 합성 사례에서 두 쌍의 평면 주소가 일치했습니다. (<a href="masked-cpp-analysis.html#jpeg">조건부 주소 공유</a>)</li>
-<li><strong>마스크 값의 변화</strong> — 모듈 20이 끝나면 마스크 값에서 <code>0x44</code> 비트가 사라지고 그 뒤의 CPP는 기본 평면에 출력합니다. Pixel Shift 레시피에서는 모듈 20이 CPP보다 앞에 있습니다. (<a href="masked-cpp-analysis.html#module20">모듈 20</a>, <a href="superresolution-lifecycle.html#recipe">레시피 순서</a>)</li>
+<li><strong>활성값</strong>: 스케일러 설정을 처음부터 큐 호출 직전까지 실행한 64건에서도 활성 바이트는 0이었습니다. 0이 아닌 값을 쓰는 코드는 아직 찾지 못했습니다. (<a href="superresolution-lifecycle.html#gate">활성값 추적</a>)</li>
+<li><strong>JPEG 보조 입력</strong>: JPEG 모듈은 <code>job+0x21E8</code>과 <code>job+0x2204</code>도 읽습니다. 보조 스케일러 출력과 JPEG 보조 입력은 서로 다른 디스크립터를 씁니다. 활성값을 1로 넣고 일반 배치 뒤에 같은 기준 주소로 마스크 배치를 만든 합성 사례에서 두 쌍의 평면 주소가 일치했습니다. (<a href="masked-cpp-analysis.html#jpeg">조건부 주소 공유</a>)</li>
+<li><strong>마스크 값의 변화</strong>: 모듈 20이 끝나면 마스크 값에서 <code>0x44</code> 비트가 사라지고 그 뒤의 CPP는 기본 평면에 출력합니다. Pixel Shift 레시피에서는 모듈 20이 CPP보다 앞에 있습니다. (<a href="masked-cpp-analysis.html#module20">모듈 20</a>, <a href="superresolution-lifecycle.html#recipe">레시피 순서</a>)</li>
 </ul>
 <div class="callout warn"><strong class="label">기본 분기 결론의 범위</strong>
 <p>모듈 17 안에는 기능·설정 검사와 메모리 준비 단계가 있습니다. 합성 요청 검증은 그 뒤의 디스크립터 읽기와 요청 조립 구간에서 시작했습니다. 그래서 기본 분기의 결론은 “필요한 조건이 성립하면 같은 버퍼로 이어진다”까지입니다. 디스크립터가 다르다는 사실만으로 실제 평면 메모리가 겹칠 가능성을 배제할 수도 없습니다.</p></div>
@@ -492,10 +492,10 @@
 <section id="limits">
 <h2>한계와 남은 과제</h2>
 <ul>
-<li><strong>백엔드 B</strong> — 대표적인 쓰기 경로 하나를 SD 명령과 ADMA 설정까지 이었습니다. 파일 전체의 클러스터 할당, 마운트, 복구 분기는 실행하지 않았습니다.</li>
-<li><strong>CPP 기본 분기</strong> — 합성 목적지와 스케일러 입력, 스케일러 목적지와 JPEG 입력의 주소가 같다는 것까지 확인했습니다. 메뉴 조작에서 출발해 이 조건이 모두 성립하는 경로, 사이의 레시피 단계가 주소나 내용을 바꾸는지는 남아 있습니다.</li>
-<li><strong>마스크 분기</strong> — 보조 스케일러를 켜는 코드, 실제 작업에서 보조 출력과 JPEG 보조 입력이 같은 평면을 쓰는지, 모듈 17 앞단의 기능 검사가 남아 있습니다.</li>
-<li><strong>하드웨어</strong> — RAW 픽셀 처리, JPEG 생성, Exif에서 SD 매체까지의 연속 실행, DMA 데이터 전송과 캐시 일관성은 확인하지 않았습니다. SoC와 보조 MCU의 정확한 부품 번호도 정해지지 않았습니다.</li>
+<li><strong>백엔드 B</strong>: 대표적인 쓰기 경로 하나를 SD 명령과 ADMA 설정까지 이었습니다. 파일 전체의 클러스터 할당, 마운트, 복구 분기는 실행하지 않았습니다.</li>
+<li><strong>CPP 기본 분기</strong>: 합성 목적지와 스케일러 입력, 스케일러 목적지와 JPEG 입력의 주소가 같다는 것까지 확인했습니다. 메뉴 조작에서 출발해 이 조건이 모두 성립하는 경로, 사이의 레시피 단계가 주소나 내용을 바꾸는지는 남아 있습니다.</li>
+<li><strong>마스크 분기</strong>: 보조 스케일러를 켜는 코드, 실제 작업에서 보조 출력과 JPEG 보조 입력이 같은 평면을 쓰는지, 모듈 17 앞단의 기능 검사가 남아 있습니다.</li>
+<li><strong>하드웨어</strong>: RAW 픽셀 처리, JPEG 생성, Exif에서 SD 매체까지의 연속 실행, DMA 데이터 전송과 캐시 일관성은 확인하지 않았습니다. SoC와 보조 MCU의 정확한 부품 번호도 정해지지 않았습니다.</li>
 </ul>
 </section>
 

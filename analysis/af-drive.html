@@ -68,7 +68,7 @@
 <p>K 마운트 렌즈의 자동 초점은 두 방식으로 구동됩니다. 리코의 <a href="https://www.ricoh-imaging.co.jp/english/products/lens/suit_mount.html">마운트별 호환표</a>는 이를 “AF 커플러(바디 구동)”와 “SDM·DC·PLM(렌즈 구동)”으로 나눕니다.</p>
 <ul>
 <li><strong>바디 구동</strong> — 바디 안의 모터가 마운트에 있는 회전축(<dfn title="바디의 AF 모터 회전을 렌즈의 초점 기구에 전달하는 마운트의 기계식 연결부">AF 커플러</dfn>)을 돌려 렌즈의 초점 기구를 움직입니다.</li>
-<li><strong>렌즈 구동</strong> — 렌즈 안에 든 모터가 초점 기구를 움직입니다. 바디는 전기 접점으로 명령만 보냅니다. SDM, DC, PLM은 렌즈 안 모터의 종류를 가리키는 PENTAX의 이름입니다.</li>
+<li><strong>렌즈 구동</strong>: 렌즈 안에 든 모터가 초점 기구를 움직입니다. 바디는 전기 접점으로 명령만 보냅니다. SDM, DC, PLM은 렌즈 안 모터의 종류를 가리키는 PENTAX의 이름입니다.</li>
 </ul>
 <p>K-3 II의 마운트는 KAF2입니다. <a href="https://www.ricoh-imaging.co.jp/english/products/k-3-2/spec/">제품 사양</a>에 따르면 AF 커플러, 렌즈 정보 접점, 전원 접점을 모두 갖추고 있어 두 방식을 다 쓸 수 있습니다. 리코의 <a href="https://www.ricoh-imaging.co.jp/english/support/qa/k-3-2/index.html">K-3 II FAQ</a>는 모터를 내장한 렌즈를 붙이면 카메라가 렌즈 안 모터로 구동하는 자동 초점으로 자동 전환한다고 설명합니다. 이 문서는 그 전환을 정하는 코드를 다룹니다.</p>
 
@@ -228,8 +228,8 @@
 
 <p>시험에서는 원본 <code>CAfMotor</code>의 구동 준비 함수 <code>0x52E38</code>에 준비한 객체와 인수 5를 넣었습니다. 분기 직전에 비트를 억지로 바꾸지 않았고 앞 절의 원본 저장·조회 코드가 만든 값을 그대로 썼습니다.</p>
 <ul>
-<li><strong>렌즈 명령 경로</strong> — 렌즈 명령 <code>0x8920</code>(1바이트)과 <code>0x8900</code>(2바이트)이 차례로 전송 함수에 넘어갔습니다. 시험용으로 넣어 둔 위치값 <code>0x0345</code>는 두 바이트 <code>03 45</code>로 준비됐습니다.</li>
-<li><strong>바디 드라이버 경로</strong> — 렌즈 명령은 하나도 나가지 않았습니다. 바디 드라이버 입구 <code>0x47D80</code>에 목표값 <code>0x12</code>가 전달되는 것까지 확인하고 멈췄습니다.</li>
+<li><strong>렌즈 명령 경로</strong>: 렌즈 명령 <code>0x8920</code>(1바이트)과 <code>0x8900</code>(2바이트)이 차례로 전송 함수에 넘어갔습니다. 시험용으로 넣어 둔 위치값 <code>0x0345</code>는 두 바이트 <code>03 45</code>로 준비됐습니다.</li>
+<li><strong>바디 드라이버 경로</strong>: 렌즈 명령은 하나도 나가지 않았습니다. 바디 드라이버 입구 <code>0x47D80</code>에 목표값 <code>0x12</code>가 전달되는 것까지 확인하고 멈췄습니다.</li>
 </ul>
 
 <div class="table-wrap"><table>
@@ -258,7 +258,7 @@
 <ul>
 <li>대체한 함수 5개: 렌즈 전송 <code>0x93F94</code>·<code>0x93D24</code>, 바디 준비 <code>0x47E38</code>·<code>0x47E58</code>, 위치 기록 <code>0x41E08</code>.</li>
 <li>바디 경로에서 드라이버 입구에 도착했을 때의 인수는 <code>r1 = 0</code>, <code>r2 = 0x12</code>였습니다. <code>0x12</code>는 시험 전에 VA <code>0x0010314A</code>에 넣어 둔 값입니다.</li>
-<li>시험값 <code>0x0345</code>는 모터 객체가 가리키는 객체의 <code>+0x9E</code> 자리에 넣었습니다. <a href="af-control.html#body">다음 문서</a>에서 요청값이 기록되는 <code>pulse+0x9E</code>와 같은 오프셋입니다. 다만 두 문서의 실행을 하나로 이어서 확인한 것은 아닙니다.</li>
+<li>시험값 <code>0x0345</code>는 모터 객체가 가리키는 객체의 <code>+0x9E</code> 자리에 넣었습니다. <a href="af-control.html#body">다음 문서</a>에서 요청값이 기록되는 <code>pulse+0x9E</code>와 같은 오프셋입니다. 다만 두 문서의 실행을 하나로 이어서 확인하지는 않았습니다.</li>
 <li>AF 센서 재설정과 관련된 분기를 타지 않도록 상태값 세 개(VA <code>0x001030A4</code>, <code>0x001030AB</code>, <code>0x001030AF</code>)를 고정했습니다.</li>
 <li>구동 준비가 끝난 뒤에도 능력 바이트는 저장된 값 그대로였습니다.</li>
 </ul>
@@ -285,7 +285,7 @@
 <p>ExifTool의 <a href="https://github.com/exiftool/exiftool/blob/9b8664dfcf2c609d3cc8925d380e98ad2a379f9b/lib/Image/ExifTool/Pentax.pm#L344-L360">PENTAX 렌즈 표</a>에서 모델 번호 241(<code>0xF1</code>)은 smc PENTAX-DA★ 50-135mm F2.8 ED [IF] SDM, 242(<code>0xF2</code>)는 smc PENTAX-DA★ 16-50mm F2.8 ED AL [IF] SDM입니다. 숫자는 위의 분기값과 같습니다. 하지만 펌웨어가 읽는 바이트가 사진 파일에 기록되는 렌즈 모델 번호와 같은 것인지는 이 연구에서 확인하지 않았습니다.</p></div>
 
 <h3>공식 자료가 말하는 것</h3>
-<p>구형 <a href="https://www.ricoh-imaging.co.jp/english/products/lens/k/standard/smcpentax-das16-50/">smc PENTAX-DA★ 16-50mm F2.8 ED AL [IF] SDM</a>과 <a href="https://www.ricoh-imaging.co.jp/english/products/lens/k/telephoto/smcpentax-das50-135/">smc PENTAX-DA★ 50-135mm F2.8 ED [IF] SDM</a>의 제품 설명에는 SDM을 지원하지 않는 바디에서는 바디의 모터로 AF를 할 수 있다고 적혀 있습니다. 두 렌즈가 두 구동 방식을 모두 갖췄다는 뜻입니다. 같은 초점거리의 후속 PLM 렌즈나 다른 모든 SDM·DC 렌즈가 그렇다고 일반화할 수는 없습니다.</p>
+<p>구형 <a href="https://www.ricoh-imaging.co.jp/english/products/lens/k/standard/smcpentax-das16-50/">smc PENTAX-DA★ 16-50mm F2.8 ED AL [IF] SDM</a>과 <a href="https://www.ricoh-imaging.co.jp/english/products/lens/k/telephoto/smcpentax-das50-135/">smc PENTAX-DA★ 50-135mm F2.8 ED [IF] SDM</a>의 제품 설명에는 SDM을 지원하지 않는 바디에서는 바디의 모터로 AF를 할 수 있다고 적혀 있습니다. 이 두 렌즈는 두 구동 방식을 모두 갖췄습니다. 같은 초점거리의 후속 PLM 렌즈나 다른 모든 SDM·DC 렌즈가 그렇다고 일반화할 수는 없습니다.</p>
 <p>이런 이유로 “능력 비트를 무조건 지워서 바디 구동으로 돌린다” 같은 수정은 특정 렌즈의 해결책으로 채택하지 않았습니다. 변경 범위를 정하려면 정확한 대상 모델, 실물 렌즈의 식별 응답, 두 구동 방식의 기계적 지원 여부, 나머지 AF 상태 전이와 오류 복구를 먼저 확인해야 합니다.</p>
 
 <details class="evidence"><summary>서비스 경로와 모델 분기의 주소</summary>

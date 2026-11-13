@@ -269,7 +269,7 @@
 <tr><th scope="row">키 <code>0x1D</code>의 표 항목</th><td>표 위치 <code>0x9DFA98</code>. 데이터 오프셋 6, 마스크 <code>0x04</code>, 시프트 2. 4바이트 헤더를 포함하면 뱅크 객체의 <code>+0xA</code></td></tr>
 <tr><th scope="row">함께 확인한 다른 키</th><td>키 <code>0x2A</code>: 표 위치 <code>0x9DFB00</code>, 데이터 오프셋 10, 마스크 <code>0x08</code>, 시프트 3. 키 <code>0x52</code>: 표 위치 <code>0x9DEA88</code>, 바이트 오프셋 29</td></tr>
 <tr><th scope="row">상태 쓰기</th><td>호출 <code>0x523D3C</code> → <code>0x69B61C</code>, 인수 1. 활성 뱅크의 데이터를 반대 뱅크에 복사하면서 해당 비트만 바꾸고 활성 뱅크를 전환합니다.</td></tr>
-<tr><th scope="row">쓰기 대조</th><td>활성 데이터의 바이트 <code>0xA3</code>이 반대 뱅크에서 <code>0xA7</code>이 됐습니다. 13바이트 복사 대조에서는 <code class="wrap">11233547596ba37d8f91adbecf</code>가 <code class="wrap">11233547596ba77d8f91adbecf</code>로 바뀌어, 키 <code>0x1D</code>의 bit 2만 달라졌습니다. 원본 뱅크는 그대로였습니다.</td></tr>
+<tr><th scope="row">쓰기 대조</th><td>활성 데이터의 바이트 <code>0xA3</code>이 반대 뱅크에서 <code>0xA7</code>이 됐습니다. 13바이트 복사 대조에서는 <code class="wrap">11233547596ba37d8f91adbecf</code>가 <code class="wrap">11233547596ba77d8f91adbecf</code>로 바뀌었습니다. 키 <code>0x1D</code>의 bit 2만 달라졌습니다. 원본 뱅크는 그대로였습니다.</td></tr>
 <tr><th scope="row">앱의 복사 구간</th><td><code>0x30A3A8</code>–<code>0x30A3D0</code>. <code>0x30A3C4</code>에서 <code>0x6F8360</code>을 불러 활성 뱅크의 키를 읽고 <code>0x30A3CC</code>에서 <code>app+0x14B4</code>에 기록</td></tr>
 <tr><th scope="row">캐시 지우기</th><td>이벤트 <code>0x0112005E</code> → <code>0x30AF2C</code></td></tr>
 <tr><th scope="row">실행 중 갱신</th><td>가상 호출 <code>0x3097E8</code> → <code>0x2FE2F8</code>, 기록 명령 <code>0x2FE498</code>. 실행 구간 <code>0x3097B4</code>–<code>0x3097EC</code></td></tr>
@@ -446,9 +446,9 @@
 <p>이 문서는 “조건이 이렇게 준비되면 원본 코드가 이렇게 움직인다”는 것까지 확인했습니다. 실제 카메라에서 그 조건이 언제 만들어지는지는 다루지 못했습니다.</p>
 <ul>
 <li><strong>입력</strong> — 상위 메뉴 동작은 함수 입구에 직접 넣었습니다. 버튼이 이 동작으로 바뀌는 과정은 확인하지 않았습니다.</li>
-<li><strong>작업 루프</strong> — 깨움 값을 넣은 구간만 따로 실행했습니다. RTOS가 깨움 요청을 작업에 전달하는 과정과 구간 사이의 코드는 실행하지 않았습니다.</li>
-<li><strong>화면 생성</strong> — 할당 함수 입구에서 멈췄습니다. 생성자를 따로 실행한 결과는 <a href="color-ui.html#route">색공간 메뉴 문서</a>에 있지만 두 실행을 하나로 잇지는 않았습니다. 생성 뒤의 초기화와 LCD 표시도 실행하지 않았습니다.</li>
-<li><strong>조건의 동시 성립</strong> — 필터 캐시, 허용 바이트, 현재 화면 ID는 각각 준비한 값입니다. 실기에서 이 값들이 함께 성립하는 시점은 확인하지 않았습니다.</li>
+<li><strong>작업 루프</strong>: 깨움 값을 넣은 구간만 따로 실행했습니다. RTOS가 깨움 요청을 작업에 전달하는 과정과 구간 사이의 코드는 실행하지 않았습니다.</li>
+<li><strong>화면 생성</strong>: 할당 함수 입구에서 멈췄습니다. 생성자를 따로 실행한 결과는 <a href="color-ui.html#route">색공간 메뉴 문서</a>에 있지만 두 실행을 하나로 잇지는 않았습니다. 생성 뒤의 초기화와 LCD 표시도 실행하지 않았습니다.</li>
+<li><strong>조건의 동시 성립</strong>: 필터 캐시, 허용 바이트, 현재 화면 ID는 각각 준비한 값입니다. 실기에서 이 값들이 함께 성립하는 시점은 확인하지 않았습니다.</li>
 </ul>
 <h3>다른 기종과 비교할 때 쓸 수 있는 것</h3>
 <p>비교할 수 있는 것은 동작의 뜻입니다. 메뉴 항목이 무엇을 요청하는지, 요청을 대기시키는 규칙, 상태를 복사하는 시점이 여기에 해당합니다. 키 번호, 화면 ID, 객체 필드 위치는 K-3 II 펌웨어의 내부 값이므로, K-3 III와 Q7에서는 각 펌웨어에서 다시 확인해야 합니다. 이 문서는 이식한 결과가 아닙니다. 세 기종 비교는 <a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/ui-port-contract.html">K-3 III 저장소의 UI 이식 설계</a>에 있습니다.</p>

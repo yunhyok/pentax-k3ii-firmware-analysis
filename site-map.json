@@ -25,7 +25,8 @@
       {"file": "analysis/storage-dma-analysis.html", "label": "파일시스템에서 SD·DMA까지"},
       {"file": "analysis/backend-b-cpp-analysis.html", "label": "백엔드 B와 두 번째 CPP 출력"},
       {"file": "analysis/masked-cpp-analysis.html", "label": "마스크 CPP와 보조 JPEG 입력"},
-      {"file": "analysis/superresolution-lifecycle.html", "label": "Pixel Shift 메뉴와 버퍼 수명"}
+      {"file": "analysis/superresolution-lifecycle.html", "label": "Pixel Shift 메뉴와 버퍼 수명"},
+      {"file": "analysis/raw-nr-feasibility.html", "label": "RAW 노이즈 감소를 끌 수 있는가"}
     ]},
     {"id": "capture", "title": "촬영 준비와 보존 레코드", "nav": "촬영·보존 레코드", "hub": "analysis/guide-capture.html", "pages": [
       {"file": "analysis/guide-capture.html", "label": "촬영 준비·보존 레코드 안내"},

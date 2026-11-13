@@ -60,7 +60,7 @@
 <section id="background">
 <h2>배경: 설정을 왜 두 벌로 두는가</h2>
 <p>플래시 메모리는 저장된 값을 고치기 전에 그 구역을 블록 단위로 먼저 지워야 합니다(<a href="https://docs.zephyrproject.org/latest/hardware/peripherals/flash.html">Zephyr 플래시 문서</a>). 설정 한 바이트만 바뀌어도 그 바이트가 든 구역 전체를 다시 쓰게 됩니다. 지우고 다시 쓰는 도중에 전원이 끊기면 내용을 잃을 수 있습니다.</p>
-<p>그래서 임베디드 소프트웨어는 흔히 복사본을 두 벌 두고 새 내용은 지금 쓰고 있지 않은 쪽에 기록합니다. 부트로더 U-Boot의 이중 환경 저장이 잘 알려진 예입니다. U-Boot는 저장 도중 전원이 끊겨도 유효한 백업이 남도록 복사본을 하나 더 두고(<a href="https://github.com/u-boot/u-boot/blob/master/env/Kconfig">env/Kconfig의 ENV_REDUNDANT</a>), 두 복사본이 모두 유효하면 저장할 때마다 올리는 일련번호가 큰 쪽을 고릅니다(<a href="https://github.com/u-boot/u-boot/blob/master/env/common.c">env/common.c의 env_check_redund</a>).</p>
+<p>그래서 임베디드 소프트웨어는 흔히 복사본을 두 벌 두고 새 내용은 지금 쓰고 있지 않은 쪽에 기록합니다. 부트로더 U-Boot의 이중 환경 저장이 잘 알려진 예입니다. U-Boot는 저장 도중 전원이 끊겨도 유효한 백업이 남도록 복사본을 하나 더 둡니다(<a href="https://github.com/u-boot/u-boot/blob/master/env/Kconfig">env/Kconfig의 ENV_REDUNDANT</a>). 두 복사본이 모두 유효하면 저장할 때마다 올리는 일련번호가 큰 쪽을 고릅니다(<a href="https://github.com/u-boot/u-boot/blob/master/env/common.c">env/common.c의 env_check_redund</a>).</p>
 <div class="callout"><strong class="label">참고</strong>
 <p>위 내용은 일반적인 설계 방식의 설명입니다. K-3 II가 같은 목적으로 이렇게 설계됐는지, 전원이 끊겼을 때 실제로 복구되는지는 이 연구에서 확인하지 않았습니다. 아래에서 확인한 것은 펌웨어 코드가 복사본을 고르고 쓰기를 요청하는 규칙입니다.</p></div>
 
@@ -214,7 +214,7 @@
 <tr><td>2</td><td>9</td><td>유효</td><td>무효</td><td>A</td></tr>
 <tr><td>0</td><td>0</td><td>무효</td><td>무효</td><td>A</td></tr>
 </tbody></table></div>
-<p>카운터가 최댓값에서 0으로 넘어간 직후에도 새로 쓴 쪽을 고르기 위한 처리로 읽을 수 있습니다. U-Boot의 <a href="https://github.com/u-boot/u-boot/blob/master/env/common.c">env_check_redund</a>도 일련번호가 255와 0으로 만나면 0인 쪽을 고르는 같은 모양의 예외를 둡니다. 다만 여기서 확인한 것은 원본 코드에 있는 이 경계 처리까지입니다. 일반적인 순환 순서 알고리즘 전체를 입증한 것은 아닙니다.</p>
+<p>카운터가 최댓값에서 0으로 넘어간 직후에도 새로 쓴 쪽을 고르기 위한 처리로 읽을 수 있습니다. U-Boot의 <a href="https://github.com/u-boot/u-boot/blob/master/env/common.c">env_check_redund</a>도 일련번호가 255와 0으로 만나면 0인 쪽을 고르는 같은 모양의 예외를 둡니다. 다만 여기서 확인한 것은 원본 코드에 있는 이 경계 처리까지입니다. 일반적인 순환 순서 알고리즘 전체는 입증하지 않았습니다.</p>
 
 <h3>2단계: 주 설정 블록의 마커 검사</h3>
 <div class="table-wrap"><table class="fit">
@@ -399,8 +399,8 @@
 <li><strong>물리 기록</strong> — 섹터 쓰기 함수 안쪽, 실제 플래시 기록, 플래시 수명은 다루지 않았습니다.</li>
 <li><strong>전원 차단과 복구</strong> — 쓰는 도중 전원이 끊겼을 때 어떤 복사본이 남는지 시험하지 않았습니다.</li>
 <li><strong>복사본 전환</strong> — 쓰기가 끝난 뒤 읽는 복사본이 언제 바뀌는지, 재부팅 뒤 설정이 유지되는지 확인하지 않았습니다.</li>
-<li><strong>연속 실행</strong> — 메뉴 이벤트에서 저장 스케줄러까지를 한 번에 실행한 시험이 아닙니다. 부팅 전체가 아니라 선택 함수와 저장 함수를 따로 실행했습니다.</li>
-<li><strong>다른 보존 섹터</strong> — 섹터 14~21의 모든 필드를 이 문서가 설명하지는 않습니다. 섹터 14는 <a href="preserved-record.html">보존 섹터 14의 진단 레코드</a>에서 다룹니다. 그쪽의 상위 저장 함수는 내용이 같아도 섹터 쓰기 함수를 호출합니다(<a href="preserved-record.html#save">저장 요청</a>).</li>
+<li><strong>연속 실행</strong>: 메뉴 이벤트에서 저장 스케줄러까지를 한 번에 실행하지는 않았습니다. 부팅 전체 대신 선택 함수와 저장 함수를 따로 실행했습니다.</li>
+<li><strong>다른 보존 섹터</strong>: 섹터 14~21의 모든 필드를 이 문서가 설명하지는 않습니다. 섹터 14는 <a href="preserved-record.html">보존 섹터 14의 진단 레코드</a>에서 다룹니다. 그쪽의 상위 저장 함수는 내용이 같아도 섹터 쓰기 함수를 호출합니다(<a href="preserved-record.html#save">저장 요청</a>).</li>
 </ul>
 </section>
 

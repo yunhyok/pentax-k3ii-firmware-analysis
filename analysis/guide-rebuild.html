@@ -112,7 +112,7 @@
 <p>주 이미지가 저장되는 플래시 메모리는 내용을 고칠 때 섹터 전체를 지운 뒤 다시 써야 합니다. K-3 II의 업데이트 코드는 128 KiB를 한 섹터로 다룹니다. 그래서 기록은 “비교 → 지우기 → 프로그램 → 다시 비교”의 반복이 됩니다. 플래시에 써 넣는 명령 바이트는 <a href="https://www.infineon.com/assets/row/public/documents/non-assigned/49/infineon-s29gl512n-s29gl256n-s29gl128n-512-256-128-mbit-3-v-page-flash-featuring-110-nm-mirrorbit-datasheet-en.pdf">널리 쓰이는 표준 명령 집합</a>과 모양이 같았지만 부품을 특정하지는 않았습니다.</p>
 
 <h3>“원본 코드 실행으로 확인”의 뜻</h3>
-<p>이 주제의 검증은 펌웨어에 들어 있는 ARM 기계어를 PC의 CPU 에뮬레이터(<a href="https://github.com/unicorn-engine/unicorn">Unicorn</a>)에서 실행하는 방식입니다. 계산과 판단은 원본 코드가 하지만, 메모리와 주변 장치는 연구자가 만들어 넣은 것입니다. 그래서 결과마다 “무엇을 실행했고 무엇을 넣어 주었는지”를 나눠 적었습니다.</p>
+<p>이 주제의 검증은 펌웨어에 들어 있는 ARM 기계어를 PC의 CPU 에뮬레이터(<a href="https://github.com/unicorn-engine/unicorn">Unicorn</a>)에서 실행하는 방식입니다. 계산과 판단은 원본 코드가 하지만 메모리와 주변 장치는 연구자가 만들어 넣은 것입니다. 그래서 결과마다 “무엇을 실행했고 무엇을 넣어 주었는지”를 나눠 적었습니다.</p>
 
 <h3>호출 규약</h3>
 <p>함수를 새 코드로 바꿀 때는 레지스터 사용 약속을 지켜야 합니다. Arm의 표준 약속은 <a href="https://github.com/ARM-software/abi-aa/blob/2025Q1/aapcs32/aapcs32.rst">AAPCS32</a>입니다. 그런데 원본 펌웨어의 호출자가 이 약속보다 더 많은 것을 가정하는 경우가 있었습니다. 세 번째 문서가 이 문제를 다룹니다.</p>
@@ -140,12 +140,12 @@
 <tr><th scope="row">크기가 바뀌는 수정(코드 추가·삭제, 주소 이동)</th><td><span class="badge open">미확인</span></td><td><a href="rebuild.html#limits">재포장과 검사</a></td></tr>
 <tr><th scope="row">수정 후보나 다시 만든 함수를 실제 카메라가 받아들이고 부팅·촬영하는지</th><td><span class="badge open">미확인</span></td><td>세 문서 모두</td></tr>
 </tbody></table></div>
-<p class="small muted">“확인”과 “모델”이 함께 붙은 항목은 원본 코드를 실행했지만 입력이나 장치 응답은 연구자가 넣었다는 뜻입니다. 네 가지 표시의 정의는 <a href="../index.html#levels">개요의 검증 수준 읽는 법</a>에 있습니다.</p>
+<p class="small muted">“확인”과 “모델”이 함께 붙은 항목에서는 원본 코드를 실행했고 입력이나 장치 응답은 연구자가 넣었습니다. 네 가지 표시의 정의는 <a href="../index.html#levels">개요의 검증 수준 읽는 법</a>에 있습니다.</p>
 </section>
 
 <section id="order">
 <h2>읽는 순서</h2>
-<p>조사한 날짜순이 아니라 업데이트가 진행되는 순서로 읽으면 이해하기 쉽습니다.</p>
+<p>조사한 날짜순보다 업데이트가 진행되는 순서로 읽으면 이해하기 쉽습니다.</p>
 <ul class="cards">
 <li class="card"><span class="tag">1단계</span><h3><a href="rebuild.html">무손실 재포장과 업데이트 검사</a></h3><p class="q">고친 이미지를 카메라가 받는 파일로 되돌릴 수 있는가. 카메라는 파일에서 무엇을 검사하는가.</p><p>무수정 재포장은 원본과 같았고 검사는 길이·모델값·표식·덧셈 체크섬이었습니다.</p></li>
 <li class="card"><span class="tag">2단계</span><h3><a href="installation.html">업데이트 전송과 기록 오류</a></h3><p class="q">검사를 통과한 이미지는 어떤 순서로 옮겨 적히고 오류가 나면 어떻게 되는가.</p><p>보조 이미지는 전송 뒤 다시 읽어 비교하고 주 이미지는 섹터마다 기록 뒤 다시 비교합니다.</p></li>

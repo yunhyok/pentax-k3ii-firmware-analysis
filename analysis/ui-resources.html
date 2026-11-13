@@ -29,7 +29,7 @@
 <ul>
 <li>RAW File Format 메뉴의 두 선택지는 <strong>설정값 하나</strong>로 저장됩니다. PEF는 0, DNG는 1입니다.</li>
 <li>항목을 고르면 화면 객체의 <strong>임시값만</strong> 바뀝니다. 적용 이벤트를 받아야 RAM의 설정(현재값과 미러)에 기록합니다. 취소 이벤트는 기록하지 않고 임시값을 원래 값으로 되돌립니다.</li>
-<li>메뉴 글자 세 개(RAW File Format, PEF, DNG)가 리소스 표에서 글자 객체로 만들어지고 언어에 따라 16비트 글리프 배열로 준비되는 과정을 실행했습니다. 화면에 그리는 단계는 실행하지 않았습니다.</li>
+<li>메뉴 글자 세 개(RAW File Format, PEF, DNG)가 리소스 표에서 글자 객체로 만들어지는 과정을 실행했습니다. 언어에 따라 16비트 글리프 배열로 준비되는 과정도 실행했습니다. 화면에 그리는 단계는 실행하지 않았습니다.</li>
 <li>이 메뉴는 K-3 III에도 같은 이름으로 있습니다. 그러나 이 문서의 번호와 객체 구조는 K-3 II의 것이고 다른 기종과 호환된다는 근거는 없습니다. 실제 버튼, LCD 표시, 플래시 저장도 확인하지 않았습니다.</li>
 </ul>
 </section>
@@ -305,10 +305,10 @@
 <section id="limits">
 <h2>한계와 남은 과제</h2>
 <ul>
-<li><strong>입력</strong> — 이벤트 번호를 화면의 가상 함수에 직접 전달했습니다. 버튼을 누른 시험이 아니고 이벤트 번호가 어느 버튼인지도 모릅니다.</li>
-<li><strong>표시</strong> — 리소스 검색에서 글자 객체 생성까지, 글자 객체에서 글리프 배열까지를 각각 실행했습니다. 두 구간을 이어 화면 전체를 그린 것이 아닙니다. 글꼴 그리기와 LCD 출력은 실행하지 않았습니다.</li>
-<li><strong>저장과 효과</strong> — RAM의 현재값과 미러까지만 확인했습니다. 플래시 저장은 <a href="settings-storage.html#save">보존 섹터의 설정 저장</a>에서 따로 다루며 그 검증에서 PEF를 DNG로 바꾼 설정이 섹터 쓰기 요청에 도달했습니다. 이 설정이 실제 RAW 파일 기록을 어떻게 바꾸는지는 이 문서의 범위가 아닙니다.</li>
-<li><strong>다른 기종</strong> — K-3 III와 Q7의 번호와 글자 준비 방식은 이 결과로 대신할 수 없습니다. 지금은 기능 대응표를 바탕으로 각 기종의 고르기·적용 규칙을 비교하는 단계입니다. 메뉴를 옮겨 실행하거나 펌웨어를 고친 적은 없습니다. 세 기종 비교는 <a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/ui-port-contract.html">K-3 III 저장소의 UI 이식 설계</a>에 있습니다.</li>
+<li><strong>입력</strong>: 이벤트 번호를 화면의 가상 함수에 직접 전달했습니다. 버튼을 누른 시험이 아니고 이벤트 번호가 어느 버튼인지도 모릅니다.</li>
+<li><strong>표시</strong>: 리소스 검색에서 글자 객체 생성까지, 글자 객체에서 글리프 배열까지를 각각 실행했습니다. 두 구간을 이어 화면 전체를 그리지는 않았습니다. 글꼴 그리기와 LCD 출력은 실행하지 않았습니다.</li>
+<li><strong>저장과 효과</strong>: RAM의 현재값과 미러까지만 확인했습니다. 플래시 저장은 <a href="settings-storage.html#save">보존 섹터의 설정 저장</a>에서 따로 다룹니다. 그 검증에서 PEF를 DNG로 바꾼 설정이 섹터 쓰기 요청에 도달했습니다. 이 설정이 실제 RAW 파일 기록을 어떻게 바꾸는지는 이 문서의 범위가 아닙니다.</li>
+<li><strong>다른 기종</strong>: K-3 III와 Q7의 번호와 글자 준비 방식은 이 결과로 대신할 수 없습니다. 지금은 기능 대응표를 바탕으로 각 기종의 고르기·적용 규칙을 비교하는 단계입니다. 메뉴를 옮겨 실행하거나 펌웨어를 고친 적은 없습니다. 세 기종 비교는 <a href="https://yunhyok.github.io/pentax-k3iii-firmware-analysis/analysis/ui-port-contract.html">K-3 III 저장소의 UI 이식 설계</a>에 있습니다.</li>
 </ul>
 </section>
 
@@ -318,7 +318,7 @@
 <pre><code>python verify_ui_resources.py decoded.bin --compare analysis/ui-resources.json
 python -m unittest discover -s tests -v
 python verify_publication.py</code></pre>
-<p>첫 명령은 리소스 레코드, 분기, 가상 함수 표를 파일 바이트로 확인한 뒤 원본 코드를 실행합니다. 리소스 검색, 글리프 준비, 화면의 가상 함수, 뱅크 계산, RAM 쓰기는 원본 명령으로 실행하고 결과가 저장소의 <code>ui-resources.json</code>과 다르면 실패합니다. 나머지 두 명령은 펌웨어 없이 돌아가는 단위 테스트와 문서 검사입니다.</p>
+<p>첫 명령은 리소스 레코드, 분기, 가상 함수 표를 파일 바이트로 확인한 뒤 원본 코드를 실행합니다. 리소스 검색, 글리프 준비, 화면의 가상 함수, 뱅크 계산, RAM 쓰기는 원본 명령으로 실행합니다. 결과가 저장소의 <code>ui-resources.json</code>과 다르면 실패합니다. 나머지 두 명령은 펌웨어 없이 돌아가는 단위 테스트와 문서 검사입니다.</p>
 </section>
 
 <section id="refs">

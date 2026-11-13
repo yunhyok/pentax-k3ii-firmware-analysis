@@ -152,7 +152,7 @@
 <thead><tr><th>찾은 대상</th><th>결과</th></tr></thead>
 <tbody>
 <tr><th scope="row">설정 함수 <code>0x71B090</code>으로 직접 분기하는 명령</th><td><code>0x659FAC</code> 한 곳</td></tr>
-<tr><th scope="row">설정 함수의 실행 주소와 같은 값의 워드</th><td>없음. 함수 포인터로 저장된 곳을 찾지 못했다는 뜻입니다.</td></tr>
+<tr><th scope="row">설정 함수의 실행 주소와 같은 값의 워드</th><td>없음. 함수 포인터로 저장된 곳을 찾지 못했습니다.</td></tr>
 <tr><th scope="row"><code>MOVW</code> 명령의 상수가 payload 위치(<code>0xA7B4</code>) 또는 활성 바이트 위치(<code>0xA7EC</code>)인 곳</th><td><code>0xA7B4</code>만 네 곳: <code>0x653B6C</code>, <code>0x653B78</code>, <code>0x656990</code>, <code>0x659ED0</code></td></tr>
 <tr><th scope="row"><code>STRB [Rn,#0x38]</code> 형태의 바이트 쓰기</th><td>후보 177개. 스케일러 설정 구간 안에 있는 것은 <code>0x71B090</code>과 <code>0x71B100</code> 둘</td></tr>
 </tbody></table></div>
@@ -403,7 +403,7 @@
 
 <section id="fringe">
 <h2>Color Fringe Correction 메뉴는 두 번째 CPP 패스를 켭니다</h2>
-<p class="takeaway">RAW 현상 화면의 Color Fringe Correction 선택값은 설정 객체를 거쳐 태그 <code>0x245</code>로 나가고 작업 종류가 5이고 이 태그가 1일 때 CPP가 한 번 더 실행됩니다. 마스크 분기나 보조 스케일러를 켜는 조건은 아닙니다.</p>
+<p class="takeaway">RAW 현상 화면의 Color Fringe Correction 선택값은 설정 객체를 거쳐 태그 <code>0x245</code>로 나갑니다. 작업 종류가 5이고 이 태그가 1일 때 CPP가 한 번 더 실행됩니다. 마스크 분기나 보조 스케일러를 켜는 조건은 아닙니다.</p>
 
 <ol class="flow">
 <li class="ok"><strong>RAW 현상 메뉴</strong><span>Color Fringe Correction 항목. 화면의 <code>+0x4B5</code>가 0과 1 사이에서 바뀜</span></li>
@@ -528,7 +528,7 @@
 <tr><td><code>0x40</code></td><td><code>0x80</code></td><td>아님</td><td>예</td></tr>
 <tr><td><code>0x01</code>, <code>0x02</code>, <code>0x20</code>, <code>0x08</code>, <code>0x80</code></td><td><code>0x08</code></td><td>아님</td><td>예</td></tr>
 </tbody></table></div>
-<p>완료 뒤에는 <code>mask &amp; 0x44</code>가 0이 되고 CPP가 세 평면 입력을 고르는 조건인 <code>mask &amp; 0x88</code>이 참이 됩니다. 입력 선택 코드는 <code>0x65962C</code>부터 <code>0x659678</code> 앞까지입니다. 마스크 값은 고정된 촬영 모드 번호가 아니라 처리 단계에 따라 바뀌는 상태로도 쓰인다는 뜻입니다.</p>
+<p>완료 뒤에는 <code>mask &amp; 0x44</code>가 0이 되고 CPP가 세 평면 입력을 고르는 조건인 <code>mask &amp; 0x88</code>이 참이 됩니다. 입력 선택 코드는 <code>0x65962C</code>부터 <code>0x659678</code> 앞까지입니다. 곧 마스크 값은 고정된 촬영 모드 번호에 그치지 않고 처리 단계에 따라 바뀌는 상태로도 쓰입니다.</p>
 
 <div class="callout warn"><strong class="label">두 경로를 합치지 않습니다</strong>
 <p>이 절의 경로는 “모듈 20의 출력이 다음 CPP의 입력이 된다”는 것입니다. 앞 절의 “마스크 CPP 출력이 보조 스케일러를 거쳐 JPEG로 간다”는 경로와는 다릅니다. 마스크 분기의 출력 <code>job+0x2354</code>를 모듈 20이 읽는지는 확인하지 못했습니다. 레시피 안에서 이 완료가 CPP·합성보다 앞에 오는지는 <a href="superresolution-lifecycle.html#recipe">레시피별 순서</a>에서 다룹니다.</p></div>
